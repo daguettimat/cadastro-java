@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Tipo de Embarque
+    </ui:define>
+
+    <ui:define name="description">
+        lista geral
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Lista Tipo de Embarque"/>
+        <h:form>
+            <p:growl autoUpdate="true" escape="false" sticky="true"/>
+            <h:panelGroup layout="block">
+                <p:dataTable widgetVar="tipoEmbarqueTable" var="c" value="#{tipoEmbarqueMB.embarqueList}" rows="10" styleClass="box-danger"
+                             filteredValue="#{tipoEmbarqueMB.filteredValue}"
+                             rowKey="#{c.id}" lazy="true" paginator="true"
+                             paginatorPosition="bottom" selection="#{tipoEmbarqueMB.tipoEmbarque}" selectionMode="single"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30">
+
+                    <p:ajax event="rowSelect" listener="#{tipoEmbarqueMB.onRowSelect}" update="@form"/>
+                    <p:ajax event="rowUnselect" listener="#{tipoEmbarqueMB.onRowUnselect}" update="@form"/>
+                    <f:facet name="header">
+                        &#160;
+                    </f:facet>
+                    <p:column headerText="ID" sortBy="#{c.id}" filterBy="#{c.id}" style="width:10%">
+                        #{c.id}
+                    </p:column>
+                    <p:column headerText="Descrição" filterBy="#{c.descricao}" sortBy="#{c.descricao}" filterMatchMode="contains">
+                        <f:facet name="filter">
+                            <p:autoComplete size="70" value="#{tipoEmbarqueMB.filter.entity.descricao}" forceSelection="true"
+                                            minQueryLength="2" queryDelay="500"
+                                            completeMethod="#{tipoEmbarqueMB.completeDescricao}" maxResults="10">
+                                <p:ajax event="blur" process="@this" update="@none"
+                                        oncomplete="PF('tipoEmbarqueTable').filter()"/>
+                            </p:autoComplete>
+                        </f:facet>
+                        #{c.descricao}
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+            <h:panelGroup layout="block">
+                <div class="align-right" style="padding: 5px;">
+                    <p:commandButton value="Novo Registro" action="#{tipoEmbarqueMB.insert}"
+                                     icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                    <p:spacer height="5"/>
+                    <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print" styleClass="btn-danger">
+                        <p:menuitem value="PDF" url="#" icon="fa fa-file-pdf-o"/>
+                        <p:menuitem value="XLS" url="#" icon="fa fa-file-excel-o"/>
+                        <p:menuitem value="CSV" url="#" icon="fa fa-file-text"/>
+                        <p:menuitem value="RTF" url="#" icon="fa fa-file-word-o"/>
+                        <p:separator/>
+                        <p:menuitem value="&#160;Visualizar" url="#" icon="fa fa-television"/>
+                    </p:splitButton>
+                </div>
+            </h:panelGroup>
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

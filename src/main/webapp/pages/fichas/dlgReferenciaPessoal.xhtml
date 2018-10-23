@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+
+    <p:panel>
+        <div class="ui-fluid" >
+            <div class="row">
+                <div class="col-md-4">
+                    <p:outputLabel for="contatoMotorista" value="Contato"/>
+                    <p:inputText id="contatoMotorista"
+                                 onchange="this.value = this.value.toUpperCase();"
+                                 value="#{enviarFichaMB.refPessoal.contato}">
+                        <f:validateLength minimum="3" />
+                    </p:inputText>
+                    <p:message for="contatoMotorista" display="icon" />
+                </div>
+                <div class="col-md-4">
+                    <p:outputLabel for="parentescoMotorista" value="Parentesco"/>
+                    <p:selectOneMenu value="#{enviarFichaMB.refPessoal.parentesco}" id="parentescoMotorista"
+                                     required="true">
+                        <f:selectItems value="#{enviarFichaMB.lstTipoContatoPessoal}" var="parentesco" itemValue="#{parentesco.id}"
+                                       itemLabel="#{parentesco.descricao}"/>
+                    </p:selectOneMenu>
+                </div>
+                <div class="col-xs-1">
+                    <p:outputLabel for="telefoneMotorista" value="Telefone"/>
+                    <p:inputMask id="dddMotorista"  mask="99" value="#{enviarFichaMB.refPessoal.ddd}"/>
+                </div>
+                <div class="col-md-2" >
+                    <p:spacer width="5" height="20" />
+                    <br/>
+                    <p:inputMask id="telefoneMotorista"  mask="9999-9999?9" style="padding-left: -10px;"
+                                 value="#{enviarFichaMB.refPessoal.telefone}"/>
+                </div>
+
+            </div>
+        </div>
+        <f:facet name="footer">
+            <div class="container ui-fluid" >
+                <div class="row" style="float: left;">
+                    <div style="float: right;">
+                        <p:commandButton value="Cancelar" styleClass="btn-danger"
+                                         style="width: 100px;"
+                                         onclick="PF('dialog').hide();onTop('dRefPessoais');"/>
+                    </div>
+                    <div style="float: right;">
+                        <p:commandButton id="btnEnviarPessoal"  value="Salvar" styleClass="btn-danger"
+                                         actionListener="#{enviarFichaMB.addReferencia}"
+                                         onclick="PF('dialog').hide();onTop('dRefPessoais');"
+                                         style="width: 100px;" partialSubmit="true" >
+                            <f:ajax execute="@form" render="@form" />
+                        </p:commandButton>
+                    </div>
+
+                </div>
+            </div>
+        </f:facet>
+    </p:panel>
+    <script>
+
+        function gotoDlg() {
+            onTop("#btnRefPessoal");
+        }
+    </script>
+</ui:composition>

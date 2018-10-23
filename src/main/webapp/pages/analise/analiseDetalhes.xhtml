@@ -1,0 +1,598 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Análise Cadastral
+    </ui:define>
+
+    <ui:define name="description">
+        Opções disponíveis
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="form0" onkeypress="if (event.keyCode == 13) { return false; }">
+            <div class="ui-fluid">
+                <div class="row">
+                        <div class="col-md-2 pull-right">
+                            <p:outputLabel value="Pesquisar Ficha: " style="display:none"/>
+                            <p:spacer height="5"/>
+                            <p:inputText id="inptId" value="#{motAnaliseMB.id}" style="display:none"/>
+                            <p:commandButton id="brFind"
+                                             value="Atualizar Tela"
+                                             action="#{cadastroMB.findById(cadastroMB.id)}"
+                                             process="@form"
+                                             update="@form"
+                                             styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                             partialSubmit="true"/>
+                        </div>
+                </div>
+            </div>
+            <br/>
+            <p:panel styleClass="box-solid">
+                <p:panel>
+                    <div class="ui-fluid">
+                        <div class="row">
+
+                            <div class="col-lg-1">
+                                <p:outputLabel value="Ficha" for="inptNumFicha"/>
+                                <p:inputText  disabled="true" id="inptNumFicha" value="#{cadastroMB.cadastro.id}" />
+                            </div>
+                            <div class="col-lg-4">
+                                <p:outputLabel value="Usuário Criação" for="inptUsuario"/>
+                                <p:inputText  disabled="true" id="inptUsuario" value="#{cadastroMB.cadastro.usuarioCriacao.nome}" />
+                            </div>
+                            <div class="col-lg-2">
+                                <p:outputLabel value="Criação" for="inptDtCriacao"/>
+                                <p:inputText  disabled="true" id="inptDtCriacao" value="#{cadastroMB.cadastro.dtCriacao}" >
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm:SS"/>
+                                </p:inputText>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <p:outputLabel value="Usuário Término" for="inptUsuarioTermino"/>
+                                <p:inputText  disabled="true" id="inptUsuarioTermino" value="#{cadastroMB.cadastro.usuarioTermino.nome}" />
+                            </div>
+                            <div class="col-lg-2">
+                                <p:outputLabel value="Término" for="inptTermino"/><br/>
+                                <p:inputText  disabled="true" id="inptTermino" value="#{cadastroMB.cadastro.dtTermino}"  >
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm:SS"/>
+                                </p:inputText>
+                            </div>
+
+                        </div>
+                        <br/>
+                        <div class="row">
+
+                            <div class="col-lg-2">
+                                <p:outputLabel value="Tipo da Ficha" for="inptTipoFicha"/><br/>
+                                <p:inputText  disabled="true" id="inptTipoFicha" value="#{cadastroMB.cadastro.tipoFicha.descricao}" />
+                            </div>
+
+                            <div class="col-lg-1" >
+                                <p:outputLabel value="Validade" for="inptValidade"/><br/>
+                                <p:inputText  disabled="true" id="inptValidade" value="#{cadastroMB.cadastro.diasValidade}" />
+                            </div>
+
+                            <div class="col-lg-2">
+                                <p:outputLabel value="Data Liberação" for="inptDtLiberacao"/><br/>
+                                <p:inputText  disabled="true" id="inptDtLiberacao" value="#{cadastroMB.cadastro.acLiberacao.dtLiberacao}" >
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm:SS"/>
+                                </p:inputText>
+                            </div>
+
+                            <div class="col-lg-7">
+                                <p:outputLabel value="Chave Liberação" for="inptLiberacao"/><br/>
+                                <p:inputText  disabled="true" id="inptLiberacao" value="#{cadastroMB.cadastro.acLiberacao.certificado}" >
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm:SS"/>
+                                </p:inputText>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </p:panel>
+                <p:tabView id="tabPendencia">
+                    <p:tab title="Itens para Análise" titleStyleClass="box-danger" >
+                        <div class="ui-fluid">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-4 col-sm-12" style="padding-top: 15px;">
+                                    <p:panel>
+                                        <div class="row">
+                                            <f:metadata>
+                                                <f:event type="preRenderView" listener="#{cadastroMB.updateOperador(cadastroMB.id, logonMB.usuarioLogado)}"/>
+                                                <f:event type="preRenderView" listener="#{motAnaliseMB.findByCadastro(cadastroMB.id)}"/>
+                                                <f:event type="preRenderView" listener="#{pendenciasMB.referencia(cadastroMB.id, indexMB.usuario)}"/>
+                                            </f:metadata>
+
+                                                <div class="col-lg-3" style="padding-top:25px;">
+                                                    <p:panel id="panServer" styleClass="box-danger"
+                                                             widgetVar="panelServer">
+                                                        <img src="/manager/resources/images/server-icon.png"
+                                                             style="width:57%;padding-bottom: 15px;padding-left:20px;"
+                                                             class="over"/>
+                                                        <img src="/manager/resources/#{cadastroMB.pathFlag(cadastroMB.cadastro.analiseEspecialStatus)}"
+                                                             style="width:35%;padding: 5px;" class="under"/>
+                                                        <br/>
+
+                                                        <p:commandButton id="btnAnalise" styleClass="btn-danger" disabled="#{cadastroMB.cadastro.analiseEspecialStatus == 39}"
+                                                                         onclick="PF('dlgAnaliseEspecial').show();onTop('dlgAnaliseEspecial')"
+                                                                         value="ANÁLISE ESPECIAL"/>
+                                                    </p:panel>
+                                                </div>
+
+                                            <ui:fragment  rendered="#{motAnaliseMB.anacmot.statusGeral.id != null}">
+                                                <div class="col-lg-3" style="padding-top:25px;">
+                                                    <p:panel id="panMotorista" styleClass="box-danger"
+                                                             widgetVar="panelMotorista">
+                                                        <img src="/manager/resources/images/people.png"
+                                                             style="width:57%;padding-bottom: 15px;padding-left:20px;"
+                                                             class="over"/>
+                                                        <img src="/manager/resources/#{motAnaliseMB.pathFlag(motAnaliseMB.anacmot.statusGeral.id)}"
+                                                             style="width:35%;padding: 5px;" class="under"/>
+                                                        <br/>
+                                                        <p:commandButton value="#{motAnaliseMB.anacmot.motorista.nome}" process="@this" action="#{motAnaliseMB.loadScreen(cadastroMB.id)}"
+                                                                         styleClass="btn-danger">
+                                                        </p:commandButton>
+                                                    </p:panel>
+                                                </div>
+                                            </ui:fragment>
+                                            <ui:fragment  rendered="#{veiAnaliseMB.selectByCadastro(cadastroMB.id,0) != null}">
+                                                <div class="col-lg-3" style="padding-top:25px;">
+                                                    <p:panel styleClass="box-danger" widgetVar="panelVeiculos">
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id == 46}">
+                                                            <img src="/manager/resources/images/red-truck.png"
+                                                                 style="width:59%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id >= 47}">
+                                                            <img src="/manager/resources/images/container.jpg"
+                                                                 style="width:64%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <img src="/manager/resources/#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.statusGeral.id)}"
+                                                             style="width:38%;padding: 5px;" class="under"/>
+                                                        <br/>
+
+                                                        <p:commandButton value="#{veiAnaliseMB.nomeByIdCadastro(cadastroMB.id,0)}"
+                                                                         process="@this" action="#{veiAnaliseMB.loadScreen(cadastroMB.id,0)}"
+                                                                         styleClass="btn-danger">
+                                                        </p:commandButton>
+                                                    </p:panel>
+                                                </div>
+                                            </ui:fragment>
+                                            <ui:fragment  rendered="#{veiAnaliseMB.selectByCadastro(cadastroMB.id,1) != null}">
+                                                <div class="col-lg-3" style="padding-top:25px;">
+                                                    <p:panel styleClass="box-danger" widgetVar="panelVeiculos">
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id == 46}">
+                                                            <img src="/manager/resources/images/red-truck.png"
+                                                                 style="width:59%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id >= 47}">
+                                                            <img src="/manager/resources/images/container.jpg"
+                                                                 style="width:64%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <img src="/manager/resources/#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.statusGeral.id)}"
+                                                             style="width:38%;padding: 5px;" class="under"/>
+                                                        <br/>
+
+                                                        <p:commandButton value="#{veiAnaliseMB.nomeByIdCadastro(cadastroMB.id ,1)}"
+                                                                         process="@this" action="#{veiAnaliseMB.loadScreen(cadastroMB.id,1)}"
+                                                                         styleClass="btn-danger">
+                                                        </p:commandButton>
+                                                    </p:panel>
+                                                </div>
+                                            </ui:fragment>
+                                            <ui:fragment  rendered="#{veiAnaliseMB.selectByCadastro(cadastroMB.id,2) != null}">
+                                                <div class="col-lg-3" style="padding-top:25px;">
+                                                    <p:panel styleClass="box-danger" widgetVar="panelVeiculos">
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id == 46}">
+                                                            <img src="/manager/resources/images/red-truck.png"
+                                                                 style="width:59%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id >= 47}">
+                                                            <img src="/manager/resources/images/container.jpg"
+                                                                 style="width:64%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <img src="/manager/resources/#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.statusGeral.id)}"
+                                                             style="width:38%;padding: 5px;" class="under"/>
+                                                        <br/>
+
+                                                        <p:commandButton value="#{veiAnaliseMB.nomeByIdCadastro(cadastroMB.id,2)}"
+                                                                         process="@this" action="#{veiAnaliseMB.loadScreen(cadastroMB.id,2)}"
+                                                                         styleClass="btn-danger">
+                                                        </p:commandButton>
+                                                    </p:panel>
+                                                </div>
+                                            </ui:fragment>
+                                        </div>
+                                        <div class="row">
+                                            <ui:fragment  rendered="#{veiAnaliseMB.selectByCadastro(cadastroMB.id,3) != null}">
+                                                <div class="col-lg-3" style="padding-top:25px;">
+                                                    <p:panel styleClass="box-danger" widgetVar="panelVeiculos">
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id == 46}">
+                                                            <img src="/manager/resources/images/red-truck.png"
+                                                                 style="width:59%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id >= 47}">
+                                                            <img src="/manager/resources/images/container.jpg"
+                                                                 style="width:64%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <img src="/manager/resources/#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.statusGeral.id)}"
+                                                             style="width:38%;padding: 5px;" class="under"/>
+                                                        <br/>
+
+                                                        <p:commandButton value="#{veiAnaliseMB.nomeByIdCadastro(cadastroMB.id,3)}"
+                                                                         process="@this" action="#{veiAnaliseMB.loadScreen(cadastroMB.id,3)}"
+                                                                         styleClass="btn-danger">
+                                                        </p:commandButton>
+                                                    </p:panel>
+                                                </div>
+                                            </ui:fragment>
+                                            <ui:fragment  rendered="#{veiAnaliseMB.selectByCadastro(cadastroMB.id,4) != null}">
+                                                <div class="col-lg-3" style="padding-top:25px;">
+                                                    <p:panel styleClass="box-danger" widgetVar="panelVeiculos">
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id == 46}">
+                                                            <img src="/manager/resources/images/red-truck.png"
+                                                                 style="width:59%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id >= 47}">
+                                                            <img src="/manager/resources/images/container.jpg"
+                                                                 style="width:64%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <img src="/manager/resources/#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.statusGeral.id)}"
+                                                             style="width:38%;padding: 5px;" class="under"/>
+                                                        <br/>
+
+                                                        <p:commandButton value="#{veiAnaliseMB.nomeByIdCadastro(cadastroMB.id,4)}"
+                                                                         process="@this" action="#{veiAnaliseMB.loadScreen(cadastroMB.id,4)}"
+                                                                         styleClass="btn-danger">
+                                                        </p:commandButton>
+                                                    </p:panel>
+                                                </div>
+                                            </ui:fragment>
+                                            <ui:fragment  rendered="#{veiAnaliseMB.selectByCadastro(cadastroMB.id,5) != null}">
+                                                <div class="col-lg-3" style="padding-top:25px;">
+                                                    <p:panel styleClass="box-danger" widgetVar="panelVeiculos">
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id == 46}">
+                                                            <img src="/manager/resources/images/red-truck.png"
+                                                                 style="width:59%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{veiAnaliseMB.veiculo.tipo.id >= 47}">
+                                                            <img src="/manager/resources/images/container.jpg"
+                                                                 style="width:64%;" class="over"/>
+                                                        </ui:fragment>
+                                                        <img src="/manager/resources/#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.statusGeral.id)}"
+                                                             style="width:38%;padding: 5px;" class="under"/>
+                                                        <br/>
+
+                                                        <p:commandButton value="#{veiAnaliseMB.nomeByIdCadastro(cadastroMB.id,5)}"
+                                                                         process="@this" action="#{veiAnaliseMB.loadScreen(cadastroMB.id,5)}"
+                                                                         styleClass="btn-danger">
+                                                        </p:commandButton>
+                                                    </p:panel>
+                                                </div>
+                                            </ui:fragment>
+                                        </div>
+                                    </p:panel>
+                                </div>
+                            </div>
+                        </div>
+                    </p:tab>
+                    <p:tab title="Pendências Encontradas" titleStyleClass="box-danger" >
+                        <div class="ui-fluid">
+                            <p:panel >
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p:dataTable widgetVar="pendTable" var="c" value="#{pendenciasMB.lista}" rows="15"
+                                                     filteredValue="#{pendenciasMB.filteredValue}" id="pendTable"
+                                                     rowKey="#{c.id}" lazy="true" paginator="true"
+                                                     paginatorPosition="bottom" selection="#{pendenciasMB.pendencias}" selectionMode="single"
+                                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                                                     currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                                                     rowsPerPageTemplate="5,10,15,20,30">
+
+                                            <p:ajax event="rowSelect" listener="#{pendenciasMB.onRowSelect}" oncomplete="PF('dlgPendencia').show()" update="@form"/>
+
+                                            <p:column headerText="Id" sortBy="#{c.id}"  style="width:10%">
+                                                #{c.id}
+                                            </p:column>
+
+                                            <p:column headerText="Situação Atual" sortBy="#{c.pendenciasStatus.descricao}"  style="width:20%">
+                                                #{c.pendenciasStatus.descricao}
+                                            </p:column>
+
+                                            <p:column headerText="Data Criação" sortBy="#{c.dtCriacao}"  style="width:15%" >
+                                                <h:outputText value="#{c.dtCriacao}">
+                                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                                </h:outputText>
+
+                                            </p:column>
+
+                                            <p:column headerText="Tipo" style="width:10%" >
+                                                #{c.tipoPendencia.pendencias.descricao}
+                                            </p:column>
+
+                                            <p:column headerText="Pendência" style="width:25%" >
+                                                #{c.tipoPendencia.descricao}
+                                            </p:column>
+
+                                            <p:column headerText="Responsável" style="width:35%" >
+                                                #{c.usuarioCriacao.nome}
+                                            </p:column>
+
+                                        </p:dataTable>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row" style="#{(cadastroMB.cadastro.status.id == 7 or cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }">
+                                    <div class="col-lg-9">
+                                        <span>&#160;</span>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <p:commandButton id="btnPendencia" styleClass="btn-danger"
+                                                         actionListener="#{pendenciasMB.clear}"
+                                                         oncomplete="PF('dlgPendencia').show()"
+                                                         value="Adicionar pendências...">
+                                            <f:ajax execute="@none" render="@form" />
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+                            </p:panel>
+                        </div>
+                    </p:tab>
+                    <p:tab title="Observações" titleStyleClass="box-danger" >
+                    <div class="ui-fluid">
+                        <p:panel>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p:outputLabel value="Cliente" for="inptInterna"/><br/>
+                                    <p:inputTextarea rows="3" disabled="true"
+                                                     style="background-color: #2a2730; color: white; width: 98%"
+                                                     id="inptCliente"
+                                                     value="#{cadastroMB.cadastro.observacaoCliente}" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p:outputLabel value="Análise" for="inptAnalise"/><br/>
+                                    <p:inputTextarea rows="3" disabled="#{(cadastroMB.cadastro.status.id == 7 or cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'true' : 'false' }"
+                                                     style="background-color: beige;width: 98%" id="inptAnalise"
+                                                     value="#{cadastroMB.cadastro.observacaoAnalise}" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p:outputLabel value="Internas" for="inptInterna"/><br/>
+                                    <p:inputTextarea rows="3" disabled="#{(cadastroMB.cadastro.status.id == 7 or cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'true' : 'false' }"
+                                                     style="background-color: beige;width: 98%" id="inptInterna"
+                                                     value="#{cadastroMB.cadastro.observacaoInterna}" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p:outputLabel value="Exclusão" for="inptExclusao"/><br/>
+                                    <p:inputTextarea rows="3" disabled="#{(cadastroMB.cadastro.status.id == 7 or cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'true' : 'false' }"
+                                                     style="background-color: beige;width: 98%" id="inptExclusao"
+                                                     value="#{cadastroMB.cadastro.observacaoExclusao}" />
+                                </div>
+                            </div>
+                        </p:panel>
+                    </div>
+                    </p:tab>
+                </p:tabView>
+                <f:facet name="footer">
+                    <div class="ui-fluid">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <p:commandButton value="Finalizar Ficha"
+                                                 process="@form" style="#{(cadastroMB.cadastro.status.id == 7 or cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
+                                                 action="#{cadastroMB.finalizarFicha}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                            <div class="col-lg-4">
+                                <span>&#160;</span>
+                            </div>
+                            <div class="col-lg-2">
+                                <p:commandButton value="Salvar" style="#{(cadastroMB.cadastro.status.id == 7 or cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
+                                                 process="@form" action="#{cadastroMB.update}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                            <div class="col-lg-2">
+                                <p:commandButton value="Excluir" style="#{(cadastroMB.cadastro.status.id == 7 or cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
+                                                 process="@form" action="#{cadastroMB.delete}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                            <div class="col-lg-2">
+                                <p:commandButton value="Voltar"  action="#{cadastroMB.btnBack}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                        </div>
+                    </div>
+                </f:facet>
+            </p:panel>
+            <p:dialog id="dlgFinalizar" widgetVar="dlgFinalizar" header="Finalizar Ficha?" modal="true"
+                      resizable="false" closable="false"
+                      width="600" >
+
+                <p:panel>
+                    <div class="row">
+                        <div class="col-lg-12" align="center">
+                            <h3>Essa ficha ainda possui algumas pendências, deseja mesmo finalizar?</h3>
+                        </div>
+                    </div>
+
+                    <f:facet name="footer">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <p:commandButton value="Confirmar"  action="#{cadastroMB.usuarioFinaliza}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                            <div class="col-lg-7">
+                                <span>&#160;</span>
+
+                            </div>
+                            <div class="col-lg-2" style="padding-left:40px;">
+                                <p:commandButton value="Cancelar"  action="#{cadastroMB.btnBack}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                        </div>
+                    </f:facet>
+                </p:panel>
+
+            </p:dialog>
+
+            <p:dialog id="dlgAviso" widgetVar="dlgAviso" header="Essa ficha será finalizada..." modal="true"
+                      resizable="false" closable="false"
+                      width="600" >
+
+                <p:panel>
+                    <div class="row">
+                        <div class="col-lg-12" align="center" id="msgAviso">
+                            <h3>Essa ficha será finalizada como <b><i>#{cadastroMB.finalizarComo}</i></b>, deseja mesmo finalizar?</h3>
+                        </div>
+                    </div>
+
+                    <f:facet name="footer">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <p:commandButton value="Confirmar"  action="#{cadastroMB.usuarioFinaliza}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                            <div class="col-lg-7">
+                                <span>&#160;</span>
+
+                            </div>
+                            <div class="col-lg-2" style="padding-left:40px;">
+                                <p:commandButton value="Cancelar"  action="#{cadastroMB.btnBack}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                        </div>
+                    </f:facet>
+                </p:panel>
+
+            </p:dialog>
+
+            <p:dialog id="dlgFechado" widgetVar="dlgFechado" header="Essa ficha ja esta finalizada..." modal="true"
+                      resizable="false" closable="false"
+                      width="600" >
+                <p:panel>
+                    <div class="row">
+                        <div class="col-lg-12" align="center">
+                            <h3>Essa ficha já foi finalizada ... <br/>Solicitação de finalização cancelada.</h3>
+                        </div>
+                    </div>
+                    <f:facet name="footer">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <span>&#160;</span>
+
+                            </div>
+                            <div class="col-lg-2" style="padding-left:40px;">
+                                <p:commandButton value="Fechar"
+                                                 onclick="PF('dlgFechado').hide();"
+                                                 action="#{cadastroMB.btnBack}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </p:dialog>
+            <p:dialog id="dlgFinalizada" widgetVar="dlgFinalizada" header="Aviso" modal="true"
+                      resizable="false" closable="false"
+                      width="600" >
+                <p:panel>
+                    <div class="row">
+                        <div class="col-lg-12" align="center">
+                            <h3>Essa ficha já foi finalizada com sucesso ...</h3>
+                        </div>
+                    </div>
+                    <f:facet name="footer">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <span>&#160;</span>
+
+                            </div>
+                            <div class="col-lg-2" style="padding-left:40px;">
+                                <p:commandButton value="Fechar"
+                                                 onclick="PF('dlgFinalizada').hide();"
+                                                 action="#{cadastroMB.btnBack}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </p:dialog>
+            <p:dialog id="dlgExcluida" widgetVar="dlgExcluida" header="Aviso" modal="true"
+                      resizable="false" closable="false"
+                      width="600" >
+                <p:panel>
+                    <div class="row">
+                        <div class="col-lg-12" align="center">
+                            <h3>Essa ficha foi excluída com sucesso ...</h3>
+                        </div>
+                    </div>
+                    <f:facet name="footer">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <span>&#160;</span>
+                            </div>
+                            <div class="col-lg-2" style="padding-left:40px;">
+                                <p:commandButton value="Fechar"
+                                                 onclick="PF('dlgExcluida').hide();"
+                                                 action="#{cadastroMB.btnBack}"
+                                                 styleClass="btn-danger" />
+                            </div>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </p:dialog>
+
+        </h:form>
+
+        <p:dialog id="dlgPendencia" widgetVar="dlgPendencia" header="Controle de Pendências" modal="true"
+                  resizable="false" closable="true" position="center,top"
+                  width="900" >
+
+            <p:ajax event="open" listener="#{pendenciasMB.dialog(1)}" />
+
+            <ui:include src="analisePendencias.xhtml"/>
+
+        </p:dialog>
+
+        <p:dialog id="dlgAnaliseEspecial" widgetVar="dlgAnaliseEspecial" header="Análise Especial" modal="true"
+                  resizable="false" closable="true" position="center,top"
+                  width="900" >
+
+            <ui:include src="dlgAnaliseEspecial.xhtml"/>
+
+        </p:dialog>
+
+
+        <script type="text/javascript">
+            function handleResponse(xhr, status, args) {
+                if (args.validationFailed) {
+                    window.scrollTo(0, 0);
+                }
+            }
+
+            function onTop(args) {
+                window.scrollTo(0, 0);
+                window.location='#'+ args;
+            }
+
+            function focusField(id){
+                $(id).focus();
+            }
+
+
+        </script>
+        <adm:sidebar collapsed="true"/>
+    </ui:define>
+
+</ui:composition>

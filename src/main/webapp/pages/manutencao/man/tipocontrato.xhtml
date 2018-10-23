@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Tipos de Contrato
+    </ui:define>
+
+    <ui:define name="description">
+        Controle de tipos de contratos existentes
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Edição Tipo de Contrato"/>
+        <h:form>
+
+            <h:panelGroup layout="block">
+            <p:panel header="Manutenção" styleClass="box-danger">
+                <div class="align-right">
+                    <p:outputLabel value="Pesquisar por Id: "/>
+                    <p:spacer height="5"/>
+                    <p:inputText id="inptId" value="#{tipoContratoMB.id}"/>
+                    <p:commandButton id="brFind"
+                                     value="Pesquisar"
+                                     action="#{tipoContratoMB.findTipoContratoById(tipoContratoMB.id)}"
+                                     process="@form"
+                                     update="@form"
+                                     styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                     partialSubmit="true"/>
+                </div>
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-2">
+                        <p:outputLabel value="Identificador" for="inptIdx"/>
+                        <p:inputText id="inptIdx" disabled="true" value="#{tipoContratoMB.tipoContrato.id}"/>
+                    </div>                
+                    <div class="ui-g-6">
+                        <p:outputLabel value="Descrição" for="inptDescricao"/>
+                        <p:inputText id="inptDescricao" value="#{tipoContratoMB.tipoContrato.descricao}"/>
+                    </div>
+
+
+                </div>
+                <f:facet name="footer">
+                    <div class="align-right" style="padding: 5px;">
+                        <p:commandButton value="Salvar" action="#{tipoContratoMB.update}"
+                                         update="@form" styleClass="btn-danger"/>
+                        <p:spacer height="5"/>
+                        <p:commandButton id="btRemove" value="Apagar" action="#{tipoContratoMB.remove}"
+                                         update="@form" styleClass="btn-danger"/>
+                        <p:spacer height="5"/>
+                        <p:commandButton value="Voltar" action="#{tipoContratoMB.btnBack}"
+                                         styleClass="btn-danger"/>                                         
+                    </div>
+                </f:facet>
+            </p:panel>
+            </h:panelGroup>
+            <br/>        
+        </h:form>
+    </ui:define>
+</ui:composition>

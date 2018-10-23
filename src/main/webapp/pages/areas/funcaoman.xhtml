@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Funções
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Edição de Funções"/>
+        <h:form>
+
+            <h:panelGroup layout="block">
+            <p:panel header="Manutenção" styleClass="box-danger">
+                <div class="align-right">
+                    <p:outputLabel value="Pesquisar por Id: "/>
+                    <p:spacer height="5"/>
+                    <p:inputText id="inptId" value="#{areaFuncaoMB.id}"/>
+                    <p:commandButton id="brFind"
+                                     value="Pesquisar"
+                                     action="#{areaFuncaoMB.findAreaFuncaoById(areaFuncaoMB.id)}"
+                                     process="@form"
+                                     update="@form"
+                                     styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                     partialSubmit="true"/>
+                </div>
+                <div class="ui ui-fluid">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <p:outputLabel value="Identificador" for="inptIdx"/>
+                            <p:inputText id="inptIdx" disabled="true" value="#{areaFuncaoMB.funcao.id}"/>
+                        </div>
+                        <div class="col-lg-5">
+                            <p:outputLabel value="Nome" for="inptNome"/>
+                            <p:inputText id="inptNome" value="#{areaFuncaoMB.funcao.nome}"/>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <p:outputLabel for="areaRoot" value="Área"/>
+                            <p:selectOneMenu id="areaRoot" value="#{areaFuncaoMB.funcao.area.id}" style="width: 100%;" >
+                                <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                <f:selectItems value="#{areaFuncaoMB.lstAreas}" var="listAreas" itemValue="#{listAreas.id}" itemLabel="#{listAreas.nome}"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-lg-2">
+                            <p:outputLabel for="pessoaFisica" value="Pessoa Física"/>
+                            <p:selectBooleanButton id="pessoaFisica"
+                                                   value = "#{areaFuncaoMB.funcao.pessoaFisica}"
+                                                   onLabel="Sim"
+                                                   offLabel="Não"
+                                                   onIcon="ui-icon-check"
+                                                   offIcon="ui-icon-close"/>
+                        </div>
+
+                    </div>
+                </div>
+
+                <f:facet name="footer">
+                    <div class="align-right" style="padding: 5px;">
+
+                        <p:commandButton value="Salvar" action="#{areaFuncaoMB.update}"
+                                         update="@form" styleClass="btn-danger"/>
+                        <p:spacer height="5"/>
+                        <p:commandButton id="btRemove" value="Apagar" action="#{areaFuncaoMB.remove}"
+                                         update="@form" styleClass="btn-danger"/>
+
+                        <p:spacer height="5"/>
+                        <p:commandButton value="Voltar" action="#{areaFuncaoMB.btnBack}"
+                                         styleClass="btn-danger"/>
+                    </div>
+                </f:facet>
+            </p:panel>
+            </h:panelGroup>
+            <br/>        
+        </h:form>
+    </ui:define>
+</ui:composition>

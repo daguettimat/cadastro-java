@@ -1,0 +1,140 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Areas
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Edição de Áreas"/>
+        <h:form>
+
+            <h:panelGroup layout="block">
+                <p:panel header="Manutenção" styleClass="box-danger">
+                    <div class="align-right">
+                        <p:outputLabel value="Pesquisar por Id: "/>
+                        <p:spacer height="5"/>
+                        <p:inputText id="inptId" value="#{areaMB.id}"/>
+                        <p:commandButton id="brFind"
+                                         value="Pesquisar"
+                                         action="#{areaMB.findAreaById(areaMB.id)}"
+                                         process="@form"
+                                         update="@form"
+                                         styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                         partialSubmit="true"/>
+                    </div>
+                    <div class="ui-fluid">
+                        <div class="row">
+                            <div class="col-lg-1">
+                                <p:outputLabel value="Identificador" for="inptIdx"/>
+                                <p:inputText id="inptIdx" disabled="true" value="#{areaMB.area.id}"/>
+                            </div>
+                            <div class="col-lg-5">
+                                <p:outputLabel value="Nome" for="inptNome"/>
+                                <p:inputText id="inptNome" value="#{areaMB.area.nome}"/>
+                            </div>
+
+                            <div class="col-lg-5">
+                                <p:outputLabel for="areaRoot" value="Área Pai"/>
+                                <p:selectOneMenu id="areaRoot" value="#{areaMB.area.root}"
+                                                 style="width: 100%;height:34px;">
+                                    <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                    <f:selectItems value="#{areaMB.lstAreas}" var="listAreas"
+                                                   itemValue="#{listAreas.id}" itemLabel="#{listAreas.nome}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <p:outputLabel for="booleanBtn" value="Interno?"/>
+                                <p:selectBooleanButton id="booleanBtn"
+                                                       style="width: 100%;height:34px;"
+                                                       value="#{areaMB.area.areaInterna}"
+                                                       onLabel="Sim"
+                                                       offLabel="Não"
+                                                       onIcon="ui-icon-check"
+                                                       offIcon="ui-icon-close"/>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <p:outputLabel for="gerarPagamento" value="Gera Pagamento?"/>
+                                <p:selectBooleanButton id="gerarPagamento"
+                                                       style="width: 100%;height:34px;"
+                                                       value="#{areaMB.area.gerarPagamento}"
+                                                       onLabel="Sim"
+                                                       offLabel="Não"
+                                                       onIcon="ui-icon-check"
+                                                       offIcon="ui-icon-close"/>
+                            </div>
+                            <div class="col-lg-2">
+                                <p:outputLabel for="gerarFatura" value="Gera Fatura?"/>
+                                <p:selectBooleanButton id="gerarFatura"
+                                                       style="width: 100%;height:34px;"
+                                                       value="#{areaMB.area.gerarFatura}"
+                                                       onLabel="Sim"
+                                                       offLabel="Não"
+                                                       onIcon="ui-icon-check"
+                                                       offIcon="ui-icon-close"/>
+                            </div>
+                            <div class="col-lg-5">
+                                <p:outputLabel for="areaPagante" value="Área Pagante"/>
+                                <p:selectOneMenu id="areaPagante" value="#{areaMB.area.areaPagante}"
+                                                 style="width: 100%;height:34px;">
+                                    <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                    <f:selectItems value="#{areaMB.lstAreas}" var="listAreas"
+                                                   itemValue="#{listAreas.id}"
+                                                   itemLabel="#{listAreas.nome}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+
+                    <f:facet name="footer">
+                        <div class="align-right" style="padding: 5px;">
+
+                            <p:commandButton value="Salvar" action="#{areaMB.update}"
+                                             update="@form" styleClass="btn-danger"/>
+                            <p:spacer height="5"/>
+                            <p:commandButton id="btRemove" value="Apagar" action="#{areaMB.remove}"
+                                             update="@form" styleClass="btn-danger"/>
+
+                            <p:spacer height="5"/>
+                            <p:commandButton value="Voltar" action="#{areaMB.btnBack}"
+                                             styleClass="btn-danger"/>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </h:panelGroup>
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

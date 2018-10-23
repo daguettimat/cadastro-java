@@ -1,0 +1,388 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+
+
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+
+            /*
+             * Timepicker stylesheet
+             * Highly inspired from datepicker
+             * FG - Nov 2010 - Web3R
+             *
+             * version 0.0.3 : Fixed some settings, more dynamic
+             * version 0.0.4 : Removed width:100% on tables
+             * version 0.1.1 : set width 0 on tables to fix an ie6 bug
+             */
+
+            .ui-timepicker-inline { display: inline; }
+
+            #ui-timepicker-div { padding: 0.2em; }
+            .ui-timepicker-table { display: inline-table; width: 0; }
+            .ui-timepicker-table table { margin:0.15em 0 0 0; border-collapse: collapse; }
+
+            .ui-timepicker-hours, .ui-timepicker-minutes { padding: 0.2em;  }
+
+            .ui-timepicker-table .ui-timepicker-title { line-height: 1.8em; text-align: center; }
+            .ui-timepicker-table td { padding: 0.1em; width: 2.2em; }
+            .ui-timepicker-table th.periods { padding: 0.1em; width: 2.2em; }
+
+            /* span for disabled cells */
+            .ui-timepicker-table td span {
+                display:block;
+                padding:0.2em 0.3em 0.2em 0.5em;
+                width: 1.2em;
+
+                text-align:right;
+                text-decoration:none;
+            }
+            /* anchors for clickable cells */
+            .ui-timepicker-table td a {
+                display:block;
+                padding:0.2em 0.3em 0.2em 0.5em;
+                width: 1.2em;
+                cursor: pointer;
+                text-align:right;
+                text-decoration:none;
+            }
+
+
+            /* buttons and button pane styling */
+            .ui-timepicker .ui-timepicker-buttonpane {
+                background-image: none; margin: .7em 0 0 0; padding:0 .2em; border-left: 0; border-right: 0; border-bottom: 0;
+            }
+            .ui-timepicker .ui-timepicker-buttonpane button { margin: .5em .2em .4em; cursor: pointer; padding: .2em .6em .3em .6em; width:auto; overflow:visible; }
+            /* The close button */
+            .ui-timepicker .ui-timepicker-close { float: right }
+
+            /* the now button */
+            .ui-timepicker .ui-timepicker-now { float: left; }
+
+            /* the deselect button */
+            .ui-timepicker .ui-timepicker-deselect { float: left; }.pe-timepicker {
+                                                                       display: inline-block;
+                                                                       overflow: visible;
+                                                                       padding: 0;
+                                                                       position: relative;
+                                                                       vertical-align: middle;
+                                                                   }
+
+            .pe-timepicker-input {
+                vertical-align: middle;
+                text-align: left;
+                width: 60px;
+            }
+
+            .pe-timepicker-button {
+                cursor: default;
+                display: block;
+                font-size: 0.5em;
+                height: 44%;
+                margin: 0;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                right: 0;
+                text-align: center;
+                vertical-align: middle;
+                width: 16px;
+                z-index: 100;
+            }
+
+            .pe-timepicker .ui-icon {
+                left: 0;
+                margin-top: -8px;
+                position: absolute;
+                top: 50%;
+            }
+
+            .pe-timepicker-button.pe-timepicker-up {
+                top: 0;
+                border-bottom: none;
+            }
+
+            .pe-timepicker-button.pe-timepicker-down {
+                bottom: 0;
+            }
+
+            .pe-timepicker .ui-icon-triangle-1-s {
+                background-position: -65px -16px;
+            }
+
+            .pe-timepicker-trigger {
+                position: absolute;
+                margin: 1px 0 1px 1px;
+                height: 2em;
+                width: 2em;
+                vertical-align: middle;
+            }
+
+            .pe-timepicker-trigger .ui-icon-clock {
+                left: 50%;
+            }
+
+            .ui-datatable{
+                overflow : auto
+            }
+
+
+
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Extrato Faturamento Detalhado
+    </ui:define>
+
+    <ui:define name="description">
+        Filtro de Pesquisa
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Extrato Faturamento Detalhado (Filtros)"/>
+
+        <h:form id="frmFaturamento" onkeypress="if (event.keyCode == 13) { return false; }">
+            <div class="ui-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                                 widgetVar="panel" toggleable="true" >
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <p:outputLabel for="dataInicial" value="Data Inicial"/>
+                                    <p:calendar id="dataInicial" showOn="button"
+                                                value="#{fatDetalhadoMB.dtInicial}" pattern="dd/MM/yyyy HH:mm"
+                                                showButtonPanel="true">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="col-md-2">
+                                    <p:outputLabel for="dataFinal" value="Data Final"/>
+                                    <p:calendar id="dataFinal" showOn="button"
+                                                value="#{fatDetalhadoMB.dtFinal}" pattern="dd/MM/yyyy HH:mm"
+                                                showButtonPanel="true">
+
+                                    </p:calendar>
+                                </div>
+
+                                <ui:fragment autoUpdate="true" rendered="#{fatDetalhadoMB.habilitaArea == true}">
+                                    <div class="col-lg-4" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
+                                        <p:outputLabel for="transportadora" value="Transportadora"/>
+                                        <p:autoComplete id="transportadora" completeMethod="#{areaMB.listArea}"
+                                                        value="#{fatDetalhadoMB.areaCliente}"  maxResults="15"
+                                                        var="area" itemLabel="#{area.nome}" itemValue="#{area}"
+                                                        forceSelection="true" minQueryLength="3" queryDelay="700"
+                                                        converter="simpleEntityConverter">
+
+                                            <p:ajax event="itemSelect" listener="#{fatDetalhadoMB.selectTransp}" update="transportadora"/>
+                                        </p:autoComplete>
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment autoUpdate="true" rendered="#{fatDetalhadoMB.habilitaArea == false}">
+                                    <div class="col-lg-4" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
+                                        <p:outputLabel for="inptArea" value="Transportadora"/>
+                                        <p:inputText id="inptArea" disabled="true" value = "#{fatDetalhadoMB.nomeCliente}"/>
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment autoUpdate="true" rendered="#{fatDetalhadoMB.habilitaFilial == true}">
+                                    <div class="col-lg-4" data-step="3" data-intro="Aqui você escolhe qual é a Filial responsável pela ficha que será enviada.">
+                                        <p:outputLabel for="filial" value="Filial"/>
+                                        <p:autoComplete id="filial" completeMethod="#{enviarFichaMB.listFilial}"
+                                                        value="#{fatDetalhadoMB.areaFilial}"  maxResults="15"
+                                                        var="areaFilial" itemLabel="#{areaFilial.nome}"
+                                                        itemValue="#{areaFilial}" forceSelection="true"
+                                                        minQueryLength="3" queryDelay="700"
+                                                        converter="simpleEntityConverter">
+                                            <p:ajax event="itemSelect" listener="#{fatDetalhadoMB.selectFilial}" update="filial"/>
+                                        </p:autoComplete>
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment autoUpdate="true" rendered="#{fatDetalhadoMB.habilitaFilial == false}">
+                                    <div class="col-lg-4" data-step="2" data-intro="O campo filial transportadora indica quem é a responsável (filial)">
+                                        <p:outputLabel for="inptAreaFilial" value="Filial"/>
+                                        <p:inputText id="inptAreaFilial" disabled="true" value = "#{fatDetalhadoMB.nomeUnidade}"/>
+                                    </div>
+                                </ui:fragment>
+
+                            </div>
+                            <br/><br/>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <span>&#160;</span>
+                                </div>
+
+                                <div class="col-lg-2" style="padding-right: 15px;">
+                                    <p:commandButton value="Pesquisar" action="#{fatDetalhadoMB.btnPesquisarData}"
+                                                     icon="fa fa-search" update="@form" styleClass="btn-danger">
+
+                                    </p:commandButton>
+                                </div>
+                                <div class="col-lg-2" style="padding-right: 15px;">
+                                    <p:commandButton value="Voltar" action="#{fatDetalhadoMB.btnBack}"
+                                                     icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </div>
+                </div>
+
+            </div>
+
+            <br/>
+
+            <h:panelGroup layout="block" style="width:100%;overflow:auto;">
+
+                <p:dataTable widgetVar="fatTable" scrollable="true"
+                             id="fatTable"
+                             var="c" scrollWidth="2000"
+                             value="#{fatDetalhadoMB.listaFaturamento}"
+                             rows="20" resizableColumns="true"
+                             expandableRowGroups="true"
+                             sortBy="#{c.nomeTransportadora}"
+                             styleClass="box-danger ui-datatable"
+                             lazy="false" paginator="true"
+                             paginatorPosition="bottom"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30,40,50,100,500">
+
+                    <f:facet name="header">
+                        Extrato do Faturamento (DETALHADO) -- De&#160;
+                        <h:outputText value="#{fatDetalhadoMB.dtInicial}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                        &#160;Até&#160;
+                        <h:outputText value="#{fatDetalhadoMB.dtFinal}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+
+                    </f:facet>
+
+                    <p:headerRow>
+                        <p:column colspan="2">
+                            <h:outputText value="#{c.nomeTransportadora}" />
+                        </p:column>
+                    </p:headerRow>
+
+                    <p:column headerText="Unidade" sortBy="#{c.nomeFilial}" style="width:35%;">
+                        <h:outputText value="#{c.nomeFilial}"/>
+                    </p:column>
+
+                    <p:column headerText="Ficha"  style="width:12%">
+                        <h:outputText value="#{c.idFicha}"/>
+                    </p:column>
+
+                    <p:column headerText="Status"   style="width:15%;text-overflow: ellipsis;">
+                        <h:outputText value="#{c.statusFicha}"/>
+                    </p:column>
+
+                    <p:column headerText="Motorista"   style="width:35%">
+                        <h:outputText value="#{c.nomeMotorista}"/>
+                    </p:column>
+
+                    <p:column headerText="Tipo"  style="width:15%">
+                        <h:outputText value="#{c.tipoFicha}"/>
+                    </p:column>
+
+                    <p:column headerText="Vinculo"  style="width:15%;text-overflow: ellipsis;">
+                        <h:outputText value="#{c.nomeVinculo}"/>
+                    </p:column>
+
+                    <p:column headerText="Cavalo / Reboques "  style="width:35%">
+                        <h:outputText value="#{c.cavalo} |:| #{c.reboque_1} |:| #{c.reboque_2}"/>
+                    </p:column>
+
+                    <p:column headerText="C.Custo"  style="width:18%;">
+                        <h:outputText value="#{c.centroCusto}"/>
+                    </p:column>
+
+                    <p:column headerText="Usuário"  style="width:25%;text-overflow: ellipsis;">
+                        <h:outputText value="#{c.usuario}"/>
+                    </p:column>
+
+                    <p:column headerText="Criação"  style="width:25%;text-align: center;">
+                        <h:outputText value="#{c.criacao}">
+                            <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+
+
+                    <p:column headerText="Término"  style="width:25%;text-align: center;">
+                        <h:outputText value="#{c.termino}">
+                            <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Validade"  style="width:15%;text-align: center;">
+                        <h:outputText value="#{c.validade}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+
+                    <p:column headerText="Valor" style="text-align: right; width:18%">
+                        <h:outputText value="#{(c.valorFicha == null ?  0 : c.valorFicha)}">
+                            <f:convertNumber type="currency" currencySymbol="" />
+                        </h:outputText>
+                    </p:column>
+
+               </p:dataTable>
+
+            </h:panelGroup>
+            <br/>
+
+            <p:panel header="Exportar para Excel" styleClass="box-danger">
+                <p:commandLink id="pdf" ajax="false">
+                    <p:graphicImage value="/resources/images/pdf-icon.png"/>
+                    <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}" />
+                    <pe:exporter type="pdf" target="fatTable" fileName="faturamento" facetBackground="#b2aeae" datasetPadding="4" />
+
+                </p:commandLink>
+
+                <p:spacer height="20"/>
+
+                <p:commandLink id="xls" ajax="false">
+                    <p:graphicImage value="/resources/images/xlsx-icon.png"/>
+                    <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}" />
+                    <p:dataExporter type="xlsx" target="fatTable" fileName="faturamento" facetBackground="#b2aeae" datasetPadding="4" postProcessor="#{fatDetalhadoMB.postProcessXLS}" />
+
+                </p:commandLink>
+
+            </p:panel>
+
+        </h:form>
+
+        <adm:sidebar collapsed="true"/>
+        
+    </ui:define>
+
+    <script>
+
+    </script>
+
+</ui:composition>

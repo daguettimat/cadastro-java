@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+
+    </ui:define>
+
+    <ui:define name="title">
+        Quadro de Avisos
+    </ui:define>
+
+    <ui:define name="description">
+        lista geral
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Quadro de Avisos"/>
+        <h:form>
+            <p:growl autoUpdate="true" escape="false" sticky="true"/>
+            <div class="ui-fluid">
+                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                         widgetVar="panel" toggleable="true">
+                    <div class="row">
+                        <div class="col-lg-1">
+                            <p:outputLabel for="nroId" value="Id"/>
+                            <p:inputText id="nroId" value="#{avisosMB.id}"/>
+                        </div>
+
+                        <div class="col-lg-5">
+                            <p:outputLabel for="nome" value="Nome"/>
+                            <p:inputText id="nome" value="#{avisosMB.nome}"/>
+                        </div>
+
+                        <div class="col-md-2">
+                            <p:outputLabel for="dataInicial" value="Data Inicial"/>
+                            <p:calendar id="dataInicial" showOn="button"
+                                        value="#{avisosMB.dtInicial}" pattern="dd/MM/yyyy HH:mm"
+                                        showButtonPanel="true">
+
+                            </p:calendar>
+                        </div>
+                        <div class="col-md-2">
+                            <p:outputLabel for="dataFinal" value="Data Final"/>
+                            <p:calendar id="dataFinal" showOn="button"
+                                        value="#{avisosMB.dtFinal}" pattern="dd/MM/yyyy HH:mm"
+                                        showButtonPanel="true">
+
+                            </p:calendar>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <span>&#160;</span>
+                        </div>
+
+                        <div class="col-lg-2" style="padding-right: 15px;">
+                            <p:commandButton value="Novo Registro" action="#{avisosMB.insert}"
+                                             icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                        </div>
+                        <div class="col-lg-2" style="padding-right: 15px;">
+
+                            <h:commandButton id="brFind"
+                                             value="Pesquisar"
+                                             icon="fa fa-search"
+                                             actionListener="#{avisosMB.btnPesquisar}"
+                                             update="@form"
+                                             style="width: 100%;"
+                                             styleClass="btn btn-danger"
+                                             partialSubmit="true"/>
+
+                        </div>
+                        <div class="col-lg-2" style="padding-right: 15px;">
+                            <p:commandButton value="Voltar" action="#{avisosMB.btnBack}"
+                                             icon="fa fa-window-close" styleClass="btn-danger"/>
+                        </div>
+                    </div>
+                </p:panel>
+            </div>
+
+            <br/>
+            <h:panelGroup layout="block">
+                <p:dataTable widgetVar="avisoTable" var="c" value="#{avisosMB.avisoList}" rows="10" styleClass="box-danger"
+                             filteredValue="#{avisosMB.filteredValue}"
+                             rowKey="#{c.id}" lazy="true" paginator="true"
+                             paginatorPosition="bottom" selection="#{avisosMB.aviso}" selectionMode="single"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30">
+
+                    <p:ajax event="rowSelect" listener="#{avisosMB.onRowSelect}" update="@form"/>
+                    <f:facet name="header">
+                        &#160;
+                    </f:facet>
+                    <p:column headerText="ID"  style="width:10%">
+                        #{c.id}
+                    </p:column>
+                    <p:column headerText="Nome" >
+                        #{c.nome}
+                    </p:column>
+                    <p:column headerText="Início Display">
+                        <div align="center">
+                            #{c.dtInicial}
+                        </div>
+                    </p:column>
+                    <p:column headerText="Validade">
+                        <div align="center">
+                            #{c.dtFinal}
+                        </div>
+                    </p:column>
+
+                </p:dataTable>
+            </h:panelGroup>
+
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

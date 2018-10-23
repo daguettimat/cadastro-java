@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Análise Cadastral
+    </ui:define>
+
+    <ui:define name="description">
+        Opções disponíveis
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Análise Cadastral"/>
+        <h:form id="form0" onkeypress="if (event.keyCode == 13) { return false; }">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p:growl autoUpdate="true" escape="false" sticky="true" id="msgs"/>
+                    <p:dataTable widgetVar="marcaTable" var="c" value="#{veiAnaliseMB.lstVeiculos}" rows="5"
+                                 styleClass="box-danger" rowIndexVar="rowId"
+                                 rowKey="#{c.id}" lazy="true" paginator="true"
+                                 paginatorPosition="bottom" selectionMode="single"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                                 currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                                 rowsPerPageTemplate="5,10,15,20,30" style="padding:20px;">
+
+                        <p:column headerText="Item">
+
+                            #{veiAnaliseMB.flag(c.statusGeral.id)}
+                        </p:column>
+
+                        <p:column headerText="Item">
+                            #{rowId}
+                        </p:column>
+                        <p:column headerText="Placa">
+                            c.acVeiculos.placa
+                        </p:column>
+                        <p:column headerText="Renavam">
+                            c.acVeiculos.renavam
+                        </p:column>
+                        <p:column headerText="Chassi">
+                            c.acVeiculos.chassi
+                        </p:column>
+                        <p:column headerText="Marca">
+                            c.veiculo.marca.nome
+                        </p:column>
+                        <p:column headerText="Modelo">
+                            c.veiculo.modelo.nome
+                        </p:column>
+                        <p:column style="width:60px">
+                            <p:commandButton value="Editar" process="@this" action="#{veiAnaliseMB.findByCadastro(c.id,c.cadastro.id)}"
+                                             styleClass="btn-danger">
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 align-right" style="padding-right:15px;">
+                    <p:commandButton value="Voltar" process="@this" action="#{veiAnaliseMB.btnBack}"
+                                     styleClass="btn-danger">
+                    </p:commandButton>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+    <script>
+
+    </script>
+
+</ui:composition>

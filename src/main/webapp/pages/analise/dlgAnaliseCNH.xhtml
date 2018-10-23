@@ -1,0 +1,199 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <style>
+            input {
+                text-transform: uppercase;
+            }
+        </style>
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+    </h:head>
+    <h:form id="formCNH" >
+
+        <p:panel>
+            <div class="ui ui-fluid">
+                <div class="row" >
+                    <div class="col-lg-7">
+                        <label>Nome</label>
+                        <p:inputText id="cnhMotorista" disabled="true" value="#{motAnaliseMB.cnh.motorista.nome}"/>
+                    </div>
+                    <div class="col-lg-3">
+                        <label>CPF</label>
+                        <p:inputText id="cnhCPF" disabled="true" value="#{motAnaliseMB.cnh.motorista.doc1}"/>
+                    </div>
+                    <div class="col-lg-2">
+                        <label>Nascimento</label>
+                        <p:inputText id="cnhNascimento" disabled="true" value="#{motAnaliseMB.cnh.motorista.dtNascimento}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </p:inputText>
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <label>Documento</label>
+                        <p:inputText id="cnhDocumento" disabled="true" value="#{motAnaliseMB.cnh.documento}"/>
+                    </div>
+                    <div class="col-lg-1">
+                        <label>UF</label>
+                        <p:inputText id="cnhUF" disabled="true" value="#{motAnaliseMB.cnh.uf}"/>
+                    </div>
+                    <div class="col-lg-3">
+                        <label>Segurança</label>
+                        <p:inputText id="cnhSeguranca" disabled="true" value="#{motAnaliseMB.cnh.validacao}"/>
+                    </div>
+                    <div class="col-lg-2">
+                        <label>Categoria</label>
+                        <p:inputText id="cnhCateg" disabled="true" value="#{motAnaliseMB.cnh.categoria.descricao}"/>
+                    </div>
+                    <div class="col-lg-3">
+                        <label>Registro</label>
+                        <p:inputText id="cnhReg" disabled="true" value="#{motAnaliseMB.cnh.registro}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <label>1<sup>a</sup> Emissão</label>
+                        <p:inputText id="cnhPrimeira" disabled="true" value="#{motAnaliseMB.cnh.dtPrimeiraEmissao}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </p:inputText>
+                    </div>
+                    <div class="col-lg-3">
+                        <label>Vencimento</label>
+                        <p:inputText id="cnhVencimento" disabled="true" value="#{motAnaliseMB.cnh.dtVencimento}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </p:inputText>
+                    </div>
+                    <div class="col-lg-3">
+                        <label>Emissão</label>
+                        <p:inputText id="cnhEmissao" disabled="true" value="#{motAnaliseMB.cnh.dtSubstituicao}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </p:inputText>
+                    </div>
+                    <div class="col-lg-3">
+                        <label>Qtd Pontos</label>
+                        <p:inputText id="cnhQtdPontos" value="#{motAnaliseMB.anacmot.cnhQtdPontos}"/>
+                    </div>
+
+                </div>
+                <br/>
+                <div class="row">
+
+                    <div class="col-lg-4">
+                        <h:outputLabel for="cnhValidade" value="Validade"/>
+                        <h:selectOneMenu value="#{motAnaliseMB.validadeCNH}" id="cnhValidade"
+                                         required="true" style="width: 100%;height:34px;">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{motAnaliseMB.lstReferencias}" var="cnhValidade" itemValue="#{cnhValidade.id}"
+                                           itemLabel="#{cnhValidade.descricao}"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="col-lg-4">
+                        <h:outputLabel for="cnhPontos" value="Pontos"/>
+                        <h:selectOneMenu value="#{motAnaliseMB.pontosCNH}" id="cnhPontos"
+                                         required="true" style="width: 100%;height:34px;">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{motAnaliseMB.lstReferencias}" var="cnhPontos" itemValue="#{cnhPontos.id}"
+                                           itemLabel="#{cnhPontos.descricao}"/>
+                        </h:selectOneMenu>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <h:outputLabel for="cnhCategoria" value="Categoria"/>
+                        <h:selectOneMenu value="#{motAnaliseMB.categoriaCNH}" id="cnhCategoria"
+                                         required="true" style="width: 100%;height:34px;">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{motAnaliseMB.lstReferencias}" var="cnhCategoria" itemValue="#{cnhCategoria.id}"
+                                           itemLabel="#{cnhCategoria.descricao}"/>
+                        </h:selectOneMenu>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h:outputLabel for="pendencias" value="Pendências"/>
+                        <p:inputTextarea id="pendencias" rows="3"
+                                         value="#{motAnaliseMB.anacmot.cnhPendencias}"/>
+                    </div>
+                </div>
+				<br/>
+				<div class="row">
+					<div class="col-lg-6" style="padding-right: 15px;">
+						<p:panel header="CNH Frente" >
+							<div class="row" style="padding-left:35px;">
+								
+							<div class="row" align="center">
+								<a href="/manager/images/dynamic/?file=#{motAnaliseMB.fotoCnhFrente()}" target="_blank">
+								<h:graphicImage width="140px" height="80px"
+									value="/images/dynamic/?file=#{motAnaliseMB.fotoCnhFrente()}"
+									style="padding-bottom: 5px;" />
+								</a>
+							</div>
+							</div>
+							<div class="row" style="padding-left:35px;" >
+								<div class="row" align="center">
+									<h:outputLabel id="CnhFrentePdf"
+										value="#{motAnaliseMB.cnh.urlCnhFrente}"
+										style="color:red;text-shadow:1px 1px 3px #000000;text-align: center;" />
+									<p:spacer width="15px" />
+									<a
+										href="/manager/images/dynamic/?file=#{motAnaliseMB.pdfCnhFrente()}"
+										target="_blank"> <i class="fa fa-search"
+										style="font-size: 15px; color: red; text-shadow: 1px 1px 3px #000000;" />
+									</a>
+								</div>
+							</div>
+						</p:panel>
+					</div>
+					<div class="col-lg-6" style="padding-right: 15px;">
+						<p:panel header="CNH Verso" >
+							<div class="row" style="padding-left:35px;">
+								<div align="center">
+									<a href="/manager/images/dynamic/?file=#{motAnaliseMB.fotoCnhVerso()}" target="_blank">
+									<h:graphicImage width="140px" height="80px" 
+										value="/images/dynamic/?file=#{motAnaliseMB.fotoCnhVerso()}"
+										style="padding-bottom: 5px;" />
+									</a>
+								</div>
+							</div>
+							<div class="row" style="padding-left:35px;">
+								<div class="row" align="center">
+									<h:outputLabel id="CnhVersoPdf"
+										value="#{motAnaliseMB.cnh.urlCnhVerso}"
+										style="color:red;text-shadow:1px 1px 3px #000000;text-align: center;" />
+									<p:spacer width="15px" />
+									<a
+										href="/manager/images/dynamic/?file=#{motAnaliseMB.pdfCnhVerso()}"
+										target="_blank"> <i class="fa fa-search"
+										style="font-size: 15px; color: red; text-shadow: 1px 1px 3px #000000;" />
+									</a>
+								</div>
+							</div>
+						</p:panel>
+					</div>
+
+				</div>
+
+				<br/>
+                <f:facet name="footer" class="ui-fluid ">
+                    <p:commandButton value="Salvar" styleClass="btn-danger"
+                                     actionListener="#{motAnaliseMB.updateCNH}"
+                                     onclick="PF('dlgCNH').hide()"
+                                     style="width:100px; margin-right:10px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
+                                     partialSubmit="true" >
+                        <f:ajax execute="@form" render="@form" />
+                    </p:commandButton>
+
+                    <p:button value="Cancelar" styleClass="btn-danger" style="width:100px;"
+                              onclick="PF('dlgCNH').hide()"/>
+                </f:facet>
+            </div>
+        </p:panel>
+    </h:form>
+</ui:composition>

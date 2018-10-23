@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="/WEB-INF/templates/template.xhtml">
+
+
+    <ui:define name="title">
+           Barra Lateral
+    </ui:define>
+
+    <ui:define name="description">
+        Neste exemplo você poderá observar o funcionamento da barra lateral.
+    </ui:define>
+
+   <ui:define name="body">
+       <adm:breadcrumb link="/pages/layout/sidebar" title="Sidebar"/>
+       <adm:sidebar collapsed="true"/>
+       <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div class="callout callout-info">
+                        <h4>Dica!</h4>
+                        <p>Nesta página a barra lateral utiliza o componente adm:sidebar com o atributo <code>collapsed=true</code></p>
+                        <p>Você também pode adicionar ou remover a classe vi CSS <code>sidebar-collapse</code> do <code>corpo da página</code>.</p>
+                    </div>
+                    <p:button styleClass="btn-primary" value="Toggle" onclick="toggleSidebar(); return false"/>
+               </div>
+       </div>
+   </ui:define>
+
+      <ui:define name="code">
+         <p:tabView>
+       <p:tab title="sidebar.xhtml">
+           <pre>
+               <code class="language-html">
+<h:outputText value="#{sourceCodeMB.getPageSource()}" escape="true"/>
+                </code>
+           </pre>
+       </p:tab>
+
+ </p:tabView>
+    </ui:define>
+</ui:composition>

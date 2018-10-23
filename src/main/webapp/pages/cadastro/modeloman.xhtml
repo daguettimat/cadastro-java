@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                xmlns:b="http://bootsfaces.net/ui"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            input[disabled] {
+                background-color: #000;
+                color:#fff !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Controle de Modelos
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Edição de Modelos"/>
+        <h:form>
+
+            <h:panelGroup layout="block">
+                <p:panel header="Manutenção" styleClass="box-danger">
+                    <div class="align-right">
+                        <p:outputLabel value="Pesquisar por Id: "/>
+                        <p:spacer height="5"/>
+                        <p:inputText id="inptId" value="#{modeloMB.id}"/>
+                        <p:commandButton id="brFind"
+                                         value="Pesquisar"
+                                         action="#{modeloMB.findById(modeloMB.id)}"
+                                         process="@form"
+                                         update="@form"
+                                         styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                         partialSubmit="true"/>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="col-lg-2">
+                            <p:outputLabel value="Identificador" for="inptIdx"/>
+                            <p:inputText id="inptIdx" disabled="true" value="#{modeloMB.modelo.id}"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <p:outputLabel value="Nome" for="inptNome"/>
+                            <p:inputText id="inptNome" value="#{modeloMB.modelo.nome}"/>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="col-lg-4">
+                            <label>Marca</label>
+                            <h:selectOneMenu id="modMarca" style="width: 100%;height:34px;"
+                                             value="#{modeloMB.modelo.marca.id}">
+                                <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                <f:selectItems value="#{modeloMB.lstMarca}"
+                                               var="listMarca"
+                                               itemValue="#{listMarca.id}"
+                                               itemLabel="#{listMarca.nome}"/>
+                            </h:selectOneMenu>
+                        </div>
+                        <div class="col-lg-2">
+                            <p:outputLabel for="nacional" value="Nacional"/>
+                            <p:selectBooleanButton id="nacional" class="btn-danger"
+                                                   value = "#{modeloMB.modelo.nacional}"
+                                                   onLabel="Sim"
+                                                   offLabel="Não"
+                                                   onIcon="ui-icon-check"
+                                                   offIcon="ui-icon-close"/>
+                        </div>
+                        <div class="col-lg-2">
+                            <p:outputLabel for="estrangeira" value="Estrangeira"/>
+                            <p:selectBooleanButton id="estrangeira" class="btn-danger"
+                                                   value = "#{modeloMB.modelo.estrangeira}"
+                                                   onLabel="Sim"
+                                                   offLabel="Não"
+                                                   onIcon="ui-icon-check"
+                                                   offIcon="ui-icon-close"/>
+                        </div>
+                    </div>
+
+                <div class="ui-g ui-fluid" style="padding-top: 15px;">
+                    <div class="col-lg-6">
+                        <p:panel header="Criação" styleClass="box-danger"  widgetVar="panelControle">
+                            <div class="ui-g ui-fluid">
+                                <div class="col-lg-3">
+                                    <p:outputLabel value="Data" for="inptCriacao"/>
+                                    <p:inputText id="inptCriacao" disabled="true" value="#{modeloMB.modelo.dtCriacao}">
+                                        <f:convertDateTime pattern="dd-MM-yyyy" />
+                                    </p:inputText>
+                                </div>
+                                <div class="col-lg-6">
+                                    <p:outputLabel value="Usuário" for="inptUsuCriacao"/>
+                                    <p:inputText id="inptUsuCriacao" disabled="true" value="#{modeloMB.modelo.usuCriacao.nome}"/>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </div>
+                    <div class="col-lg-6">
+                        <p:panel header="Alteração" styleClass="box-danger"  widgetVar="panelAlteracao">
+                            <div class="ui-g ui-fluid">
+                                <div class="col-lg-3">
+                                    <p:outputLabel value="Data" for="inptAlteracao"/>
+                                    <p:inputText id="inptAlteracao" disabled="true" value="#{modeloMB.modelo.dtAlteracao}">
+                                        <f:convertDateTime pattern="dd-MM-yyyy" />
+                                    </p:inputText>
+                                </div>
+                                <div class="col-lg-6">
+                                    <p:outputLabel value="Usuário" for="inptUsuAlteracao"/>
+                                    <p:inputText id="inptUsuAlteracao" disabled="true" value="#{modeloMB.modelo.usuAlteracao.nome}"/>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <f:facet name="footer">
+                    <div class="align-right" style="padding: 5px;">
+
+                        <p:commandButton value="Salvar" action="#{modeloMB.update}"
+                                         update="@form" styleClass="btn-danger"/>
+                        <p:spacer height="5"/>
+                        <p:commandButton id="btRemove" value="Apagar" action="#{modeloMB.remove}"
+                                         update="@form" styleClass="btn-danger"/>
+
+                        <p:spacer height="5"/>
+                        <p:commandButton value="Voltar" action="#{modeloMB.btnBack}"
+                                         styleClass="btn-danger"/>
+                    </div>
+                </f:facet>
+            </p:panel>
+            </h:panelGroup>
+            <br/>        
+        </h:form>
+    </ui:define>
+</ui:composition>

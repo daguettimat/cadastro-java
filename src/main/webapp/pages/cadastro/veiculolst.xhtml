@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            .center  {
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+
+
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Controle de Veículos
+    </ui:define>
+
+    <ui:define name="description">
+        lista geral
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Lista de Veículos"/>
+        <h:form>
+            <p:growl autoUpdate="true" escape="false" sticky="true"/>
+            <h:panelGroup layout="block">
+                <p:dataTable widgetVar="veiculoTable" var="c" value="#{veiculoMB.veiculoList}" rows="15" styleClass="box-danger"
+                             filteredValue="#{veiculoMB.filteredValue}"
+                             rowKey="#{c.id}" lazy="true" paginator="true"
+                             paginatorPosition="bottom" selection="#{veiculoMB.veiculo}" selectionMode="single"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30">
+
+                    <p:ajax event="rowSelect" listener="#{veiculoMB.onRowSelect}" update="@form"/>
+                    <p:ajax event="rowUnselect" listener="#{veiculoMB.onRowUnselect}" update="@form"/>
+                    <f:facet name="header">
+                        &#160;
+                    </f:facet>
+                    <!--<p:column headerText="ID" sortBy="#{c.id}" filterBy="#{c.id}" style="width:10%">-->
+                    <!--<div style="text-align: right;">-->
+                    <!--#{c.id}-->
+                    <!--</div>-->
+                    <!--</p:column>-->
+                    <p:column headerText="Placa" sortBy="#{c.placa}" name="placa" id="placa" filterStyle="width: 90%;" filterBy="#{c.placa}" style="width:10%">
+                        <div style="text-align: center">
+                            <h:outputText value="#{c.placa}" />
+                        </div>
+                        <f:facet name="filter" >
+                            <p:inputText value="#{veiculoMB.filter.entity.placa}" style="width: 90%;">
+                                <p:ajax process="@this" update="@none" oncomplete="PF('veiculoTable').filter()"/>
+                            </p:inputText>
+                        </f:facet>
+                    </p:column>
+                    <p:column headerText="Marca/Modelo" sortBy="#{c.marca.nome} #{c.modelo.nome}">
+                        <h:outputText value="#{c.marca.nome} #{c.modelo.nome}"/>
+                    </p:column>
+                    <p:column headerText="Renavam" sortBy="#{c.renavam}" filterStyle="width: 90%;" filterBy="#{c.renavam}" style="width:10%" >
+                        <div style="text-align: center">
+                            <h:outputText value="#{c.renavam}"/>
+                        </div>
+                        <f:facet name="filter" >
+                            <p:inputText value="#{veiculoMB.filter.entity.renavam}" style="width: 90%;">
+                                <p:ajax process="@this" update="@none" oncomplete="PF('veiculoTable').filter()"/>
+                            </p:inputText>
+                        </f:facet>
+                    </p:column>
+                    <p:column headerText="Chassi" sortBy="#{c.chassi}"  style="width:15%" filterStyle="width: 90%;" filterBy="#{c.chassi}" >
+                        <div style="text-align: center">
+                            <h:outputText value="#{c.chassi}"/>
+                        </div>
+                        <f:facet name="filter" >
+                            <p:inputText value="#{veiculoMB.filter.entity.chassi}" style="width: 90%;">
+                                <p:ajax process="@this" update="@none" oncomplete="PF('veiculoTable').filter()"/>
+                            </p:inputText>
+                        </f:facet>
+                    </p:column>
+                    <p:column headerText="Nacional"  style="width:10%" >
+                        <ui:fragment rendered="#{c.nacional}">
+                            <img class="center" src="/manager/resources/images/green-ok.png" width="20%"/>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{!c.nacional}">
+                            <img class="center" src="/manager/resources/images/red-cross.png" width="20%"/>
+                        </ui:fragment>
+                    </p:column>
+
+
+                    <p:column headerText="Data Criação" sortBy="#{c.dtCriacao}"  style="width:15%" >
+                        <div style="text-align: center">
+                            <h:outputText value="#{c.dtCriacao}">
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </div>
+                    </p:column>
+                    <!--
+                    1rm40c4m1nh0n31r0#
+                    -->
+                </p:dataTable>
+            </h:panelGroup>
+            <h:panelGroup layout="block">
+                <div class="align-right" style="padding: 5px;">
+
+                    <p:spacer height="5"/>
+                    <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print" styleClass="btn-danger">
+                        <p:menuitem value="PDF" url="#" icon="fa fa-file-pdf-o"/>
+                        <p:menuitem value="XLS" url="#" icon="fa fa-file-excel-o"/>
+                        <p:menuitem value="CSV" url="#" icon="fa fa-file-text"/>
+                        <p:menuitem value="RTF" url="#" icon="fa fa-file-word-o"/>
+                        <p:separator/>
+                        <p:menuitem value="&#160;Visualizar" url="#" icon="fa fa-television"/>
+                    </p:splitButton>
+                </div>
+            </h:panelGroup>
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,434 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+
+            input[disabled] {
+                background-color: #000;
+                color:#fff !important;
+            }
+
+
+        </style>
+        <script>
+            $(document).ready(function() {
+
+                $('#btnFile').click(function () {
+                    $("input[type='file']").trigger('click');
+                })
+
+
+            });
+        </script>
+    </ui:define>
+
+    <ui:define name="title">
+        Controle de Motoristas
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+    <h:head></h:head>
+    <ui:define name="body">
+        <adm:breadcrumb title="Edição de Motoristas"/>
+        <h:form id="frmMotorista" enctype="multipart/form-data">
+            <h:panelGroup layout="block">
+                <p:panel header="Cadastro" styleClass="box-danger">
+                    <p:fragment autoUpdate="true" rendered="#{motoristaMB.edit}">
+                        <div class="align-right">
+                            <p:outputLabel value="Pesquisar por Id: "/>
+                            <p:spacer height="5"/>
+                            <p:inputText id="inptId" value="#{motoristaMB.id}"/>
+                            <p:commandButton id="brFind"
+                                             value="Pesquisar"
+                                             action="#{motoristaMB.findById(motoristaMB.id)}"
+                                             process="@form"
+                                             update="@form"
+                                             styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                             partialSubmit="true"/>
+                        </div>
+                    </p:fragment>
+                    <div class="ui-fluid">
+                        <div class="row">
+                            <div class="col-md-10" style="width: 81%;">
+                                <div class="row">
+                                    <div class="col-md-2" >
+                                        <p:outputLabel value="Identificador" for="inptIdx"/>
+                                        <p:inputText id="inptIdx"  disabled="true" value="#{motoristaMB.motorista.id}"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p:outputLabel value="Nome" for="inptNome"/>
+                                        <p:inputText id="inptNome" value="#{motoristaMB.motorista.nome}" disabled="#{! motoristaMB.edit}"/>
+                                    </div>
+                                    <div class="col-md-1" style="width: 130px;">
+                                        <p:outputLabel for="dtNsctoMotorista" value="Nascimento"/>
+                                        <p:inputMask id="dtNsctoMotorista" required="true" disabled="#{! motoristaMB.edit}"
+                                                     value="#{motoristaMB.motorista.dtNascimento}"
+                                                     mask="99/99/9999">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:inputMask>
+                                    </div>
+                                    <div class="col-md-2" >
+                                        <p:outputLabel for="nacional" value="Nacional"/>
+                                        <p:selectBooleanButton id="nacional" class="btn-danger" disabled="#{! motoristaMB.edit}"
+                                                               value = "#{motoristaMB.motorista.nacional}"
+                                                               onLabel="Sim"
+                                                               offLabel="Não"
+                                                               onIcon="ui-icon-check"
+                                                               offIcon="ui-icon-close"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p:outputLabel value="Documento" for="inptDoc"/>
+                                        <p:inputText id="inptDoc" value="#{motoristaMB.motorista.doc1}" disabled="#{! motoristaMB.edit}"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:outputLabel for="tipoDoc" value="Tipo Documento"/>
+                                        <p:selectOneMenu id="tipoDoc"
+                                                         value="#{motoristaMB.motorista.doc1_tipo.id}" disabled="#{! motoristaMB.edit}">
+                                            <p:ajax listener="#{motoristaMB.onTipoDocumento}"/>
+                                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                            <f:selectItems value="#{motoristaMB.lstDocumentoTipo}"
+                                                           var="listTipos"
+                                                           itemValue="#{listTipos.id}"
+                                                           itemLabel="#{listTipos.descricao}"/>
+
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p:outputLabel for="docEmissaoMotorista" value="Emissao"/>
+                                        <p:inputMask id="docEmissaoMotorista" disabled="#{! motoristaMB.edit}"
+                                                     value="#{motoristaMB.motorista.doc1_emissao}"
+                                                     mask="99/99/9999">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:inputMask>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:outputLabel for="docEmissorMotorista" value="Emissor"/>
+                                        <p:inputText id="docEmissorMotorista"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     onchange="this.value = this.value.toUpperCase();"
+                                                     value="#{motoristaMB.motorista.doc1_emissor}"/>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p:outputLabel for="doc1UFMotorista" value="UF"/>
+                                        <p:inputText id="doc1UFMotorista"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     onchange="this.value = this.value.toUpperCase();"
+                                                     value="#{motoristaMB.motorista.doc1_uf}"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p:outputLabel value="Documento 2" for="inptDoc2"/>
+                                        <p:inputText id="inptDoc2"
+                                                     value="#{motoristaMB.motorista.doc2}"
+                                                     disabled="#{! motoristaMB.edit}"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:outputLabel for="tipoDoc2" value="Tipo Documento"/>
+                                        <p:selectOneMenu id="tipoDoc2"
+                                                         disabled="#{! motoristaMB.edit}"
+                                                         value="#{motoristaMB.motorista.doc2_tipo.id}"
+                                                         style="width: 100%;height:34px;" >
+                                            <p:ajax listener="#{motoristaMB.onTipoDocumento}"/>
+                                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                            <f:selectItems value="#{motoristaMB.lstDocumentoTipo}"
+                                                           var="listTipos"
+                                                           itemValue="#{listTipos.id}"
+                                                           itemLabel="#{listTipos.descricao}"/>
+
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p:outputLabel for="doc2EmissaoMotorista" value="Emissao"/>
+                                        <p:inputMask id="doc2EmissaoMotorista"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     value="#{motoristaMB.motorista.doc2_emissao}"
+                                                     mask="99/99/9999">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:inputMask>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p:outputLabel for="doc2EmissorMotorista" value="Emissor"/>
+                                        <p:inputText id="doc2EmissorMotorista"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     onchange="this.value = this.value.toUpperCase();"
+                                                     value="#{motoristaMB.motorista.doc2_emissor}"/>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p:outputLabel for="doc2UFMotorista" value="UF"/>
+                                        <p:inputText id="doc2UFMotorista"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     onchange="this.value = this.value.toUpperCase();"
+                                                     value="#{motoristaMB.motorista.doc2_uf}"/>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p:outputLabel value="Pai" for="inptNomePai"/>
+                                        <p:inputText id="inptNomePai"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     value="#{motoristaMB.motorista.pai}"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p:outputLabel value="Mãe" for="inptNomeMae"/>
+                                        <p:inputText id="inptNomeMae"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     value="#{motoristaMB.motorista.mae}"/>
+                                    </div>
+                                </div>
+                                <div class="row" id="endereco_1">
+                                    <div class="col-md-2" style="width: 130px;">
+                                        <p:outputLabel for="cepMotorista" value="CEP"/>
+                                        <p:inputText id="cepMotorista"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     mask="99999-999"
+                                                     value="#{motoristaMB.motorista.localizador.cep}" >
+                                            <p:ajax event="blur"
+                                                    listener="#{motoristaMB.BuscaCep}"
+                                                    partialSubmit="true" process="@this"/>
+
+                                        </p:inputText>
+                                    </div>
+                                    <div class="col-md-1" style="width: 70px;">
+                                        <p:outputLabel for="cepUFMotorista" value="UF"/>
+                                        <p:inputText id="cepUFMotorista"
+                                                     disabled="#{motoristaMB.foundUF}"
+                                                     value="#{motoristaMB.motorista.localizador.uf}"/>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <p:outputLabel for="cepCidadeMotorista" value="Cidade"/>
+                                        <p:inputText id="cepCidadeMotorista" required="true"
+                                                     disabled="#{motoristaMB.foundCidade}"
+                                                     value="#{motoristaMB.motorista.localizador.cidade}"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p:outputLabel for="cepBairroMotorista" value="Bairro"/>
+                                        <p:inputText id="cepBairroMotorista"
+                                                     disabled="#{motoristaMB.foundBairro}"
+                                                     value="#{motoristaMB.motorista.localizador.bairro}"/>
+                                    </div>
+                                </div>
+                                <div class="row" id="endereco_2">
+                                    <div class="col-md-6">
+                                        <p:outputLabel for="cepEndMotorista" value="Endereço"/>
+                                        <p:inputText id="cepEndMotorista" required="true"
+                                                     disabled="#{motoristaMB.foundEndereco}"
+                                                     value="#{motoristaMB.motorista.localizador.logradouro}"/>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p:outputLabel for="cepNumMotorista" value="Número"/>
+                                        <p:inputText id="cepNumMotorista"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     required="true"
+                                                     value="#{motoristaMB.motorista.localizador.numero}">
+                                            <p:ajax event="valueChange" listener="#{motoristaMB.onValueChangeNumEndereco}"/>
+                                        </p:inputText>
+
+
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <p:outputLabel for="telTipoMotorista" value="Tipo"/>
+                                        <p:selectOneMenu id="telTipoMotorista" value="#{motoristaMB.motorista.telefone.tipo.id}">
+                                            <p:ajax listener="#{motoristaMB.onTipoTelefone}"/>
+                                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                            <f:selectItems value="#{motoristaMB.lstTelefoneTipo}" var="lstTelTipo" itemValue="#{lstTelTipo.id}" itemLabel="#{lstTelTipo.descricao}" />
+                                        </p:selectOneMenu>
+
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <p:outputLabel for="telDddMotorista" value="DDD"/>
+                                        <p:inputText id="telDddMotorista"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     required="true" maxlength="3"
+                                                     value="#{motoristaMB.motorista.telefone.ddd}"/>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <p:outputLabel for="telNumMotorista" value="Número "/>
+                                        <p:inputText id="telNumMotorista"
+                                                     disabled="#{! motoristaMB.edit}"
+                                                     required="true" maxlength="10"
+                                                     value="#{motoristaMB.motorista.telefone.fone}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="padding-top:25px;">
+                                <p:panel styleClass="box-danger" widgetVar="panelFoto">
+                                    <h:graphicImage value="/images/dynamic/?file=#{motoristaMB.foto()}" style="width:100%;padding-bottom: 15px;"/>
+
+                                    <p:fragment autoUpdate="true" rendered="#{motoristaMB.edit}">
+                                        <p:fileUpload id="registryUpload"
+                                                      label ="Atualizar foto..."
+                                                      disabled="#{! motoristaMB.edit}"
+                                                      value="#{motoristaMB.imgFile}"
+                                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="524288000" mode="simple"
+                                                      skinSimple="true" invalidFileMessage="Tipo de Arquivo não permitido"
+                                                      messageTemplate="Não foi possível enviar para o servidor o arquivo {name}. O servidor aceita apenas imagens."
+                                                      required="true" requiredMessage="Selecione uma imagem para upload"
+                                                      update="registryUploadMessage"  />
+                                        <p:message id="registryUploadMessage" for="registryUpload" />
+
+                                        <p:commandButton action="#{motoristaMB.upload}" value="Enviar" ajax="false" styleClass="btn-danger"/>
+                                    </p:fragment>
+                                </p:panel>
+
+                            </div>
+                        </div>
+                    </div>
+                    <ui:fragment rendered="#{true == true}">
+                    <br/>
+                    <p:panel header="C.N.H.">
+                        <div class="ui-fluid" id="dadosCNH">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <p:outputLabel for="cnhMotorista" value="Número"/>
+                                    <p:inputText id="cnhMotorista"
+                                                 onchange="this.value = this.value.toUpperCase();"
+                                                 value="#{motoristaMB.cnhMotorista.documento}"/>
+                                </div>
+                                <div class="col-lg-1">
+                                    <p:outputLabel for="ufCNHMotorista" value="UF"/>
+                                    <p:selectOneMenu id="ufCNHMotorista"  style="min-width: 65px !important;"
+                                                     value="#{motoristaMB.cnhMotorista.uf}">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{motoristaMB.lstUF}"
+                                                       var="listUF"
+                                                       itemValue="#{listUF.sigla}"
+                                                       itemLabel="#{listUF.sigla}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="col-lg-1" >
+                                    <p:outputLabel for="categMotorista" value="Categoria"/>
+                                    <p:selectOneMenu id="categMotorista"  style="min-width: 65px !important;"
+                                                     value="#{motoristaMB.cnhMotorista.categoria.id}">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{motoristaMB.lstCategoriaCNH}"
+                                                       var="listCategoriaCNH"
+                                                       itemValue="#{listCategoriaCNH.id}"
+                                                       itemLabel="#{listCategoriaCNH.descricao}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p:outputLabel for="primemissaoCnhMotorista"
+                                                   value="1a. Emissão"/>
+                                    <p:inputMask id="primemissaoCnhMotorista"
+                                                 value="#{motoristaMB.cnhMotorista.dtPrimeiraEmissao}"
+                                                 mask="99/99/9999">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                    </p:inputMask>
+                                </div>
+
+                                <div class="col-lg-1" style="width:120px;">
+                                    <p:outputLabel for="emissaoCnhMotorista"
+                                                   value="Emissão"/>
+                                    <p:inputMask id="emissaoCnhMotorista"
+                                                 value="#{motoristaMB.cnhMotorista.dtSubstituicao}"
+                                                 mask="99/99/9999">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                    </p:inputMask>
+                                </div>
+
+                                <div class="col-lg-1" style="width:120px;">
+                                    <p:outputLabel for="vctoCnhMotorista"
+                                                   value="Validade"/>
+                                    <p:inputMask id="vctoCnhMotorista"
+                                                 value="#{motoristaMB.cnhMotorista.dtVencimento}"
+                                                 mask="99/99/9999">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                    </p:inputMask>
+                                </div>
+                                <div class="col-lg-1" style="width:150px;">
+                                    <p:outputLabel for="segCnhMotorista" value="No. Segurança"/>
+                                    <p:inputText id="segCnhMotorista"
+                                                 onchange="this.value = this.value.toUpperCase();"
+                                                 value="#{motoristaMB.cnhMotorista.validacao}"/>
+                                </div>
+                                <div class="col-lg-1" style="width:150px;">
+                                    <p:outputLabel for="regCnhMotorista" value="No. Registro"/>
+                                    <p:inputText id="regCnhMotorista"
+                                                 onchange="this.value = this.value.toUpperCase();"
+                                                 value="#{motoristaMB.cnhMotorista.registro}"/>
+                                </div>
+
+                            </div>
+                        </div>
+                    </p:panel>
+                    </ui:fragment>
+                    <f:facet name="footer">
+                        <div class="align-right" style="padding: 5px;">
+
+
+                            <p:commandButton value="Salvar" action="#{motoristaMB.update}"
+                                             partialSubmit="true" style="width: 100px;"
+                                             update="@form" styleClass="btn-danger"/>
+                            <p:spacer height="5"/>
+                            <p:commandButton id="btRemove" value="Apagar" action="#{motoristaMB.remove}"
+                                             update="@form" style="width: 100px;" styleClass="btn-danger"/>
+
+                            <p:spacer height="5"/>
+                            <p:commandButton value="Voltar" action="#{motoristaMB.btnBack}"
+                                             style="width: 100px;" styleClass="btn-danger"/>
+
+
+                        </div>
+                    </f:facet>
+            </p:panel>
+            </h:panelGroup>
+            <br/>
+            <p:fragment autoUpdate="true" rendered="#{indexMB.usuario.interno == true}">
+                <p:panel header="Histórico do Motorista" styleClass="box-danger" toggleable="true">
+                    <p:dataTable var="historico" value="#{motoristaMB.motAList}" resizableColumns="true" sortBy="#{historico.acCadastro.dtCriacao}" sortOrder="DESCENDING"
+                                 paginatorPosition="bottom" rows="10" styleClass="box-danger" lazy="true" paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                                 currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                                 rowsPerPageTemplate="5,10,15,25,50">
+                        <p:column headerText="Ficha" width="85">
+                            <h:outputText value="#{historico.acCadastro.id}" />
+                        </p:column>
+
+                        <p:column headerText="Data" width="85">
+                            <h:outputText value="#{historico.acCadastro.dtCriacao}">
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Transportadora"  width="350">
+                            <h:outputText value="#{historico.acCadastro.filialArea.nome}" />
+                        </p:column>
+                        <p:column headerText="Telefone"  width="105">
+                            <h:outputText value="#{(historico.telefone.ddd)} #{historico.telefone.fone}"/>
+                        </p:column>
+                        <p:column headerText="Status Geral">
+                            <img src="/manager/resources/#{motoristaMB.flag(historico.statusGeral.id)}" style="width: 16px;"/>
+                            <p:spacer height="5px;"/>
+                            <h:outputText value="#{historico.statusGeral.descricao}"/>
+                        </p:column>
+                        <p:column headerText="CNH">
+                            <img src="/manager/resources/#{motoristaMB.flag(historico.statusCNH.id)}" style="width: 16px;"/>
+                            <p:spacer height="5px;"/>
+                            <h:outputText value="#{historico.statusCNH.descricao}"/>
+                        </p:column>
+                        <p:column headerText="Criminal">
+                            <img src="/manager/resources/#{motoristaMB.flag(historico.statusCriminal.id)}" style="width: 16px;"/>
+                            <p:spacer height="5px;"/>
+                            <h:outputText value="#{historico.statusCriminal.descricao}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </p:fragment>
+        </h:form>
+    </ui:define>
+</ui:composition>

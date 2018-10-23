@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+    <h:form id="formAnaliseEspecial" >
+        <b:panel>
+            <div class="ui-fluid" style="padding-left: 30px;">
+
+
+                <div class="row">
+                    <div class="col-md-11">
+                        <p:scrollPanel style="width:100%;height:300px;">
+                            <h:outputText id="outputY" escape="false" value="#{cadastroMB.formatJSON(cadastroMB.cadastro.analiseEspecialDetalhe)}"/>
+                        </p:scrollPanel>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-11">
+                        <h:outputLabel for="cpStatus" value="Status Geral"/>
+                        <b:selectOneMenu value="#{cadastroMB.cadastro.analiseEspecialStatus}" id="cpStatus" disabled="true">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{cadastroMB.lstReferencias}" var="cpStatus" itemValue="#{cpStatus.id}"
+                                           itemLabel="#{cpStatus.descricao}"/>
+                        </b:selectOneMenu>
+                    </div>
+                </div>
+
+                <br/>
+                <f:facet name="footer" class="ui-fluid">
+
+                    <b:button value="Cancelar" look="danger"
+                              onclick="PF('dlgAnaliseEspecial').hide()"/>
+                </f:facet>
+            </div>
+        </b:panel>
+    </h:form>
+</ui:composition>

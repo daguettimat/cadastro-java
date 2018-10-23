@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html">
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <h:outputStylesheet library="css" name="prism.css"/>
+    </h:head>
+
+    <h:body styleClass="hold-transition lockscreen">
+
+        <p:growl autoUpdate="true" life="4000"/>
+
+        <!-- Automatic element centering -->
+        <div class="lockscreen-wrapper">
+            <div class="login-logo">
+                <p:link href="index.xhtml"><img alt="\" src="resources/images/logo.png" /></p:link>
+            </div>
+            <!-- User name -->
+            <div class="lockscreen-name">John Doe</div>
+
+            <!-- START LOCK SCREEN ITEM -->
+            <div class="lockscreen-item">
+                <!-- lockscreen image -->
+                <div class="lockscreen-image">
+                    <img src="https://almsaeedstudio.com/themes/AdminLTE/dist/img/user1-128x128.jpg" alt="User Image"/>
+                </div>
+                <!-- /.lockscreen-image -->
+
+                <!-- lockscreen credentials (contains the form) -->
+                <form class="lockscreen-credentials">
+                    <div class="input-group">
+                        <input type="password" class="form-control" placeholder="password"/>
+
+                        <div class="input-group-btn">
+                            <button type="button" class="btn"><i class="fa fa-arrow-right text-muted"></i></button>
+                        </div>
+                    </div>
+                </form>
+                <!-- /.lockscreen credentials -->
+
+            </div>
+            <!-- /.lockscreen-item -->
+            <div class="help-block text-center">
+                Entre com sua senha para reabilitar a sessão
+            </div>
+            <div class="text-center">
+                <a href="login.html">Ou você pode informar um novo usuário</a>
+            </div>
+            <div class="lockscreen-footer text-center">
+                Copyright (c) 2000-2017 <b><a href="http://www.global5.com.br" class="text-black">Global 5 - Engenharia de Riscos</a></b><br/>
+                All rights reserved
+            </div>
+        </div>
+    </h:body>
+</f:view>
+</html>

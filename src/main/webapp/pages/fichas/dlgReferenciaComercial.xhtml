@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <p:panel>
+        <p:messages showDetail="false" autoUpdate="true" closable="true" />
+        <div class="form-group">
+            <h:outputLabel for="refMot" value="Empresa"/>
+            <b:inputText id="refMot" value="#{enviarFichaMB.refComercial.empresa}"/>
+        </div>
+        <div class="form-group">
+            <h:outputLabel for="referenciaMotorista" value="Contato"/>
+            <b:inputText id="referenciaMotorista"
+                         requiredMessage="O nome do Contato não parece ser válido, por favor verifique."
+                         required="true"
+                         value="#{enviarFichaMB.refComercial.contato}">
+                <f:validateLength minimum="3" />
+            </b:inputText>
+        </div>
+        <div class="form-group">
+            <h:outputLabel for="tipoContatoMotorista" value="Tipo de Contato"/>
+            <b:selectOneMenu value="#{enviarFichaMB.refComercial.tipoContato}"
+                             requiredMessage="O Tipo de Contrato é um campo obrigatório"
+                             id="tipoContatoMotorista"
+                             required="true">
+
+                <f:selectItems value="#{enviarFichaMB.lstTipoContatoComercial}" var="tipoContato"
+                               itemValue="#{tipoContato.id}" itemLabel="#{tipoContato.descricao}"/>
+            </b:selectOneMenu>
+        </div>
+        <div class="form-group">
+            <h:outputLabel for="telefoneContato" value="Telefone"/>
+            <br/>
+            <p:inputMask id="dddContato" mask="99" style="width: 40px !important;"
+                         requiredMessage="O DDD é um campo obrigatório"
+                         required="true"
+                         value="#{enviarFichaMB.refComercial.ddd}"/>
+            <p:inputMask id="telefoneContato" mask="9999-9999?9" style="width: 90px !important;"
+                         requiredMessage="O Telefone é um campo obrigatório"
+                         required="true"
+                         value="#{enviarFichaMB.refComercial.telefone}"/>
+        </div>
+        <f:facet name="footer">
+            <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
+                <div align="right">
+                    <p:commandButton value="Salvar" styleClass="btn-danger"
+                                     action="#{enviarFichaMB.addReferenciaComercial}"
+                                     onclick="onTop('dRefComerciais');"
+                                     style="width: 100px;" partialSubmit="true" >
+                        <f:ajax execute="@form" render="@form" />
+                    </p:commandButton>
+
+                    <p:commandButton value="Cancelar" styleClass="btn-danger"
+                                     style="width: 100px;"
+                                     onclick="PF('dialogRC').hide();onTop('dRefComerciais');"/>
+                </div>
+
+            </div>
+        </f:facet>
+    </p:panel>
+</ui:composition>

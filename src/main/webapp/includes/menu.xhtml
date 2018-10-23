@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ul class="sidebar-menu">
+        <li>
+            <p:link href="/index.xhtml">
+                <i class="fa fa-home"/>
+                <span>Home</span>
+            </p:link>
+        </li>
+        <ui:fragment rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
+            <li class="treeview" >
+            <a href="#">
+                <i class="fa fa-laptop"/>
+                <span>Administração</span>
+                <span class="pull-right-container">
+                     <i class="fa fa-angle-left pull-right"/>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <p:link href="/pages/areas/arealst.xhtml">
+                        <i class="fa fa-stack-overflow"/>
+                        <span>Áreas</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link href="/pages/areas/nivellst.xhtml">
+                        <i class="fa fa-stack-overflow"/>
+                        <span>Níveis</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link href="/pages/areas/funcaolst.xhtml">
+                        <i class="fa fa-stack-overflow"/>
+                        <span>Funções</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link href="/pages/cadastro/usuarioslst.xhtml">
+                        <i class="fa fa-address-book-o"/>
+                        <span>Usuários</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link href="/pages/cadastro/fichaemaillst.xhtml">
+                        <i class="fa fa-industry"/>
+                        <span>Pré Cadastro de Clientes</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link href="/pages/manutencao/avisolst.xhtml">
+                        <i class="fa fa-envelope-o"/>
+                        <span>Quadro de Avisos</span>
+                    </p:link>
+                </li>
+            </ul>
+        </li>
+        </ui:fragment>
+        <li class="header">
+            Cadastros
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-id-card"/>
+                <span>Fichas</span>
+                <span class="pull-right-container">
+                     <i class="fa fa-angle-left pull-right"/>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <p:link href="/pages/fichas/enviarFichaMenu.xhtml">
+                        <i class="fa fa-paper-plane-o"/>
+                        <span>Enviar Ficha</span>
+                    </p:link>
+                </li>
+
+                <ui:fragment rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
+
+                    <li>
+                        <p:link href="/pages/analise/pesquisapessoalst.xhtml">
+                            <i class="fa fa-group"/>
+                            <span>Pesquisa de Pessoas</span>
+                        </p:link>
+                    </li>
+
+                    <li>
+                        <p:link href="/pages/analise/pesquisaveiculolst.xhtml">
+                            <i class="fa fa-truck"/>
+                            <span>Pesquisa de Veículos</span>
+                        </p:link>
+                    </li>
+
+                    <li>
+                        <p:link href="/pages/manutencao/pontoslst.xhtml">
+                            <i class="fa fa-group"/>
+                            <span>Pontos de Apoio</span>
+                        </p:link>
+                    </li>
+
+                </ui:fragment>
+
+
+                <ui:fragment rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
+                    <li>
+                        <p:link href="/pages/analise/analiseCadastral.xhtml">
+                            <i class="fa fa-shield"/>
+                            <span>Análise Cadastral</span>
+                        </p:link>
+                    </li>
+                </ui:fragment>
+                <li>
+                    <p:link href="/pages/analise/analiseListar.xhtml">
+                        <i class="fa fa-shield"/>
+                        <span>Lista Cadastral</span>
+                    </p:link>
+                </li>
+
+
+
+            </ul>
+        </li>
+        <ui:fragment rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-laptop"/>
+                    <span>Geral</span>
+                    <span class="pull-right-container">
+                         <i class="fa fa-angle-left pull-right"/>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <p:link href="/pages/cadastro/veiculolst.xhtml">
+                            <i class="fa fa-truck"/>
+                            <span>Veículos</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/pages/cadastro/proprietariolst.xhtml">
+                            <i class="fa fa-male"/>
+                            <span>Proprietários</span>
+                        </p:link>
+                    </li>
+
+                    <li>
+                        <p:link href="/pages/cadastro/motoristalst.xhtml">
+                            <i class="fa fa-drivers-license"/>
+                            <span>Motoristas</span>
+                        </p:link>
+                    </li>
+
+                    <li>
+                        <p:link href="/pages/cadastro/pessoalst.xhtml">
+                            <i class="fa fa-id-card-o"/>
+                            <span>Pessoas</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/pages/cadastro/produtolst.xhtml">
+                            <i class="fa fa-shopping-cart"/>
+                            <span>Produtos</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/pages/cadastro/marcalst.xhtml">
+                            <i class="fa fa-diamond"/>
+                            <span>Marca</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/pages/cadastro/modelolst.xhtml">
+                            <i class="fa fa-tags"/>
+                            <span>Modelos</span>
+                        </p:link>
+                    </li>
+                </ul>
+            </li>
+            <li class="header">
+                Manutenção
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-laptop"/>
+                    <span>Controle de Acesso</span>
+                    <span class="pull-right-container">
+                         <i class="fa fa-angle-left pull-right"/>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <p:link href="/pages/cadastro/paginalst.xhtml">
+                            <i class="fa fa-bars"/>
+                            <span>Páginas</span>
+                        </p:link>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-envelope"/>
+                    <span>Endereçamento</span>
+                    <span class="pull-right-container">
+                         <i class="fa fa-angle-left pull-right"/>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <p:link href="/pages/ect/logradourolst.xhtml">
+                            <i class="fa fa-street-view"/>
+                            <span>Logradouros</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/pages/ect/bairrolst.xhtml">
+                            <i class="fa fa-map-marker"/>
+                            <span>Bairros</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/pages/ect/cidadelst.xhtml">
+                            <i class="fa fa-location-arrow"/>
+                            <span>Cidades</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/pages/ect/uflst.xhtml">
+                            <i class="fa fa-university"/>
+                            <span>Estados (UF)</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/pages/ect/paislst.xhtml">
+                            <i class="fa fa-globe"/>
+                            <span>Países</span>
+                        </p:link>
+                    </li>
+                </ul>
+            </li>
+            <!--<li class="treeview">-->
+                <!--<a href="#">-->
+                    <!--<i class="fa fa-laptop"/>-->
+                    <!--<span>Tabelas de Tipo</span>-->
+                    <!--<span class="pull-right-container">-->
+                         <!--<i class="fa fa-angle-left pull-right"/>-->
+                    <!--</span>-->
+                <!--</a>-->
+                <!--<ul class="treeview-menu">-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/corlst.xhtml">-->
+                            <!--<i class="fa fa-tint"/>-->
+                            <!--<span>Cores</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/banco.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Bancos</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/tipocontrato.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Contratos</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/tipoveiculo.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Veículos</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/tipousuario.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Usuários</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/mercadoria.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Mercadorias</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/tipocnh.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>C.N.H.</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/tipoembarque.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Embarque</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/tipomot.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Motorista</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/tiporeboque.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Reboque</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/tiporegulacao.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Regulação</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/manutencao/list/tipotransportadora.xhtml">-->
+                            <!--<i class="fa fa-bars"/>-->
+                            <!--<span>Transportadora</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<p:link href="/pages/layout/skin.xhtml">-->
+                            <!--<i class="fa fa-gears"/>-->
+                            <!--<span>Skins</span>-->
+                        <!--</p:link>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</li>-->
+        </ui:fragment>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-laptop"/>
+                <span>Relatórios</span>
+                <span class="pull-right-container">
+                         <i class="fa fa-angle-left pull-right"/>
+                    </span>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <p:link href="/pages/reports/rptFaturamento.xhtml">
+                        <i class="fa fa-bars"/>
+                        <span>Faturamento</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link href="/pages/reports/rptFatDetalhado.xhtml">
+                        <i class="fa fa-bars"/>
+                        <span>Faturamento Detalhado</span>
+                    </p:link>
+                </li>
+                <ui:fragment rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H' or indexMB.nivelUsuario}">
+                    <li>
+                        <p:link href="/pages/reports/rptHistoricoFichas.xhtml">
+                            <i class="fa fa-bars"/>
+                            <span>Histórico de Fichas</span>
+                        </p:link>
+                    </li>
+                </ui:fragment>
+            </ul>
+        </li>
+    </ul>
+
+    <script>
+        $('body').addClass('skin-red');
+    </script>
+</ui:composition>

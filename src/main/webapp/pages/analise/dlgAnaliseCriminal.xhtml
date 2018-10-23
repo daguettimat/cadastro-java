@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+    <h:form id="formCriminal" >
+        <b:panel>
+            <div class="ui-fluid" style="padding-left: 30px;">
+
+
+                <div class="row">
+                    <div class="col-md-11">
+                        <p:scrollPanel style="width:100%;height:300px;">
+                            <h:outputText id="outputY" escape="false" value="#{motAnaliseMB.formatJSON()}"/>
+                        </p:scrollPanel>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-11">
+                        <h:outputLabel for="cpStatus" value="Status Apontamentos"/>
+                        <b:selectOneMenu value="#{motAnaliseMB.criminal}" id="cpStatus"
+                                         required="true">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{motAnaliseMB.lstReferencias}" var="cpStatus" itemValue="#{cpStatus.id}"
+                                           itemLabel="#{cpStatus.descricao}"/>
+                        </b:selectOneMenu>
+                    </div>
+                </div>
+
+                <br/>
+                <div class="row">
+                    <div class="col-md-11" >
+                        <h:outputLabel for="pendencias" value="Pendências"/>
+                        <p:inputTextarea id="pendencias" rows="3"
+                                         value="#{motAnaliseMB.anacmot.criminalPendencias}"/>
+                    </div>
+                </div>
+                <br/>
+                <f:facet name="footer" class="ui-fluid">
+                    <p:commandButton value="Salvar" styleClass="btn-danger"
+                                     actionListener="#{motAnaliseMB.updateCriminal}"
+                                     onclick="PF('dlgCriminal').hide()"
+                                     style="margin-right:10px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
+                                     partialSubmit="true" >
+                        <f:ajax execute="@form" render="@form" />
+                    </p:commandButton>
+
+                    <b:button value="Cancelar" look="danger"
+                              onclick="PF('dlgCriminal').hide()"/>
+                </f:facet>
+            </div>
+        </b:panel>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+    <h:outputScript>Dropzone.options.uploadForm = { paramName: "uploadForm:file" };</h:outputScript>
+
+    <style>
+
+    </style>
+</h:head>
+<h:body>
+    <h:form id="uploadForm" enctype="multipart/form-data" styleClass="dropzone">
+        <div class="dz-message needsclick">
+            <h1 class="text-danger">Arraste os arquivos para esta área ou clique aqui para para abrir o explorer.</h1><br/>
+        </div>
+        <div class="fallback">
+            <h:messages />
+        </div>
+        <br/><br/>
+        <div class="pull-right" style="padding-top: 30px;">
+            <h:commandButton styleClass="btn btn-danger" value="submit" action="#{upload.submit}" />
+        </div>
+    </h:form>
+</h:body>
+
+</html>

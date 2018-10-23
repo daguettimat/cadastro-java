@@ -1,0 +1,428 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+
+
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+
+            /*
+             * Timepicker stylesheet
+             * Highly inspired from datepicker
+             * FG - Nov 2010 - Web3R
+             *
+             * version 0.0.3 : Fixed some settings, more dynamic
+             * version 0.0.4 : Removed width:100% on tables
+             * version 0.1.1 : set width 0 on tables to fix an ie6 bug
+             */
+
+            .ui-timepicker-inline { display: inline; }
+
+            #ui-timepicker-div { padding: 0.2em; }
+            .ui-timepicker-table { display: inline-table; width: 0; }
+            .ui-timepicker-table table { margin:0.15em 0 0 0; border-collapse: collapse; }
+
+            .ui-timepicker-hours, .ui-timepicker-minutes { padding: 0.2em;  }
+
+            .ui-timepicker-table .ui-timepicker-title { line-height: 1.8em; text-align: center; }
+            .ui-timepicker-table td { padding: 0.1em; width: 2.2em; }
+            .ui-timepicker-table th.periods { padding: 0.1em; width: 2.2em; }
+
+            /* span for disabled cells */
+            .ui-timepicker-table td span {
+                display:block;
+                padding:0.2em 0.3em 0.2em 0.5em;
+                width: 1.2em;
+
+                text-align:right;
+                text-decoration:none;
+            }
+            /* anchors for clickable cells */
+            .ui-timepicker-table td a {
+                display:block;
+                padding:0.2em 0.3em 0.2em 0.5em;
+                width: 1.2em;
+                cursor: pointer;
+                text-align:right;
+                text-decoration:none;
+            }
+
+
+            /* buttons and button pane styling */
+            .ui-timepicker .ui-timepicker-buttonpane {
+                background-image: none; margin: .7em 0 0 0; padding:0 .2em; border-left: 0; border-right: 0; border-bottom: 0;
+            }
+            .ui-timepicker .ui-timepicker-buttonpane button { margin: .5em .2em .4em; cursor: pointer; padding: .2em .6em .3em .6em; width:auto; overflow:visible; }
+            /* The close button */
+            .ui-timepicker .ui-timepicker-close { float: right }
+
+            /* the now button */
+            .ui-timepicker .ui-timepicker-now { float: left; }
+
+            /* the deselect button */
+            .ui-timepicker .ui-timepicker-deselect { float: left; }.pe-timepicker {
+                                                                       display: inline-block;
+                                                                       overflow: visible;
+                                                                       padding: 0;
+                                                                       position: relative;
+                                                                       vertical-align: middle;
+                                                                   }
+
+            .pe-timepicker-input {
+                vertical-align: middle;
+                text-align: left;
+                width: 60px;
+            }
+
+            .pe-timepicker-button {
+                cursor: default;
+                display: block;
+                font-size: 0.5em;
+                height: 44%;
+                margin: 0;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                right: 0;
+                text-align: center;
+                vertical-align: middle;
+                width: 16px;
+                z-index: 100;
+            }
+
+            .pe-timepicker .ui-icon {
+                left: 0;
+                margin-top: -8px;
+                position: absolute;
+                top: 50%;
+            }
+
+            .pe-timepicker-button.pe-timepicker-up {
+                top: 0;
+                border-bottom: none;
+            }
+
+            .pe-timepicker-button.pe-timepicker-down {
+                bottom: 0;
+            }
+
+            .pe-timepicker .ui-icon-triangle-1-s {
+                background-position: -65px -16px;
+            }
+
+            .pe-timepicker-trigger {
+                position: absolute;
+                margin: 1px 0 1px 1px;
+                height: 2em;
+                width: 2em;
+                vertical-align: middle;
+            }
+
+            .pe-timepicker-trigger .ui-icon-clock {
+                left: 50%;
+            }
+
+
+
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Análise Cadastral
+    </ui:define>
+
+    <ui:define name="description">
+        Filtro de Pesquisa
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Análise Cadastral (Filtros)"/>
+
+        <h:form id="frmListaCadastral" onkeypress="if (event.keyCode == 13) { return false; }">
+            <div class="ui-fluid">
+                <div class="row">
+                    <div class="col-lg-12 col-md-4 col-sm-12">
+                        <div class="row" id="filtroMenu" >
+                            <div class="col-lg-12">
+                                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                                         widgetVar="panel" toggleable="true" >
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <p:outputLabel for="nroFicha" value="Ficha"/>
+                                            <p:inputText id="nroFicha" value="#{listaCadastralMB.nFicha}"/>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <p:outputLabel for="nroLiberacao" value="Número Liberação"/>
+                                            <p:inputText id="nroLiberacao" value="#{listaCadastralMB.nLiberacao}"/>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <p:outputLabel for="nroRenavam" value="Renavam"/>
+                                            <p:inputText id="nroRenavam" value="#{listaCadastralMB.nRenavam}"/>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <p:outputLabel for="nroChassis" value="Chassis"/>
+                                            <p:inputText id="nroChassis" value="#{listaCadastralMB.nChassis}"/>
+                                        </div>
+                                        <div class="col-lg-1" style="min-width: 110px;">
+                                            <p:outputLabel for="placa" value="Placa"/>
+                                            <p:inputMask mask="aaa-9999" id="placa"
+                                                         onchange="this.value = this.value.toUpperCase();"
+                                                         value="#{listaCadastralMB.placa}"
+                                                         style="width:100%">
+                                            </p:inputMask>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <p:outputLabel for="dataInicial" value="Data Inicial"/>
+                                            <p:calendar id="dataInicial" showOn="button"
+                                                        value="#{listaCadastralMB.dtInicial}" pattern="dd/MM/yyyy HH:mm"
+                                                        showButtonPanel="true">
+
+                                            </p:calendar>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p:outputLabel for="dataFinal" value="Data Final"/>
+                                            <p:calendar id="dataFinal" showOn="button"
+                                                        value="#{listaCadastralMB.dtFinal}" pattern="dd/MM/yyyy HH:mm"
+                                                        showButtonPanel="true">
+
+                                            </p:calendar>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <p:outputLabel for="nroCPFNome" value="CPF ou Nome do Motorista"/>
+                                            <p:inputText id="nroCPFNome" value="#{listaCadastralMB.motorista}"/>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <p:outputLabel for="tipoStatus" value="Status Atual da Ficha"/>
+                                            <p:selectOneMenu id="tipoStatus"
+                                                             value="#{listaCadastralMB.fichaStatus}">
+                                                <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                <f:selectItems value="#{listaCadastralMB.lstFichaStatus}"
+                                                               var="listStatus"
+                                                               itemValue="#{listStatus.id}"
+                                                               itemLabel="#{listStatus.descricao}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <p:outputLabel for="tipoFicha" value="Tipo da Ficha"/>
+                                            <p:selectOneMenu id="tipoFicha"
+                                                             value="#{listaCadastralMB.idFichaTipo}">
+                                                <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                <f:selectItems value="#{listaCadastralMB.lstFichaTipo}"
+                                                               var="listTipo"
+                                                               itemValue="#{listTipo.id}"
+                                                               itemLabel="#{listTipo.descricao}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                        <p:fragment autoUpdate="true" rendered="#{listaCadastralMB.usuario.interno == true}">
+                                            <div class="col-lg-4">
+                                                <p:outputLabel for="cliNome" value="Nome do Cliente"/>
+                                                <p:inputText id="cliNome" value="#{listaCadastralMB.nomeCliente}"/>
+                                            </div>
+
+
+
+                                            <div class="col-lg-3">
+                                                <p:outputLabel for="finFicha" value="Finalizado Por"/>
+                                                <p:selectOneMenu id="finFicha"
+                                                                 value="#{listaCadastralMB.usuFinalizador}">
+                                                    <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                    <f:selectItems value="#{listaCadastralMB.lstUsuariosInternos}"
+                                                                   var="listUsuario"
+                                                                   itemValue="#{listUsuario.id}"
+                                                                   itemLabel="#{listUsuario.nome}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </p:fragment>
+                                    </div>
+                                    <br/><br/>
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <span>&#160;</span>
+                                        </div>
+
+                                        <div class="col-lg-2" style="padding-right: 15px;">
+                                            <p:commandButton id="btnPesquisa" value="Pesquisar" action="#{listaCadastralMB.btnPesquisarData}"
+                                                             icon="fa fa-search" update="@form" styleClass="btn-danger">
+
+                                            </p:commandButton>
+                                        </div>
+                                        <div class="col-lg-2" style="padding-right: 15px;">
+                                            <p:commandButton value="Voltar" action="#{listaCadastralMB.btnBack}"
+                                                             icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
+                                        </div>
+                                    </div>
+                                </p:panel>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <br/>
+
+            <h:panelGroup layout="block">
+
+                <p:dataTable widgetVar="cadastroTable"
+                             id="cadastroTable"
+                             var="c"
+                             value="#{listaCadastralMB.listaFicha}"
+                             rows="20"
+                             styleClass="box-danger"
+                             rowKey="#{c.anacoid}" paginator="true"
+                             paginatorPosition="bottom"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30,40,50,100">
+
+                    <f:facet name="header">
+                        &#160;
+                    </f:facet>
+
+                    <p:column headerText="ID" sortBy="#{c.anacoid}" style="width:12%">
+                        <div align="right" style="padding-right: 10px;">
+                            <a target="_blank" style="color : #3C8DB8;" href="http://sisold.global5.com.br/ficha_cadastral.php?ficha=#{c.anacoid}&amp;sys=1">#{c.anacoid}</a>
+                            <span>&#160;</span>
+                            <p:tooltip for="cmdAnalise" value="Análise Cadastral" />
+                            <p:commandButton id="cmdAnalise" action="#{cadastroMB.showAnalise(c.anacoid)}"
+                                              icon="fa fa-search" styleClass="btn btn-sm btn-danger" />
+                            <ui:fragment id="fragPendencias" rendered="#{cadastroMB.disableButton(c.status)}">
+                                <p:commandButton id="cmdUnlock" action="#{cadastroMB.unlock(c.anacoid)}"
+                                                 icon="fa fa-unlock" styleClass="btn btn-sm btn-danger" />
+                            </ui:fragment>
+
+                        </div>
+                    </p:column>
+
+                    <p:column headerText="Análises" style="width:7%;" >
+                        <div align="center">
+                            <p:tooltip for="imgPessoal" value="#{c.refPessoalDsc}"/>
+                            <p:graphicImage id="imgPessoal" library="resources" value="/resources/#{motoristaMB.flag(c.refPessoal)}" style="width: 16px;"/>
+                            <p:spacer height="5px;"/>
+                            <p:tooltip for="imgComercial" value="#{c.refComercialDsc}"/>
+                            <p:graphicImage id="imgComercial" library="resources" value="/resources/#{motoristaMB.flag(c.refComercial)}" style="width: 16px;"/>
+                            <p:spacer height="5px;"/>
+                            <p:tooltip for="imgCriminal" value="#{c.refCriminalDsc}"/>
+                            <p:graphicImage id="imgCriminal" library="resources" value="/resources/#{motoristaMB.flag(c.refCriminal)}" style="width: 16px;"/>
+                        </div>
+                    </p:column>
+
+                    <p:column headerText="Operador" sortBy="#{c.usuAlteracao}" style="width:17%">
+                        <img src="/manager/resources/#{cadastroMB.flagOperador(c.anacoid)}" style="width: 8%;" />
+                        #{c.usuAlteracao}
+                    </p:column>
+
+                    <p:column headerText="Liberação" sortBy="#{c.numLiberacao}" style="width:8%" visible="true">
+                        <div align="center">
+                            <a target="_blank" href="http://sisold.global5.com.br/liberacao_email.php?origem=SYS&amp;ficha=#{c.anacoid}">#{c.numLiberacao}</a>
+                            <span>&#160;</span>
+                            <p:tooltip for="imgStatus" value="&#160;#{c.statusFicha}"/>
+                            <p:graphicImage id="imgStatus" library="resources" value="/resources/#{cadastroMB.flag(c.status)}" style="width: 16%;" />
+                        </div>
+                    </p:column>
+
+                    <p:column headerText="Usuário Criação" style="width:20%" visible="false">
+                        <h:outputText value="#{c.usuCriacao}"/>
+                    </p:column>
+
+                    <p:column headerText="Usuário Termino" style="width:20%" visible="false">>
+                        <h:outputText value="#{c.usuTermino}"/>
+                    </p:column>
+
+                    <p:column headerText="Criação" sortBy="#{c.dtCriacao}" style="width:10%" >
+                        <div align="right" style="padding-right: 10px;">
+                            <h:outputText value="#{c.dtCriacao}">
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+                            </h:outputText>
+                        </div>
+                    </p:column>
+
+                    <p:column headerText="Expiração" sortBy="#{c.dtVencimento}" style="width:10%" >
+                        <div align="right" style="padding-right: 10px;">
+                            <h:outputText value="#{c.dtVencimento}">
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </div>
+                    </p:column>
+
+                    <p:column headerText="Filial" sortBy="#{c.idFilial}" style="width:20%" visible="true">
+                        <p:tooltip id="toolTipArea" for="filialNome" value="#{c.nomeCliente}"/>
+                        <h:outputText id="filialNome" value="#{c.nomeFilial}"/>
+
+                    </p:column>
+
+                    <p:column headerText="Término" style="width:10%" visible="false">
+                        <div align="right" style="padding-right: 10px;">
+                            <h:outputText value="#{c.dtTermino}">
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm:SS" />
+                            </h:outputText>
+                        </div>
+                    </p:column>
+
+                    <p:column headerText="Motorista" sortBy="#{c.nomeMotorista}" style="width:20%" visible="true">
+                        <h:commandLink action="#{motoristaMB.showFicha(c.idMotorista)}" value="#{c.nomeMotorista}" />
+                    </p:column>
+
+                    <p:column headerText="Placa" sortBy="#{c.placaVeiculo}" style="width:10%" visible="false">
+                        <h:commandLink action="#{veiculoMB.showFicha(c.idVeiculo)}" value="#{c.placaVeiculo}" />
+                    </p:column>
+
+                </p:dataTable>
+            </h:panelGroup>
+            <br/>
+            <h:panelGroup layout="block">
+                <div class="align-right" style="padding: 5px;">
+                    <p:commandButton id="toggler" type="button" value="Configurações" styleClass="btn-danger"
+                                     style="float:left" icon="ui-icon-circle-arrow-s" />
+                    <p:columnToggler datasource="cadastroTable" trigger="toggler" />
+                    <p:spacer height="5"/>
+
+                </div>
+            </h:panelGroup>
+        </h:form>
+
+        <adm:sidebar collapsed="true"/>
+
+
+        <script>
+            // A $( document ).ready() block.
+            $( document ).ready(function() {
+                $("#frmListaCadastral\\:btnPesquisa").click();
+            });
+
+
+        </script>
+        
+    </ui:define>
+
+
+</ui:composition>

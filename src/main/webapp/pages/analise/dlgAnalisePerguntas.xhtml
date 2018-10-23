@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Referencias Pessoais (Perguntas)</title>
+    <style type="text/css">
+        .ui-widget {
+            font-size: 90%;
+        }
+        input[disabled] {
+            background-color: #000;
+            color:#fff !important;
+        }
+    </style>
+</h:head>
+<h:body styleClass="ui-widget">
+    <h:form id="formPerguntas" style="padding: 10px;">
+        <div class="ui-fluid">
+            <div class="row">
+                <div class="col-xs-5">
+                    <label>Nome da Referencia</label>
+                    <p:inputText id="infRefNome" disabled="true" value="#{motAnaliseMB.refPessoal.nome}"/>
+                </div>
+                <div class="col-xs-1">
+                    <label>DDD</label>
+                    <p:inputText id="infRefDDD" disabled="true" value="#{motAnaliseMB.refPessoal.telefone.ddd}"/>
+                </div>
+                <div class="col-xs-2">
+                    <label>Telefone</label>
+                    <p:inputText id="infRefTelefone" disabled="true" value="#{motAnaliseMB.refPessoal.telefone.fone}"/>
+                </div>
+                <div class="col-xs-4">
+                    <label>Tipo da Referencia</label>
+                    <p:inputText id="infTipoContato" disabled="true" value="#{motAnaliseMB.refPessoal.tipoContato.descricao}"/>
+                </div>
+            </div>
+        </div>
+        <p:tabView>
+            <p:tab title="Dados Básicos do Motorista" titleStyleClass="box-danger">
+                <p:panel style="padding-left: 20px;padding-right: 20px;">
+                    <div class="ui-fluid">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <p:outputLabel value="CPF" for="infCPF"/>
+                                <p:inputText id="infCPF" disabled="true" value="#{motAnaliseMB.anacmot.motorista.doc1}" />
+                            </div>
+                            <div class="col-xs-5">
+                                <p:outputLabel value="Nome" for="infNome"/>
+                                <p:inputText id="infNome" disabled="true" value="#{motAnaliseMB.anacmot.motorista.nome}"/>
+                            </div>
+                            <div class="col-xs-1">
+                                <p:outputLabel value="DDD" for="infDDD"/>
+                                <p:inputText id="infDDD" disabled="true" value="#{motAnaliseMB.anacmot.telefone.ddd}"/>
+                            </div>
+                            <div class="col-xs-2">
+                                <p:outputLabel value="Telefone" for="infTEL"/>
+                                <p:inputText id="infTEL" disabled="true" value="#{motAnaliseMB.anacmot.telefone.fone}"/>
+                            </div>
+                            <div class="col-xs-2">
+                                <p:outputLabel value="Nascimento" for="infNasc"/>
+                                <p:inputText id="infNasc" disabled="true" value="#{motAnaliseMB.anacmot.motorista.dtNascimento}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                </p:inputText>
+                            </div>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p:outputLabel value="Pai" for="infPAI"/>
+                                <p:inputText id="infPAI" disabled="true" value="#{motAnaliseMB.anacmot.motorista.pai}" />
+                            </div>
+                            <div class="col-xs-6">
+                                <p:outputLabel value="Mãe" for="infMAE"/>
+                                <p:inputText id="infMAE" disabled="true" value="#{motAnaliseMB.anacmot.motorista.mae}" />
+                            </div>
+
+                        </div>
+                    </div>
+                </p:panel>
+            </p:tab>
+            <p:tab title="Informações do Endereço" titleStyleClass="box-danger">
+                <p:panel style="padding-left: 20px;padding-right: 20px;">
+                    <div class="ui-fluid">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <p:outputLabel value="Cep" for="infCep"/>
+                                <p:inputText id="infCep" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.cep}" />
+                            </div>
+                            <div class="col-xs-1">
+                                <p:outputLabel value="UF" for="infUF"/>
+                                <p:inputText id="infUF" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.uf}" />
+                            </div>
+                            <div class="col-xs-5">
+                                <p:outputLabel value="Cidade" for="infCidade"/>
+                                <p:inputText id="infCidade" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.cidade}" />
+                            </div>
+                            <div class="col-xs-4">
+                                <p:outputLabel value="Bairro" for="infBairro"/>
+                                <p:inputText id="infBairro" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.bairro}" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p:outputLabel value="Endereço" for="infEnd"/>
+                                <p:inputText id="infEnd" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.logradouro}" />
+                            </div>
+                            <div class="col-xs-1">
+                                <p:outputLabel value="Número" for="infNumero"/>
+                                <p:inputText id="infNumero" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.numero}" />
+                            </div>
+                            <div class="col-xs-4">
+                                <p:outputLabel value="Complemento" for="infComplemento"/>
+                                <p:inputText id="infComplemento" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.complemento}" />
+                            </div>
+                        </div>
+                    </div>
+                </p:panel>
+            </p:tab>
+
+
+        </p:tabView>
+        <div class="row">
+            <div class="col-lg-12">
+                <p:growl autoUpdate="true" escape="false" sticky="true" id="msgs"/>
+                <p:dataTable widgetVar="marcaTable" var="c" value="#{motAnaliseMB.lstPerguntas}" rows="5"
+                             styleClass="box-danger"
+                             rowKey="#{c.id}" lazy="true" paginator="true" editable="true"
+                             paginatorPosition="bottom" selectionMode="single"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30" style="padding:20px;">
+
+                    <p:ajax event="rowEdit" listener="#{motAnaliseMB.onRowEdit}" update=":formPerguntas:msgs"/>
+                    <p:ajax event="rowEditCancel" listener="#{motAnaliseMB.onRowCancel}" update=":formPerguntas:msgs"/>
+
+                    <p:column headerText="Pergunta">
+                        #{c.pergunta.texto}
+                    </p:column>
+                    <p:column headerText="Resposta">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <p:graphicImage id="imgFlag" style="width: 32px; height: 32px;"
+                                                name="#{motAnaliseMB.printFlag(c.resposta)}"/>
+                                <span>&#160;</span>
+                                <h:outputText id="textoResposta" value="#{motAnaliseMB.printTexto(c.resposta)}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu value="#{c.resposta}" id="idAvaliacao"
+                                                 styleClass="form-control ">
+                                    <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                    <f:selectItems value="#{c.pergunta.itens}" var="l" itemLabel="#{l.get('Resposta')}"
+                                                   itemValue="#{l}"/>
+
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column style="width:40px">
+                        <p:rowEditor style="margin-right:10px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </div>
+        <div align="right" style="padding-right:15px;">
+            <p:commandButton value="Salvar" process="@this"
+                             style="margin-right:10px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
+                             action="#{motAnaliseMB.salvarDlgPerguntas}"
+                             styleClass="btn-danger">
+            </p:commandButton>
+
+        </div>
+    </h:form>
+</h:body>
+
+</html>

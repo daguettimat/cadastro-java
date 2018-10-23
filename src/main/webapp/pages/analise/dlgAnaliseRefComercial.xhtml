@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Referencias Comerciais</title>
+    <style type="text/css">
+        .ui-widget {
+            font-size: 90%;
+        }
+
+    </style>
+
+</h:head>
+<h:body styleClass="ui-widget">
+    <h:form id="formRefPessoal" >
+        <p:panelGrid columns="3"  style="width: 100%;padding-top: 20px;" styleClass="ui-noborder">
+            <f:facet name="header">
+                <p:dataGrid var="acReferencia" value="#{motAnaliseMB.lstReferenciasComerciais}"  columns="3" layout="grid"
+                            rows="3" paginator="true" id="gridRefPessoal" paginatorPosition="bottom" rowIndexVar="rowId"
+                            paginatorTemplate="{CurrentPageReport}  {PageLinks}  {RowsPerPageDropdown} {JumpToPageDropdown}"
+                            currentPageReportTemplate="[ {startRecord}/{totalRecords} registro(s) - Página: {currentPage}/{totalPages} ]"
+                            rowsPerPageTemplate="5,10,15,20,30">
+
+                    <p:panel header="#{acReferencia.nome}" style="text-align:center" >
+                        <h:panelGrid columns="1" style="width:100%" id="panelReferencias">
+                            <p:graphicImage id="imgFlag" style="width: 96px; height: 96px;" name="#{motAnaliseMB.pathFlag(acReferencia.avaliacao.id)}"/>
+                            <h:outputText value="#{acReferencia.telefone.ddd} #{acReferencia.telefone.fone}"/>
+                            <p class="bg-info">#{acReferencia.avaliacao.descricao}</p>
+                            <br/>
+                            <p:commandButton id="rootbtn"
+                                             styleClass="btn-danger"
+                                             value="Maiores Informações"
+                                             actionListener="#{motAnaliseMB.openDlgPerguntas(acReferencia.id)}">
+                                <p:ajax event="dialogReturn" listener="#{motAnaliseMB.onReturnDlgClose}"/>
+                            </p:commandButton>
+
+                        </h:panelGrid>
+                    </p:panel>
+                </p:dataGrid>
+            </f:facet>
+
+            <f:facet name="footer" class="ui-fluid">
+                <div class="row">
+                    <div class="col-lg-12 align-right" style="padding-right:15px;">
+
+                    </div>
+                </div>
+            </f:facet>
+        </p:panelGrid>
+        <br/>
+    </h:form>
+</h:body>
+
+</html>

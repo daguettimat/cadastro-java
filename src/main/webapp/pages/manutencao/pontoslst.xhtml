@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+
+    </ui:define>
+
+    <ui:define name="title">
+        Pontos de Apoio
+    </ui:define>
+
+    <ui:define name="description">
+        lista geral
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Pontos de Apoio"/>
+        <h:form>
+            <p:growl autoUpdate="true" escape="false" sticky="true"/>
+            <div class="ui-fluid">
+                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                         widgetVar="panel" toggleable="true">
+                    <div class="row">
+                        <div class="col-lg-1">
+                            <p:outputLabel for="nroId" value="Id"/>
+                            <p:inputText id="nroId" value="#{pontosApoioMB.id}"/>
+                        </div>
+
+                        <div class="col-lg-5">
+                            <p:outputLabel for="nome" value="Nome"/>
+                            <p:inputText id="nome" value="#{pontosApoioMB.nome}"/>
+                        </div>
+
+                        <div class="col-md-2">
+                            <p:outputLabel for="dataInicial" value="Data Inicial"/>
+                            <p:calendar id="dataInicial" showOn="button"
+                                        value="#{pontosApoioMB.dtInicial}" pattern="dd/MM/yyyy HH:mm"
+                                        showButtonPanel="true">
+
+                            </p:calendar>
+                        </div>
+                        <div class="col-md-2">
+                            <p:outputLabel for="dataFinal" value="Data Final"/>
+                            <p:calendar id="dataFinal" showOn="button"
+                                        value="#{pontosApoioMB.dtFinal}" pattern="dd/MM/yyyy HH:mm"
+                                        showButtonPanel="true">
+
+                            </p:calendar>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <span>&#160;</span>
+                        </div>
+
+                        <div class="col-lg-2" style="padding-right: 15px;">
+                            <p:commandButton value="Novo Registro" action="#{pontosApoioMB.insert}"
+                                             icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                        </div>
+                        <div class="col-lg-2" style="padding-right: 15px;">
+
+                            <h:commandButton id="brFind"
+                                             value="Pesquisar"
+                                             icon="fa fa-search"
+                                             actionListener="#{pontosApoioMB.btnPesquisar}"
+                                             update="@form"
+                                             style="width: 100%;"
+                                             styleClass="btn btn-danger"
+                                             partialSubmit="true"/>
+
+                        </div>
+                        <div class="col-lg-2" style="padding-right: 15px;">
+                            <p:commandButton value="Voltar" action="#{pontosApoioMB.btnBack}"
+                                             icon="fa fa-window-close" styleClass="btn-danger"/>
+                        </div>
+                    </div>
+                </p:panel>
+            </div>
+
+            <br/>
+            <h:panelGroup layout="block">
+                <p:dataTable widgetVar="pontosTable" var="c" value="#{pontosApoioMB.pontosList}" rows="10" styleClass="box-danger"
+                             filteredValue="#{pontosApoioMB.filteredValue}"
+                             rowKey="#{c.id}" lazy="true" paginator="true"
+                             paginatorPosition="bottom" selection="#{pontosApoioMB.pontos}" selectionMode="single"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30">
+
+                    <p:ajax event="rowSelect" listener="#{pontosApoioMB.onRowSelect}" update="@form"/>
+                    <f:facet name="header">
+                        &#160;
+                    </f:facet>
+                    <p:column headerText="ID"  style="width:10%">
+                        #{c.id}
+                    </p:column>
+                    <p:column headerText="Nome" >
+                        #{c.nomeFantasia}
+                    </p:column>
+                    <p:column headerText="Telefone" >
+                        (#{c.telFixo.ddd}) #{c.telFixo.fone}
+                    </p:column>
+                    <p:column headerText="eMail" >
+                        #{c.email}
+                    </p:column>
+
+                    <p:column headerText="Data Cadastro">
+                        <div align="center">
+                            #{c.dtCriacao}
+                        </div>
+                    </p:column>
+
+
+                </p:dataTable>
+            </h:panelGroup>
+
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

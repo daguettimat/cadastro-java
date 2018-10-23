@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>An&aacute;lise da Ficha Cadastral</title>
+    <style>
+        body,td {
+            font-family: tahoma;
+            font-size: 12px;
+            font-weight: normal;
+        }
+        .bgimg {
+            background-image: url('http://104.245.34.229/images/secureback2.jpg');
+            background-repeat: repeat;
+            /* no-repeat; */
+            /*width: 100%;*/
+            /*background-size: 100%;*/
+        }
+        input[type="text"] {
+            font-weight: bold;
+            color: black;
+            background-color: transparent;
+            /* Other stuff: font-weight, font-size */
+        }
+        .under {
+            position: absolute;
+            z-index: 2;
+            top: 20px;
+            left: 100px;
+
+        }
+
+        .over {
+            z-index: 1;
+            position: relative;
+            left: 0;
+            top: 0;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container bgimg over">
+        <div class="row">
+            <div class="col-lg-9">
+                <img src="http://www.global5.com.br/images/logo.png" alt="Global5"
+                     align="left" border="0" hspace="0" vspace="0"/>
+                <hr/>
+            </div>
+            <div class="col-lg-3">
+                <img style="width: 65%;" src="http://104.245.34.229/images/rosettefinal.png" class="under"/>
+                <label class="pull-right" style="padding-top:10px;">Qua  7 Jun 2017 08:41:02</label>
+                <label class="pull-right under" style="color: #979797; font-weight:bold; font-size:22px; padding-top:80px;padding-left:20px;">Recomendado</label>
+
+            </div>
+        </div>
+        <div class="row  watermark">
+            <div class="col-lg-12">
+                <div align="center">
+                    <h3>An&aacute;lise Final da Ficha Cadastral<br/>964719</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <label>Empresa</label>
+                <input type="text" class="form-control" id="empresa" value="TRC EXPRESS MATAO LTDA ME">
+            </div>
+            <div class="col-lg-6">
+                <label>Unidade</label>
+                <input type="text" class="form-control" id="unidade" value="TRC EXPRESS MATAO LTDA ME">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div align="center">
+                    <h3>Pessoa Física (Terceiro)</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label>Nome</label>
+                <input type="text" class="form-control" id="nomePF" value="JAIME SABINO DE RESENDE">
+            </div>
+            <div class="col-md-1">
+                <label>Tipo</label>
+                <input type="text" class="form-control" id="tipo" value="CPF">
+            </div>
+
+            <div class="col-md-2" style="width:160px;">
+                <label>Documento</label>
+                <input type="text" class="form-control" id="doc" value="240.925.686-49">
+            </div>
+            <div class="col-md-1" style="width: 85px;">
+                <label>Tipo</label>
+                <input type="text" class="form-control" id="tipo2" value="RG">
+            </div>
+
+            <div class="col-md-2" style="width:160px;">
+                <label>Documento</label>
+                <input type="text" class="form-control" id="doc2" value="M1062413">
+            </div>
+
+            <div class="col-md-2" style="width:160px;">
+                <label>Emissor</label>
+                <input type="text" class="form-control" id="emissor" value="SSP/PR">
+            </div>
+
+            <div class="col-md-1" style="width:160px;" >
+                <label>Emiss&atilde;o</label>
+                <input type="text" class="form-control" id="emissao" value="12/05/1987">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div align="center">
+                    <h3>Ve&iacute;culos</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1" style="width: 130px;">
+                <label>Placa</label>
+                <input type="text" class="form-control" id="placaVei1" value="CZC-0878">
+            </div>
+            <div class="col-md-2">
+                <label>Marca</label>
+                <input type="text" class="form-control" id="marcaVei1" value="Scania">
+            </div>
+
+            <div class="col-md-2">
+                <label>Modelo</label>
+                <input type="text" class="form-control" id="modeloVei1" value="GA 4X2NZ 360">
+            </div>
+
+            <div class="col-md-4" >
+                <label>Propriet&aacute;rio</label>
+                <input type="text" class="form-control" id="propVei1" value="LUIZ PAULO GOULART DE ANDRADE ME">
+            </div>
+
+            <div class="col-md-2" style="width:190px;">
+                <label>Documento</label>
+                <input type="text" class="form-control" id="propDocVei1" value="03.215.155/0001-33">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-1" style="width: 130px;">
+                <input type="text" class="form-control" id="placaVei2" value="CZC-1150">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="marcaVei2" value="Fachini">
+            </div>
+
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="modeloVei2" value="Reboque">
+            </div>
+
+            <div class="col-md-4" >
+                <input type="text" class="form-control" id="propVei2" value="LUIZ PAULO GOULART DE ANDRADE ME">
+            </div>
+
+            <div class="col-md-2" style="width:190px;">
+                <input type="text" class="form-control" id="propDocVei2" value="03.215.155/0001-33">
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-6">
+                <div align="center">
+                    <h4>Certificação<br/>637a3f2f572bfc9b3279d53eecbb1659c0a484a5</h4>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <a rel='nofollow' class="pull-right"  href='http://www.qrcode-generator.de' border='0' style='cursor:default'>
+                    <img style="width: 60%" src='https://chart.googleapis.com/chart?cht=qr&chl=http%3A%2F%2Fecadastro.global5.com.br%2Fsys%2Fautenticador%3Fcode%3D637a3f2f572bfc9b3279d53eecbb1659c0a484a5&chs=180x180&choe=UTF-8&chld=L|2' alt=''/>
+                </a>
+            </div>
+        </div>
+        <div clas="row">
+            <div class="col-md-12">
+                <div align="center">
+                    <span>A impressão ou divulgação desta consulta será de inteira responsabilidade de TRC EXPRESS MATAO LTDA ME. </span>
+                    <span>A utilização do serviço de informações cadastrais oferecido pela GLOBAL 5, implica na aceitação plena de todas as cláusulas de nosso contrato de prestação de serviços.</span>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+</html>

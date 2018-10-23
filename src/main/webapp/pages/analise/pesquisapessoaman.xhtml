@@ -1,0 +1,200 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Pesquisa de Pessoas
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Pesquisa de Pessoas"/>
+        <h:form>
+            <f:metadata>
+                <f:event type="preRenderView" listener="#{pesquisaPessoaMB.updateUsuario(logonMB.usuarioLogado)}"/>
+            </f:metadata>
+            <h:panelGroup layout="block">
+                <p:panel header="Dados básicos" styleClass="box-danger" toggleable="true">
+                    <div class="align-right">
+                        <p:outputLabel value="Pesquisar por Id: "/>
+                        <p:spacer height="5"/>
+                        <p:inputText id="inptId" value="#{pesquisaPessoaMB.id}"/>
+                        <p:commandButton id="brFind"
+                                         value="Pesquisar"
+                                         action="#{pesquisaPessoaMB.findById(pesquisaPessoaMB.id)}"
+                                         process="@form"
+                                         update="@form"
+                                         styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                         partialSubmit="true"/>
+                    </div>
+                    <br/>
+                    <div class="ui-fluid">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <p:outputLabel value="Identificador" for="inptIdx"/>
+                                <p:inputText id="inptIdx" disabled="true" value="#{pesquisaPessoaMB.pessoa.id}"/>
+                            </div>
+                            <div class="col-lg-2">
+                                <p:outputLabel value="CPF" for="inptCPF"/>
+                                <p:inputText id="inptCPF" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.cpf}"/>
+                            </div>
+                            <div class="col-lg-5">
+                                <p:outputLabel value="Nome" for="inptNome"/>
+                                <p:inputText id="inptNome" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.nome}"/>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <p:outputLabel value="Data Nascimento" for="inptDtNasc"/>
+                                <p:inputText id="inptDtNasc" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.dtNascimento}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <p:outputLabel value="RG" for="inptRG"/>
+                                <p:inputText id="inptRG" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.rg}"/>
+                            </div>
+                            <div class="col-lg-1">
+                                <p:outputLabel value="UF" for="inptUFRG"/>
+                                <p:inputText id="inptUFRG" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.ufRg}"/>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <p:outputLabel value="Pai" for="inptPai"/>
+                                <p:inputText id="inptPai"  disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.nomePai}"/>
+                            </div>
+                            <div class="col-lg-4">
+                                <p:outputLabel value="Mãe" for="inptMae"/>
+                                <p:inputText id="inptMae"  disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.nomeMae}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <p:outputLabel value="Cidade" for="inptCidade"/>
+                                <p:inputText id="inptCidade" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.cidade}"/>
+                            </div>
+                            <div class="col-lg-1">
+                                <p:outputLabel value="UF" for="inptUF"/>
+                                <p:inputText id="inptUF" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.uf}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <ui:fragment rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
+                        <p:panel header="Dados internos" styleClass="box-default">
+                            <div class="ui-fluid">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p:outputLabel value="Usuário Consulta" for="inptUsuario"/>
+                                        <p:inputText id="inptUsuario" disabled="true" value="#{pesquisaPessoaMB.pessoa.usuConsulta.nome}"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p:outputLabel for="aprovado" value="Aprovado"/>
+                                        <p:selectBooleanButton id="aprovado" class="btn-danger"
+                                                               value = "#{pesquisaPessoaMB.pessoa.aprovado}"
+                                                               onLabel="Sim"
+                                                               offLabel="Não"
+                                                               partialsubmit="true"
+                                                               onIcon="ui-icon-check"
+                                                               offIcon="ui-icon-close">
+                                        </p:selectBooleanButton>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p:outputLabel value="Criação" for="inptDtCriacao"/>
+                                        <p:inputText id="inptDtCriacao" disabled="true" value="#{pesquisaPessoaMB.pessoa.dtCriacao}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:inputText>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p:outputLabel value="Resposta" for="inptDtResposta"/>
+                                        <p:inputText id="inptDtResposta" disabled="true" value="#{pesquisaPessoaMB.pessoa.dtResposta}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:inputText>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p:outputLabel value="Valor" for="inptValor"/>
+                                        <p:inputText id="inptValor" disabled="true" value="#{pesquisaPessoaMB.pessoa.valor}">
+                                            <f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </ui:fragment>
+
+                    <f:facet name="footer">
+                        <div class="align-right" style="padding: 5px;">
+
+                            <p:commandButton value="Consultar" disabled="#{pesquisaPessoaMB.pessoa.id != null}" action="#{pesquisaPessoaMB.update()}"
+                                             update="@form" styleClass="btn-danger"/>
+                            <p:spacer height="5"/>
+                            <p:commandButton value="Voltar" action="#{pesquisaPessoaMB.btnBack}"
+                                             styleClass="btn-danger"/>
+                        </div>
+                    </f:facet>
+                </p:panel>
+                <br/>
+
+                <br/>
+                <p:panel header="Resultado Consulta" styleClass="box-danger" style="#{pesquisaPessoaMB.pessoa.id != null ? '': 'display : none;'}">
+                    <ui:fragment rendered="#{pesquisaPessoaMB.pessoa.dtResposta == null }">
+                            <br/>
+                            <h3 style="text-align: center">Ainda não temos resultado da consulta...</h3>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{pesquisaPessoaMB.pessoa.dtResposta != null }">
+                        <div class="ui-fluid">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <p:outputLabel value="Data Consulta" for="inptDataConsulta"/>
+                                    <p:inputText id="inptDataConsulta" disabled="true" value="#{pesquisaPessoaMB.pessoa.consulta.dtConsulta}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p:outputLabel value="Solicitação" for="inptSolicitacao"/>
+                                    <p:inputText id="inptSolicitacao" disabled="true" value="#{pesquisaPessoaMB.pessoa.consulta.dtResposta}"/>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p:outputLabel value="CPF" for="inptRespCPF"/>
+                                    <p:inputText id="inptRespCPF" disabled="true" value="#{pesquisaPessoaMB.pessoa.consulta.cpf}"/>
+                                </div>
+                                <div class="col-lg-4">
+                                    <p:outputLabel value="Nome" for="inptRespNome"/>
+                                    <p:inputText id="inptRespNome" disabled="true" value="#{pesquisaPessoaMB.pessoa.consulta.nome}"/>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p:outputLabel for="nadaconsta" value="Resultado"/>
+                                    <p:selectBooleanButton id="nadaconsta" class="btn-danger"
+                                                           value = "#{pesquisaPessoaMB.pessoa.consulta.nadaConsta}"
+                                                           onLabel="Nada Consta"
+                                                           offLabel="Constam Anotações"
+                                                           partialsubmit="true"
+                                                           onIcon="ui-icon-check"
+                                                           offIcon="ui-icon-close">
+                                    </p:selectBooleanButton>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p:scrollPanel style="width:100%;height:300px;">
+                                        <h:outputText id="outputY" escape="false" value="#{pesquisaPessoaMB.formatJSON()}"/>
+                                    </p:scrollPanel>
+                                </div>
+                            </div>
+                        </div>
+                    </ui:fragment>
+                </p:panel>
+            </h:panelGroup>
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

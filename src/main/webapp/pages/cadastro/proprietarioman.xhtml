@@ -1,0 +1,278 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                xmlns:b="http://bootsfaces.net/ui"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            input[disabled] {
+                background-color: #000;
+                color:#fff !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Controle de Proprietários
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Edição de Proprietários"/>
+        <h:form id="frmProprietario" enctype="multipart/form-data">
+
+            <h:panelGroup layout="block">
+            <p:panel header="Manutenção" styleClass="box-danger">
+                <div class="align-right">
+                    <p:outputLabel value="Pesquisar por Id: "/>
+                    <p:spacer height="5"/>
+                    <p:inputText id="inptId" value="#{proprietarioMB.id}"/>
+                    <p:commandButton id="brFind"
+                                     value="Pesquisar"
+                                     action="#{proprietarioMB.findById(proprietarioMB.id)}"
+                                     process="@form"
+                                     update="@form"
+                                     styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                     partialSubmit="true"/>
+                </div>
+                <div class="ui-g ui-fluid">
+                    <div class="col-lg-2">
+                        <p:outputLabel value="Identificador" for="inptIdx"/>
+                        <p:inputText id="inptIdx" disabled="true" value="#{proprietarioMB.proprietario.id}"/>
+                    </div>
+                    <div class="col-lg-6">
+                        <p:outputLabel value="Nome" for="inptNome"/>
+                        <p:inputText id="inptNome" value="#{proprietarioMB.proprietario.nome}"/>
+                    </div>
+
+                    <div class="col-md-2">
+                        <p:outputLabel value="CPF/CNPJ" for="inptDoc"/>
+                        <p:inputText id="inptDoc"
+                                     value="#{proprietarioMB.proprietario.documento}"/>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <p:outputLabel for="nacional" value="Nacional"/>
+                        <p:selectBooleanButton id="nacional" class="btn-danger"
+                                               value = "#{proprietarioMB.proprietario.nacional}"
+                                               onLabel="Sim"
+                                               offLabel="Não"
+                                               onIcon="ui-icon-check"
+                                               offIcon="ui-icon-close"/>
+                    </div>
+                </div>
+
+                <div class="ui-g ui-fluid" id="endereco_1">
+                    <div class="col-lg-2">
+                        <p:outputLabel for="cepProprietario" value="CEP"/>
+                        <p:inputText id="cepProprietario" mask="99999-999"
+                                     value="#{proprietarioMB.prop.endereco.cep}">
+                            <p:ajax event="blur"
+                                    listener="#{proprietarioMB.BuscaCep}"
+                                    partialSubmit="true" process="@this"/>
+                        </p:inputText>
+                    </div>
+                    <div class="col-lg-1">
+                        <p:outputLabel for="cepUFProprietario" value="UF"/>
+                        <p:inputText id="cepUFProprietario" disabled="#{proprietarioMB.foundUF}"
+                                     value="#{proprietarioMB.prop.endereco.uf}"/>
+                    </div>
+                    <div class="col-lg-3">
+                        <p:outputLabel for="cepCidadeProprietario" value="Cidade"/>
+                        <p:inputText id="cepCidadeProprietario" disabled="#{proprietarioMB.foundCidade}"
+                                     value="#{proprietarioMB.proprietario.endereco.cidade}"/>
+                    </div>
+                    <div class="col-lg-3">
+                        <p:outputLabel for="cepBairroProprietario" value="Bairro"/>
+                        <p:inputText id="cepBairroProprietario" disabled="#{proprietarioMB.foundBairro}"
+                                     value="#{proprietarioMB.proprietario.endereco.bairro}"/>
+                    </div>
+                </div>
+                <div class="ui-g ui-fluid" id="endereco_2">
+                    <div class="col-lg-6">
+                        <p:outputLabel for="cepEndProprietario" value="Endereço"/>
+                        <p:inputText id="cepEndProprietario" disabled="#{proprietarioMB.foundEndereco}"
+                                     value="#{proprietarioMB.proprietario.endereco.logradouro}"/>
+                    </div>
+                    <div class="col-lg-1">
+                        <p:outputLabel for="cepNumProprietario" value="Número"/>
+                        <p:inputText id="cepNumProprietario"
+                                     value="#{proprietarioMB.prop.endereco.numero}">
+
+                            <p:ajax event="valueChange" listener="#{proprietarioMB.onValueChange}" />
+                        </p:inputText>
+
+
+                    </div>
+
+                    <div class="col-md-2">
+                        <p:outputLabel for="telTipoProprietario" value="Tipo"/>
+                        <p:selectOneMenu id="telTipoProprietario" value="#{proprietarioMB.prop.telefone.tipo.id}">
+                            <p:ajax event="valueChange" listener="#{proprietarioMB.onTipoTelefone}" process="@this"/>
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{proprietarioMB.lstTelefoneTipo}" var="lstTelTipo" itemValue="#{lstTelTipo.id}" itemLabel="#{lstTelTipo.descricao}" />
+                        </p:selectOneMenu>
+
+                    </div>
+
+                    <div class="col-lg-1">
+                        <p:outputLabel for="cepDDDProprietario" value="DDD"/>
+                        <p:inputMask id="cepDDDProprietario" required="true" requiredMessage=""
+                                     value="#{proprietarioMB.proprietario.telefone.ddd}" mask="99"/>
+                        <p:message id="cepDDDProprietarioMsg" for="cepDDDProprietario"  />
+                    </div>
+    
+                    <div class="col-lg-2">
+                        <p:outputLabel for="telProprietario" value="Telefone"/>
+                        <p:inputMask id="telProprietario" required="true" requiredMessage="Obrigatório!"
+                                     value="#{proprietarioMB.proprietario.telefone.fone}" mask="9999-9999"/>
+                        <p:message id="telProprietarioMsg" for="telProprietario"  />
+                    </div>
+                </div>
+
+                <div class="ui-g ui-fluid" style="padding-top: 15px;">
+                    <div class="col-lg-2">
+                        <p:outputLabel value="Data Criação" for="inptCriacao"/>
+                        <p:inputText id="inptCriacao" disabled="true" value="#{proprietarioMB.proprietario.dtCriacao}">
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </p:inputText>
+                    </div>
+                    <div class="col-lg-3">
+                        <p:outputLabel value="Usuário Criação" for="inptUsuCriacao"/>
+                        <p:inputText id="inptUsuCriacao" disabled="true" value="#{proprietarioMB.proprietario.usuCriacao.nome}"/>
+                    </div>
+                    <div class="col-lg-2">
+                        <p:outputLabel value="Data Alteração" for="inptAlteracao"/>
+                        <p:inputText id="inptAlteracao" disabled="true" value="#{proprietarioMB.proprietario.dtAlteracao}">
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </p:inputText>
+                    </div>
+                    <div class="col-lg-3">
+                        <p:outputLabel value="Usuário Alteração" for="inptUsuAlteracao"/>
+                        <p:inputText id="inptUsuAlteracao" disabled="true" value="#{proprietarioMB.proprietario.usuAlteracao.nome}"/>
+                    </div>
+                </div>
+
+                <f:facet name="footer">
+                    <div class="align-right" style="padding: 5px;">
+
+                        <p:commandButton value="Salvar" action="#{proprietarioMB.update}"
+                                         update="@form" styleClass="btn-danger"/>
+                        <p:spacer height="5"/>
+                        <p:commandButton id="btRemove" value="Apagar" action="#{proprietarioMB.remove}"
+                                         update="@form" styleClass="btn-danger"/>
+
+                        <p:spacer height="5"/>
+                        <p:commandButton value="Voltar" action="#{proprietarioMB.btnBack}"
+                                         styleClass="btn-danger"/>
+                    </div>
+                </f:facet>
+            </p:panel>
+            </h:panelGroup>
+            <br/>
+            <p:panel header="Veículos Associados" styleClass="box-danger" toggleable="true">
+                <p:dataTable var="veiculo" value="#{proprietarioMB.lstVeiculo}" resizableColumns="true" sortBy="#{veiculo.placa}" sortOrder="ASCENDING"
+                             paginatorPosition="bottom" rows="10" styleClass="box-danger" lazy="true" paginator="true"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,25,50">
+                    <p:column headerText="Ficha" width="85">
+                        <h:outputText value="#{veiculo.placa}" />
+                    </p:column>
+
+                    <p:column headerText="UF/Municipio">
+                        <h:outputText value="#{veiculo.uf} #{veiculo.municipio}" />
+                    </p:column>
+
+                    <p:column headerText="Renavam" width="100">
+                        <h:outputText value="#{veiculo.renavam}" />
+                    </p:column>
+
+                    <p:column headerText="Chassi">
+                        <h:outputText value="#{veiculo.chassi}" />
+                    </p:column>
+
+                    <p:column headerText="Ano/Modelo" width="100">
+                        <h:outputText value="#{veiculo.anoFabricacao} #{veiculo.anoModelo}" />
+                    </p:column>
+
+                    <p:column headerText="Marca"  width="200">
+                        <h:outputText value="#{veiculo.marca.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Modelo"  width="200">
+                        <h:outputText value="#{veiculo.modelo.nome}" />
+                    </p:column>
+
+                </p:dataTable>
+            </p:panel>
+            <br/>
+            <p:panel header="Histórico de Fichas" styleClass="box-danger" toggleable="true">
+                <p:dataTable var="historico" value="#{proprietarioMB.lstFichas}" resizableColumns="true"
+                             paginatorPosition="bottom" rows="10" styleClass="box-danger" lazy="true" paginator="true"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,25,50">
+                    <p:column headerText="Ficha" width="85">
+                        <h:outputText value="#{historico.acCadastro.id}" />
+                    </p:column>
+
+                    <p:column headerText="Data" width="85" >
+                        <h:outputText value="#{historico.acCadastro.dtCriacao}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Transportadora"  width="350">
+                        <h:outputText value="#{historico.acCadastro.filialArea.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Status Geral">
+                        <img src="/manager/resources/#{proprietarioMB.flag(historico.statusGeral.id)}" style="width: 16px;"/>
+                        <p:spacer height="5px;"/>
+                        <h:outputText value="#{historico.statusGeral.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Renavam">
+                        <img src="/manager/resources/#{proprietarioMB.flag(historico.renavam.id)}" style="width: 16px;"/>
+                        <p:spacer height="5px;"/>
+                        <h:outputText value="#{historico.renavam.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Referências">
+                        <img src="/manager/resources/#{proprietarioMB.flag(historico.referenciaProprietario.id)}" style="width: 16px;"/>
+                        <p:spacer height="5px;"/>
+                        <h:outputText value="#{historico.referenciaProprietario.descricao}"/>
+                    </p:column>
+
+                    <p:column headerText="Antt Situação">
+                        <img src="/manager/resources/#{proprietarioMB.flag(historico.anttSituacao.id)}" style="width: 16px;"/>
+                        <p:spacer height="5px;"/>
+                        <h:outputText value="#{historico.anttSituacao.descricao}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <br/>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

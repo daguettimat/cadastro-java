@@ -1,0 +1,688 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                xmlns:c="http://java.sun.com/jstl/core"
+                template="WEB-INF/templates/template.xhtml">
+
+
+
+    <ui:define name="head-end">
+
+
+        <ui:param name="renderBreadCrumb" value="false"/>
+        <style>
+            .ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td, .ui-datatable tfoot th {
+                padding: 4px 5px !important;
+                overflow: hidden;
+                border-width: 1px;
+                border-style: solid;
+            }
+
+            .box-header.with-border {
+                border-bottom: 1px solid #f4f4f4;
+                padding: 10px !important;
+            }
+
+            .ql-size-large {
+                font-size: 1.5em;
+            }
+
+            .ql-align-center {
+                text-align: center;
+            }
+
+            .flex-wrapper {
+                display: flex;
+                flex-flow: row nowrap;
+            }
+
+            .single-chart {
+                width: 33%;
+                justify-content: space-around ;
+            }
+
+            .circular-chart {
+                display: block;
+                margin: 10px auto;
+                max-width: 80%;
+                max-height: 250px;
+            }
+
+            .circle-bg {
+                fill: none;
+                stroke: #eee;
+                stroke-width: 3.8;
+            }
+
+            .circle {
+                fill: none;
+                stroke-width: 2.8;
+                stroke-linecap: round;
+                animation: progress 1s ease-out forwards;
+            }
+
+            @keyframes progress {
+                0% {
+                    stroke-dasharray: 0 100;
+                }
+            }
+
+            .circular-chart.orange .circle {
+                stroke: #ff9f00;
+            }
+
+            .circular-chart.green .circle {
+                stroke: #4CC790;
+            }
+
+            .circular-chart.blue .circle {
+                stroke: #3c9ee5;
+            }
+
+            .percentage {
+                fill: #666;
+                font-family: sans-serif;
+                font-size: 0.5em;
+                text-anchor: middle;
+            }
+        </style>
+
+
+    </ui:define>
+
+    <ui:define name="body">
+        <p:messages showDetail="false" autoUpdate="true" closable="true"/>
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{pendenciasMB.listaPrincipal(indexMB.usuario)}"/>
+            <f:event type="preRenderView" listener="#{indexMB.listaAvisos(indexMB.usuario)}"/>
+        </f:metadata>
+
+        <h:form>
+            <h:inputHidden id="msgUsuario" value="#{indexMB.msgUsuario}" />
+            <div class="row" data-step="1"
+                 data-intro="Esse é o resumo informativo, aqui você verá o que aconteceu nas últimas 48 horas...">
+                <!-- Enviadas -->
+                <div class="col-lg-3 col-xs-3">
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>#{indexMB.ultimas()}</h3>
+                            <p>Últimas 48 horas</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-upload"></i>
+                        </div>
+                        <h:commandLink action="#{listaCadastralMB.ultimasfichas(indexMB.today, indexMB.past)}"
+                                       styleClass="small-box small-box-footer" value="Mais informações"/>
+
+                    </div>
+                </div>
+                <!-- Aprovadas -->
+                <div class="col-lg-3 col-xs-3">
+                    <!-- small box -->
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>#{indexMB.aprovadas()}</h3>
+                            <p>Aprovadas</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-truck"></i>
+                        </div>
+                        <h:commandLink action="#{listaCadastralMB.recomendadas(indexMB.today, indexMB.past)}"
+                                       styleClass="small-box small-box-footer" value="Mais informações"/>
+
+                    </div>
+                </div>
+                <!-- Análise -->
+                <div class="col-lg-3 col-xs-3">
+                    <!-- small box -->
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>#{indexMB.analise()}</h3>
+                            <p>Em Análise</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-tv"></i>
+                        </div>
+                        <h:commandLink action="#{listaCadastralMB.emanalise(indexMB.today, indexMB.past)}"
+                                       styleClass="small-box small-box-footer" value="Mais informações"/>
+
+                    </div>
+                </div>
+                <!-- Reprovadas -->
+                <div class="col-lg-3 col-xs-3">
+                    <!-- small box -->
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>#{indexMB.reprovadas()}</h3>
+                            <p>Não Recomendadas</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-thumbs-down "></i>
+                        </div>
+                        <h:commandLink action="#{listaCadastralMB.reprovadas(indexMB.today, indexMB.past)}"
+                                       styleClass="small-box small-box-footer" value="Mais informações"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- Aguardando Cliente -->
+                <div class="col-lg-4 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3>#{indexMB.aguardaCliente()}</h3>
+                            <p>Aguardando Cliente</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-user-circle"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">
+                            Mais Informações <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Re-Análise -->
+                <div class="col-lg-4 col-xs-6" style="#{indexMB.usuario.interno == true ? '' : 'display : none;'}">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner" id="reanaliseBox">
+                            <h3>#{indexMB.reanalise()}</h3>
+                            <p>Aguardando Re-Análise</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-recycle"></i>
+                        </div>
+                        <h:commandLink action="#{listaCadastralMB.reanalise(indexMB.today)}"
+                                       styleClass="small-box small-box-footer" value="Mais informações"/>
+                    </div>
+                </div>
+                <!-- Renovações -->
+                <div class="col-lg-4 col-xs-6" style="#{indexMB.usuario.interno != true ? '' : 'display : none;'}">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner" id="renovacoesBox">
+                            <h3>#{indexMB.renovacoes()}</h3>
+                            <p>Renovações</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-recycle"></i>
+                        </div>
+                        <a href="#panelRenovacoes" class="small-box-footer">
+                            Mais Informações <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Enviar Ficha -->
+                <div class="col-lg-4 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-inverse text-white">
+                        <div class="inner" id="enviarFichaBox">
+                            <h3>Nova Ficha</h3>
+                            <p>Enviar novas fichas para a Global 5</p>
+                        </div>
+                        <div class="icon" id="iconClock">
+                            <div id="myclock"></div>
+                        </div>
+                        <h:commandLink action="#{indexMB.enviarFicha}"
+                                       styleClass="small-box small-box-footer" value="Acesso Rápido (Clique Aqui)"/>
+                    </div>
+                </div>
+            </div>
+
+            <ui:fragment  rendered="#{indexMB.usuario.interno == false and indexMB.total > 0}">
+                <div class="row">
+                    <div class="col-lg-6">
+
+                        <div class="box box-danger">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Fichas Recomendadas x Não Recomendadas</h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="box-body" >
+                                <p:chart type="bar" model="#{indexMB.model}" style="height:300px;" responsive="true"/>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="box box-danger">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Resumo do Últimos Lançamentos</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="flex-wrapper">
+                                    <div class="single-chart">
+                                        <svg viewbox="0 0 36 36" class="circular-chart orange">
+                                            <path class="circle-bg"
+                                                  d="M18 2.0845
+                                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <path class="circle"
+                                                  stroke-dasharray="#{indexMB.reprovadas}, 100"
+                                                  d="M18 2.0845
+                                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <text x="18" y="20.35" class="percentage">#{indexMB.reprovadas}%</text>
+                                        </svg>
+                                        <span style="padding-left: 50px;">Não Recomendadas</span>
+                                    </div>
+
+                                    <div class="single-chart">
+                                        <svg viewbox="0 0 36 36" class="circular-chart green">
+                                            <path class="circle-bg"
+                                                  d="M18 2.0845
+                                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <path class="circle"
+                                                  stroke-dasharray="#{indexMB.aprovadas}, 100"
+                                                  d="M18 2.0845
+                                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <text x="18" y="20.35" class="percentage">#{indexMB.aprovadas}%</text>
+                                        </svg>
+                                        <span style="padding-left: 60px;">Recomendadas</span>
+                                    </div>
+
+                                    <div class="single-chart">
+                                        <svg viewbox="0 0 36 36" class="circular-chart blue">
+                                            <path class="circle-bg"
+                                                  d="M18 2.0845
+                                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <path class="circle"
+                                                  stroke-dasharray="#{indexMB.total}, 100"
+                                                  d="M18 2.0845
+                                                      a 15.9155 15.9155 0 0 1 0 31.831
+                                                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            />
+                                            <text x="18" y="20.35" class="percentage">#{indexMB.total}%</text>
+                                        </svg>
+                                        <span style="padding-left: 60px;">Período vs Anual</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:fragment>
+
+
+            <p:tabView dynamic="true">
+                <p:tab id="PC" title="Pendências Cadastrais" titleStyleClass="box-danger">
+                    <f:facet name="title">
+                        <h:outputText value="Pendências Cadastrais"/>
+                        <span class="badge">#{pendenciasMB.lstPrincipal.size()}</span>
+                    </f:facet>
+                    <p:panel widgetVar="panel" toggleable="true">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p:dataTable widgetVar="pendTable" var="c" value="#{pendenciasMB.lstPrincipal}"
+                                             rows="15"
+                                             rowKey="#{c.id}" lazy="true" paginator="true"
+                                             paginatorPosition="bottom" selection="#{pendenciasMB.pendencias}"
+                                             selectionMode="single"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                                             rowsPerPageTemplate="5,10,15,20,30">
+
+                                    <p:ajax event="rowSelect" listener="#{pendenciasMB.onRowSelect}"
+                                            oncomplete="PF('dlgPenCliente').show();onTop('dlgPenCliente')"
+                                            update="@form"/>
+
+                                    <p:column headerText="Ficha" style="width:14%;">
+                                        <c:if test="#{!pendenciasMB.usuario.interno}">
+                                            <span style="#{c.pendenciasStatus.id == 206  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">#{c.cadastro.id}</span>
+
+                                        </c:if>
+                                        <c:if test="#{pendenciasMB.usuario.interno}">
+                                            <span style="padding-right:15px;#{c.pendenciasStatus.id == 209  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">#{c.cadastro.id}</span>
+                                            <p:tooltip for="cmdAnalise" value="Análise Cadastral" />
+                                            <p:commandButton id="cmdAnalise" action="#{cadastroMB.showAnaliseViaPendencias(c.cadastro.id)}"
+                                                             icon="fa fa-search" styleClass="btn btn-sm btn-danger" style="padding-right: 25px;"/>
+                                            <p:tooltip for="imgFlag" value="#{c.pendenciasStatus.descricao}" />
+                                            <p:graphicImage id="imgFlag" value="/resources/#{indexMB.flagPendencia(c.pendenciasStatus.id)}" styleClass="pull-right" style="width: 20%;" />
+
+                                        </c:if>
+
+                                    </p:column>
+
+                                    <c:if test="#{!pendenciasMB.usuario.interno}">
+                                        <p:column headerText="Situação Atual" style="width:20%">
+                                            <span style="#{c.pendenciasStatus.id == 206  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                                #{c.pendenciasStatus.descricao}
+                                            </span>
+                                        </p:column>
+                                    </c:if>
+
+                                    <c:if test="#{pendenciasMB.usuario.interno}">
+                                        <p:column headerText="Cliente" style="width:25%">
+                                           <span style="#{c.pendenciasStatus.id == 209  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                                #{c.cadastro.clienteArea.nome}
+                                           </span>
+                                        </p:column>
+                                    </c:if>
+
+                                    <p:column headerText="Data Criação" style="width:12%">
+                                        <c:if test="#{!pendenciasMB.usuario.interno}">
+                                       <span style="#{c.pendenciasStatus.id == 206  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                           <h:outputText value="#{c.dtCriacao}">
+                                               <f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss"/>
+                                           </h:outputText>
+                                       </span>
+                                        </c:if>
+                                        <c:if test="#{pendenciasMB.usuario.interno}">
+                                       <span style="#{c.pendenciasStatus.id == 209  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                           <h:outputText value="#{c.dtCriacao}">
+                                               <f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss"/>
+                                           </h:outputText>
+                                       </span>
+                                        </c:if>
+                                    </p:column>
+
+                                    <p:column headerText="Tipo" style="width:10%">
+                                        <c:if test="#{!pendenciasMB.usuario.interno}">
+                                       <span style="#{c.pendenciasStatus.id == 206  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                            #{c.tipoPendencia.pendencias.descricao}
+                                       </span>
+                                        </c:if>
+                                        <c:if test="#{pendenciasMB.usuario.interno}">
+                                       <span style="#{c.pendenciasStatus.id == 209  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                            #{c.tipoPendencia.pendencias.descricao}
+                                       </span>
+                                        </c:if>
+
+                                    </p:column>
+
+                                    <p:column headerText="Pendência" style="width:17%">
+                                        <c:if test="#{!pendenciasMB.usuario.interno}">
+                                       <span style="#{c.pendenciasStatus.id == 206  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                            #{c.tipoPendencia.descricao}
+                                       </span>
+                                        </c:if>
+                                        <c:if test="#{pendenciasMB.usuario.interno}">
+                                       <span style="#{c.pendenciasStatus.id == 209  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                            #{c.tipoPendencia.descricao}
+                                       </span>
+                                        </c:if>
+                                    </p:column>
+
+                                    <p:column headerText="Responsável" style="width:20%">
+                                        <c:if test="#{!pendenciasMB.usuario.interno}">
+                                       <span style="#{c.pendenciasStatus.id == 206  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                            #{c.usuarioCriacao.nome}
+                                       </span>
+                                        </c:if>
+                                        <c:if test="#{pendenciasMB.usuario.interno}">
+                                       <span style="#{c.pendenciasStatus.id == 209  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">
+                                            #{c.usuarioCriacao.nome}
+                                       </span>
+                                        </c:if>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </div>
+                        </div>
+                    </p:panel>
+                </p:tab>
+                <br/>
+                <f:event type="preRenderView" listener="#{renovacaoMB.updateUsuario(logonMB.usuarioLogado)}"/>
+
+                <p:tab id="CR" titleStyleClass="box-danger" rendered="#{indexMB.admin != true}">
+                    <f:facet name="title">
+                        <h:outputText value="Controle de Renovações"/>
+                        <span class="badge">#{indexMB.renovacoes()}</span>
+                    </f:facet>
+                    <p:panel widgetVar="panel" toggleable="true">
+                        <div class="row" id="panelRenovacoes">
+                            <div class="col-lg-12">
+                                <p:dataTable widgetVar="renovTable" var="rnv" value="#{renovacaoMB.renovacaoList}"
+                                             rows="15"
+                                             rowKey="#{rnv.id}" lazy="true" paginator="true"
+                                             filteredValue="#{renovacaoMB.filteredValue}"
+                                             sortBy="#{rnv.dtVencimento}" resizableColumns="true" sortOrder="ASCENDING"
+                                             paginatorPosition="bottom" selection="#{renovacaoMB.renovacao}"
+                                             selectionMode="single"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                                             rowsPerPageTemplate="5,10,15,20,30">
+
+                                    <p:column headerText="Ficha" style="width:8%">
+                                        <p:tooltip for="lblID" value="Aviso gerado em #{rnv.dtRegistro}">
+                                            <f:convertDateTime pattern="dd-MM-yyyy"/>
+                                        </p:tooltip>
+
+                                        <h:outputText id="lblID" value="#{rnv.id}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Vencimento" sortBy="#{rnv.rVencimento}" style="width:11%">
+                                        <p:tooltip for="lblVencimento"
+                                                   value="#{renovacaoMB.showTimeleft(rnv.rVencimento)}"/>
+                                        <h:outputText id="lblVencimento" value="#{rnv.rVencimento}">
+                                            <f:convertDateTime pattern="dd-MM-yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Centro de Custo" sortBy="#{rnv.centroCusto}"
+                                              style="width:11%">
+                                        <h:outputText value="#{rnv.centroCusto}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Filial" sortBy="#{rnv.filialArea.id}" style="width:25%">
+                                        <h:outputText value="#{rnv.filialArea.nome}"/>
+                                    </p:column>
+
+
+                                    <p:column headerText="Motorista" style="width:20%">
+                                        #{rnv.motorista.nome}
+                                    </p:column>
+
+                                    <p:column headerText="Veículos" style="width:20%">
+                                        #{renovacaoMB.showVeiculos(rnv.veiculos)}
+                                    </p:column>
+
+                                    <p:column headerText="Ações" style="width:8%">
+                                        <div align="center">
+                                            <p:tooltip for="cmdAutorizar" value="Autorizar a renovação da ficha"/>
+                                            <p:commandButton id="cmdAutorizar" icon="fa fa-recycle"
+                                                             action="#{renovacaoMB.dlg('dlgRenovar', rnv.id)}"
+                                                             partialSubmit="true"
+                                                             update="@form" styleClass="btn-sm btn-danger"/>
+                                            <p:spacer height="5px;"/>
+                                            <p:tooltip for="cmdCancelar" value="Cancelar a renovação da ficha"/>
+                                            <p:commandButton id="cmdCancelar" icon="fa fa-ban"
+                                                             action="#{renovacaoMB.dlg('dlgRecusar', rnv.id)}"
+                                                             partialSubmit="true"
+                                                             update="@form" styleClass="btn-sm btn-default"/>
+                                        </div>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </div>
+                        </div>
+                    </p:panel>
+                </p:tab>
+                <br/>
+                <p:tab id="LT" title="Linha do Tempo" titleStyleClass="box-danger" rendered="#{indexMB.admin != true}">
+                    <div class="box" style="font-family: 'Helvetica Neue';font-size: 15px; padding-top:10px;">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h:outputText value="#{indexMB.timeline()}" escape="false"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p:tab>
+            </p:tabView>
+
+            <p:dialog id="dlgRenovar" widgetVar="dlgRenovar" header="Confirmação Necessária..." modal="true"
+                      resizable="false" closable="false"
+                      width="600">
+                <p:panel>
+                    <div class="row">
+                        <div class="col-lg-12" align="center">
+                            <img src="/manager/resources/images/recycle_icon.png"
+                                 style="width:47%;padding-bottom: 15px;padding-left:20px;"/>
+                            <br/>
+                            <h3>Confirma a renovação automática desta ficha?
+                                <br/>Depois de confirmada a mesma será processa pela Global 5.</h3>
+                        </div>
+                    </div>
+                    <f:facet name="footer">
+                        <div align="right">
+                            <span>&#160;</span>
+                            <p:commandButton value="Confirmar"
+                                             onclick="PF('dlgRenovar').hide();"
+                                             action="#{renovacaoMB.renew(215)}"
+                                             update="@form"
+                                             styleClass="btn btn-danger"/>
+                            <span style="padding-left: 10px; padding-right: 10px;">&#160;</span>
+                            <p:commandButton value="Voltar"
+                                             update="@form"
+                                             onclick="PF('dlgRenovar').hide();"
+                                             styleClass="btn btn-default"/>
+
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </p:dialog>
+
+            <p:dialog id="dlgRecusar" widgetVar="dlgRecusar" header="Confirmação Necessária..." modal="true"
+                      resizable="false" closable="false"
+                      width="600">
+                <p:panel>
+                    <div class="row">
+                        <div class="col-lg-12" align="center">
+                            <img src="/manager/resources/images/danger_icon.png"
+                                 style="width:47%;padding-bottom: 15px;padding-left:20px;"/>
+                            <br/>
+                            <h3>Confirma a recusa da renovação automática?<br/>Após o término da validade a mesma não será processada automaticamente!
+                            </h3>
+                        </div>
+                    </div>
+                    <f:facet name="footer">
+                        <div align="right">
+                            <span>&#160;</span>
+
+                            <p:commandButton value="Confirmar"
+                                             onclick="PF('dlgRecusar').hide();"
+                                             action="#{renovacaoMB.renew(216)}"
+                                             styleClass="btn btn-danger"/>
+                            <span style="padding-left: 10px; padding-right: 10px;">&#160;</span>
+
+                            <p:commandButton value="Cancelar"
+                                             onclick="PF('dlgRecusar').hide();"
+                                             styleClass="btn btn-default"/>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </p:dialog>
+
+            <p:remoteCommand name="encerrarAviso" actionListener="#{indexMB.encerrarAviso}"/>
+
+        </h:form>
+
+
+
+        <p:dialog id="dlgPenCliente" widgetVar="dlgPenCliente" header="Controle de Pendências" modal="true"
+                  resizable="false" closable="true" position="center,top"
+                  width="900">
+
+            <p:ajax event="open" listener="#{pendenciasMB.dialog(0)}"/>
+
+            <ui:include src="pages/analise/analisePendencias.xhtml"/>
+
+        </p:dialog>
+
+        <script type="text/javascript">
+
+            function onTop(args) {
+                window.scrollTo(0, 0);
+                window.location = '#' + args;
+            }
+
+            $(document).ready(function(){
+
+                msgAviso = '#{indexMB.msgUsuario}';
+
+                if( msgAviso.length > 0  ) {
+                    BootstrapDialog.show({
+                        size : BootstrapDialog.SIZE_WIDE,
+                        type : BootstrapDialog.TYPE_DANGER,
+                        title: 'Informe ao Usuário',
+                        message: '#{indexMB.msgUsuario}',
+                        buttons: [{
+                            label: 'Ok, estou ciente...',
+                            cssClass: 'btn-danger',
+                            action: function(dialogRef){
+                                dialogRef.close();
+                                encerrarAviso();
+
+                            }
+                        }]
+                    });
+                }
+
+                var audioElement = new Audio("");
+
+                //clock plugin constructor
+                $('#myclock').thooClock({
+                    size:110,
+                    onAlarm:function(){
+                        //all that happens onAlarm
+                        $('#alarm1').show();
+                        alarmBackground(0);
+                        //audio element just for alarm sound
+                        document.body.appendChild(audioElement);
+                        var canPlayType = audioElement.canPlayType("audio/ogg");
+                        if(canPlayType.match(/maybe|probably/i)) {
+                            audioElement.src = 'alarm.ogg';
+                        } else {
+                            audioElement.src = 'alarm.mp3';
+                        }
+                        // erst abspielen wenn genug vom mp3 geladen wurde
+                        audioElement.addEventListener('canplay', function() {
+                            audioElement.loop = true;
+                            audioElement.play();
+                        }, false);
+                    },
+                    showNumerals:true,
+                    brandText:'Global 5',
+                    brandText2:'Engenharia de Riscos',
+                    onEverySecond:function(){
+                        //callback that should be fired every second
+                    },
+                    //alarmTime:'15:10',
+                    offAlarm:function(){
+                        $('#alarm1').hide();
+                        audioElement.pause();
+                        clearTimeout(intVal);
+                        $('body').css('background-color','#FCFCFC');
+                    }
+                });
+
+            });
+
+
+        </script>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,264 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        <style>
+
+            .colored {
+                background: red;
+                color: white;
+            }
+            .error {
+                background: lightslategray;
+                color: white;
+            }
+        </style>
+        Histórico de Fichas
+    </ui:define>
+
+    <ui:define name="description">
+        Filtro de Pesquisa
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Histórico de Fichas (Filtros)"/>
+
+        <h:form id="frmHistoricoFicha" onkeypress="if (event.keyCode == 13) { return false; }">
+            <div class="ui-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                                 widgetVar="panel" toggleable="true" >
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <p:outputLabel for="dataInicial" value="Data Inicial"/>
+                                    <p:calendar id="dataInicial" showOn="button"
+                                                value="#{historicoFichasMB.dtInicial}" pattern="dd/MM/yyyy"
+                                                showButtonPanel="true">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="col-md-2">
+                                    <p:outputLabel for="dataFinal" value="Data Final"/>
+                                    <p:calendar id="dataFinal" showOn="button"
+                                                value="#{historicoFichasMB.dtFinal}" pattern="dd/MM/yyyy"
+                                                showButtonPanel="true">
+
+                                    </p:calendar>
+                                </div>
+
+                                <ui:fragment autoUpdate="true" rendered="#{historicoFichasMB.habilitaArea == true}">
+                                    <div class="col-lg-4" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
+                                        <p:outputLabel for="transportadora" value="Transportadora"/>
+                                        <p:autoComplete id="transportadora" completeMethod="#{areaMB.listArea}"
+                                                        value="#{historicoFichasMB.areaCliente}"  maxResults="15"
+                                                        var="area" itemLabel="#{area.nome}" itemValue="#{area}"
+                                                        forceSelection="true" minQueryLength="3" queryDelay="700"
+                                                        converter="simpleEntityConverter">
+
+                                            <p:ajax event="itemSelect" listener="#{historicoFichasMB.selectTransp}" update="transportadora"/>
+                                        </p:autoComplete>
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment autoUpdate="true" rendered="#{historicoFichasMB.habilitaArea == false}">
+                                    <div class="col-lg-4" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
+                                        <p:outputLabel for="inptArea" value="Transportadora"/>
+                                        <p:inputText id="inptArea" disabled="true" value = "#{historicoFichasMB.nomeCliente}"/>
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment autoUpdate="true" rendered="#{false == true}">
+                                    <div class="col-lg-4" data-step="3" data-intro="Aqui você escolhe qual é a Filial responsável pela ficha que será enviada.">
+                                        <p:outputLabel for="filial" value="Filial"/>
+                                        <p:autoComplete id="filial" completeMethod="#{enviarFichaMB.listFilial}"
+                                                        value="#{historicoFichasMB.areaFilial}"  maxResults="15"
+                                                        var="areaFilial" itemLabel="#{areaFilial.nome}"
+                                                        itemValue="#{areaFilial}" forceSelection="true"
+                                                        minQueryLength="3" queryDelay="700"
+                                                        converter="simpleEntityConverter">
+                                            <p:ajax event="itemSelect" listener="#{historicoFichasMB.selectFilial}" update="filial"/>
+                                        </p:autoComplete>
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment autoUpdate="true" rendered="#{true == false}">
+                                    <div class="col-lg-4" data-step="2" data-intro="O campo filial transportadora indica quem é a responsável (filial)">
+                                        <p:outputLabel for="inptAreaFilial" value="Filial"/>
+                                        <p:inputText id="inptAreaFilial" disabled="true" value = "#{historicoFichasMB.nomeUnidade}"/>
+                                    </div>
+                                </ui:fragment>
+
+                            </div>
+                            <br/><br/>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <span>&#160;</span>
+                                </div>
+
+                                <div class="col-lg-2" style="padding-right: 15px;">
+                                    <p:commandButton value="Pesquisar" action="#{historicoFichasMB.btnPesquisarData}"
+                                                     icon="fa fa-search" update="@form" styleClass="btn-danger">
+
+                                    </p:commandButton>
+                                </div>
+                                <div class="col-lg-2" style="padding-right: 15px;">
+                                    <p:commandButton value="Voltar" action="#{historicoFichasMB.btnBack}"
+                                                     icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </div>
+                </div>
+
+            </div>
+
+            <br/>
+
+            <h:panelGroup layout="block" id="rptFat">
+
+
+                <p:dataTable widgetVar="historicoTable"
+                             id="historicoTable"
+                             var="c"
+                             value="#{historicoFichasMB.listaHistorico}"
+                             rows="20"
+                             styleClass="box-danger"
+                             resizableColumns="true"
+                             lazy="false" paginator="true"
+                             paginatorPosition="bottom"
+                             rowStyleClass="#{c.ficha eq c.idAnalise  ? 'error' : null}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30,40,50,100,1000,10000">
+
+                    <f:facet name="header">
+                            Historico de Fichas : De &#160;
+                            <h:outputText value="#{historicoFichasMB.dtInicial}">
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                            &#160;Até&#160;
+                            <h:outputText value="#{historicoFichasMB.dtFinal}">
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                    </f:facet>
+
+                    <p:column headerText="Ficha Fat."  style="width:8%; ">
+                        <h:outputText value="#{c.ficha}" />
+                    </p:column>
+
+
+                    <p:column headerText="Histórico"  style="width:8%">
+                        <h:outputText value="#{c.idAnalise}" />
+                    </p:column>
+
+                    <p:column headerText="Dt Término" style="text-align: center;width:8%">
+                        <h:outputText value="#{c.dtTermino}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Motorista" style="width:25%">
+                        <h:outputText value="#{c.nomeMotorista}" />
+                    </p:column>
+
+                    <p:column headerText="Tipo Ficha" style="width:10%">
+                        <h:outputText value="#{c.tipoFicha}" />
+                    </p:column>
+
+                    <p:column headerText="Status" style="width:10%">
+                        <h:outputText value="#{c.status}" />
+                    </p:column>
+
+                    <p:column headerText="Valor" style="text-align: right; width:8%;">
+                        <h:outputText value="#{(c.valor == null ?  0 : c.valor)}">
+                            <f:convertNumber pattern="¤###0.00" currencySymbol="" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Dias Ult. Cad." style="width:8%" >
+                            <h:outputText value="#{c.dtUltCadastro}"/>
+
+                    </p:column>
+
+                    <p:column headerText="Vinculo" style="width:20%">
+                        <h:outputText value="#{c.vinculo}" />
+                    </p:column>
+
+                    <p:column headerText="Cavalo" visible="false">
+                        <h:outputText value="#{c.cavalo}" />
+                    </p:column>
+
+                    <p:column headerText="Prop. CAV" visible="false">
+                        <h:outputText value="#{c.proprietario_cavalo}" />
+                    </p:column>
+
+                    <p:column headerText="Reboque 1" visible="false">
+                        <h:outputText value="#{c.reboque_1}" />
+                    </p:column>
+
+                    <p:column headerText="Prop. RB1" visible="false">
+                        <h:outputText value="#{c.proprietario_reboque_1}" />
+                    </p:column>
+
+                    <p:column headerText="Reboque 2" visible="false">
+                        <h:outputText value="#{c.reboque_2}" />
+                    </p:column>
+
+                    <p:column headerText="Prop. RB2" visible="false">
+                        <h:outputText value="#{c.proprietario_reboque_2}" />
+                    </p:column>
+
+                    <p:column headerText="Reboque 3" visible="false">
+                        <h:outputText value="#{c.reboque_3}" />
+                    </p:column>
+
+                    <p:column headerText="Prop. RB3" visible="false">
+                        <h:outputText value="#{c.proprietario_reboque_3}" />
+                    </p:column>
+
+
+
+                </p:dataTable>
+
+            </h:panelGroup>
+            <br/>
+
+            <h:panelGroup layout="block">
+                <div class="align-right" style="padding: 5px;">
+                    <p:commandButton id="toggler" type="button" value="Configurações" styleClass="btn-danger"
+                                     style="float:left" icon="ui-icon-circle-arrow-s" />
+                    <p:columnToggler datasource="historicoTable" trigger="toggler" />
+                    <p:spacer height="5"/>
+
+                </div>
+            </h:panelGroup>
+
+            <br/>
+            <p:panel header="Exportar para Excel" styleClass="box-danger">
+                <p:commandLink id="pdf" ajax="false">
+                    <p:graphicImage value="/resources/images/pdf-icon.png"/>
+                    <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}" />
+                    <p:dataExporter type="pdf" target="historicoTable" fileName="historico_ficha" facetBackground="#b2aeae" datasetPadding="4" />
+
+                </p:commandLink>
+
+                <p:spacer height="20"/>
+
+                <p:commandLink id="xls" ajax="false">
+                    <p:graphicImage value="/resources/images/xlsx-icon.png"/>
+                    <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}"  />
+                    <p:dataExporter type="xlsx" target="historicoTable" fileName="historico_ficha" facetBackground="#b2aeae" datasetPadding="4" postProcessor="#{historicoFichasMB.postProcessXLS}" />
+
+                </p:commandLink>
+
+            </p:panel>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

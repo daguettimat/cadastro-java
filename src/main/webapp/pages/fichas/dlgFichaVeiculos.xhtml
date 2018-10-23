@@ -1,0 +1,306 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <h:head>
+        <style>
+            input {
+                text-transform: uppercase;
+            }
+            .ppanel.ui-widget-content {
+                border: none;
+            }
+
+            .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error, div.ui-selectonemenu.ui-state-error, div.ui-fluid div.ui-selectonemenu.ui-state-error, div.ui-fluid div.ui-selectonemenu.ui-state-error.ui-state-focus, .form-control .ui-state-error {
+                color: #dd4b39 !important;
+            }
+
+
+        </style>
+
+
+    </h:head>
+    <h:form id="formVeiculo" onkeypress="if (event.keyCode == 13) { return false; }">
+        <p:messages showDetail="false" autoUpdate="true" closable="true" />
+        <p:panel widgetVar="panelVeiculos">
+
+            <div class="ui-fluid">
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <p:outputLabel for="booleanBtn" value="Nacionalidade"/>
+                        <p:selectBooleanButton id="booleanBtn" onLabel="Nacional" offLabel="Estrangeiro" onIcon="ui-icon-check"
+                                               offIcon="ui-icon-close" value="#{enviarFichaMB.veiculoNacional}">
+                            <p:ajax listener="#{enviarFichaMB.veiNacional}" />
+                        </p:selectBooleanButton>
+
+                    </div>
+                    <ui:fragment id="fragPlacaNacional" rendered="#{enviarFichaMB.veiculoNacional}">
+                        <div class="col-md-2" id="placaNacional">
+                            <label>Placa</label>
+                            <p:inputMask mask="aaa-9999"
+                                         onchange="this.value = this.value.toUpperCase();"
+                                         value="#{enviarFichaMB.refVeiculo.placa}"
+                                         style="width:100%">
+                                <p:ajax event="blur" listener="#{enviarFichaMB.findVeiculo}"
+                                        update="formVeiculo"/>
+                            </p:inputMask>
+                        </div>
+                        <div class="col-md-2" id="docNacional">
+                            <label>Renavam</label>
+                            <p:inputText id="veiDoc" required="true"
+                                         requiredMessage="O número do Renavam é um campo obrigatório"
+                                         value="#{enviarFichaMB.refVeiculo.renavam}">
+                                <p:ajax event="blur" listener="#{enviarFichaMB.checkRenavam}"/>
+                            </p:inputText>
+                        </div>
+
+                    </ui:fragment>
+                    <ui:fragment id="fragPlacaEstrangeira" rendered="#{! enviarFichaMB.veiculoNacional}">
+                        <div class="col-md-2" id="placaEstrangeira">
+                            <label>Placa</label>
+                            <p:inputText
+                                         onchange="this.value = this.value.toUpperCase();"
+                                         value="#{enviarFichaMB.refVeiculo.placa}"
+                                         style="width:100%">
+                                <p:ajax event="blur" listener="#{enviarFichaMB.findVeiculo}"
+                                        update="formVeiculo"/>
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-2" id="docEstrangeiro">
+                            <label>Documento</label>
+                            <p:inputText required="true"
+                                         requiredMessage="O número do Documento é um campo obrigatório"
+                                         value="#{enviarFichaMB.refVeiculo.renavam}">
+                            </p:inputText>
+                        </div>
+                    </ui:fragment>
+
+                    <div class="col-lg-2">
+                        <label>Data Documento</label>
+                        <p:inputMask id="dataDocumento" required="true"
+                                     value="#{enviarFichaMB.refVeiculo.dataDocumento}"
+                                     mask="99/99/9999">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </p:inputMask>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Tipo Veículo</label>
+                        <p:selectOneMenu id="veiTipo" required="true"
+                                         requiredMessage="O Tipo do veículo é obrigatório!"
+                                         value="#{enviarFichaMB.refVeiculo.tipo}">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{enviarFichaMB.lstTipoVeiculo}"
+                                           var="listTipoVeiculo"
+                                           itemValue="#{listTipoVeiculo.id}"
+                                           itemLabel="#{listTipoVeiculo.descricao}"/>
+                            <p:ajax listener="#{enviarFichaMB.findCategoria}" update="veiTipo"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Categoria</label>
+                        <b:selectOneMenu id="veiCategoria" required="true"
+                                         requiredMessage="A Categoria deve ser uma que está na lista de opções"
+                                         value="#{enviarFichaMB.refVeiculo.idCategoria}">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{enviarFichaMB.lstVeiculoCategoria}"
+                                           var="listVeiCategoria"
+                                           itemValue="#{listVeiCategoria.id}"
+                                           itemLabel="#{listVeiCategoria.descricao}"/>
+                        </b:selectOneMenu>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Marca</label>
+                        <h:selectOneMenu id="veiMarca" style="width: 100%;height:34px;" required="true"
+                                         styleClass="form-control bf-no-message has-success"
+                                         value="#{enviarFichaMB.refVeiculo.marca}" ajax="true" >
+
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{enviarFichaMB.lstMarca}"
+                                           var="listMarca"
+                                           itemValue="#{listMarca.id}"
+                                           itemLabel="#{listMarca.nome}"/>
+                            <p:ajax listener="#{enviarFichaMB.findModelo}" update="veiMarca"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Modelo</label>
+                        <h:selectOneMenu id="veiModelo"  style="width: 100%;height:34px;" required="true"
+                                         styleClass="form-control bf-no-message has-success"
+                                         value="#{enviarFichaMB.refVeiculo.modelo}">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{enviarFichaMB.lstModelo}"
+                                           var="listModelo"
+                                           itemValue="#{listModelo.id}"
+                                           itemLabel="#{listModelo.nome}"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Cor</label>
+                        <b:selectOneMenu id="veiCor" style="width: 100%;" required="true"
+                                         value="#{enviarFichaMB.refVeiculo.cor}">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{enviarFichaMB.lstCor}"
+                                           var="listCor"
+                                           itemValue="#{listCor.id}"
+                                           itemLabel="#{listCor.nome}"/>
+                        </b:selectOneMenu>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Chassi</label>
+                        <p:inputText id="veiChassi" style="width: 100%;" required="true"
+                                     value="#{enviarFichaMB.refVeiculo.chassi}"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Cidade</label>
+                        <p:inputText id="veiCidade" style="width: 100%;" required="true"
+                                     value="#{enviarFichaMB.refVeiculo.municipio}"/>
+                    </div>
+                    <div class="col-md-2">
+                        <label>UF</label>
+                        	
+                         <p:inputText id="veiUf"  
+                                      value="#{enviarFichaMB.refVeiculo.uf}" maxlength="2" size="2"/> 
+                        	
+                        
+                                     
+                    </div>
+                </div>
+
+                <div class="row">
+                    <ui:fragment id="fragPropNacional" rendered="#{enviarFichaMB.veiculoNacional}">
+                        <div class="col-md-3" id="propNacional">
+                            <label>CPF/CNPJ</label>
+                            <p:inputText id="veiPropDoc" style="width: 100%;" required="true"
+                                         value="#{enviarFichaMB.docProprietario}">
+                                <p:ajax event="blur" listener="#{enviarFichaMB.verificaDoc}" partialSubmit="true" process="@this"/>
+                            </p:inputText>
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Proprietário</label>
+                            <p:inputText id="veiProp" style="width: 100%;" required="true"
+                                         value="#{enviarFichaMB.nomProprietario}"/>
+                        </div>
+
+                        <div class="col-md-1" id="dddPropNacional" >
+                            <label>DDD</label>
+                            <p:inputMask id="veiPropDDD" style="width: 100%;" mask="99" required="#{enviarFichaMB.veiculoNacional}"
+                                         requiredMessage="O DDD é um campo obrigatório"
+                                         value="#{enviarFichaMB.refVeiculo.ddd}"/>
+                        </div>
+                        <div class="col-md-2" id="telPropNacional">
+                            <label>Telefone</label>
+                            <p:inputMask id="veiPropFone" style="width: 100%;" mask="9999-9999?9" required="#{enviarFichaMB.veiculoNacional}"
+                                         requiredMessage="O Telefone é um campo obrigatório"
+                                         value="#{enviarFichaMB.refVeiculo.telefone}"/>
+                        </div>
+                    </ui:fragment>
+
+                    <ui:fragment id="fragPropEstrangeiro" rendered="#{! enviarFichaMB.veiculoNacional}">
+                        <div class="col-md-3" id="propEstrangeiro">
+                            <label>D.N.I.</label>
+                            <p:inputText  style="width: 100%;" required="true"
+                                         value="#{enviarFichaMB.docProprietario}">
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Proprietário</label>
+                            <p:inputText id="veiPropEstrangeiro" style="width: 100%;" required="true"
+                                         value="#{enviarFichaMB.nomProprietario}"/>
+                        </div>
+
+                        <div class="col-md-3" id="telPropEstrangeiro">
+                            <label>Telefone Internacional</label>
+                            <p:inputText style="width: 100%;" required="#{!enviarFichaMB.veiculoNacional}"
+                                         value="#{enviarFichaMB.refVeiculo.telefone}"/>
+                        </div>
+                    </ui:fragment>
+
+
+                </div>
+                <div class="row" id="endereco_1">
+                    <ui:fragment id="fragPropNacionalCEP" rendered="#{enviarFichaMB.veiculoNacional}">
+                        <div class="col-md-2" id="propCEP">
+                            <label>CEP</label>
+                            <p:inputText id="cepProprietario" mask="99999-999" style="width: 100%;"
+                                         value="#{enviarFichaMB.refVeiculo.proprietario.endereco.cep}">
+                                <p:ajax event="blur" listener="#{enviarFichaMB.BuscaCepProprietario}" partialSubmit="true" process="@this"/>
+
+                            </p:inputText>
+                        </div>
+                        <div class="col-md-1" id="propUF" style="min-width: 85px;">
+                            <label>UF</label>
+                            <p:inputText id="cepUFProprietario" disabled="#{enviarFichaMB.foundEndereco}"
+                                         value="#{enviarFichaMB.refVeiculo.proprietario.endereco.uf}" maxlength="2" size="2"/>
+                        </div>
+                    </ui:fragment>
+                    <div class="col-md-5">
+                        <label>Cidade</label>
+                        <p:inputText id="cepCidadeProprietario" disabled="#{enviarFichaMB.foundEndereco}"
+                                     value="#{enviarFichaMB.refVeiculo.proprietario.endereco.cidade}"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Bairro</label>
+                        <p:inputText id="cepBairroProprietario" disabled="#{enviarFichaMB.foundEndereco}"
+                                     value="#{enviarFichaMB.refVeiculo.proprietario.endereco.bairro}"/>
+                    </div>
+                </div>
+                <div class="row" id="endereco_2">
+                    <div class="col-md-9">
+                        <label>Endereço</label>
+                        <p:inputText id="cepEndProprietario" disabled="#{enviarFichaMB.foundEndereco}"
+                                     value="#{enviarFichaMB.refVeiculo.proprietario.endereco.logradouro}"/>
+                    </div>
+                    <div class="col-md-1" style="min-width: 85px;">
+                        <label>Número</label>
+                        <p:inputText id="cepNumProprietario"
+                                     value="#{enviarFichaMB.refVeiculo.proprietario.endereco.numero}"/>
+                    </div>
+
+                    <!--<div class="col-md-1" style="min-width: 85px;">-->
+                        <!--<label>DDD</label>-->
+                        <!--<p:inputMask id="cepDDDProprietario"-->
+                                     <!--value="#{enviarFichaMB.refVeiculo.proprietario.telefone.ddd}" mask="99"/>-->
+                    <!--</div>-->
+
+                    <!--<div class="col-md-2">-->
+                        <!--<label>Telefone</label>-->
+                        <!--<p:inputMask id="telProprietario" style="width: 100%;"-->
+                                     <!--value="#{enviarFichaMB.refVeiculo.proprietario.telefone.fone}" mask="9999-9999?9"/>-->
+
+                    <!--</div>-->
+                </div>
+
+
+            </div>
+            <f:facet name="footer">
+                <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
+                    <div align="right">
+                        <p:commandButton value="Salvar" styleClass="btn-danger" update="@form" process="@form"
+                                         actionListener="#{enviarFichaMB.addReferenciaVeiculos}"
+                                         onclick="onTop('dVeiculos');"
+                                         style="margin-right:10px;" partialSubmit="true" >
+                            <f:ajax execute="@form" render="@form" />
+                        </p:commandButton>
+
+                        <b:button value="Cancelar" look="danger"
+                                  onclick="PF('dlgVeiculo').hide();onTop('dVeiculos');"/>
+                    </div>
+                </div>
+            </f:facet>
+            <br/>
+        </p:panel>
+    </h:form>
+
+
+</ui:composition>

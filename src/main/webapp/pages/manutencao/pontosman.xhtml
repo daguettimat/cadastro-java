@@ -1,0 +1,481 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Pontos de Apoio
+    </ui:define>
+
+    <ui:define name="description">
+        edição do registro
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Edição do Ponto de Apoio"/>
+        <h:form>
+            <h:panelGroup layout="block">
+                <p:panel header="Manutenção" styleClass="box-danger">
+                    <div class="align-right">
+                        <p:outputLabel value="Pesquisar por Id: "/>
+                        <p:spacer height="5"/>
+                        <p:inputText id="inptId" value="#{pontosApoioMB.id}"/>
+                        <p:commandButton id="brFind"
+                                         value="Pesquisar"
+                                         action="#{pontosApoioMB.findById(pontosApoioMB.id)}"
+                                         process="@form"
+                                         update="@form"
+                                         styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                         partialSubmit="true"/>
+                    </div>
+                    <div class="ui-g ui-fluid">
+
+                        <div class="ui-g-2">
+                            <p:outputLabel value="CNPJ" for="inptCNPJ"/>
+                            <p:inputText id="inptCNPJ" value="#{pontosApoioMB.pontos.cnpj}"/>
+                        </div>
+
+                        <div class="ui-g-2">
+                            <p:outputLabel for="tipoApoio" value="Tipo do Ponto"/>
+                            <p:selectOneMenu id="tipoApoio" required="true"
+                                             value="#{pontosApoioMB.tipoApoio}"
+                                             style="width: 100%;height:34px;" >
+                                <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                <f:selectItems value="#{pontosApoioMB.lstTipoApoio}"
+                                               var="listTipos"
+                                               itemValue="#{listTipos.id}"
+                                               itemLabel="#{listTipos.descricao}"/>
+                            </p:selectOneMenu>
+                        </div>
+
+                        <div class="ui-g-2">
+                            <p:outputLabel for="tipoBandeira" value="Bandeira"/>
+                            <p:selectOneMenu id="tipoBandeira" required="true"
+                                             value="#{pontosApoioMB.tipoBandeira}"
+                                             style="width: 100%;height:34px;" >
+                                <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                <f:selectItems value="#{pontosApoioMB.lstBandeiras}"
+                                               var="listTipos"
+                                               itemValue="#{listTipos.id}"
+                                               itemLabel="#{listTipos.descricao}"/>
+                            </p:selectOneMenu>
+                        </div>
+
+                        <div class="ui-g-3">
+                            <p:outputLabel value="Nome Fantasia" for="inptNome"/>
+                            <p:inputText id="inptNome" value="#{pontosApoioMB.pontos.nomeFantasia}"/>
+                        </div>
+
+                        <div class="ui-g-3">
+                            <p:outputLabel value="Razão Social" for="inptRazao"/>
+                            <p:inputText id="inptRazao" value="#{pontosApoioMB.pontos.razaoSocial}"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-6">
+                            <p:outputLabel value="Web" for="inptWeb"/>
+                            <p:inputText id="inptWeb" value="#{pontosApoioMB.pontos.web}"/>
+                        </div>
+                        <div class="ui-g-6">
+                            <p:outputLabel value="eMail" for="inptmail"/>
+                            <p:inputText id="inptmail" value="#{pontosApoioMB.pontos.email}"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-6">
+                            <p:outputLabel value="Responsável pelas informações" for="inptResp"/>
+                            <p:inputText id="inptResp" value="#{pontosApoioMB.pontos.responsavel}"/>
+                        </div>
+                        <div class="ui-g-6">
+                            <p:outputLabel value="Cargo do Responsável" for="inptCargo"/>
+                            <p:inputText id="inptCargo" value="#{pontosApoioMB.pontos.cargo}"/>
+                        </div>
+                    </div>
+                </p:panel>
+                <br/>
+                <p:panel header="Telefones de Contato" styleClass="box box-danger">
+                    <div class="ui-g ui-fluid">
+                        <div class="col-lg-1">
+                            <p:outputLabel for="DDDFixo" value="DDD"/>
+                            <p:inputMask id="DDDFixo"
+                                         required="true"
+                                         value="#{pontosApoioMB.pontos.telFixo.ddd}"
+                                         mask="99"/>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <p:outputLabel for="telFixo" value="Telefone (Fixo)"/>
+                            <p:inputMask id="telFixo" required="true"
+                                         value="#{pontosApoioMB.pontos.telFixo.fone}"
+                                         mask="9999-9999?9"/>
+
+                        </div>
+                        <div class="col-lg-1">
+                            <span>&#160;</span>
+                        </div>
+
+                        <div class="col-lg-1">
+                            <p:outputLabel for="DDDPublico" value="DDD"/>
+                            <p:inputMask id="DDDPublico"
+                                         value="#{pontosApoioMB.pontos.telPublico.ddd}"
+                                         mask="99"/>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <p:outputLabel for="telPublico" value="Telefone (Público)"/>
+                            <p:inputMask id="telPublico"
+                                         value="#{pontosApoioMB.pontos.telPublico.fone}"
+                                         mask="9999-9999?9"/>
+
+                        </div>
+                        <div class="col-lg-1">
+                            <span>&#160;</span>
+                        </div>
+
+                        <div class="col-lg-1">
+                            <p:outputLabel for="DDDCelular" value="DDD"/>
+                            <p:inputMask id="DDDCelular"
+                                         value="#{pontosApoioMB.pontos.telCelular.ddd}"
+                                         mask="99"/>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <p:outputLabel for="telCelular" value="Telefone (Celular)"/>
+                            <p:inputMask id="telCelular"
+                                         value="#{pontosApoioMB.pontos.telCelular.fone}"
+                                         mask="9999-9999?9"/>
+
+                        </div>
+                    </div>
+                </p:panel>
+                <br/>
+                <p:panel styleClass="box box-danger" header="Serviços">
+
+                    <p:tabView id="tabPendencia">
+                        <p:tab title="Manutenção e Abastecimento" titleStyleClass="box-warning" >
+                            <div class="ui-g ui-fluid">
+                                <div class="ui-g-2">
+                                    <p:outputLabel for="tipoAbast" value="Descrição do Serviço"/>
+                                    <p:selectOneMenu id="tipoAbast"
+                                                     value="#{pontosApoioMB.servManutencao.tipoServico}"
+                                                     style="width: 100%;height:34px;" >
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{pontosApoioMB.lstServManutencao}"
+                                                       var="listTipos"
+                                                       itemValue="#{listTipos.id}"
+                                                       itemLabel="#{listTipos.descricao}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-1">
+                                    <p:outputLabel for="temServico" value="Disponível"/>
+                                    <p:selectBooleanButton id="temServico" class="btn-warning"
+                                                           value = "#{pontosApoioMB.servManutencao.disponivel}"
+                                                           onLabel="Sim"
+                                                           offLabel="Não"
+                                                           partialsubmit="true"
+                                                           onIcon="ui-icon-check"
+                                                           offIcon="ui-icon-close">
+                                    </p:selectBooleanButton>
+                                </div>
+                                <div class="ui-g-2">
+                                    <p:outputLabel for="horFuncionamento" value="Horário Funcionamento"/>
+                                    <p:selectOneMenu id="horFuncionamento"
+                                                     value="#{pontosApoioMB.servManutencao.horFunc}"
+                                                     style="width: 100%;height:34px;" >
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{pontosApoioMB.lstHorFuncionamento}"
+                                                       var="listTipos"
+                                                       itemValue="#{listTipos.id}"
+                                                       itemLabel="#{listTipos.descricao}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-2">
+                                    <p:outputLabel for="vlrMercadoria" value="Valor"/>
+                                    <p:inputText id="vlrMercadoria" onkeydown="mascara(this,moeda)"
+                                                 value="#{pontosApoioMB.servManutencao.valor}">
+                                        <f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-3">
+                                    <p:outputLabel value="Observações" for="inptObs"/>
+                                    <p:inputText id="inptObs" value="#{pontosApoioMB.servManutencao.observacoes}"/>
+                                </div>
+                                <div class="ui-g-2">
+                                    <p:outputLabel value="&#160;" />
+                                    <p:commandButton value="Adicionar"
+                                                     action="#{pontosApoioMB.updateServicoAbastecimento()}"
+                                                     styleClass="btn-warning"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g ui-fluid">
+                                <p:panel styleClass="box box-warning">
+                                    <p:dataTable widgetVar="abastecimentoTable" var="c" value="#{pontosApoioMB.lstManutencao}" rows="10"
+                                                 filteredValue="#{pontosApoioMB.filteredManutencao}"
+                                                 rowKey="#{c.id}" lazy="true" paginator="true"
+                                                 paginatorPosition="bottom" selection="#{pontosApoioMB.srvManutencao}" selectionMode="single"
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+
+                                                 rowsPerPageTemplate="5,10,15,20,30">
+
+                                        <f:facet name="header">
+                                            &#160;
+                                        </f:facet>
+                                        <p:column headerText="ID"  style="width:10%">
+                                            #{c.id}
+                                        </p:column>
+                                        <p:column headerText="Serviço" >
+                                            #{c.tipo.descricao}
+                                        </p:column>
+                                        <p:column headerText="Disponível" style="width:10%;text-align: center">
+                                            <ui:fragment rendered="#{c.disponivel}">
+                                                <img class="center" src="/manager/resources/images/green-ok.png" width="20%"/>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{!c.disponivel}">
+                                                <img class="center" src="/manager/resources/images/red-cross.png" width="20%"/>
+                                            </ui:fragment>
+                                        </p:column>
+                                        <p:column headerText="Funcionamento" >
+                                            #{c.horarioFuncionamento.descricao}
+                                        </p:column>
+                                        <p:column headerText="Valor" >
+                                            <h:outputText value="#{c.valor}">
+                                                <f:convertNumber pattern="#0.000" locale="pt_BR"/>
+                                            </h:outputText>
+                                        </p:column>
+
+                                        <p:column headerText="Observações">
+                                            #{c.observacoes}
+                                        </p:column>
+
+
+                                    </p:dataTable>
+                                </p:panel>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Serviços aos Motoristas" titleStyleClass="box-success" >
+                            <div class="ui-g ui-fluid">
+                                <div class="ui-g-2">
+                                    <p:outputLabel for="tipoServMot" value="Descrição do Serviço"/>
+                                    <p:selectOneMenu id="tipoServMot"
+                                                     value="#{pontosApoioMB.servMotorista.tipoServico}"
+                                                     style="width: 100%;height:34px;" >
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{pontosApoioMB.lstServMotoristas}"
+                                                       var="listTipos"
+                                                       itemValue="#{listTipos.id}"
+                                                       itemLabel="#{listTipos.descricao}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-1">
+                                    <p:outputLabel for="temServicoMotorista" value="Disponível"/>
+                                    <p:selectBooleanButton id="temServicoMotorista" class="btn-success"
+                                                           value = "#{pontosApoioMB.servMotorista.disponivel}"
+                                                           onLabel="Sim"
+                                                           offLabel="Não"
+                                                           partialsubmit="true"
+                                                           onIcon="ui-icon-check"
+                                                           offIcon="ui-icon-close">
+                                    </p:selectBooleanButton>
+                                </div>
+                                <div class="ui-g-2">
+                                    <p:outputLabel for="horFuncMotorista" value="Horário Funcionamento"/>
+                                    <p:selectOneMenu id="horFuncMotorista"
+                                                     value="#{pontosApoioMB.servMotorista.horFunc}"
+                                                     style="width: 100%;height:34px;" >
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{pontosApoioMB.lstHorFuncionamento}"
+                                                       var="listTipos"
+                                                       itemValue="#{listTipos.id}"
+                                                       itemLabel="#{listTipos.descricao}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-2">
+                                    <p:outputLabel for="vlrMercMotoristas" value="Valor"/>
+                                    <p:inputText id="vlrMercMotoristas" onkeydown="mascara(this,moeda)"
+                                                 value="#{pontosApoioMB.servMotorista.valor}">
+                                        <f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-3">
+                                    <p:outputLabel value="Observações" for="inptObsMot"/>
+                                    <p:inputText id="inptObsMot" value="#{pontosApoioMB.servMotorista.observacoes}"/>
+                                </div>
+                                <div class="ui-g-2">
+                                    <p:outputLabel value="&#160;" />
+                                    <p:commandButton value="Adicionar"
+                                                     action="#{pontosApoioMB.updateServicoMotoristas}"
+                                                     styleClass="btn-success">
+                                        <f:ajax execute="@form" render="@form" />
+                                    </p:commandButton>
+                                </div>
+                            </div>
+                            <div class="ui-g ui-fluid">
+                                <p:panel styleClass="box box-success">
+                                    <p:dataTable widgetVar="motoristasTable" var="c" value="#{pontosApoioMB.lstMotoristas}" rows="10"
+                                                 filteredValue="#{pontosApoioMB.filteredMotoristas}"
+                                                 rowKey="#{c.id}" lazy="true" paginator="true"
+                                                 paginatorPosition="bottom" selection="#{pontosApoioMB.srvMotoristas}" selectionMode="single"
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                                                 currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                                                 rowsPerPageTemplate="5,10,15,20,30">
+
+                                        <f:facet name="header">
+                                            &#160;
+                                        </f:facet>
+                                        <p:column headerText="ID"  style="width:10%">
+                                            #{c.id}
+                                        </p:column>
+                                        <p:column headerText="Serviço" >
+                                            #{c.tipo.descricao}
+                                        </p:column>
+                                        <p:column headerText="Disponível" style="width:10%;text-align: center">
+                                            <ui:fragment rendered="#{c.disponivel}">
+                                                <img class="center" src="/manager/resources/images/green-ok.png" width="20%"/>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{!c.disponivel}">
+                                                <img class="center" src="/manager/resources/images/red-cross.png" width="20%"/>
+                                            </ui:fragment>
+                                        </p:column>
+                                        <p:column headerText="Funcionamento" >
+                                            #{c.horarioFuncionamento.descricao}
+                                        </p:column>
+                                        <p:column headerText="Valor" >
+                                            <h:outputText value="#{c.valor}">
+                                                <f:convertNumber pattern="#0.000" locale="pt_BR"/>
+                                            </h:outputText>
+                                        </p:column>
+
+                                        <p:column headerText="Observações">
+                                            #{c.observacoes}
+                                        </p:column>
+
+
+                                    </p:dataTable>
+                                </p:panel>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Ferramentas de Segurança" titleStyleClass="box-info" >
+                            <div class="ui-g ui-fluid">
+                                <div class="ui-g-2">
+                                    <p:outputLabel for="tipoFerSeg" value="Descrição do Serviço"/>
+                                    <p:selectOneMenu id="tipoFerSeg"
+                                                     value="#{pontosApoioMB.servSeguranca.tipoServico}"
+                                                     style="width: 100%;height:34px;" >
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{pontosApoioMB.lstServSeguranca}"
+                                                       var="listTipos"
+                                                       itemValue="#{listTipos.id}"
+                                                       itemLabel="#{listTipos.descricao}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-1">
+                                    <p:outputLabel for="temServicoSeguranca" value="Disponível"/>
+                                    <p:selectBooleanButton id="temServicoSeguranca" class="btn-info"
+                                                           value = "#{pontosApoioMB.servSeguranca.disponivel}"
+                                                           onLabel="Sim"
+                                                           offLabel="Não"
+                                                           partialsubmit="true"
+                                                           onIcon="ui-icon-check"
+                                                           offIcon="ui-icon-close">
+                                    </p:selectBooleanButton>
+                                </div>
+                                <div class="ui-g-2">
+                                    <p:outputLabel for="horFuncSeguranca" value="Horário Funcionamento"/>
+                                    <p:selectOneMenu id="horFuncSeguranca"
+                                                     value="#{pontosApoioMB.servSeguranca.horFunc}"
+                                                     style="width: 100%;height:34px;" >
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{pontosApoioMB.lstHorFuncionamento}"
+                                                       var="listTipos"
+                                                       itemValue="#{listTipos.id}"
+                                                       itemLabel="#{listTipos.descricao}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-2">
+                                    <p:outputLabel for="vlrMercSeguranca" value="Valor"/>
+                                    <p:inputText id="vlrMercSeguranca" onkeydown="mascara(this,moeda)"
+                                                 value="#{pontosApoioMB.servSeguranca.valor}">
+                                        <f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-3">
+                                    <p:outputLabel value="Observações" for="inptObsSeg"/>
+                                    <p:inputText id="inptObsSeg" value="#{pontosApoioMB.servSeguranca.observacoes}"/>
+                                </div>
+                                <div class="ui-g-2">
+                                    <p:outputLabel value="&#160;" />
+                                    <p:commandButton value="Adicionar" action="#{pontosApoioMB.updateServicoSeguranca}"
+                                                     update="@form" styleClass="btn-info"/>
+                                </div>
+                            </div>
+                            <div class="ui-g ui-fluid">
+                                <p:panel styleClass="box box-info">
+                                    <p:dataTable widgetVar="segurancaTable" var="c" value="#{pontosApoioMB.lstSeguranca}" rows="10"
+                                                 filteredValue="#{pontosApoioMB.filteredSegurancas}"
+                                                 rowKey="#{c.id}" lazy="true" paginator="true"
+                                                 paginatorPosition="bottom" selection="#{pontosApoioMB.srvSeguranca}" selectionMode="single"
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                                                 currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                                                 rowsPerPageTemplate="5,10,15,20,30">
+
+                                        <f:facet name="header">
+                                            &#160;
+                                        </f:facet>
+                                        <p:column headerText="ID"  style="width:10%">
+                                            #{c.id}
+                                        </p:column>
+                                        <p:column headerText="Serviço" >
+                                            #{c.tipo.descricao}
+                                        </p:column>
+                                        <p:column headerText="Disponível" style="width:10%;text-align: center">
+                                            <ui:fragment rendered="#{c.disponivel}">
+                                                <img class="center" src="/manager/resources/images/green-ok.png" width="20%"/>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{!c.disponivel}">
+                                                <img class="center" src="/manager/resources/images/red-cross.png" width="20%"/>
+                                            </ui:fragment>
+                                        </p:column>
+                                        <p:column headerText="Funcionamento" >
+                                            #{c.horarioFuncionamento.descricao}
+                                        </p:column>
+                                        <p:column headerText="Valor" >
+                                            <h:outputText value="#{c.valor}">
+                                                <f:convertNumber pattern="#0.000" locale="pt_BR"/>
+                                            </h:outputText>
+                                        </p:column>
+
+                                        <p:column headerText="Observações">
+                                            #{c.observacoes}
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panel>
+                            </div>
+                        </p:tab>
+                    </p:tabView>
+                </p:panel>
+                <br/>
+                <p:panel>
+                    <f:facet name="footer">
+                        <div class="align-right" style="padding: 5px;">
+                            <p:commandButton value="Salvar" action="#{pontosApoioMB.update}"
+                                             update="@form" styleClass="btn-danger"/>
+                            <p:spacer height="5"/>
+                            <p:commandButton id="btRemove" value="Apagar" action="#{pontosApoioMB.remove}"
+                                             update="@form" styleClass="btn-danger"/>
+                            <p:spacer height="5"/>
+                            <p:commandButton value="Voltar" action="#{pontosApoioMB.btnBack}"
+                                             styleClass="btn-danger"/>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </h:panelGroup>
+            <br/>        
+        </h:form>
+    </ui:define>
+</ui:composition>

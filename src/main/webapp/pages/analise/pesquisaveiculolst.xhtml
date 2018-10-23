@@ -1,0 +1,172 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Pesquisa de Veículos
+    </ui:define>
+
+    <ui:define name="description">
+        lista geral
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Pesquisa de Veículos"/>
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{pesquisaVeiculoMB.updateUsuario(logonMB.usuarioLogado)}"/>
+        </f:metadata>
+        <h:form>
+            <p:growl autoUpdate="true" escape="false" sticky="true"/>
+            <div class="ui-fluid">
+                <div class="row" id="filtroMenu" >
+                    <div class="col-md-12">
+                        <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                             widgetVar="panel" toggleable="true" >
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <p:outputLabel for="nroFicha" value="Pesquisa"/>
+                                    <p:inputText id="nroFicha" value="#{pesquisaVeiculoMB.nFicha}"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <p:outputLabel for="dataInicial" value="Data Inicial"/>
+                                    <p:calendar id="dataInicial" showOn="button"
+                                                value="#{pesquisaVeiculoMB.filter.entity.dtInicial}" pattern="dd/MM/yyyy HH:mm"
+                                                showButtonPanel="true">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="col-md-2">
+                                    <p:outputLabel for="dataFinal" value="Data Final"/>
+                                    <p:calendar id="dataFinal" showOn="button"
+                                                value="#{pesquisaVeiculoMB.filter.entity.dtFinal}" pattern="dd/MM/yyyy HH:mm"
+                                                showButtonPanel="true">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="col-md-2">
+                                    <p:outputLabel for="Placa" value="Placa"/>
+                                    <p:inputText id="Placa" value="#{pesquisaVeiculoMB.filter.entity.placa}"/>
+                                </div>
+
+
+                                <div class="col-md-2">
+                                    <p:outputLabel for="Chassi" value="Chassi"/>
+                                    <p:inputText id="Chassi" value="#{pesquisaVeiculoMB.filter.entity.chassi}"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <ui:fragment autoUpdate="true" rendered="#{pesquisaVeiculoMB.habilitaArea == true}">
+                                    <div class="col-md-5" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
+                                        <p:outputLabel for="transportadora" value="Transportadora"/>
+                                        <p:autoComplete id="transportadora" completeMethod="#{areaMB.listArea}"
+                                                        value="#{pesquisaVeiculoMB.areaCliente}"  maxResults="15"
+                                                        var="area" itemLabel="#{area.nome}" itemValue="#{area}"
+                                                        forceSelection="true" minQueryLength="3" queryDelay="700"
+                                                        converter="simpleEntityConverter">
+
+                                            <p:ajax event="itemSelect" listener="#{pesquisaVeiculoMB.selectTransp}" update="transportadora"/>
+                                        </p:autoComplete>
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment autoUpdate="true" rendered="#{pesquisaVeiculoMB.habilitaArea == false}">
+                                    <div class="col-md-5" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
+                                        <p:outputLabel for="inptArea" value="Transportadora"/>
+                                        <p:inputText id="inptArea" disabled="true" value = "#{pesquisaVeiculoMB.areaCliente.nome}"/>
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment autoUpdate="true" rendered="#{pesquisaVeiculoMB.habilitaFilial == true}">
+                                    <div class="col-md-6" data-step="3" data-intro="Aqui você escolhe qual é a Filial responsável pela ficha que será enviada.">
+                                        <p:outputLabel for="filial" value="Filial"/>
+                                        <p:autoComplete id="filial" completeMethod="#{enviarFichaMB.listFilial}"
+                                                        value="#{pesquisaVeiculoMB.areaFilial}"  maxResults="15"
+                                                        var="areaFilial" itemLabel="#{areaFilial.nome}"
+                                                        itemValue="#{areaFilial}" forceSelection="true"
+                                                        minQueryLength="3" queryDelay="700"
+                                                        converter="simpleEntityConverter">
+                                            <p:ajax event="itemSelect" listener="#{pesquisaVeiculoMB.selectFilial}" update="filial"/>
+                                        </p:autoComplete>
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment autoUpdate="true" rendered="#{pesquisaVeiculoMB.habilitaFilial == false}">
+                                    <div class="col-md-6" data-step="2" data-intro="O campo filial transportadora indica quem é a responsável (filial)">
+                                        <p:outputLabel for="inptAreaFilial" value="Filial"/>
+                                        <p:inputText id="inptAreaFilial" disabled="true" value = "#{pesquisaVeiculoMB.areaFilial.nome}"/>
+                                    </div>
+                                </ui:fragment>
+                            </div>
+                            <br/><br/>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span>&#160;</span>
+                                </div>
+
+                                <div class="col-md-2" style="padding-right: 15px;">
+                                    <p:commandButton id="btnInsert" value="Nova Consulta" action="#{pesquisaVeiculoMB.insert}"
+                                                     icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                                </div>
+
+                                <div class="col-md-2" style="padding-right: 15px;">
+                                    <p:commandButton value="Pesquisar"
+                                                     action="#{pesquisaVeiculoMB.dummy}"
+                                                     process="@form"
+                                                     update="@none"
+                                                     oncomplete="PF('pesTable').filter()"
+                                                     icon="fa fa-search" styleClass="btn-danger">
+
+                                    </p:commandButton>
+                                </div>
+                                <div class="col-md-2" style="padding-right: 15px;">
+                                    <p:commandButton value="Voltar" action="#{pesquisaVeiculoMB.btnBack}"
+                                                     icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </div>
+                </div>
+            </div>
+            <br/><br/>
+            <h:panelGroup layout="block">
+                <p:dataTable widgetVar="pesTable" var="c" value="#{pesquisaVeiculoMB.pesList}" rows="15" styleClass="box-danger"
+                             filteredValue="#{pesquisaVeiculoMB.filteredValue}"
+                             rowKey="#{c.id}" lazy="true" paginator="true"
+                             paginatorPosition="bottom" selection="#{pesquisaVeiculoMB.pesqVeiculo}" selectionMode="single"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30">
+
+                    <p:ajax event="rowSelect" listener="#{pesquisaVeiculoMB.onRowSelect}" update="@form"/>
+                    <f:facet name="header">
+                        &#160;
+                    </f:facet>
+                    <p:column headerText="Renavam" sortBy="#{c.renavam}"  >
+                        #{c.renavam}
+                    </p:column>
+                    <p:column headerText="Placa" sortBy="#{c.placa}" filterMatchMode="contains">
+                        #{c.placa}
+                    </p:column>
+                    <p:column headerText="UF" sortBy="#{c.uf}"  >
+                        #{c.uf}
+                    </p:column>
+                    <p:column headerText="Chassi"  sortBy="#{c.chassi}" style="width: 15%;">
+                        <div style="text-align: center">
+                            <h:outputText value="#{c.chassi}"/>
+                        </div>
+                    </p:column>
+                    <p:column headerText="Data Criação" sortBy="#{c.dtCriacao}"  style="width:15%" >
+                        <div style="text-align: center">
+                            <h:outputText value="#{c.dtCriacao}">
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

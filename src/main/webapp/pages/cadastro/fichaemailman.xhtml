@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Pré Cadastro de Clientes
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Edição do pré-Cadastro"/>
+        <h:form>
+            <f:event type="preRenderView" listener="#{fichaEmailMB.updateUsuario(logonMB.usuarioLogado)}"/>
+            <h:panelGroup layout="block">
+                <p:panel header="Manutenção" styleClass="box-danger">
+                    <div class="align-right">
+                        <p:outputLabel value="Pesquisar por Id: "/>
+                        <p:spacer height="5"/>
+                        <p:inputText id="inptId" value="#{fichaEmailMB.id}"/>
+                        <p:commandButton id="brFind"
+                                         value="Pesquisar"
+                                         action="#{fichaEmailMB.findById(fichaEmailMB.id)}"
+                                         process="@form"
+                                         update="@form"
+                                         styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                         partialSubmit="true"/>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="col-lg-1">
+                            <p:outputLabel value="Id" for="inptIdx"/>
+                            <p:inputText id="inptIdx" disabled="true" value="#{fichaEmailMB.fichaEmail.id}"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <p:outputLabel value="Nome" for="inptNome"/>
+                            <p:inputText id="inptNome" value="#{fichaEmailMB.fichaEmail.nome}"/>
+                        </div>
+                        <div class="col-lg-2" >
+                            <p:outputLabel value="Telefone" for="telResponsavel"/>
+                            <p:inputMask id="telResponsavel"  mask="(99)9999-9999?9" style="padding-left: -10px;"
+                                         value="#{fichaEmailMB.fichaEmail.telefone}"/>
+                        </div>
+                        <div class="col-lg-2">
+                            <p:outputLabel value="Data Validação" for="inptValidacao"/>
+                            <p:inputText id="inptValidacao" disabled="true"
+                                         value="#{fichaEmailMB.fichaEmail.dtValidacao}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+                        </div>
+
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="col-lg-4">
+                            <p:outputLabel value="Responsavel" for="inptResponsavel"/>
+                            <p:inputText id="inptResponsavel" value="#{fichaEmailMB.fichaEmail.responsavel}"/>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <p:outputLabel value="eMail" for="inptEmail"/>
+                            <p:inputText id="inptEmail" value="#{fichaEmailMB.fichaEmail.email}"/>
+                        </div>
+                        <div class="col-lg-2">
+                            <p:outputLabel value="Date de Envio" for="inptDtEmail"/>
+                            <p:inputText id="inptDtEmail" disabled="true"
+                                         value="#{fichaEmailMB.fichaEmail.dtEmail}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+                        </div>
+                        <div class="col-lg-2">
+                            <p:outputLabel value="Data de Retorno" for="inptDtRetorno"/>
+                            <p:inputText id="inptDtRetorno" disabled="true"
+                                         value="#{fichaEmailMB.fichaEmail.dtRetorno}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid" style="padding-top: 15px;">
+                        <div class="col-lg-2">
+                            <p:outputLabel value="Data Registro" for="inptCriacao"/>
+                            <p:inputText id="inptCriacao" disabled="true"
+                                         value="#{fichaEmailMB.fichaEmail.dtCriacao}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+                        </div>
+                        <div class="col-lg-4">
+                            <p:outputLabel value="Usuário" for="inptUsuCriacao"/>
+                            <p:inputText id="inptUsuCriacao" disabled="true"
+                                         value="#{fichaEmailMB.fichaEmail.usuarioCriacao.nome}"/>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <p:outputLabel value="Data Alteração" for="inptAlteracao"/>
+                            <p:inputText id="inptAlteracao" disabled="true"
+                                         value="#{fichaEmailMB.fichaEmail.dtAlteracao}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+                        </div>
+                        <div class="col-lg-4">
+                            <p:outputLabel value="Usuário" for="inptUsuAlteracao"/>
+                            <p:inputText id="inptUsuAlteracao" disabled="true"
+                                         value="#{fichaEmailMB.fichaEmail.usuarioAlteracao.nome}"/>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid" style="padding-top: 15px;">
+
+                    </div>
+
+
+                    <f:facet name="footer">
+                        <div class="align-right" style="padding: 5px;">
+
+                            <p:commandButton value="Salvar" action="#{fichaEmailMB.update}"
+                                             update="@form" styleClass="btn-danger"/>
+                            <p:spacer height="5"/>
+                            <p:commandButton id="btRemove" value="Apagar" action="#{fichaEmailMB.remove}"
+                                             update="@form" styleClass="btn-danger"/>
+
+                            <p:spacer height="5"/>
+                            <p:commandButton value="Voltar" action="#{fichaEmailMB.btnBack}"
+                                             styleClass="btn-danger"/>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </h:panelGroup>
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

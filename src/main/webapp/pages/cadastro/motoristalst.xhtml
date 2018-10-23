@@ -1,0 +1,212 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+
+                template="/WEB-INF/templates/template.xhtml">
+
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Motoristas
+    </ui:define>
+
+    <ui:define name="description">
+        lista geral
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Lista de Motoristas"/>
+        <h:form>
+            <p:growl autoUpdate="true" escape="false" sticky="true"/>
+            <div class="ui-fluid">
+                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                         widgetVar="panel" toggleable="true">
+                    <div class="row">
+                        <div class="col-lg-1">
+                            <p:outputLabel for="nroId" value="Id"/>
+                            <p:inputText id="nroId" value="#{motoristaMB.id}"/>
+                        </div>
+                        <div class="col-lg-2">
+                            <p:outputLabel for="nroDocumento" value="Documento"/>
+                            <p:inputText id="nroDocumento" value="#{motoristaMB.documento}"/>
+                        </div>
+
+                        <div class="col-lg-5">
+                            <p:outputLabel for="nome" value="Nome"/>
+                            <p:inputText id="nome" value="#{motoristaMB.nome}"/>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <p:outputLabel for="mae" value="Mãe"/>
+                            <p:inputText id="mae" value="#{motoristaMB.nome}"/>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <p:outputLabel for="dataInicial" value="Data Inicial"/>
+                            <p:calendar id="dataInicial" showOn="button"
+                                        value="#{motoristaMB.dtInicial}" pattern="dd/MM/yyyy HH:mm"
+                                        showButtonPanel="true">
+
+                            </p:calendar>
+                        </div>
+                        <div class="col-md-2">
+                            <p:outputLabel for="dataFinal" value="Data Final"/>
+                            <p:calendar id="dataFinal" showOn="button"
+                                        value="#{motoristaMB.dtFinal}" pattern="dd/MM/yyyy HH:mm"
+                                        showButtonPanel="true">
+
+                            </p:calendar>
+                        </div>
+                        <div class="col-lg-2">
+                            <p:outputLabel for="booleanBtn" value="Mostrar Excluídos"/>
+                            <p:selectBooleanButton id="booleanBtn" onLabel="Sim" offLabel="Não" onIcon="ui-icon-check"
+                                                   offIcon="ui-icon-close" value="#{motoristaMB.mostrarExcluidos}"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <span>&#160;</span>
+                        </div>
+
+                        <div class="col-lg-2" style="padding-right: 15px;">
+
+                            <h:commandButton id="brFind"
+                                             value="Pesquisar"
+                                             icon="fa fa-search"
+                                             actionListener="#{motoristaMB.btnPesquisar}"
+                                             update="@form"
+                                             style="width: 100%;"
+                                             styleClass="btn btn-danger"
+                                             partialSubmit="true"/>
+
+                        </div>
+                        <div class="col-lg-2" style="padding-right: 15px;">
+                            <p:commandButton value="Voltar" action="#{motoristaMB.btnBack}"
+                                             icon="fa fa-window-close" styleClass="btn-danger"/>
+                        </div>
+                    </div>
+                </p:panel>
+            </div>
+            <br/>
+            <h:panelGroup layout="block">
+                <p:dataTable widgetVar="motoristaTable" var="c" value="#{motoristaMB.motList}" rows="10" styleClass="box-danger"
+                             filteredValue="#{motoristaMB.filteredValue}" id="motoristas"
+                             rowKey="#{c.id}" lazy="true" paginator="true"
+                             filterDelay="2000" resizableColumns="true" sortBy="#{c.nome}" sortOrder="ASCENDING"
+                             paginatorPosition="bottom" selection="#{motoristaMB.motorista}" selectionMode="single"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30">
+
+
+                    <p:ajax event="rowSelect" listener="#{motoristaMB.onRowSelect}" update="@form"/>
+                    <p:ajax event="rowUnselect" listener="#{motoristaMB.onRowUnselect}" update="@form"/>
+                    <f:facet name="header">
+                        &#160;
+                    </f:facet>
+                    <p:column headerText="ID"  style="width:10%">
+                    <div align="right" style="padding-right: 10px;">
+                    #{c.id}
+                    </div>
+                    </p:column>
+                    <p:column headerText="Nome">
+                        #{c.nome}
+                    </p:column>
+                    <p:column headerText="Tipo"   visible="false">
+                        <h:outputText style="float:left;" value="#{c.localizador.tipoEndereco.descricao}" />
+                    </p:column>
+
+                    <p:column headerText="Endereco"  visible="false">
+                        <h:outputText style="float:left;" value="#{c.localizador.logradouro}, #{c.localizador.numero}" />
+                    </p:column>
+                    <p:column headerText="Bairro" visible="false">
+                        <h:outputText style="float:left;" value="#{c.localizador.bairro}" />
+                    </p:column>
+                    <p:column headerText="Cidade"   visible="false">
+                        <h:outputText style="float:left;" value="#{c.localizador.cidade}" />
+                    </p:column>
+                    <p:column headerText="UF"  visible="false">
+                        <h:outputText style="float:left;" value="#{c.localizador.uf}" />
+                    </p:column>
+                    <p:column headerText="Pai"   visible="false">
+                        <h:outputText style="float:left;" value="#{c.pai}" />
+                    </p:column>
+                    <p:column headerText="Mãe"  visible="false">
+                        <h:outputText style="float:left;" value="#{c.mae}" />
+                    </p:column>
+
+                    <p:column headerText="Documento 1"  style="width:15%">
+                        <div align="center" style="padding-right: 10px;">
+                            <h:outputText value="#{c.doc1}"/>
+                        </div>
+                    </p:column>
+                    <p:column headerText="Documento 2"  style="width:15%">
+                        <h:outputText style="float:right; padding-right: 10px;" value="#{c.doc2}"/>
+                    </p:column>
+
+                    <p:column headerText="Nascimento"  style="width:15%">
+                        <h:outputText style="float:right;padding-right: 10px;" value="#{c.dtNascimento}">
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Cadastro"  style="width:15%">
+                        <h:outputText style="float:right;padding-right: 10px;"  value="#{c.dtCriacao}"  >
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                </p:dataTable>
+
+            </h:panelGroup>
+            <h:panelGroup layout="block">
+                <div class="align-right" style="padding: 5px;">
+                    <p:commandButton id="toggler" type="button" value="Configurações" styleClass="btn-danger"
+                                     style="float:left" icon="ui-icon-circle-arrow-s" />
+                    <p:columnToggler datasource="motoristas" trigger="toggler" />
+                    <p:spacer height="5"/>
+                    <p:commandButton value="Novo Registro" action="#{motoristaMB.insert}"
+                                     icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                    <p:spacer height="5"/>
+                    <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print" styleClass="btn-danger">
+                        <p:menuitem value="PDF" url="#" icon="fa fa-file-pdf-o"/>
+                        <p:menuitem value="XLS" url="#" icon="fa fa-file-excel-o"/>
+                        <p:menuitem value="CSV" url="#" icon="fa fa-file-text"/>
+                        <p:menuitem value="RTF" url="#" icon="fa fa-file-word-o"/>
+                        <p:separator/>
+                        <p:menuitem value="&#160;Visualizar" url="#" icon="fa fa-television"/>
+                    </p:splitButton>
+                </div>
+            </h:panelGroup>
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

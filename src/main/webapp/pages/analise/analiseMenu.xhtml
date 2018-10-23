@@ -1,0 +1,214 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Análise Cadastral
+    </ui:define>
+
+    <ui:define name="description">
+        Filtro de Pesquisa
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Análise Cadastral (Filtros)"/>
+        <h:form id="formTable">
+            <p:growl autoUpdate="true" escape="false" sticky="true"/>
+            <div class="ui-fluid">
+                <div class="row">
+                    <div class="col-lg-12 col-md-4 col-sm-12">
+                        <div class="row" id="filtroMenu" >
+                            <div class="col-lg-12">
+                                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                                         widgetVar="panel" toggleable="true" >
+
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <p:outputLabel for="nroFicha" value="Ficha"/>
+                                            <p:inputText id="nroFicha" value="#{cadastroMB.filter.entity.id}"/>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <p:outputLabel for="nroLiberacao" value="Número Liberação"/>
+                                            <p:inputText id="nroLiberacao" value="#{cadastroMB.filter.entity.acLiberacao.id}"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p:outputLabel for="dataInicial" value="Data Inicial"/>
+                                            <p:calendar id="dataInicial" showOn="button"
+                                                        value="#{cadastroMB.filter.entity.dtInicial}" pattern="dd/MM/yyyy HH:mm"
+                                                        showButtonPanel="true">
+
+                                            </p:calendar>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p:outputLabel for="dataFinal" value="Data Final"/>
+                                            <p:calendar id="dataFinal" showOn="button"
+                                                        value="#{cadastroMB.filter.entity.dtFinal}" pattern="dd/MM/yyyy HH:mm"
+                                                        showButtonPanel="true">
+
+                                            </p:calendar>
+                                        </div>
+
+                                        <div class="col-lg-3">
+                                            <p:outputLabel for="tipoStatus" value="Status Atual da Ficha"/>
+                                            <p:selectOneMenu id="tipoStatus"
+                                                             value="#{cadastroMB.filter.entity.status.id}">
+                                                <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                <f:selectItems value="#{listaCadastralMB.lstFichaStatus}"
+                                                               var="listStatus"
+                                                               itemValue="#{listStatus.id}"
+                                                               itemLabel="#{listStatus.descricao}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <p:outputLabel for="tipoFicha" value="Tipo da Ficha"/>
+                                            <p:selectOneMenu id="tipoFicha"
+                                                             value="#{listaCadastralMB.idFichaTipo}">
+                                                <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                <f:selectItems value="#{listaCadastralMB.lstFichaTipo}"
+                                                               var="listTipo"
+                                                               itemValue="#{listTipo.id}"
+                                                               itemLabel="#{listTipo.descricao}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                        <ui:fragment autoUpdate="true" rendered="#{listaCadastralMB.usuario.interno == true}">
+                                            <div class="col-lg-4">
+                                                <p:outputLabel for="filial" value="Nome do Cliente"/>
+                                                <p:autoComplete id="filial" completeMethod="#{cadastroMB.listFilial}"
+                                                                value="#{cadastroMB.areaFilial}"  maxResults="15"
+                                                                var="areaFilial" itemLabel="#{areaFilial.nome}"
+                                                                itemValue="#{areaFilial}" forceSelection="true"
+                                                                minQueryLength="3" queryDelay="700"
+                                                                converter="simpleEntityConverter">
+                                                    <p:ajax event="itemSelect" listener="#{cadastroMB.selectFilial}" update="filial"/>
+                                                </p:autoComplete>
+                                            </div>
+
+                                            <div class="col-lg-3">
+                                                <p:outputLabel for="finFicha" value="Finalizado Por"/>
+                                                <p:selectOneMenu id="finFicha"
+                                                                 value="#{cadastroMB.filter.entity.usuarioTermino.id}">
+                                                    <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                    <f:selectItems value="#{listaCadastralMB.lstUsuariosInternos}"
+                                                                   var="listUsuario"
+                                                                   itemValue="#{listUsuario.id}"
+                                                                   itemLabel="#{listUsuario.nome}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </ui:fragment>
+                                    </div>
+
+                                    <br/><br/>
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <span>&#160;</span>
+                                        </div>
+
+                                        <div class="col-lg-2" style="padding-right: 15px;">
+                                            <p:commandButton value="Pesquisar"
+                                                             action="#{cadastroMB.dummy}"
+                                                             process="@form"
+                                                             update="@none"
+                                                             oncomplete="PF('cadastroTable').filter()"
+                                                             icon="fa fa-search" styleClass="btn-danger">
+
+                                            </p:commandButton>
+                                        </div>
+                                        <div class="col-lg-2" style="padding-right: 15px;">
+                                            <p:commandButton value="Voltar" action="#{listaCadastralMB.btnBack}"
+                                                             icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
+                                        </div>
+                                    </div>
+                                </p:panel>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <h:panelGroup layout="block">
+                <p:dataTable widgetVar="cadastroTable"
+                             id="cadastroTable"
+                             var="c"
+                             value="#{cadastroMB.cadList}"
+                             rows="20"
+                             styleClass="box-danger"
+                             filteredValue="#{cadastroMB.filteredValue}"
+                             filterDelay="1000"
+                             rowKey="#{c.id}" lazy="true" paginator="true"
+                             paginatorPosition="bottom" selection="#{cadastroMB.cadastro}" selectionMode="single"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30,40,50,100">
+
+                    <p:ajax event="rowSelect" listener="#{cadastroMB.onRowSelect}" update="@form"/>
+                    <f:facet name="header">
+                        &#160;
+                    </f:facet>
+
+                    <p:column headerText="Ficha" sortBy="#{c.id}"  style="width:8%">
+                        <div align="right" style="padding-right: 10px;">
+                            #{c.id}
+                        </div>
+                    </p:column>
+                    <p:column headerText="Tipo Ficha" sortBy="#{c.tipoFicha.id}"  style="width:8%">
+                        <div align="right" style="padding-right: 10px;">
+                            #{c.tipoFicha.descricao}
+                        </div>
+                    </p:column>
+                    <p:column headerText="Criação" sortBy="#{c.dtCriacao}" name="dtCriacao" id="dtCriacao" style="width:11%">
+                        <div align="right" style="padding-right: 10px;">
+                            <h:outputText value="#{c.dtCriacao}">
+                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+                            </h:outputText>
+                        </div>
+                    </p:column>
+                    <p:column headerText="Vecimento" sortBy="#{c.dtVencimento}" name="dtVencimento" id="dtVencimento" style="width:8%">
+                        <div align="right" style="padding-right: 10px;">
+                            <h:outputText value="#{c.dtVencimento}">
+                                <f:convertDateTime pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </div>
+                    </p:column>
+                    <p:column headerText="Operador" sortBy="#{c.usuarioAlteracao.nome}" style="width:20%">
+                        <img src="/manager/resources/#{cadastroMB.flagOperador(c.id)}" style="width: 10%;" />
+                        #{c.usuarioAlteracao.nome}
+                    </p:column>
+                    <p:column headerText="Liberacao" sortBy="#{c.acLiberacao.id}"  style="width:8%">
+                        <div align="right" style="padding-right: 10px;">
+                            <h:outputText value="#{c.acLiberacao.id}"/>
+                            <img src="/manager/resources/#{cadastroMB.flag(c.status.id)}" style="width: 25%;" />
+                        </div>
+                    </p:column>
+
+                    <p:column headerText="Status" style="width:12%">
+                        <div align="right" style="padding-right: 10px;">
+                            <h:outputText value="#{c.status.descricao}"/>
+                        </div>
+                    </p:column>
+                    <p:column headerText="Filial" sortBy="#{c.filialArea.nome}" filterStyle="width: 90%;"  style="width:30%">
+                        <div align="right" style="padding-right: 10px;">
+                            <p:tooltip id="toolTipArea" for="filialNome" value="#{c.clienteArea.nome}"/>
+                            <h:outputText value="#{c.filialArea.nome}" id="filialNome"/>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+            <br/>
+        </h:form>
+
+        <adm:sidebar collapsed="true"/>
+    </ui:define>
+
+    <script>
+
+    </script>
+
+</ui:composition>

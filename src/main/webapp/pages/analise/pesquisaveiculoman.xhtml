@@ -1,0 +1,177 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Pesquisa de Veículos
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Pesquisa de Pessoas"/>
+        <h:form>
+            <f:metadata>
+                <f:event type="preRenderView" listener="#{pesquisaVeiculoMB.updateUsuario(logonMB.usuarioLogado)}"/>
+            </f:metadata>
+            <h:panelGroup layout="block">
+                <p:panel header="Dados básicos" styleClass="box-danger" toggleable="true">
+                    <div class="align-right">
+                        <p:outputLabel value="Pesquisar por Id: "/>
+                        <p:spacer height="5"/>
+                        <p:inputText id="inptId" value="#{pesquisaVeiculoMB.id}"/>
+                        <p:commandButton id="brFind"
+                                         value="Pesquisar"
+                                         action="#{pesquisaVeiculoMB.findById(pesquisaVeiculoMB.id)}"
+                                         process="@form"
+                                         update="@form"
+                                         styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                         partialSubmit="true"/>
+                    </div>
+                    <br/>
+                    <div class="ui-fluid">
+                        <div class="row">
+                            <div class="col-lg-1">
+                                <p:outputLabel value="ID" for="inptIdx"/>
+                                <p:inputText id="inptIdx" disabled="true" value="#{pesquisaVeiculoMB.pesqVeiculo.id}"/>
+                            </div>
+
+                            <div class="col-lg-1" style="min-width: 110px;">
+                                <p:outputLabel for="placa" value="Placa"/>
+                                <p:inputMask mask="aaa-9999" id="placa"
+                                             disabled="#{pesquisaVeiculoMB.pesqVeiculo.id != null}"
+                                             onchange="this.value = this.value.toUpperCase();"
+                                             value="#{pesquisaVeiculoMB.pesqVeiculo.placa}"
+                                             style="width:100%">
+                                </p:inputMask>
+                            </div>
+                            <div class="col-lg-1">
+                                <p:outputLabel value="UF" for="inptUF"/>
+                                <p:inputText id="inptUF" disabled="#{pesquisaVeiculoMB.pesqVeiculo.id != null}" value="#{pesquisaVeiculoMB.pesqVeiculo.uf}"/>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <p:outputLabel value="Chassi" for="inptChassi"/>
+                                <p:inputText id="inptChassi" disabled="#{pesquisaVeiculoMB.pesqVeiculo.id != null}" value="#{pesquisaVeiculoMB.pesqVeiculo.chassi}"/>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <p:outputLabel value="Doc Proprietário" for="inptDoc"/>
+                                <p:inputText id="inptDoc" disabled="#{pesquisaVeiculoMB.pesqVeiculo.id != null}" value="#{pesquisaVeiculoMB.pesqVeiculo.docProprietario}"/>
+
+                            </div>
+                            <div class="col-lg-2">
+                                <p:outputLabel value="Renavam" for="inptRenavam"/>
+                                <p:inputText id="inptRenavam" disabled="#{pesquisaVeiculoMB.pesqVeiculo.id != null}" value="#{pesquisaVeiculoMB.pesqVeiculo.renavam}"/>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <br/>
+                    <ui:fragment rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
+                        <p:panel header="Dados internos" styleClass="box-default">
+                            <div class="ui-fluid">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <p:outputLabel value="Usuário Consulta" for="inptUsuario"/>
+                                        <p:inputText id="inptUsuario" disabled="true" value="#{pesquisaVeiculoMB.pesqVeiculo.usuConsulta.nome}"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p:outputLabel for="aprovado" value="Aprovado"/>
+                                        <p:selectBooleanButton id="aprovado" class="btn-danger"
+                                                               value = "#{pesquisaVeiculoMB.pesqVeiculo.aprovado}"
+                                                               onLabel="Sim"
+                                                               offLabel="Não"
+                                                               partialsubmit="true"
+                                                               onIcon="ui-icon-check"
+                                                               offIcon="ui-icon-close">
+                                        </p:selectBooleanButton>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p:outputLabel value="Criação" for="inptDtCriacao"/>
+                                        <p:inputText id="inptDtCriacao" disabled="true" value="#{pesquisaVeiculoMB.pesqVeiculo.dtCriacao}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:inputText>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p:outputLabel value="Resposta" for="inptDtResposta"/>
+                                        <p:inputText id="inptDtResposta" disabled="true" value="#{pesquisaVeiculoMB.pesqVeiculo.dtResposta}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:inputText>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <p:outputLabel value="Valor" for="inptValor"/>
+                                        <p:inputText id="inptValor" disabled="true" value="#{pesquisaVeiculoMB.pesqVeiculo.valor}">
+                                            <f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </ui:fragment>
+
+                    <f:facet name="footer">
+                        <div class="align-right" style="padding: 5px;">
+
+                            <p:commandButton value="Consultar" disabled="#{pesquisaVeiculoMB.pesqVeiculo.id != null}" action="#{pesquisaVeiculoMB.update()}"
+                                             update="@form" styleClass="btn-danger"/>
+                            <p:spacer height="5"/>
+                            <p:commandButton value="Voltar" action="#{pesquisaVeiculoMB.btnBack}"
+                                             styleClass="btn-danger"/>
+                        </div>
+                    </f:facet>
+                </p:panel>
+                <br/>
+
+                <br/>
+                <p:panel header="Resultado Consulta" styleClass="box-danger" style="#{pesquisaVeiculoMB.pesqVeiculo.id != null ? '': 'display : none;'}">
+                    <ui:fragment rendered="#{pesquisaVeiculoMB.pesqVeiculo.dtResposta == null }">
+                            <br/>
+                            <h3 style="text-align: center">Ainda não temos resultado da consulta...</h3>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{pesquisaVeiculoMB.pesqVeiculo.dtResposta != null }">
+                        <div class="ui-fluid">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <p:outputLabel value="Data Consulta" for="inptDataConsulta"/>
+                                    <p:inputText id="inptDataConsulta" disabled="true" value="#{pesquisaVeiculoMB.pesqVeiculo.consulta.dtConsulta}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                    </p:inputText>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p:outputLabel value="Solicitação" for="inptSolicitacao"/>
+                                    <p:inputText id="inptSolicitacao" disabled="true" value="#{pesquisaVeiculoMB.pesqVeiculo.consulta.dtResposta}"/>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p:outputLabel value="Placa" for="inptRespPlaca"/>
+                                    <p:inputText id="inptRespPlaca" disabled="true" value="#{pesquisaVeiculoMB.pesqVeiculo.consulta.veiculo.placa}"/>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p:outputLabel value="Chassi" for="inptRespChassi"/>
+                                    <p:inputText id="inptRespChassi" disabled="true" value="#{pesquisaVeiculoMB.pesqVeiculo.consulta.veiculo.chassi}"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p:scrollPanel style="width:100%;height:300px;">
+                                        <h:outputText id="outputY" escape="false" value="#{pesquisaVeiculoMB.formatJSON()}"/>
+                                    </p:scrollPanel>
+                                </div>
+                            </div>
+                        </div>
+                    </ui:fragment>
+                </p:panel>
+            </h:panelGroup>
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

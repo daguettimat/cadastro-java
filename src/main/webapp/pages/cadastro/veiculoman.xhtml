@@ -1,0 +1,442 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+
+            input[disabled] {
+                background-color: #000;
+                color:#fff !important;
+            }
+
+            div.row {
+                padding-top: 10px;
+            }
+
+
+        </style>
+        <script>
+            $(document).ready(function() {
+
+                $('#btnFile').click(function () {
+                    $("input[type='file']").trigger('click');
+                })
+
+
+            });
+        </script>
+    </ui:define>
+
+    <ui:define name="title">
+        Controle de Veiculos
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+    <h:head></h:head>
+    <ui:define name="body">
+        <adm:breadcrumb title="Edição de Motoristas"/>
+        <h:form id="formVeiculo" enctype="multipart/form-data">
+            <h:panelGroup layout="block">
+                <p:panel header="Dados Básicos do Veículo" styleClass="box-danger">
+                    <p:fragment autoUpdate="true" rendered="#{veiculoMB.edit}">
+                        <div class="align-right">
+                            <p:outputLabel value="Pesquisar por Id: "/>
+                            <p:spacer height="5"/>
+                            <p:inputText id="inptId" value="#{veiculoMB.id}"/>
+                            <p:commandButton id="brFind"
+                                             value="Pesquisar"
+                                             action="#{veiculoMB.findById(veiculoMB.id)}"
+                                             process="@form"
+                                             update="@form"
+                                             styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                             partialSubmit="true"/>
+                        </div>
+                    </p:fragment>
+                    <br/>
+                <div class="ui-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-1" style="min-width: 120px;">
+                                    <p:outputLabel value="Identificador" for="inptIdx"/>
+                                    <p:inputText id="inptIdx" style="min-width: 100px;" disabled="true" value="#{veiculoMB.veiculo.id}"/>
+                                </div>
+                                <div class="col-md-1" >
+                                    <p:outputLabel value="Placa" for="inptPlaca" />
+                                    <p:inputText id="inptPlaca" value="#{veiculoMB.veiculo.placa}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-1" style="min-width: 120px;">
+                                    <p:outputLabel value="Renavam" for="inptRenavam"  />
+                                    <p:inputText id="inptRenavam" style="min-width: 100px;" value="#{veiculoMB.veiculo.renavam}" disabled="#{! veiculoMB.edit}">
+                                    </p:inputText>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Chassi" for="inptChassi"/>
+                                    <p:inputText id="inptChassi" value="#{veiculoMB.veiculo.chassi}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-1" style="min-width: 120px;">
+                                    <p:outputLabel value="Documento" for="inptDoc"/>
+                                    <p:inputText id="inptDoc" style="min-width: 100px;" value="#{veiculoMB.veiculo.renavam}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <p:outputLabel value="UF" for="inptUF"/>
+                                    <p:inputText id="inptUF" value="#{veiculoMB.veiculo.uf}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Municipio" for="inptMunicipio"/>
+                                    <p:inputText id="inptMunicipio" value="#{veiculoMB.veiculo.municipio}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Pais" for="inptPais"/>
+                                    <p:inputText id="inptPais" value="#{veiculoMB.veiculo.pais}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2" >
+                                    <p:outputLabel for="nacional" value="Nacional"/>
+                                    <p:selectBooleanButton id="nacional" class="btn-danger" disabled="#{! veiculoMB.edit}"
+                                                           value = "#{veiculoMB.veiculo.nacional}"
+                                                           onLabel="Sim"
+                                                           offLabel="Não"
+                                                           onIcon="ui-icon-check"
+                                                           offIcon="ui-icon-close"/>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <p:outputLabel value="Marca" for="veiMarca"/>
+                                    <h:selectOneMenu id="veiMarca" style="width: 100%;height:34px;" required="true"
+                                                     styleClass="form-control bf-no-message has-success"
+                                                     value="#{veiculoMB.veiculo.marca.id}" ajax="true" >
+
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiculoMB.lstMarca}"
+                                                       var="listMarca"
+                                                       itemValue="#{listMarca.id}"
+                                                       itemLabel="#{listMarca.nome}"/>
+                                        <p:ajax listener="#{veiculoMB.findModelo}" update="veiMarca"/>
+                                    </h:selectOneMenu>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <p:outputLabel value="Modelo" for="veiModelo"/>
+                                    <h:selectOneMenu id="veiModelo"  style="width: 100%;height:34px;" required="true"
+                                                     styleClass="form-control bf-no-message has-success"
+                                                     value="#{veiculoMB.veiculo.modelo.id}">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiculoMB.lstModelo}"
+                                                       var="listModelo"
+                                                       itemValue="#{listModelo.id}"
+                                                       itemLabel="#{listModelo.nome}"/>
+                                        <p:ajax listener="#{veiculoMB.onModelo}" />
+                                    </h:selectOneMenu>
+                                </div>
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Versão" for="inptVersao"/>
+                                    <p:inputText id="inptVersao" value="#{veiculoMB.veiculo.versao}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-2" >
+                                    <p:outputLabel for="leasing" value="Leasing"/>
+                                    <p:selectBooleanButton id="leasing" class="btn-danger" disabled="#{! veiculoMB.edit}"
+                                                           value = "#{veiculoMB.veiculo.leasing}"
+                                                           onLabel="Sim"
+                                                           offLabel="Não"
+                                                           onIcon="ui-icon-check"
+                                                           offIcon="ui-icon-close"/>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <p:outputLabel value="Fabricação" for="inptFab"/>
+                                    <p:inputText id="inptFab" value="#{veiculoMB.veiculo.anoFabricacao}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <p:outputLabel value="Modelo" for="inptMod"/>
+                                    <p:inputText id="inptMod" value="#{veiculoMB.veiculo.anoModelo}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <p:outputLabel value="Cor" for="veiCor"/>
+                                    <h:selectOneMenu id="veiCor"  style="width: 100%;height:34px;" required="true"
+                                                     styleClass="form-control bf-no-message has-success"
+                                                     value="#{veiculoMB.veiculo.cor.id}">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiculoMB.lstCor}"
+                                                       var="listCor"
+                                                       itemValue="#{listCor.id}"
+                                                       itemLabel="#{listCor.nome}"/>
+                                        <p:ajax listener="#{veiculoMB.onCor}"/>
+                                    </h:selectOneMenu>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Frota" for="inptFrota"/>
+                                    <p:inputText id="inptFrota" value="#{veiculoMB.veiculo.frota}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Tipo" for="inptTipo"/>
+                                    <h:selectOneMenu id="inptTipo" style="width: 100%; height: 34px;" required="true"
+                                                     styleClass="form-control bf-no-message has-success"
+                                                     value="#{veiculoMB.veiculo.tipo.id}">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiculoMB.lstTipoVeiculo}" var="listTipo"
+                                                        itemValue="#{listTipo.id}" itemLabel="#{listTipo.descricao}"/>
+										<p:ajax listener="#{veiculoMB.onTipo}" />
+                                    </h:selectOneMenu>
+
+                                </div>
+
+                            </div>
+                            <br/>
+
+                            <div id="dProprietario" class="box box-solid box-default">
+                                <div class="box-header with-border" style="padding-top: 1px">
+                                    <h4 style="padding-top: 5px;">Dados do Proprietário</h4>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+
+                                        <div class="col-md-2">
+                                            <p:outputLabel value="Documento" for="inptDocP"/>
+                                            <p:inputText id="inptDocP" value="#{veiculoMB.veiculo.proprietario.documento}" disabled="true"  >
+
+                                            </p:inputText>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <p:outputLabel value="Proprietário" for="inptProp"/>
+                                            <p:inputText id="inptProp" value="#{veiculoMB.veiculo.proprietario.nome}" disabled="true"/>
+                                        </div>
+
+                                        <div class="col-md-1" >
+                                            <p:outputLabel for="propNacional" value="Nacional"/>
+                                            <p:selectBooleanButton id="propNacional" class="btn-danger" disabled="true"
+                                                                   value = "#{veiculoMB.veiculo.proprietario.nacional}"
+                                                                   onLabel="Sim"
+                                                                   offLabel="Não"
+                                                                   onIcon="ui-icon-check"
+                                                                   offIcon="ui-icon-close"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p:outputLabel value="Data Cadastro" for="inptdtCad"/>
+                                            <p:inputText id="inptdtCad" value="#{veiculoMB.veiculo.proprietario.dtCriacao}" disabled="true"/>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <p:outputLabel value="Telefone" for="inpTel"/>
+                                            <p:inputText id="inpTel" value="#{veiculoMB.veiculo.proprietario.telefone.ddd} #{veiculoMB.veiculo.proprietario.telefone.fone}" disabled="true"/>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-1" style="min-width: 120px;">
+                                            <p:outputLabel value="CEP" for="inptCepProp"/>
+                                            <p:inputText id="inptCepProp" style="min-width: 100px;" value="#{veiculoMB.veiculo.proprietario.endereco.cep}" disabled="true"/>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <p:outputLabel value="Logradouro" for="inptLogrProp"/>
+                                            <p:inputText id="inptLogrProp" value="#{veiculoMB.veiculo.proprietario.endereco.logradouro}" disabled="true"/>
+                                        </div>
+
+                                        <div class="col-md-1">
+                                            <p:outputLabel value="Número" for="inptNumProp"/>
+                                            <p:inputText id="inptNumProp" value="#{veiculoMB.veiculo.proprietario.endereco.numero}" disabled="true"/>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <p:outputLabel value="Complemento" for="inptCompProp"/>
+                                            <p:inputText id="inptCompProp" value="#{veiculoMB.veiculo.proprietario.endereco.complemento}" disabled="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <p:outputLabel value="Bairro" for="inptBaiProp"/>
+                                            <p:inputText id="inptBaiProp" value="#{veiculoMB.veiculo.proprietario.endereco.bairro}" disabled="true"/>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <p:outputLabel value="Cidade" for="inptCidProp"/>
+                                            <p:inputText id="inptCidProp" value="#{veiculoMB.veiculo.proprietario.endereco.cidade}" disabled="true"/>
+                                        </div>
+
+                                        <div class="col-md-1">
+                                            <p:outputLabel value="UF" for="inptUFProp"/>
+                                            <p:inputText id="inptUFProp" value="#{veiculoMB.veiculo.proprietario.endereco.uf}" disabled="true"/>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <p:outputLabel value="Pais" for="inptPaisProp"/>
+                                            <p:inputText id="inptPaisProp" value="#{veiculoMB.veiculo.proprietario.endereco.pais}" disabled="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <p:fragment rendered="#{veiculoMB.veiculo.arrendatario.nome.length() > 0 }">
+                                <div id="dArrendatario" class="box box-solid box-default">
+                                <div class="box-header with-border" style="padding-top: 1px">
+                                    <h4 style="padding-top: 5px;">Dados do Arrendatário</h4>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <p:outputLabel value="Proprietário" for="inptArre"/>
+                                            <p:inputText id="inptArre" value="#{veiculoMB.veiculo.arrendatario.nome}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p:outputLabel value="Documento" for="inptDocArre"/>
+                                            <p:inputText id="inptDocArre" value="#{veiculoMB.veiculo.arrendatario.documento}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+                                        <div class="col-md-1" >
+                                            <p:outputLabel for="ArreNacional" value="Nacional"/>
+                                            <p:selectBooleanButton id="ArreNacional" class="btn-danger" disabled="#{! veiculoMB.edit}"
+                                                                   value = "#{veiculoMB.veiculo.arrendatario.nacional}"
+                                                                   onLabel="Sim"
+                                                                   offLabel="Não"
+                                                                   onIcon="ui-icon-check"
+                                                                   offIcon="ui-icon-close"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p:outputLabel value="Data Cadastro" for="inptdtCadArre"/>
+                                            <p:inputText id="inptdtCadArre" value="#{veiculoMB.veiculo.arrendatario.dtCriacao}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <p:outputLabel value="Telefone" for="inpTelArre"/>
+                                            <p:inputText id="inpTelArre" value="#{veiculoMB.veiculo.arrendatario.telefone.ddd} #{veiculoMB.veiculo.arrendatario.telefone.fone}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-1" style="min-width: 120px;">
+                                            <p:outputLabel value="CEP" for="inptCepArre"/>
+                                            <p:inputText id="inptCepArre" style="min-width: 100px;" value="#{veiculoMB.veiculo.arrendatario.endereco.cep}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <p:outputLabel value="Logradouro" for="inptLogrArre"/>
+                                            <p:inputText id="inptLogrArre" value="#{veiculoMB.veiculo.arrendatario.endereco.logradouro}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+
+                                        <div class="col-md-1">
+                                            <p:outputLabel value="Número" for="inptNumArre"/>
+                                            <p:inputText id="inptNumArre" value="#{veiculoMB.veiculo.arrendatario.endereco.numero}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <p:outputLabel value="Complemento" for="inptCompArre"/>
+                                            <p:inputText id="inptCompArre" value="#{veiculoMB.veiculo.arrendatario.endereco.complemento}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <p:outputLabel value="Bairro" for="inptBaiArre"/>
+                                            <p:inputText id="inptBaiArre" value="#{veiculoMB.veiculo.arrendatario.endereco.bairro}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <p:outputLabel value="Cidade" for="inptCidArre"/>
+                                            <p:inputText id="inptCidArre" value="#{veiculoMB.veiculo.arrendatario.endereco.cidade}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+
+                                        <div class="col-md-1">
+                                            <p:outputLabel value="UF" for="inptUFArre"/>
+                                            <p:inputText id="inptUFArre" value="#{veiculoMB.veiculo.arrendatario.endereco.uf}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <p:outputLabel value="Pais" for="inptPaisArre"/>
+                                            <p:inputText id="inptPaisArre" value="#{veiculoMB.veiculo.arrendatario.endereco.pais}" disabled="#{! veiculoMB.edit}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </p:fragment>
+                        </div>
+
+
+                        <f:facet name="footer">
+                            <div class="align-right" style="padding: 5px;">
+
+                                <p:fragment autoUpdate="true" rendered="#{veiculoMB.edit}">
+                                    <p:commandButton id="btnEnviarFicha" styleClass="btn-danger"
+                                                     action="#{veiculoMB.update}"
+                                                     oncomplete="javascript: window.scrollTo(0, 0);"
+                                                     update="@form"
+                                                     process="@form"
+                                                     value="Salvar"/>
+
+                                    <p:spacer height="5"/>
+                                    <p:commandButton id="btRemove" value="Apagar" action="#{veiculoMB.remove}"
+                                                     update="@form" styleClass="btn-danger"/>
+
+
+                                    <p:spacer height="5"/>
+                                    <p:commandButton value="Voltar" action="#{veiculoMB.btnBack}"
+                                                     styleClass="btn-danger"/>
+                                </p:fragment>
+
+                            </div>
+                        </f:facet>
+                        </div>
+                    </div>
+                </div>
+            </p:panel>
+            </h:panelGroup>
+            <br/>
+            <p:panel header="Histórico do Veículo" styleClass="box-danger" toggleable="true">
+                <p:dataTable var="historico" value="#{veiculoMB.lstacVeiculos}" resizableColumns="true" sortBy="#{historico.acCadastro.dtCriacao}" sortOrder="DESCENDING"
+                             paginatorPosition="bottom" rows="10" styleClass="box-danger" lazy="true" paginator="true"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,25,50">
+                    <p:column headerText="Ficha" width="85">
+                        <h:outputText value="#{historico.acCadastro.id}" />
+                    </p:column>
+                    <p:column headerText="Tipo"  width="10%">
+                        <h:outputText value="#{historico.acCadastro.tipoFicha.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Data" width="85">
+                        <h:outputText value="#{historico.acCadastro.dtCriacao}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Transportadora"  width="20%">
+                        <h:outputText value="#{historico.acCadastro.filialArea.nome}" />
+                    </p:column>
+                    <p:column headerText="Telefone"  width="105">
+                        <h:outputText value="#{(historico.veiculo.proprietario.telefone.ddd)} #{historico.veiculo.proprietario.telefone.fone}"/>
+                    </p:column>
+                    <p:column headerText="Status Geral">
+                        <img src="/manager/resources/#{motoristaMB.flag(historico.acCadastro.status.id)}" style="width: 16px;"/>
+                        <p:spacer height="5px;"/>
+                        <h:outputText value="#{historico.statusGeral.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Usuário"  width="15%">
+                        <h:outputText value="#{historico.acCadastro.usuarioTermino.nome}"/>
+                    </p:column>
+
+                    <p:column headerText="Liberação" width="10%">
+                        <h:outputText value="#{historico.acCadastro.acLiberacao.id}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>

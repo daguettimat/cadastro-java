@@ -1,0 +1,513 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+
+
+            input[disabled] {
+                background-color: #000;
+                color:#fff !important;
+                width: 90%;
+            }
+
+            hr { width:100%; height:1px; background: #fff }
+
+            .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3,
+            .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5,
+            .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7,
+            .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9,
+            .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11,
+            .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+                position: relative;
+                min-height: 1px;
+                padding-right: 5px;
+                padding-left: 5px;
+            }
+
+            .under {
+                position: absolute;
+                z-index: 2;
+                top: 5px;
+                left: 5px;
+
+            }
+
+            .over {
+                z-index: 1;
+                position: relative;
+                left: 0;
+                top: 0;
+            }
+
+            .ui-dialog {
+                top : 0 !important;
+            }
+
+            .row {
+                padding-left:15px;
+            }
+
+        </style>
+
+
+    </ui:define>
+
+    <ui:define name="title">
+        Análise Cadastral Veículos
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+
+    <ui:define name="body">
+
+        <adm:breadcrumb title="Análise Cadastral Veículos"/>
+        <h:form id="formVeiculo">
+
+            <h:panelGroup layout="block">
+                <div class="align-right">
+                    <p:outputLabel value="Pesquisar Ficha: "/>
+                    <p:spacer height="5"/>
+                    <p:inputText id="inptId" value="#{veiAnaliseMB.id}"/>
+
+                    <p:commandButton id="brFind"
+                                     value="Pesquisar"
+                                     action="#{veiAnaliseMB.findByCadastro(veiAnaliseMB.id, cadastroMB.id)}"
+
+                                     process="@form"
+                                     update="@form"
+                                     styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                     partialSubmit="true"/>
+                </div>
+                <br/>
+                <div class="ui ui-fluid ">
+                    <p:panel  styleClass="box-danger">
+                        <p:tabView id="tabPendencia">
+                            <p:tab title="Dados do Veículo" titleStyleClass="box-danger" >
+                                <p:panel header="Dados Informados">
+
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <p:outputLabel value="Ficha" for="inptIdx"/>
+                                            <p:inputText id="inptIdx" disabled="true"  style="text-align:right;" value="#{veiAnaliseMB.veiculo.acCadastro.id}"/>
+                                        </div>
+
+                                        <div class="col-lg-2">
+                                            <p:outputLabel value="Renavam" for="inptRenav"/>
+                                            <p:inputText id="inptRenav" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.renavam}" />
+                                        </div>
+
+                                        <div class="col-lg-2">
+                                            <p:outputLabel value="Data Documento" for="inptRenav"/>
+                                            <p:inputText id="dtDocumento" disabled="true" value="#{veiAnaliseMB.veiculo.dtDocumento}" >
+                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                            </p:inputText>
+                                        </div>
+
+
+                                        <div class="col-lg-1" style="width: 85px;">
+                                            <p:outputLabel value="Placa" for="inptPlaca"/>
+                                            <p:inputText id="inptPlaca" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.placa}" />
+                                        </div>
+
+                                        <div class="col-lg-1" style="width: 85px;">
+                                            <p:outputLabel value="UF" for="inptUFPlaca"/>
+                                            <p:inputText id="inptUFPlaca" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.uf}" />
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <p:outputLabel value="Munícipio" for="inptMun"/>
+                                            <p:inputText id="inptMun" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.municipio}" />
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-1">
+                                            <p:outputLabel value="Fab/Modelo" for="inptFabAno"/>
+                                            <p:inputText id="inptFabAno" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.anoFabricacao}" />
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <p:outputLabel value="&#160;" for="inptFabMod"/>
+                                            <p:inputText id="inptFabMod" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.anoModelo}" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <p:outputLabel value="Chassi" for="inptChassi"/>
+                                            <p:inputText id="inptChassi" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.chassi}"/>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <p:outputLabel value="Marca" for="inptMarca"/>
+                                            <p:inputText id="inptMarca" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.marca.nome}"/>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <p:outputLabel value="Modelo" for="inptModelo"/>
+                                            <p:inputText id="inptModelo" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.modelo.nome}"/>
+                                        </div>
+                                    </div>
+
+
+                                    <ui:fragment rendered="#{veiAnaliseMB.veiculo.veiculo.proprietario.nome != null}">
+                                        <div class="row" style="padding-right: 25px;">
+                                            <div class="col-lg-2">
+                                                <br/>
+                                                <h4>Dados do Proprietário</h4>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <p:outputLabel value="Proprietário" for="inptProp"/>
+                                                <p:inputText id="inptProp" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.proprietario.nome}" />
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <p:outputLabel value="Documento" for="inptDoc"/>
+                                                <p:inputText id="inptDoc" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.proprietario.documento}" />
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <p:outputLabel value="DDD" for="inptDDD"/>
+                                                <p:inputText id="inptDDD" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.proprietario.telefone.ddd}" />
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <p:outputLabel value="Telefone" for="inptTel"/>
+                                                <p:inputText id="inptTel" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.proprietario.telefone.fone}" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <p:outputLabel value="Endereco" for="inptEnd"/>
+                                                <p:inputText id="inptEnd" disabled="true" value="#{veiAnaliseMB.veiculo.proprietario.endereco.logradouro}" />
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <p:outputLabel value="Numero" for="inptNum"/>
+                                                <p:inputText id="inptNum" disabled="true" value="#{veiAnaliseMB.veiculo.proprietario.endereco.numero}" />
+                                            </div>
+
+                                            <div class="col-lg-2">
+                                                <p:outputLabel value="Bairro" for="inptBairro"/>
+                                                <p:inputText id="inptBairro" disabled="true" value="#{veiAnaliseMB.veiculo.proprietario.endereco.bairro}" />
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <p:outputLabel value="Cidade" for="inptCidade"/>
+                                                <p:inputText id="inptCidade" disabled="true" value="#{veiAnaliseMB.veiculo.proprietario.endereco.cidade}" />
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <p:outputLabel value="UF" for="inptUF"/>
+                                                <p:inputText id="inptUF" disabled="true" value="#{veiAnaliseMB.veiculo.proprietario.endereco.uf}" />
+                                            </div>
+                                        </div>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{veiAnaliseMB.veiculo.veiculo.arrendatario.nome != null}">
+                                        <div class="row" style="padding-right: 25px;">
+                                            <div class="col-lg-2">
+                                                <br/>
+                                                <h4>Dados do Arrendatário</h4>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <p:outputLabel value="Arrendatário" for="inptArrendNome"/>
+                                                <p:inputText id="inptArrendNome" disabled="true" value="" />
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <p:outputLabel value="Documento" for="inptArrendDoc"/>
+                                                <p:inputText id="inptArrendDoc" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.arrendatario.documento}" />
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <p:outputLabel value="DDD" for="inptArrendDDD"/>
+                                                <p:inputText id="inptArrendDDD" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.arrendatario.telefone.ddd}" />
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <p:outputLabel value="Telefone" for="inptArrendTel"/>
+                                                <p:inputText id="inptArrendTel" disabled="true" value="#{veiAnaliseMB.veiculo.veiculo.arrendatario.telefone.fone}" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <p:outputLabel value="Endereco" for="inptArrendEnd"/>
+                                                <p:inputText id="inptArrendEnd" disabled="true" value="#{veiAnaliseMB.veiculo.arrendatario.endereco.logradouro}" />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <p:outputLabel value="Numero" for="inptArrendNum"/>
+                                                <p:inputText id="inptArrendNum" disabled="true" value="#{veiAnaliseMB.veiculo.arrendatario.endereco.numero}" />
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <p:outputLabel value="Bairro" for="inptArrendBairro"/>
+                                                <p:inputText id="inptArrendBairro" disabled="true" value="#{veiAnaliseMB.veiculo.arrendatario.endereco.bairro}" />
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <p:outputLabel value="Cidade" for="inptArrendCidade"/>
+                                                <p:inputText id="inptArrendCidade" disabled="true" value="#{veiAnaliseMB.veiculo.arrendatario.endereco.cidade}" />
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <p:outputLabel value="UF" for="inptArrendUF"/>
+                                                <p:inputText id="inptArrendUF" disabled="true" value="#{veiAnaliseMB.veiculo.arrendatario.endereco.uf}" />
+                                            </div>
+                                        </div>
+                                    </ui:fragment>
+                                    <div class="row" style="padding-top: 30px;">
+                                        <div class="col-lg-12">
+                                            <p:gmap id="geoGmap" widgetVar="geoMap" center="#{veiAnaliseMB.centerGeoMap}" zoom="#{veiAnaliseMB.zoomMap}"
+                                                    type="HYBRID" style="width:95%;height:400px" streetView="true" model="#{veiAnaliseMB.geoModel}" >
+                                                <p:ajax event="geocode" listener="#{veiAnaliseMB.onGeocode}" update="@this" />
+                                            </p:gmap>
+
+                                        </div>
+                                    </div>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab title="Observações" titleStyleClass="box-danger" >
+                                    <div class="row" style="padding-right: 25px;">
+                                        <div class="col-lg-2">
+                                            <br/>
+                                            <h4>Pendencias</h4>
+                                        </div>
+                                        <hr />
+                                    </div>
+                                    <ui:fragment rendered="#{veiAnaliseMB.veiculo.veiculo.proprietario.nome != null}">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <p:outputLabel value="Proprietário" for="inptPendProp"/><br/>
+                                                <p:inputTextarea rows="2" style="background-color: beige;width: 98%" id="inptPendProp" value="#{veiAnaliseMB.veiculo.refPropPendencia}" />
+                                            </div>
+                                        </div>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{veiAnaliseMB.veiculo.veiculo.arrendatario.nome != null}">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <p:outputLabel value="Arrendatário" for="inptPendArrend"/><br/>
+                                                <p:inputTextarea rows="2" style="background-color: beige;width: 98%" id="inptPendArrend" value="#{veiAnaliseMB.veiculo.refPropPendencia}" />
+                                            </div>
+                                        </div>
+                                    </ui:fragment>
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <p:outputLabel value="A.N.T.T." for="inptPendANTT"/><br/>
+                                            <p:inputTextarea rows="2" style="background-color: beige;width: 98%" id="inptPendANTT" value="#{veiAnaliseMB.veiculo.anttPendencias}" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <p:outputLabel value="Renavam" for="inptPendRenavam"/><br/>
+                                            <p:inputTextarea rows="2" style="background-color: beige;width: 98%" id="inptPendRenavam" value="#{veiAnaliseMB.veiculo.renavamPendencias}" />
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-right: 25px;">
+                                        <div class="col-lg-2">
+                                            <br/>
+                                            <h4>Observações</h4>
+                                        </div>
+                                        <hr />
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <p:inputTextarea rows="3" style="background-color: beige;width: 98%" id="inptObservacoes" value="#{veiAnaliseMB.veiculo.observacao}" />
+                                        </div>
+                                    </div>
+
+                                    <br/>
+                            </p:tab>
+                        </p:tabView>
+
+                        <br/>
+                        <p:panel header="Dados da Análise" >
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h:outputLabel for="anoFabricacao" value="Ano de Fabricação"/>
+                                    <p:selectOneMenu value="#{veiAnaliseMB.anoFabricacao}" id="anoFabricacao">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiAnaliseMB.lstReferencias}" var="propStatus" itemValue="#{propStatus.id}"
+                                                       itemLabel="#{propStatus.descricao}"/>
+
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="col-md-3" style="padding-right: 15px; ">
+                                    <h:outputLabel for="renavam" value="Renavam"/>
+                                    <p:selectOneMenu value="#{veiAnaliseMB.renavam}" id="renavam">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiAnaliseMB.lstReferencias}" var="aRenav" itemValue="#{aRenav.id}"
+                                                       itemLabel="#{aRenav.descricao}"/>
+
+                                    </p:selectOneMenu>
+                                </div>
+
+                                <div class="col-md-3" style="padding-right: 15px; ">
+                                    <h:outputLabel for="dtVDocumento" value="Data Documento"/>
+                                    <p:selectOneMenu value="#{veiAnaliseMB.dtVDocumento}" id="dtVDocumento">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiAnaliseMB.lstReferencias}" var="aDtVDoc" itemValue="#{aDtVDoc.id}"
+                                                       itemLabel="#{aDtVDoc.descricao}"/>
+
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="col-md-3" style="padding-right: 15px; ">
+                                    <h:outputLabel for="antt" value="A.N.T.T."/>
+                                    <p:selectOneMenu value="#{veiAnaliseMB.antt}" id="antt">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiAnaliseMB.lstReferencias}" var="aStatus" itemValue="#{aStatus.id}"
+                                                       itemLabel="#{aStatus.descricao}"/>
+
+                                    </p:selectOneMenu>
+                                </div>
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3" style="padding-right: 15px; ">
+                                    <h:outputLabel for="anttSituacao" value="A.N.T.T. Situação"/>
+                                    <p:selectOneMenu value="#{veiAnaliseMB.anttSituacao}" id="anttSituacao">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiAnaliseMB.lstAnttSituacao}" var="aSitStatus" itemValue="#{aSitStatus.id}"
+                                                       itemLabel="#{aSitStatus.descricao}"/>
+
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="col-md-3" style="padding-right: 15px; ">
+                                    <h:outputLabel for="DPropStatus" value="Documentos (Proprietário)"/>
+                                    <p:selectOneMenu value="#{veiAnaliseMB.documentoProprietario}" id="DPropStatus">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiAnaliseMB.lstReferencias}" var="DpropStatus" itemValue="#{DpropStatus.id}"
+                                                       itemLabel="#{DpropStatus.descricao}"/>
+                                        <p:ajax event="change" update="@this" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="col-md-3" style="padding-right: 15px; ">
+                                    <h:outputLabel for="tipo" value="Tipo"/>
+                                    <p:selectOneMenu value="#{veiAnaliseMB.tipoParte}" id="tipo">
+                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                        <f:selectItems value="#{veiAnaliseMB.lstRefTipo}" var="tipo" itemValue="#{tipo.id}"
+                                                       itemLabel="#{tipo.descricao}"/>
+                                        <p:ajax event="change" update="@this" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <ui:fragment rendered="#{veiAnaliseMB.veiculo.documentoArrendatario.id != null}">
+                                    <div class="col-md-3" style="padding-right: 15px; ">
+                                        <h:outputLabel for="DArrendStatus" value="Documentos (Arrendatário)"/>
+                                        <p:selectOneMenu value="#{veiAnaliseMB.documentoArrendatario}" id="DArrendStatus">
+                                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                            <f:selectItems value="#{veiAnaliseMB.lstReferencias}" var="DcArrendStatus" itemValue="#{DcArrendStatus.id}"
+                                                           itemLabel="#{DcArrendStatus.descricao}"/>
+                                            <p:ajax event="change" update="@this" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                </ui:fragment>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <p:panelGrid  columns="1" styleClass="box box-danger">
+                                        <f:facet name="header">
+                                            <h4>Status Geral da Ficha</h4>
+                                            <p:graphicImage name="#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.acCadastro.status.id)}" width="96px;" height="96px;" style="padding:5px;"/>
+                                        </f:facet>
+                                        <f:facet name="footer">
+                                            <div align="center">
+                                                <h:outputText value="#{veiAnaliseMB.veiculo.acCadastro.status.descricao}" class="ui-panel-title" style="padding-top:15px; font-weight: bold;"/>
+                                            </div>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                </div>
+                                <div class="col-lg-3">
+                                    <p:panelGrid columns="1" styleClass="box box-danger">
+                                        <f:facet name="header">
+                                            <h4>Este item</h4>
+                                            <p:graphicImage name="#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.statusGeral.id)}" width="96px;" height="96px;" style="padding:5px;"/>
+                                        </f:facet>
+                                        <f:facet name="footer">
+                                            <div align="center">
+                                                <h:outputText value="#{veiAnaliseMB.veiculo.statusGeral.descricao}" class="ui-panel-title" style="padding-top:15px; font-weight: bold;"/>
+                                            </div>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                </div>
+                                <div class="col-lg-3">
+                                    <p:panelGrid columns="1" styleClass="box box-danger">
+                                        <f:facet name="header">
+                                            <h4>Usuário</h4>
+                                            <ui:fragment rendered="#{!veiAnaliseMB.veiculo.acCadastro.usuarioCriacao.interno}">
+                                                <p:graphicImage name="images/ref_user_group.png" class="over" width="96px;" height="96px;" style="padding:5px;"/>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{veiAnaliseMB.veiculo.acCadastro.usuarioCriacao.interno}">
+                                                <p:graphicImage name="images/logo.png" class="over" width="240px;" height="96px;" style="padding:5px;"/>
+                                            </ui:fragment>
+                                        </f:facet>
+                                        <f:facet name="footer">
+                                            <div align="center">
+                                                <h:outputText value="#{veiAnaliseMB.veiculo.acCadastro.usuarioCriacao.nome}" class="ui-panel-title" style="padding-top:15px; font-weight: bold;"/>
+                                            </div>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                </div>
+                                <div class="col-lg-3" style="padding-right: 15px; padding-left: 15px;">
+                                    <p:panelGrid columns="1" styleClass="box box-danger">
+                                        <f:facet name="header">
+                                            <h4>Data Criação</h4>
+                                            <p:graphicImage name="images/event_search.png" class="over" width="96px;" height="96px;" style="padding:5px;"/>
+                                        </f:facet>
+                                        <f:facet name="footer">
+                                            <div align="center">
+                                                <h:outputText value="#{veiAnaliseMB.veiculo.acCadastro.usuarioCriacao.criacao}" class="ui-panel-title" style="padding-top:15px; font-weight: bold;"/>
+                                            </div>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                </div>
+                            </div>
+                        </p:panel>
+                        <f:facet name="footer" class="ui-fluid">
+                            <div class="ui align-right" style="padding: 5px;">
+                                <p:commandButton value="Salvar"
+                                                 style="width: 100px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
+                                                 type="submit" action="#{veiAnaliseMB.update}"
+                                                 styleClass="btn-danger">
+                                    <f:actionListener binding="#{cadastroMB.loadScreen(veiAnaliseMB.veiculo.acCadastro.id)}" />
+                                    <f:ajax execute="@form" render="@form" />
+                                </p:commandButton>
+                                <p:commandButton style="width: 100px;" value="Voltar" action="#{cadastroMB.loadScreen(veiAnaliseMB.veiculo.acCadastro.id)}"
+                                                 styleClass="btn-danger"/>
+                            </div>
+                        </f:facet>
+                    </p:panel>
+                </div>
+            </h:panelGroup>
+            <br/>
+        </h:form>
+
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+
+                PF('geoMap').geocode('#{veiAnaliseMB.veiculo.proprietario.endereco.cidade} #{veiAnaliseMB.veiculo.proprietario.endereco.logradouro} #{veiAnaliseMB.veiculo.proprietario.endereco.numero}'  );
+
+            });
+
+            function geocode() {
+                PF('geoMap').geocode(document.getElementById('infEnd').value);
+            }
+
+            function handleResponse(xhr, status, args) {
+                if (args.validationFailed) {
+                    window.scrollTo(0, 0);
+                }
+            }
+
+            function onTop(args) {
+                window.location='#'+ args;
+            }
+
+            function focusField(id){
+                $(id).focus();
+            }
+        </script>
+        <adm:sidebar collapsed="true"/>
+    </ui:define>
+</ui:composition>

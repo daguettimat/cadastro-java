@@ -1,0 +1,66 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from ConsultaPlacaMobileService WSDL service -->
+
+  <service name="ConsultaPlacaMobilePort" provider="java:RPC" style="document" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://soap.ws.placa.service.sinesp.serpro.gov.br/"/>
+      <parameter name="wsdlServiceElement" value="ConsultaPlacaMobileService"/>
+      <parameter name="schemaUnqualified" value="http://soap.ws.placa.service.sinesp.serpro.gov.br/"/>
+      <parameter name="wsdlServicePort" value="ConsultaPlacaMobilePort"/>
+      <parameter name="className" value="br.gov.serpro.sinesp.service.placa.ws.soap.ConsultaPlacaMobileServiceSoapBindingSkeleton"/>
+      <parameter name="wsdlPortType" value="ConsultaPlacaMobile"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+      <typeMapping
+        xmlns:ns="http://soap.ws.placa.service.sinesp.serpro.gov.br/"
+        qname="ns:getStatusResponse"
+        type="java:br.gov.serpro.sinesp.service.placa.ws.soap.GetStatusResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://soap.ws.placa.service.sinesp.serpro.gov.br/"
+        qname="ns:getStatus"
+        type="java:br.gov.serpro.sinesp.service.placa.ws.soap.GetStatus"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://soap.ws.placa.service.sinesp.serpro.gov.br/"
+        qname="ns:codigoRetorno"
+        type="java:br.gov.serpro.sinesp.service.placa.ws.soap.CodigoRetorno"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://soap.ws.placa.service.sinesp.serpro.gov.br/"
+        qname="ns:retornoPlaca"
+        type="java:br.gov.serpro.sinesp.service.placa.ws.soap.RetornoPlaca"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://soap.ws.placa.service.sinesp.serpro.gov.br/"
+        qname="ns:codigoSituacao"
+        type="java:br.gov.serpro.sinesp.service.placa.ws.soap.CodigoSituacao"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>
