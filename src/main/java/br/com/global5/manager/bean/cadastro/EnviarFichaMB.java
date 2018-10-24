@@ -870,11 +870,22 @@ public class EnviarFichaMB implements Serializable {
     public void verificaDoc(AjaxBehaviorEvent event) {
 
         String doc = (String) ((UIOutput) event.getSource()).getValue();
-
+        
         doc = (Normalizer
                 .normalize(doc, Normalizer.Form.NFD)
                 .replaceAll("[\\W]", ""));
 
+        if(refVeiculo.isNacional()){
+        	if(doc.length() < 13 && ! ValidaBrasil.validateCPF(doc)){
+        		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção","CPF inválido verifique e digite novamente."));
+        		//throw new BusinessException("CPF Inválido!!! Por favor confira e digite novamente!");
+        	} else {
+        		if(doc.length() > 12 && ! ValidaBrasil.validateCNPJ(doc) ){
+        			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção","CNPJ inválido verifique e digite novamente."));
+        		}
+        	}	
+        }
+        
         docProprietario = doc;
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("formVeiculo:veiPropDoc");

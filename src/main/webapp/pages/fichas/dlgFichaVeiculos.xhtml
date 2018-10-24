@@ -24,7 +24,7 @@
 
     </h:head>
     <h:form id="formVeiculo" onkeypress="if (event.keyCode == 13) { return false; }">
-        <p:messages showDetail="false" autoUpdate="true" closable="true" />
+        <p:messages showDetail="true" autoUpdate="true" closable="true" />
         <p:panel widgetVar="panelVeiculos">
 
             <div class="ui-fluid">
@@ -177,9 +177,10 @@
 
                 <div class="row">
                     <ui:fragment id="fragPropNacional" rendered="#{enviarFichaMB.veiculoNacional}">
+
                         <div class="col-md-3" id="propNacional">
                             <label>CPF/CNPJ</label>
-                            <p:inputText id="veiPropDoc" style="width: 100%;" required="true"
+                            <p:inputText id="veiPropDoc" style="width: 100%;" required="true" requiredMessage="Documento Proprietário Obrigatório"
                                          value="#{enviarFichaMB.docProprietario}">
                                 <p:ajax event="blur" listener="#{enviarFichaMB.verificaDoc}" partialSubmit="true" process="@this"/>
                             </p:inputText>
