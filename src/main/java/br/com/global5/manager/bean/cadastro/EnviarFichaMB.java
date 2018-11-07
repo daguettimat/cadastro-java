@@ -160,6 +160,11 @@ public class EnviarFichaMB implements Serializable {
     private String docProprietario;
     private String nomProprietario;
     private String centroCusto;
+    
+    private Boolean validoDocProprietarioNacional = false;
+    private String  msgResultPesquisaPlaca = "";
+    private Boolean btnSalvarVeiculo = false;
+    private Boolean placaEncontrada  = false;
 
 
     private Motorista motorista;
@@ -360,6 +365,8 @@ public class EnviarFichaMB implements Serializable {
         stsImgCnhFrenteFile = "";
         stsImgCnhVersoFile = "";
         
+        msgResultPesquisaPlaca = ""; 
+        
         success = false;
 
         limitadorVeiculo = false;
@@ -466,20 +473,51 @@ public class EnviarFichaMB implements Serializable {
         RequestContext context = RequestContext.getCurrentInstance();
 
         if (veiculoNacional) {
+        	
             //context.execute("veiNacionalShow();");
-            veiculoNacional = true;
-            refVeiculo.setNacional(true);
+        	String resultFormatoPlaca = validaFormatoPlacaNacional();
+        		
+        		if (resultFormatoPlaca.equals("erro")){
+        			
+        			this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato inválido para a inclusão do veículo  tipo nacional.");
+        			//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Atenção","Formato da placa inválida para tipo Nacional!"));
+        			
+        		} else {
+        			
+        			if (this.getPlacaEncontrada()== true){
+        				
+        				this.setMsgResultPesquisaPlaca("Encontrado registro para a Placa : " + refVeiculo.getPlaca() + " , edição de dados aberta para uso. " ) ;
+        				
+        			} else {
+        				
+        				this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato válido para a inclusão do veículo  tipo nacional.");
+        				
+        			}
+        			
+                    veiculoNacional = true;
+                    refVeiculo.setNacional(true);        			
+        		}
 
         } else {
+        	
             //context.execute("veiNacionalHide();");
+			if (this.getPlacaEncontrada()== true){
+				
+				this.setMsgResultPesquisaPlaca("Encontrado registro para a Placa : " + refVeiculo.getPlaca() + " , edição de dados aberta para uso. " ) ;
+				
+			} else {
+				
+				this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato válido para a inclusão do veículo  tipo estrangeiro.");
+				
+			}
+			
             veiculoNacional = false;
             refVeiculo.setNacional(false);
+            
         }
 
        // refVeiculo.setPlaca("");
-
         context.update("formVeiculo");
-
 
     }
 
@@ -676,7 +714,6 @@ public class EnviarFichaMB implements Serializable {
 
     public void clearComercial() {
 
-
         if( ! validaCampos() ) {
             return ;
         }
@@ -715,6 +752,8 @@ public class EnviarFichaMB implements Serializable {
         refVeiculo.setNacional(true);
         docProprietario = "";
         nomProprietario = "";
+        msgResultPesquisaPlaca = "";
+        placaEncontrada = false;
 
         showDialog("dlgVeiculo");
 
@@ -748,13 +787,31 @@ public class EnviarFichaMB implements Serializable {
             context.update("form0:btnRefVeiculo");
         }
     }
-
+    
+    
+    /**
+     * Method: record the values of vehicles in list at internal class 'ReferenciaVeiculos' for soon will by used at procedure for persistence at database. 
+     * 
+     * created at: not information. 
+     * 
+     * @author Francis Bueno
+     * 
+     * modifications:
+     * 
+     * change date: 25/10/2018
+     *  
+     * 1 - The conditions for variable 'veiculoNacional = true' 
+     * -----1.1 - include validation at 'validaFormatoPlacaNacional' for national vehicle. Not allowed invalid format, allowed (ABC-123,ABC-1234 and ABC1D23);
+     * -----1.2 - include validation at 'ValidaBrasil.validateRENAVAM' not allowed for invalid number at vehicle document.   
+     * 
+     * 2 - The condition for variable 'validoDocProprietarioNacional = false'
+     * -----2.1 - include validation at 'verificaDocNacional' not allowed for invalid number at personal document.
+     * 
+     */
     public void addReferenciaVeiculos() {
 
-
         success = refVeiculo.getRenavam().length() > 6;
-
-
+        
         if (refVeiculo.getTipo() == null) {
             success = false;
 
@@ -767,7 +824,49 @@ public class EnviarFichaMB implements Serializable {
                             "O nome do proprietário é obrigatório no cadastro de veículos!"));
             success = false;
         }
+        
+        if (veiculoNacional) {
 
+        	String resultFormatoPlaca = validaFormatoPlacaNacional();
+        		
+        		if (resultFormatoPlaca.equals("erro")){
+        			
+        			FacesContext.getCurrentInstance().addMessage(
+                            null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção!",
+                                    "Não foi possível gravar esse registro. Verifique o número da placa. Formato inválido!"));
+        			
+        			this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato inválido para a inclusão do veículo  tipo nacional.");
+        			
+        			success = false;
+        			
+        		}
+        		
+        		  if( refVeiculo.getRenavam().length() == 0  || ! ValidaBrasil.validateRENAVAM(refVeiculo.getRenavam()))  {
+        	            FacesContext.getCurrentInstance().addMessage(
+        	                    null,
+        	                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Esse RENAVAM não pode ser "
+        	                            + " validado confira e digite novamente!", "Erro"));
+        	            success = false;
+        	        }
+
+        }
+                
+        if (validoDocProprietarioNacional == false) {
+        	
+        	String checaDoc = verificaDocNacional();
+        	
+        	if( checaDoc.equals("cpfErro") || checaDoc.equals("cnpjErro")){
+        		validoDocProprietarioNacional = false;
+        		
+        		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "CPF/CNPJ!",
+                        "O Número do Documento CPF/CPNJ do proprietário está inválido, redigite!"));
+        		
+        		success = false;
+        	}        	
+        	
+        }
+        
         if (docProprietario.length() == 0) {
             FacesContext.getCurrentInstance().addMessage(
                     null,
@@ -784,18 +883,23 @@ public class EnviarFichaMB implements Serializable {
         }
 
         if (refVeiculo != null) {
+        	
             refVeiculo.setId(referenciasVeiculos.size() + 1);
             refVeiculo.setNomeproprietario(nomProprietario);
             refVeiculo.getProprietario().setNome(nomProprietario);
             refVeiculo.getProprietario().setDocumento(docProprietario);
+            
             referenciasVeiculos.add(refVeiculo);
+            
             refVeiculo = new ReferenciaVeiculos();
+            
             refVeiculo.setProprietario(new br.com.global5.manager.model.auxiliar.Proprietario());
             refVeiculo.getProprietario().setEndereco(new Endereco());
-            nomProprietario = "";
-            docProprietario = "";
+            nomProprietario = "";        
+            
             RequestContext context = RequestContext.getCurrentInstance();
             context.update("form0:panelVeiculos");
+            
             if (referenciasVeiculos.size() == 4) {
                 limitadorVeiculo = true;
                 context.update("form0:btnRefVeiculo");
@@ -866,7 +970,17 @@ public class EnviarFichaMB implements Serializable {
         context.update("formVeiculo:veiCategoria");
 
     }
-
+    
+    
+    /**
+     * Method: Your function it is validate the number of document the  truck  owner from  type vehicle National at moment at change value
+     * created at: 25/10/2018
+     * 
+     * @author Francis Bueno
+     * 
+     * @param event	
+     * 
+     */
     public void verificaDoc(AjaxBehaviorEvent event) {
 
         String doc = (String) ((UIOutput) event.getSource()).getValue();
@@ -876,21 +990,71 @@ public class EnviarFichaMB implements Serializable {
                 .replaceAll("[\\W]", ""));
 
         if(refVeiculo.isNacional()){
+        	
         	if(doc.length() < 13 && ! ValidaBrasil.validateCPF(doc)){
+        		validoDocProprietarioNacional = false;
         		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção","CPF inválido verifique e digite novamente."));
         		//throw new BusinessException("CPF Inválido!!! Por favor confira e digite novamente!");
-        	} else {
-        		if(doc.length() > 12 && ! ValidaBrasil.validateCNPJ(doc) ){
-        			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção","CNPJ inválido verifique e digite novamente."));
-        		}
-        	}	
+        	} else if(doc.length() < 13 && ValidaBrasil.validateCPF(doc)){
+        		validoDocProprietarioNacional = true;
+        	}
+        	
+    		if(doc.length() > 12 && ! ValidaBrasil.validateCNPJ(doc) ){
+    			validoDocProprietarioNacional = false;
+    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção","CNPJ inválido verifique e digite novamente."));
+    		} else if(doc.length() > 12 &&  ValidaBrasil.validateCNPJ(doc) ){
+    			validoDocProprietarioNacional = true;
+    		}
+    		
+        } else {
+        	
+        	 validoDocProprietarioNacional = false;
         }
         
-        docProprietario = doc;
         RequestContext context = RequestContext.getCurrentInstance();
         context.update("formVeiculo:veiPropDoc");
-
-
+        
+    }
+    
+    
+    /**
+     * Method: Your function it is validate the number of document the  truck  owner from  type vehicle National   
+     * 
+     * created at: 25/10/2018
+     *  
+     * @author Francis Bueno
+     * 
+     * @return string by erros 'cpfErro' to CPF , 'cnpjErro' to CNPJ. String by right 'cpfCnpjOk' 
+     *  
+     */
+    public String verificaDocNacional(){
+    	
+    	String doc = "";
+    	
+    	if( docProprietario != null && refVeiculo.isNacional() == true){
+    		
+    		doc = (Normalizer
+                    .normalize(docProprietario, Normalizer.Form.NFD)
+                    .replaceAll("[\\W]", ""));
+    		
+        	if(doc.length() < 13 && ! ValidaBrasil.validateCPF(doc)){
+        		validoDocProprietarioNacional = false;
+        		return "cpfErro";
+        	} else if(doc.length() < 13 && ValidaBrasil.validateCPF(doc)){ 
+        		validoDocProprietarioNacional = true;
+        	}
+    		
+    		if(doc.length() > 12 && ! ValidaBrasil.validateCNPJ(doc) ){
+    			validoDocProprietarioNacional = false;
+    			return "cnpjErro";    			
+    		} else if(doc.length() > 12 && ValidaBrasil.validateCNPJ(doc) ){
+    			validoDocProprietarioNacional = true;
+    		}
+        	
+    	} else {
+    		validoDocProprietarioNacional = false;
+    	}
+    	return "cpfCnpjOk";
     }
 
     public void findMotorista(AjaxBehaviorEvent event) {
@@ -1019,49 +1183,166 @@ public class EnviarFichaMB implements Serializable {
             return "";
         }
     }
+    
+    
+    /**
+     * Method: used at validation for national vehicle. Not allowed invalid format. Allowed (ABC-123, ABC-1234 and ABC1D23)  
+     *  
+     * created at : 25/10/2018
+     * 
+     * @author Francis Bueno
+     * 
+     * @return 'erro' to denied and 'valido' to allowed 
+     * 
+     */
+    public String validaFormatoPlacaNacional(){
+    	
+    	Integer qtdCaracteresPlaca = null;
+    	String  caracterPosicao = "";
+    	String  caracterPosHifen = "";
+    	
+    	if( refVeiculo.getPlaca() != null){
+    		
+    		qtdCaracteresPlaca = refVeiculo.getPlaca().length();
 
+    		//Nacional Antiga 7 caracteres ABC-123 (hifem na contagem)    	    		
+    		//Nacional Atual 8 caracteres ABC-1234 (hifem na contagem , placa anterior a padrão Mercosul)    		
+    		//Nacional Padrao Mercosul 7 caracteres    		
+    		
+    		if( qtdCaracteresPlaca == 7 || qtdCaracteresPlaca == 8  ){
+    			
+    			caracterPosicao = refVeiculo.getPlaca().substring(3,4);
+    			
+    			if( caracterPosicao.equals("-") ){
+    				
+    				caracterPosHifen = refVeiculo.getPlaca().substring(4,qtdCaracteresPlaca);    				
+    				
+    				Boolean checkAlfPosHifen = checarStringAlfabeto(caracterPosHifen);
+    				
+    				if( checkAlfPosHifen == true ) {
+    					return "erro";
+    				}  else {
+    					return "valido";
+    				}
+    				
+    			} else {
+    				
+    				if ( qtdCaracteresPlaca == 7) {    					
+    					//Padrão Mercosul
+    					
+    					// localiza se o codigo tem hifem (caso exista não permite a inclusão)
+    					int findHifen = refVeiculo.getPlaca().indexOf("-");					// senão encontrar apresenta -1 senão retorna a posição;
+    					
+    					if (findHifen == -1) {
+    						return "valido";
+    					} else {
+    						return "erro";	
+    					}    					
+    					
+    				} 
+    				
+    				if ( qtdCaracteresPlaca == 6 ) {
+    					// não permite placa com 6 caracteres para tipo nacional
+    					return "erro";
+    				}
+    				
+    			}
+    			
+    		}
+    		
+    	}
+    	return "erro";
+    }
+    
+    
+    /**
+     * Method: check if string received contains alphabet or not 
+     * 
+     * created at: 25/10/2018
+     * 
+     * @author Francis Bueno
+     * @param textoPlaca	receive one slice the code of license plate
+     *  
+     * @return 'true' when the parameter is all alphabet and 'false' when some character not is one alphabet
+     *  
+     */
+    public Boolean checarStringAlfabeto(String textoPlaca){
+    
+    	for (int i = 0; i < textoPlaca.length(); i++) {
+    	      if (Character.isAlphabetic(textoPlaca.charAt(i))) 
+    	         return true;
+    	   }
+    	   return false;
+    }
+  
+
+    /**    	   
+     * Method: find vehicle by code license plate and case found add record at class 'ref Veiculo' and report the informations for  client side requester
+     * 
+     * created at: not information.
+     * 
+     * @author Jose Roberto
+     * 
+     * @param event
+     * 
+     * 
+     * modifications:
+     * 
+     * @author Francis Bueno
+     * 
+     * change date: 25/10/2018
+     * --restructured algorithm; 
+     * --message added about result the searched code license plate; and,
+     * --control activation for button save. 
+     * 
+     */
     public void findVeiculo(AjaxBehaviorEvent event) {
 
         String placa = (String) ((UIOutput) event.getSource()).getValue();
 
-        Pattern pattern = Pattern.compile("[a-zA-Z]{3}-\\d{4,4}");
-        Matcher matcher = pattern.matcher(placa);
+        if (placa.length() > 0) {
 
-        boolean match = matcher.find();
-
-        if( ! veiculoNacional ) {
-            match = true;
-        }
-
-
-        if (match && placa.length() > 0) {
-            Veiculo veiculo;
+        	Veiculo veiculo;
+        	
             if (veiculoService.crud().eq("placa", placa.toUpperCase()).count() <= 1) {
+            	
                 veiculo = veiculoService.crud().eq("placa", placa.toUpperCase()).find();
+                
             } else {
+            	
                 veiculo = veiculoService.crud().eq("placa", placa.toUpperCase()).list().get(0);
             }
+            
             if (veiculo != null) {
-
+            	
+            	this.setPlacaEncontrada(true);
+            	
+            	this.setMsgResultPesquisaPlaca("Encontrado registro para a Placa : " + refVeiculo.getPlaca() + " , edição de dados aberta para uso. " ) ;           	
+            	
                 // veiculoNacional = ValidaBrasil.validateRENAVAM(veiculo.getRenavam());
-                veiculoNacional = veiculo.isNacional();
-
+            	if(veiculo.isNacional() == true) {
+            		
+            		setBtnSalvarVeiculo(true);
+            		
+            		veiculoNacional = veiculo.isNacional();
+            	    refVeiculo.setRenavam("00000000000".substring(veiculo.getRenavam().length()) + veiculo.getRenavam());
+                    refVeiculo.setNacional(veiculoNacional);
+            	} else {
+            		refVeiculo.setRenavam(veiculo.getRenavam());
+            		refVeiculo.setNacional(false);
+            	}
+                               
                 refVeiculo.setMarca(veiculo.getMarca().getId());
                 refVeiculo.setModelo(veiculo.getModelo().getId());
                 refVeiculo.setCor(veiculo.getCor().getId());
                 refVeiculo.setProprietario(getProprietario(veiculo.getProprietario()));
                 refVeiculo.setTipo(veiculo.getTipo().getId());
                 refVeiculo.setChassi(veiculo.getChassi());
-                if( veiculoNacional ) {
-                    refVeiculo.setRenavam("00000000000".substring(veiculo.getRenavam().length()) + veiculo.getRenavam());
-                } else {
-                    refVeiculo.setRenavam(veiculo.getRenavam());
-                }
+                              
                 refVeiculo.setMunicipio(veiculo.getMunicipio());
                 refVeiculo.setUf(veiculo.getUf());
                 refVeiculo.setDocumento(veiculo.getDocumento());
                 refVeiculo.setIdVeiculo(veiculo.getId());
-                refVeiculo.setNacional(veiculoNacional);
 
                 lstModelo = new ArrayList<Modelo>();
                 lstModelo = modeloService.crud().criteria().eq("marca.id", veiculo.getMarca().getId())
@@ -1080,7 +1361,13 @@ public class EnviarFichaMB implements Serializable {
                 context.update("formVeiculo:veiModelo");
                 context.update("formVeiculo:veiCategoria");
                 return;
+                
             } else {
+            	
+            	this.setPlacaEncontrada(false);   	
+            	this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada , continue com a inclusão ou realize uma nova pesquisa.");
+            	setBtnSalvarVeiculo(true);
+            	
                 refVeiculo = new ReferenciaVeiculos();
                 refVeiculo.setPlaca(placa.toUpperCase());
                 refVeiculo.setNacional(true);
@@ -1089,8 +1376,14 @@ public class EnviarFichaMB implements Serializable {
                 refVeiculo.getProprietario().setDocumento("");
 
             }
+            
+        } else {
+        
+        this.setMsgResultPesquisaPlaca("Informe uma placa com formato válido para prosseguir! Ex.: ABC-123 , ABC-1234 ou ABC1D23. Veículo Estrangeiro formato livre. ");
+        
+        setBtnSalvarVeiculo(false);
+        
         }
-
 
     }
 
@@ -2696,7 +2989,39 @@ public class EnviarFichaMB implements Serializable {
 	public void setChangeImgFileCnhVerso(boolean changeImgFileCnhVerso) {
 		this.changeImgFileCnhVerso = changeImgFileCnhVerso;
 	}
+
+	public Boolean getValidoDocProprietarioNacional() {
+		return validoDocProprietarioNacional;
+	}
+
+	public void setValidoDocProprietarioNacional(Boolean validoDocProprietarioNacional) {
+		this.validoDocProprietarioNacional = validoDocProprietarioNacional;
+	}
+
+	public String getMsgResultPesquisaPlaca() {
+		return msgResultPesquisaPlaca;
+	}
+
+	public void setMsgResultPesquisaPlaca(String msgResultPesquisaPlaca) {
+		this.msgResultPesquisaPlaca = msgResultPesquisaPlaca;
+	}
+
+	public Boolean getBtnSalvarVeiculo() {
+		return btnSalvarVeiculo;
+	}
+
+	public void setBtnSalvarVeiculo(Boolean btnSalvarVeiculo) {
+		this.btnSalvarVeiculo = btnSalvarVeiculo;
+	}
+
+	public Boolean getPlacaEncontrada() {
+		return placaEncontrada;
+	}
+
+	public void setPlacaEncontrada(Boolean placaEncontrada) {
+		this.placaEncontrada = placaEncontrada;
+	}
 	
 	
-    
+	    
 }
