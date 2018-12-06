@@ -49,8 +49,6 @@ public class Usuario implements BaseEntity {
             "Usuario.findInternos";
 
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "usuoid")

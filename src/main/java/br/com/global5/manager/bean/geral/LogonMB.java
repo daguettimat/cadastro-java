@@ -1,18 +1,38 @@
 package br.com.global5.manager.bean.geral;
 
+
+import br.com.global5.infra.util.checkUsuario;
 import br.com.global5.manager.model.geral.Usuario;
 import br.com.global5.manager.model.geral.UsuarioArea;
 import br.com.global5.manager.model.geral.UsuarioCtr;
+import br.com.global5.manager.model.permissao.Formulario;
+
 import br.com.global5.manager.service.geral.UsuarioService;
+import br.com.global5.manager.service.permissao.FormularioService;
+
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.http.HttpSession;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+
+import org.hibernate.transform.Transformers;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.DefaultSubMenu;
+import org.primefaces.model.menu.MenuModel;
+
 import java.io.*;
 import java.util.List;
 import java.util.Properties;
@@ -50,7 +70,14 @@ public class LogonMB implements Serializable {
     
     private List<UsuarioArea> listUsuArea;
     private List<UsuarioCtr>  listUsuCtr;
-
+    
+    
+    //TESTE CONTROLE_ACESSO
+    private String conteudoHtml = "";
+    private String idProdutosDoContrato = "";
+    private Integer codArea_anvloid = null;
+    
+    
     @Inject
     UsuarioService uService;
 
@@ -58,19 +85,6 @@ public class LogonMB implements Serializable {
     public void init() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().clear();
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-
-//        // load a properties file
-//        try {
-//            ClassLoader classLoader = getClass().getClassLoader();
-//            input = new FileInputStream(classLoader.getResource("admin-config.properties").getFile());
-//            prop.load(input);
-//            // get the property value and print it out
-//            ambiente = prop.getProperty("geral.ambiente").toUpperCase();
-//            System.out.println(ambiente);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
     }
 
@@ -105,7 +119,9 @@ public class LogonMB implements Serializable {
         //Verifica se o e-mail e senha existem e se o usuario pode logar
         Usuario usuarioFound = uService.isUsuarioReadyToLogin(login, password);
         if(usuarioFound != null){
+        	
         	permissao = this.permissaoAcessoUsuario(usuarioFound);
+        	
         }
         //Caso não tenha retornado nenhum usuario, então mostramos um erro
         //e redirecionamos ele para a página login.xhtml
@@ -123,15 +139,19 @@ public class LogonMB implements Serializable {
             //como true e guardamos o usuario encontrado na variável
             //usuarioLogado. Depois de tudo, mandamos o usuário
             //para a página index.xhtml
+        	
             loggedIn = true;
             usuarioLogado = usuarioFound;
-           //
+            this.gerarMenuHtml();
+            //this.montarMenuHtml(usuarioFound);
+            
             FacesContext facesContext = FacesContext.getCurrentInstance();
 
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
             session.setAttribute("logonMB", this);
             session.setAttribute("ambiente", ambiente);
             return "index.xhtml?faces-redirect=true";
+            
         } else if (usuarioFound != null && permissao == "negada"){
         	
             FacesContext.getCurrentInstance().addMessage(
@@ -147,7 +167,232 @@ public class LogonMB implements Serializable {
 		
     }
     
+    // implementação
+    /**
+     *Method: call method listMenu and set at variable string conteudoHtml to menu application.   
+     *
+     *created: 2018-12-04 
+     *
+     *@author Francis.Bueno
+     *
+     */
+    public void gerarMenuHtml(){
+    	
+    	this.setConteudoHtml(this.listMenu());
+    	
+    }
     
+    /**
+     * Method: called by method gerarMenuHtml for generation the menu of systems erp with base at access permission
+     * 
+     * created: 2018-12-04
+     * 
+     * @author Francis.Bueno
+     * @return string 
+     * 
+     */
+    public String listMenu(){
+    	
+    	StringBuilder html = new StringBuilder();
+    	
+    	EntityManager em = uService.crud().getEntityManager();
+    	
+    	String parameters = usuarioLogado.getPessoa().getFuncao().getId().toString(); 
+    	
+	      String query = " select formoid as id, form_titulo as titulo, form_tag as tag, " +
+                  " form_descricao as descricao, form_ordem_menu as ordemMenu, form_interna as areaInterna, " +
+                  " form_area_matriz as areaMatriz,  form_area_filial as areaFilial, " +
+                  " form_prodoid as idProduto, form_dt_criacao as dtCriacao, form_dt_exclusao as dtExclusao, " +
+                  " form_usuoid_criacao as usuarioCriacao,form_usuoid_exclusao as usuarioExclusao,  form_url as urlMenu, " +
+                  " form_nivel_pai as nivelPai , form_nivel as nivel  ,form_indice as indice, form_icone as icone, form_nivel_tipo as nivelTipo" +
+                  " from formulario " +
+                  " where formoid in (select aff_formoid from area_funcao_formulario where aff_afunoid = "  + parameters + " ) and " + 
+                  " form_nivel_pai is null and form_dt_exclusao is null order by form_ordem_menu, form_indice" ;
+
+	      List<Formulario> lMenu = em.createNativeQuery(query, "LstFormularioMapping").getResultList();
+	      
+	      int result = lMenu.size();
+	    
+	      if ( result > 0 ) {
+	    	  
+	    	  for( int i = 0; i < result ; i++){
+	    		  //Nivel: S - sessão, M - menu e P - página
+	    		  
+	    		  // 1 Sessão Livre - 
+	    		  	//HOME ( é uma pagina pois têm um link). Porém deve ser o primeiro respeitando a estrutura do menu padrão arquitetado
+	    		  	if ( lMenu.get(i).getTag().equals("HOME") ) {
+
+	    		  		html.append("<li class= \"\"" + ">");
+	    		  		html.append("<a class=\"ui-link ui-widget\" href=\"/manager/index.xhtml\">");
+	    		  		html.append("<i class=\"" + lMenu.get(i).getIcone() + "\" > "      );
+	    		  		html.append("</i>");
+	    		  		html.append("<span>" + lMenu.get(i).getTitulo() + "</span>"  );
+	    		  		html.append("</a>");
+	    		  		html.append("</li>");	    		  		
+	    		  		
+	    		  	}
+	    		  
+	    		  	//Administração (tipo menu) nota: html tag <li> não será finalizada neste if
+	    		  	if ( lMenu.get(i).getTag().equals("ADMIN") ) {
+	    		  	
+	    		  		//Menu
+	    		  		html.append("<li class=\"treeview\" >");
+	    		  		html.append("<a href=\"#\" >");
+	    		  		html.append("<i class=\"" + lMenu.get(i).getIcone() + " \" >"  );
+	    		  		html.append("</i>");
+	    		  		html.append("<span>" + lMenu.get(i).getTitulo() + "</span>"  );	    		  		
+	    		  		html.append("<span class=\"pull-right-container\">");
+	    		  		html.append("<i class=\"fa fa-angle-left pull-right \" > ");
+	    		  		html.append("</i>");
+	    		  		html.append("</span>");
+	    		  		html.append("</a>");
+	    		  		
+	    		  		//Paginas do Menu
+	    		  		List<Formulario> lstPaginas = this.ListMenusFilhos(lMenu.get(i).getId());
+	    		  		
+	    		  		int resultF = lstPaginas.size();
+	    		  		
+	    		  		if ( resultF > 0 ) {
+	    		  									 
+	    		  			html.append("<ul class=\"treeview-menu menu-open\">");
+	    		  			
+	    		  			for ( int mi = 0 ; mi < resultF ; mi++) {
+	    		  				
+	    		  				html.append("<li> ");
+	    		  				html.append("<a href=\"" + lstPaginas.get(mi).getUrlMenu() + "\">");
+	    		  				html.append("<i class=\"" + lstPaginas.get(mi).getIcone() + " \" >");
+	    		  				html.append("</i>");
+	    		  				html.append("<span>" + lstPaginas.get(mi).getTitulo() + "</span>");	    		  				
+	    		  				html.append("</a>");
+	    		  				html.append("</li>");	    		  				
+	    		  				
+	    		  			}
+	    		  			
+	    		  			html.append("</ul>"); // final class treeview-menu
+	    		  			
+	    		  		}
+	    		  		
+	    		  		html.append("</li>");
+	    		  		
+	    		  	} // final Menu Administração
+	    		  
+	    		  	// S - sessao 
+	    		  	if ( lMenu.get(i).getNivelTipo().equals("S") ) {
+	    		  		
+	    		  		//Header
+	    		  		html.append("<li class=\"header\">" + lMenu.get(i).getTitulo() + "</li>");	    		  		
+	    		  		
+	    		  	}
+	    		  	
+	    		  	// Demais Menus e Paginas, excluindo ADMIN e HOME
+	    		  	if ( lMenu.get(i).getNivelTipo().equals("M") && !lMenu.get(i).getTag().equals("ADMIN")) {
+	    		  		
+	    		  		//Menu	    		  			    		  		
+	    		  		html.append("<li class=\"treeview\" >");
+	    		  		html.append("<a href=\"#\" >");
+	    		  		html.append("<i class=\"" + lMenu.get(i).getIcone() + " \" >"  );
+	    		  		html.append("</i>");
+	    		  		html.append("<span>" + lMenu.get(i).getTitulo() + "</span>"  );	    		  		
+	    		  		html.append("<span class=\"pull-right-container\">");
+	    		  		html.append("<i class=\"fa fa-angle-left pull-right \" > ");
+	    		  		html.append("</i>");
+	    		  		html.append("</span>");
+	    		  		html.append("</a>");	    		  		    		  		
+	    		  		
+	    		  		//Paginas do Menu
+	    		  		List<Formulario> lstPaginas = this.ListMenusFilhos(lMenu.get(i).getId());
+	    		  		
+	    		  		int resultF = lstPaginas.size();
+	    		  		
+	    		  		if ( resultF > 0 ) {
+	    		  			
+	    		  			html.append("<ul class=\"treeview-menu menu-open \">");
+	    		  			
+	    		  			for ( int mi = 0 ; mi < resultF ; mi++) {
+	    		  					    		  				
+	    		  				html.append("<li> ");
+	    		  				html.append("<a class=\"ui-link ui-widget\" href=\"" + lstPaginas.get(mi).getUrlMenu() + "\">");
+	    		  				html.append("<i class=\"" + lstPaginas.get(mi).getIcone() + " \" >");
+	    		  				html.append("</i>");
+	    		  				html.append("<span>" + lstPaginas.get(mi).getTitulo() + "</span>");	    		  				
+	    		  				html.append("</a>");
+	    		  				html.append("</li>");	    		  				
+	    		  				
+	    		  			}
+	    		  			
+	    		  			html.append("</ul>"); // final class treeview-menu
+	    		  			
+	    		  		}
+	    		  		
+	    		  		html.append("</li>");	    		  		
+	    		  		
+	    		  	}
+	    		  
+	    	  }
+	    	  return html.toString();
+	    	    
+	      } else {
+	    	  
+	    	  return "<h1>.: PERMISSAO NÃO ATRIBUIDA :.</h1>";
+	      }
+	      
+    }
+    
+    public List<Formulario> ListMenusFilhos (Integer idNivelPai){
+    	
+    	EntityManager emF = uService.crud().getEntityManager();
+    	
+    	String parameters = usuarioLogado.getPessoa().getFuncao().getId().toString();
+    	
+    	if ( !this.getIdProdutosDoContrato().equals("") ) {
+    		
+    		parameters  = parameters + " and form_prodoid is null or form_prodoid in ( " + this.getIdProdutosDoContrato() + ") "; 
+    	}
+    	
+    	if ( this.getCodArea_anvloid() != null ) {
+    		
+    		//Transportadora / nivel 2 = Matriz Cliente
+    		if ( this.getCodArea_anvloid() == 2 ) {
+    			
+    			parameters  = parameters + " and form_area_matriz = true " ;
+    			
+    		} else {
+    		
+    		// Unidade de Transportes / nivel 3 = filiais
+    			if ( this.getCodArea_anvloid() == 3 ) {
+    				parameters  = parameters + " and form_area_filial = true " ;
+    			}
+    		
+    		}
+    	}    			
+    	
+	      String query = " select formoid as id, form_titulo as titulo, form_tag as tag, " +
+                  " form_descricao as descricao, form_ordem_menu as ordemMenu, form_interna as areaInterna, " +
+                  " form_area_matriz as areaMatriz,  form_area_filial as areaFilial, " +
+                  " form_prodoid as idProduto, form_dt_criacao as dtCriacao, form_dt_exclusao as dtExclusao, " +
+                  " form_usuoid_criacao as usuarioCriacao,form_usuoid_exclusao as usuarioExclusao,  form_url as urlMenu, " +
+                  " form_nivel_pai as nivelPai , form_nivel as nivel  ,form_indice as indice, form_icone as icone, form_nivel_tipo as nivelTipo" +
+                  " from formulario " +
+                  " where formoid in (select aff_formoid from area_funcao_formulario where aff_afunoid = "  + parameters + " ) " +
+                  " and form_nivel_pai = " + idNivelPai + 
+                  " and form_dt_exclusao is null " +
+                  " order by form_ordem_menu, form_indice" ;
+	      
+	      int result = emF.createNativeQuery(query, "LstFormularioMapping").getResultList().size();
+    	
+	      if ( result > 0 ) {
+	    	  // retorna uma lista com os itens de menus selecionados
+	    	  return emF.createNativeQuery(query, "LstFormularioMapping").getResultList();
+	    	  
+	      } else {
+	    	  // retorna uma lista null
+	    	  return emF.createNativeQuery(query, "LstFormularioMapping").getResultList() ;
+	      }
+    	    	
+    }
+    
+    
+  
     /**
      * Method:  verify the kind definition at your user by area and the validity status agreement the customer, 
      * case status of agreement is 645 (active) or 646 (cancel previous) then access will by allow 
@@ -188,6 +433,8 @@ public class LogonMB implements Serializable {
     			numArea_areaoid_pai = listUsuArea.get(0).getArea_areaoid_pai();
     			numArea_anvloid = listUsuArea.get(0).getArea_anvloid();
     			
+    			this.setCodArea_anvloid(numArea_anvloid);
+    			
     			//Caso nivel da area seja (2) = Transportadora
     			if(numArea_anvloid == 2){
     				
@@ -208,6 +455,9 @@ public class LogonMB implements Serializable {
     					 
     					 if(sizeListUsuCtr != 0){
     						 // Retorna string para confirmar o acesso
+    						 
+    						 this.verificarProdutosDoContrato(listUsuCtr.get(0).getConoid());
+    						 
     						 return "concedida";
     					 } else if(sizeListUsuCtr == 0){
     						 // Retorna string para negar o acesso    						 
@@ -241,6 +491,10 @@ public class LogonMB implements Serializable {
        					 
        					 if(sizeListUsuCtr != 0){
        						 // Retorna string para confirmar o acesso
+       					
+       						this.verificarProdutosDoContrato(listUsuCtr.get(0).getConoid());
+       						 
+       						 
        						 return "concedida";
        					 } else if(sizeListUsuCtr == 0){
        						 // Retorna string para negar o acesso    						 
@@ -267,6 +521,52 @@ public class LogonMB implements Serializable {
     	return "negada";
     }
     
+    //Nova Implementação - verifica os produtos do contrato
+    public void verificarProdutosDoContrato(Integer idContrato){
+    	
+    	EntityManager em = uService.crud().getEntityManager();
+    	
+    	String SQL = " select cp.conp_prodoid " +
+    	        	 "      from contrato c   " + 
+    	        	 "       join contrato_produto cp " +   
+    	        	 "        on cp.conp_conoid = c.conoid " +   
+    	        	 "       join produto p   " + 
+    	        	 "        on p.prodoid = cp.conp_prodoid  " +  
+    	        	 "   where cp.conp_produto_ativo = true and cp.conp_conoid = :idContrato ";
+    	Query query = em.createNativeQuery(SQL);
+    	query.setParameter("idContrato", idContrato);
+    	
+    	int result = query.getResultList().size();
+    	String codProdutoAtivoContrato = "";
+    	
+    	if ( result > 0 ) {
+    		
+    		Integer fatorSaida = result - 1 ;
+    		
+    		for ( int i = 1; i <= result ; i++  ){
+    			
+    			if ( i < result) {
+    				
+    				codProdutoAtivoContrato = codProdutoAtivoContrato + query.getResultList().get(i - 1).toString() + " , ";
+    				
+    			} else 
+    		
+    				if ( i == result ) {
+    					
+    				codProdutoAtivoContrato = codProdutoAtivoContrato + query.getResultList().get(i - 1).toString();
+    				
+    			}
+    		}
+    		
+    		if (! codProdutoAtivoContrato.equals("") ) {
+    			
+    			this.setIdProdutosDoContrato(codProdutoAtivoContrato);
+    			
+    		}
+    		
+    	}
+    	
+    }
     
     public String doChangePasswd() {
 
@@ -403,7 +703,30 @@ public class LogonMB implements Serializable {
 	public void setListUsuCtr(List<UsuarioCtr> listUsuCtr) {
 		this.listUsuCtr = listUsuCtr;
 	}
-    
+
+	public String getConteudoHtml() {
+		return conteudoHtml;
+	}
+
+	public void setConteudoHtml(String conteudoHtml) {
+		this.conteudoHtml = conteudoHtml;
+	}
+
+	public String getIdProdutosDoContrato() {
+		return idProdutosDoContrato;
+	}
+
+	public void setIdProdutosDoContrato(String idProdutosDoContrato) {
+		this.idProdutosDoContrato = idProdutosDoContrato;
+	}
+
+	public Integer getCodArea_anvloid() {
+		return codArea_anvloid;
+	}
+
+	public void setCodArea_anvloid(Integer codArea_anvloid) {
+		this.codArea_anvloid = codArea_anvloid;
+	}	
+	    
 	
-    
 }

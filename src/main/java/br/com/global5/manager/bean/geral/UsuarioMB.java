@@ -4,23 +4,32 @@ import br.com.global5.infra.Crud;
 import br.com.global5.infra.CrudService;
 import br.com.global5.infra.model.Filter;
 import br.com.global5.infra.util.AppUtils;
+import br.com.global5.infra.util.checkUsuario;
 import br.com.global5.manager.model.geral.Usuario;
+import br.com.global5.manager.model.permissao.Formulario;
 import br.com.global5.manager.model.auxiliar.TipoUsuario;
 import br.com.global5.manager.service.geral.UsuarioService;
+import br.com.global5.manager.service.permissao.FormularioService;
 import br.com.global5.manager.service.auxiliar.TipoUsuarioService;
 import br.com.global5.template.exception.BusinessException;
+import javassist.convert.Transformer;
+
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
+import org.apache.poi.ss.formula.functions.Now;
 import org.hibernate.Hibernate;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.UnselectEvent;
-import org.primefaces.model.LazyDataModel;
-import org.primefaces.model.SortOrder;
+import org.hibernate.query.Query;
+import org.hibernate.transform.Transformers;
+import org.primefaces.event.*;
+import org.primefaces.model.*;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.UniqueConstraint;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -42,8 +51,9 @@ public class UsuarioMB implements Serializable {
 	private String confirmarSenha;
 	private Filter<Usuario> filter = new Filter<Usuario>(new Usuario());
 	private boolean Externo;
-
-
+	
+	private TreeNode raizMenu;
+		
 	@Inject
 	TipoUsuarioService tpuService;
 
@@ -204,7 +214,73 @@ public class UsuarioMB implements Serializable {
 	public void onRowUnselect(UnselectEvent event) {
 		usuario = new Usuario();
 	}
+	
 
+	/**
+	 * Method: this event has objective the menu  list  generation  based at permission by employee position (area_funcao)
+	 * created: 2018-11-18
+	 * 
+	 * @author Francis.Bueno   
+	 * 
+	 */
+	public void consultarMenu(){
+		
+		//Armazena o list dos menus tipo nivel pai para geração do node
+		List<Formulario> formMenus = this.raizMenu();
+		
+		//Instancia o Objeto para a geração dos nodes
+		this.raizMenu = new DefaultTreeNode("RaizM", null);	//"RaizM", null não aparece em lugar nenhum mais pode colocar
+		
+		//Chama o método para gerar a estrutura de apresentação do tree e treeNode
+		adicionarNos(formMenus, this.raizMenu);
+		
+	}
+	
+	/**
+	 * Method: generates the list for frameWork primefaces tree and treeNode
+	 * created: 2018-11-18
+	 * 
+	 * @author Francis.Bueno
+	 * @param FormsMenus	receive a list of menu where the kind pai is null 
+	 * @param pai			receive object raizMenu (pai)
+	 */
+	public void adicionarNos(List<Formulario> FormsMenus, TreeNode pai){
+ 
+		//Gera os dados na estrutura da arvore tree e treeNode
+		for(Formulario formulario : FormsMenus ){
+			
+			TreeNode no = new DefaultTreeNode(formulario, pai);
+			
+			adicionarNos(formulario.getFilhos(), no);
+		}
+		
+	}
+	
+	/**
+	 * Method: generates an list the items menu to records where form_nivel_pai is null (It is first level to principal menu)
+	 * @return 
+	 * 
+	 */
+	public List<Formulario> raizMenu(){
+		
+		  EntityManager em = usuarioService.crud().getEntityManager(); 
+			
+		  String parameters =  checkUsuario.valid().getPessoa().getFuncao().getId().toString();
+		
+	      String query = " select formoid as id, form_titulo as titulo, form_tag as tag, " +
+	                     " form_descricao as descricao, form_ordem_menu as ordemMenu, form_interna as areaInterna, " +
+	                     " form_area_matriz as areaMatriz,  form_area_filial as areaFilial, " +
+	                     " form_prodoid as idProduto, form_dt_criacao as dtCriacao, form_dt_exclusao as dtExclusao, " +
+	                     " form_usuoid_criacao as usuarioCriacao,form_usuoid_exclusao as usuarioExclusao,  form_url as urlMenu, " +
+	                     " form_nivel_pai as nivelPai , form_nivel as nivel  ,form_indice as indice, form_icone as icone, form_nivel_tipo as nivelTipo" +
+	                     " from formulario " +
+	                     " where formoid in (select aff_formoid from area_funcao_formulario where aff_afunoid = "  + parameters + " ) and form_nivel_pai is null order by form_ordem_menu, form_indice" ;
+
+	      return em.createNativeQuery(query, "LstFormularioMapping").getResultList();
+		
+	}
+	
+	
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
 	}
@@ -300,4 +376,29 @@ public class UsuarioMB implements Serializable {
     public void setExterno(boolean externo) {
         Externo = externo;
     }
+	
+	public void montaDadosTree(final TreeNode pai, final List<Formulario> lista){
+		
+		if ( lista != null && lista.size() > 0) {
+			
+			TreeNode filho = null;
+			 
+			for(final Formulario formulario : lista) {
+				filho = (TreeNode)new DefaultTreeNode((Object)formulario, pai);
+				this.montaDadosTree(filho, formulario.getFilhos());
+			}
+			
+		}
+		
+	}
+
+	public TreeNode getRaizMenu() {
+		return raizMenu;
+	}
+	
+	
+	
+
+    
+	
 }

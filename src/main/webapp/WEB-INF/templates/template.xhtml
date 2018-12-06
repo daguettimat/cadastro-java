@@ -3,7 +3,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:pe="http://primefaces.org/ui/extensions"               
                 template="/resources/admin.xhtml">
 
     <f:view contentType="text/html" ></f:view>
@@ -243,7 +243,7 @@
     </ui:define>
 
      <ui:define name="menu">
-         <ui:include src="/includes/menu.xhtml"/>
+         <ui:include src="/includes/menudn.xhtml"/>
      </ui:define>
 
     <ui:define name="top-menu">
@@ -266,7 +266,7 @@
         <div class="pull-right hidden-xs" style="color: gray">
             <i>#{adm['admin.version']}</i>
         </div>
-
+		
 
         <h:outputScript library="js" name="prism.js"  target="head"/>
         <h:outputScript library="js" name="maskedinput.js"  target="head"/>

@@ -187,12 +187,13 @@
                                             <p:inputText id="nroChassis" value="#{listaCadastralMB.nChassis}"/>
                                         </div>
                                         <div class="col-lg-1" style="min-width: 110px;">
-                                            <p:outputLabel for="placa" value="Placa"/>
-                                            <p:inputMask mask="aaa-9999" id="placa"
-                                                         onchange="this.value = this.value.toUpperCase();"
-                                                         value="#{listaCadastralMB.placa}"
-                                                         style="width:100%">
-                                            </p:inputMask>
+                                            <p:outputLabel  value="Placa"/>
+                                            <p:inputText maxlength="8"  id="pesqPlaca"
+                                         		onchange="this.value = this.value.toUpperCase();"
+                                         		value="#{listaCadastralMB.placa}" title="Exemplo: Padrão Nacional ABC-123 , ABC-1234 ou ABC1D23 (Mercosul)"
+                                         		style="width:100%">
+                            				</p:inputText>
+                                            <p:tooltip id="toolTipPesqPlaca" for="pesqPlaca" showEvent="focus" hideEvent="blur" position="top" />
                                         </div>
                                     </div>
                                     <br/>

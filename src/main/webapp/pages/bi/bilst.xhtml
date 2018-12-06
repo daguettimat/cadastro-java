@@ -1,0 +1,286 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            .center  {
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+        </style>
+    </ui:define>
+	    	
+    <ui:define name="title"  >
+     	Boletim Informativo
+    </ui:define>
+	 
+    <ui:define name="description">
+                  
+    </ui:define>
+ 
+
+    <ui:define name="body">
+        <adm:breadcrumb title="List de Registros de BI"/>
+        
+        		
+		<h:form id="formPosSelecao">		
+			<div class="ui-g" id="dvSubTotais">
+			
+				<div class="ui-g-12 ui-md-4">
+					<p:panel>
+						<h:outputText value=" Registrados "
+							style="font-size: 12pt;color: #0a568c;font-weight: bold;text-align: center;display:block" />
+						<h:outputText 
+							style="font-size: 10pt;color : blue;font-weight: bold;text-align: center;display:block">
+							<f:convertNumber pattern="#,##0.00" minFractionDigits="2" locale="pt_BR" />
+						</h:outputText>
+					</p:panel>
+				</div>
+				<div class="ui-g-12 ui-md-4">
+					<p:panel>
+						<h:outputText value=" Confirmados "
+							style="font-size: 12pt;color: #0a568c;font-weight: bold;text-align: center;display:block" />
+						<h:outputText 
+							style="font-size: 10pt;color : green;font-weight: bold;text-align: center;display:block">
+							<f:convertNumber pattern="#,##0.00" minFractionDigits="2" locale="pt_BR" />
+						</h:outputText>
+					</p:panel>
+				</div>
+				<div class="ui-g-12 ui-md-4" style="text-align: center">
+					<p:panel>
+						<h:outputText value=" Suspeitas "
+							style="font-size: 12pt;color: #0a568c;font-weight: bold;text-align: center;display:block" />
+						<h:outputText 
+							style="font-size: 10pt;color : orange;font-weight: bold;text-align: center;display:block">
+							<f:convertNumber pattern="#,##0.00" minFractionDigits="2"
+								locale="pt_BR" />
+						</h:outputText>
+
+
+					</p:panel>
+				</div>
+			</div>
+			<!-- final dvSubTotais / to panel -->
+		</h:form>
+       
+        <h:form id="frmFiltroPesq">
+        	<div class="align-right" style="padding-right: 10px" >
+           		<p >
+  					<a class="btn btn-warning" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Filtros de Pesquisa</a>
+  					<a class="btn btn-danger"  href="../bi/bi.xhtml" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Novo BI</a>                            
+		 		</p>
+		 		
+            </div> 		 
+  		
+			<div class="row" style="padding-bottom:15px;">
+  				<div class="col">
+    				<div class="collapse multi-collapse" id="multiCollapseExample1">
+     					<h:form >
+							<p:panel style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid orange;">
+								<div class="ui-g ui-fluid">
+									<div class="col-lg-2">										
+										<p:calendar id="dataInicial" placeholder="Dt Início Vcto"
+											value="#{contasReceberMB.dtIniVcto}" inputStyle="text-align:center"
+											 locale="pt_BR" navigator="true" pattern="dd-MMM-yyyy"
+											 showButtonPanel="true" title="Data inicial vencimento - a partir do dia">
+										</p:calendar>
+									</div>
+
+									<div class="col-lg-2">										
+										<p:calendar id="dataFinal" placeholder="Dt Final Vcto" value="#{contasReceberMB.dtFimVcto}"
+											 inputStyle="text-align:center"
+											locale="pt_BR" navigator="true" pattern="dd-MMM-yyyy"
+										    showButtonPanel="true" title="Data final vencimento - até o dia.">
+
+										</p:calendar>										
+									</div>
+									
+									<div class="col-lg-2">
+										<p:inputNumber style="width:100%;" id="vlrReceber1" inputStyle="text-align:center"
+											size="15" maxlength="15" value="#{contasReceberMB.filVlrIniCre}"
+											minValue="0.00" maxValue="9999999.99" decimalSeparator=","
+											placeholder="R$ Início" thousandSeparator="." title="Faixa inicial - a partir do valor de R$">
+										</p:inputNumber>
+									</div>
+									
+									<div class="col-lg-2">
+										<p:inputNumber style="width:100%;" id="vlrReceber2" inputStyle="text-align:center"
+											 size="15" maxlength="15" value="#{contasReceberMB.filVlrFimCre}"
+											minValue="0.00" maxValue="9999999.99" decimalSeparator=","
+											placeholder="R$ Final" thousandSeparator="." title="Faixa final - até o valor de R$">
+										</p:inputNumber>
+									</div>	
+																																																							
+								</div>
+								<p:spacer width="5" />
+								<div class="ui-g ui-fluid" id="filterLn2">
+								
+									<div class="col-lg-4">
+										<p:inputText  value="#{contasReceberMB.descNomeCliente}" disabled="true"
+											style="width:100%" placeholder="Cliente" title="Parte do nome do cliente"></p:inputText>
+									</div>
+									<div class="col-lg-4">
+										<p:inputText  disabled="true"
+											style="width:100%" placeholder="Transação" title="Parte da transação"></p:inputText>
+									</div>
+
+									<div class="col-lg-4">
+									<p:selectOneButton value="#{contasReceberMB.stsReceber}" >
+            							<f:selectItem itemLabel="Recebido" itemValue="recebido"/>            							
+            							<f:selectItem itemLabel="A Receber" itemValue="receber" />
+            							<f:selectItem itemLabel="Todos" itemValue="todos" />            							
+        							</p:selectOneButton>
+        								
+        							</div>
+			
+								</div>
+								<div class="row" id="filterLn3">
+
+									<div class="align-right" style="padding: 5px;">
+										<p:commandButton id="btnPesquisar" value="Pesquisar"
+											icon="fa fa-search" action="#{contasReceberMB.btnPesqContasReceber()}" update=":frmListaRec , :formPosSelecao"
+											 />
+										<p:spacer height="5" />
+										<p:commandButton id="btnClearFilter" value="Nova Consulta" 
+											  icon="fa fa-filter" action="#{contasReceberMB.btnNvConsultaCre()}"
+											 style="text-shadow:1px 1px 3px red;" />
+									 	<p:spacer height="5" />
+										<p:splitButton id="btnReports" value="Relatórios"
+											type="button" icon="fa fa-print" styleClass="">
+											<p:menuitem value="PDF" url="#" icon="fa fa-file-pdf-o" />
+											<p:menuitem value="XLS" url="#" icon="fa fa-file-excel-o" />
+											<p:menuitem value="CSV" url="#" icon="fa fa-file-text" />
+											<p:menuitem value="RTF" url="#" icon="fa fa-file-word-o" />
+											<p:separator />
+											<p:menuitem value="&#160;Visualizar" url="#"
+												icon="fa fa-television" />
+										</p:splitButton>
+									</div>
+								</div>
+							</p:panel>
+							
+						</h:form>
+    				</div>
+  				</div>
+  			</div>
+        </h:form>
+ 
+        <h:form id="frmListaRec">            
+            <h:panelGroup layout="block"  >
+    	
+   			<p:dataTable widgetVar="dtCre" var="c" value="#{contasReceberMB.listContasReceber}" rows="15" styleClass="box-danger"
+                             filteredValue="#{contasReceberMB.filteredValue}" id="tbListRec"
+                             rowKey="#{c.id}" lazy="true"  paginator="true" emptyMessage="Nenhum Título ainda cadastrada!"
+                             paginatorPosition="bottom" selectionMode="single" selection="#{contasReceberMB.cre}" 
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30,50,100">
+					
+				
+					<f:facet name="header">						
+                    </f:facet>
+
+                    <p:column headerText="BI nº" style="width:10%" sortBy="#{c.numTitulo}" >
+                        <div align="left" style="padding-right: 10px;">
+                         	  <p:outputLabel value="#{c.numTitulo}"
+                                            style="text-align: center;display:block"/>
+                            
+                        </div>                        
+                    </p:column>
+                    <p:column headerText="Tipo" style="width:10%" sortBy="#{c.tipoTitulo.titulo}" >
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.tipoTitulo.titulo}" style="text-align: center;display:block">                                
+                            </p:outputLabel>	
+                        </div>                        
+                    </p:column>
+                    <p:column headerText="Data" style="width:5%" sortBy="#{c.dt_vencimento}">
+                         <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.dt_vencimento}" style="text-align: center;display:block">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+                    <p:column headerText="Cliente" style="width:20%" sortBy="#{c.statusReceber.descricao}" >
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.statusReceber.descricao}" style="text-align: center;display:block">                                
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+                    <p:column headerText="Seguradora" style="width:20%" sortBy="#{c.operacao.id}"  >
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.operacao.codOperacao}" style="text-align: center;display:block">                                
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+                        <p:column headerText="Corretora" style="width:20%" sortBy="#{c.pessoaSacado.nome}" >
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.pessoaSacado.nome}" style="text-align: left;display:block">                                
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+
+                    <p:column headerText="Operações" style="width:8%" >
+                    	<div class="align-right" style="padding: 5px;text-align: center ">
+
+							<div class="col-lg-2">
+								<p:link href="/pages/finan/cad/operacaolst.xhtml" title="receber" >
+									<i class="fa fa-check-square-o"  style="font-size:15px;color:green;text-shadow:1px 1px 3px #000000;"/>									
+								</p:link>
+							</div>
+							<div class="col-lg-2">
+								<h:commandLink action="#{contasReceberMB.showCadastro(c.id)}"> 
+									<i class="fa fa-pencil-square-o" title="editar" style="font-size:15px;color:#1c86ee;text-shadow:1px 1px 3px #000000;" />
+									
+								</h:commandLink>
+                    		 
+                    		 </div>
+                    		  <div class="col-lg-2">
+								<p:link href="/pages/finan/cad/operacaolst.xhtml" title="excluir">
+									<i class="fa fa-trash-o" style="font-size:15px;color:#FF0000;text-shadow:1px 1px 3px #000000;"/>									
+								</p:link>
+                    		 </div>
+                    		 <div class="col-lg-2"> 
+                    		 	<h:commandLink action="#{contasReceberMB.gerarBoleto(c.id)}"> 
+									<i class="fa fa-print" title="boleto" style="font-size:15px;color:#FF0000;text-shadow:1px 1px 3px #000000;"/>
+									
+								</h:commandLink>
+								
+                    		 </div>                    		 
+                    	</div>
+   
+    </p:column>  
+                
+             
+                                                      
+                </p:dataTable>
+            </h:panelGroup>
+            
+            <br/>
+        </h:form>
+  
+    </ui:define>
+</ui:composition>

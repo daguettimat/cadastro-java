@@ -1,0 +1,434 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            input[disabled] {
+                background-color: #000;
+                color:#fff !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        BI boletim informativo
+    </ui:define>
+
+    <ui:define name="description">
+        inclusão de dados
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Registro de BI"/>
+        <h:form>
+            <h:panelGroup layout="block">
+            	
+                <p:panel  styleClass="box-danger" >
+											
+					<div class="row" style="padding-top: 10px">
+					
+						<div class="col-md-4">
+							<h:outputText value="Tipo Boletim: " for="numBI" style="color:black;font-weight:bold"  />      																			
+						</div>
+						
+						<div class="col-md-8">														
+							<p:selectOneRadio id="radioTipoBoletim">
+								<f:selectItem itemLabel="Sinistro de Perdas" itemValue="sinPerda" />
+								<f:selectItem itemLabel="Sinistro de Danos" itemValue="sinDanos" />
+								<f:selectItem itemLabel="Suspeita de Roubo" itemValue="suspRoubo	" />
+							</p:selectOneRadio>							
+						</div>							
+												
+					</div>
+					
+					<p:separator/>
+					
+					<h:form id="frmDadosCliente">
+					
+						<p:panel id="pnDadosCliente" header="Dados do Cliente">
+							
+							<div class="row">
+							
+								<div class="col-md-2">
+									<h:outputText value="Cliente: " for="idCliente" style="color:black;font-weight:bold"  />
+								</div>
+							
+								<div class="col-md-2">
+									<p:commandButton action="#{modeloMB.testeGR}" icon="ui-icon-search" title="pesquisar cliente" style="height:23px">
+								 	</p:commandButton>
+								 </div>
+							
+								<div class="col-md-8">
+									<h:outputText value="Aqui o nome do cliente..." style="color:red;font-weight:bold"  />
+								</div>
+								
+							</div>
+
+							<div class="row">
+							
+								<div class="col-md-4">
+								</div>
+							
+								<div class="col-md-8">
+									<div class="col-md-4">
+										<h:outputText value="Seguradora: " for="idSeguradora" style="color:gray;font-weight:bold"  />
+									</div>
+									<div class="col-md-8">
+										<h:outputText value="Aqui o nome da seguradora" style="color:red;font-weight:bold"  />
+									</div>								
+								</div>
+								
+							</div>
+
+							<div class="row">
+							
+								<div class="col-md-4">
+								</div>
+							
+								<div class="col-md-8">
+									<div class="col-md-4">
+										<h:outputText value="Corretora: " for="idCorretora" style="color:gray;font-weight:bold"  />
+									</div>
+									<div class="col-md-8">
+										<h:outputText value="Aqui o nome da corretora" style="color:red;font-weight:bold"  />
+									</div>								
+								</div>
+								
+							</div>
+
+							<p:spacer/>
+
+							<div class="row">
+							
+								<div class="col-md-2">
+									<h:outputText value="Transportadora: " for="idTransportadora" style="color:black;font-weight:bold"  />
+								</div>
+							
+								<div class="col-md-2">
+									<p:commandButton icon="ui-icon-search" title="pesquisar transportadora" style="height:23px">
+								 	</p:commandButton>
+								 </div>
+							
+								<div class="col-md-8">
+									<h:outputText value="Aqui o nome da transportadora..." style="color:red;font-weight:bold"  />
+								</div>
+								
+							</div>																								
+							
+							<p:spacer/>
+							
+							<div class="row">
+							
+								<div class="col-md-4">
+									<h:outputText value="Gerente Resp. pela Conta: " for="idGerResponsavel" style="color:black;font-weight:bold"  />
+								</div>
+														
+								<div class="col-md-8">
+									<h:outputText value="Aqui o nome do gerente..." style="color:red;font-weight:bold"  />
+								</div>
+								
+							</div>
+								
+						</p:panel>
+						
+					</h:form>
+					
+					<p:spacer/>
+					
+					<h:form id="frmDadosCavalo">
+						
+						<p:panel id="pnDadosCavalo" header="Dados do Cavalo" styleClass="redColorPanel" >
+							
+						</p:panel>
+					
+					</h:form>
+					
+					<p:spacer/>					
+					
+					<h:form id="frmDadosCarreta">
+						
+						<p:panel id="pnDadosCarreta" header="Dados da Carreta" styleClass="ui-panel-titlebar" >
+							
+						</p:panel>
+					
+					</h:form>
+					
+					<p:panelGrid style="width:100%" styleClass="ui-panelgrid-blank" id="pnGridCre" >
+
+						<p:focus context="pnGridCre"/>
+
+																		
+						<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="Título nº: " for="numTitulo" style="color:black;font-weight:bold"  /><p:spacer/>
+        					</p:column>
+							<p:column>   
+								<p:outputLabel style="text-align:left;font-size:14px; color: blue"></p:outputLabel>								
+							</p:column>
+							<p:column style="width:400px">	
+																						
+							</p:column>
+						</p:row>
+						
+						<p:spacer height="5px" />
+						
+						<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="Tipo Título: " for="tipoTitulo" style="color:black;font-weight:bold"  />
+        					</p:column>
+							<p:column> 
+								<p:outputLabel  style="text-align:left;font-size:14px; color: blue"></p:outputLabel>														
+							</p:column>
+							<p:column style="width:400px">	
+								<h:outputText value="Nota Fiscal: " for="numNfse" style="color:black;font-weight:bold"  /> 								
+								<p:spacer width="7px" />
+								<p:outputLabel style="text-align:left;padding-top:5px;color: blue" 
+											id="numNfse" 
+											 size="40"
+											maxlength="40" />															
+							</p:column>
+						</p:row>
+						
+						<p:spacer height="5px" />
+						
+						<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="Emissão: " for="dtEmissao" style="color:black;font-weight:bold"   />
+        					</p:column>
+							<p:column> 											
+								<p:outputLabel  style="text-align:left;font-size:14px; color: blue">
+									<f:convertDateTime  locale="pt_BR"></f:convertDateTime>	
+								</p:outputLabel>
+							</p:column>
+							<p:column style="width:400px">	
+								<h:outputText value="Autorização: " for="autoNf" style="color:black;font-weight:bold"   />	
+								<p:outputLabel  id="autoNf" style="text-align:left;font-size:14px; color: blue">
+									<f:convertDateTime  locale="pt_BR"></f:convertDateTime>	
+								</p:outputLabel>						
+							</p:column>
+						</p:row>
+						
+						<p:spacer height="5px" />
+						
+						<p:row>
+							<p:column style="width:150px">							
+								<h:outputText value="Cliente: " for="nomecliente" style="color:black;font-weight:bold"  /> 
+        					</p:column>
+							<p:column > 
+								<p:outputLabel style="text-align:left;font-size:14px; color: blue" id="nomeCliente" 
+								size="9"
+								maxlength="9" />
+								<p:spacer width="7px" />
+								<p:outputLabel style="text-align:left;padding-top:5px;color: blue" 
+											id="nomeCliente1" 
+											 size="40"
+											maxlength="40" />									
+							</p:column>
+							
+							<p:column > 
+								<h:outputText value="CNPJ: " for="nomecliente" style="color:black;font-weight:bold"  /> 								
+								<p:spacer width="7px" />
+								<p:outputLabel style="text-align:left;padding-top:5px;color: blue" 
+											id="cnpjCliente" 
+											 size="40"
+											maxlength="40" />									
+							</p:column>
+							
+						</p:row>										
+					
+						<p:row>
+							<p:column style="width:150px"> 
+								<p:separator/>
+        					</p:column>
+							<p:column> 
+								<p:separator/>
+							</p:column>
+							<p:column style="width:400px">	
+								<p:separator/>							
+							</p:column>
+						</p:row>
+						
+						<p:spacer height="5px" />
+						
+						<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="Valor: " for="vlrTitulo" style="color:black;font-weight:bold"/>
+        					</p:column>
+							<p:column>
+								<p:outputLabel style="text-align:left;padding-top:5px;color: blue" 											
+											 size="40"
+											maxlength="40">								
+									<f:convertNumber locale="pt_BR" />
+								</p:outputLabel>	 																				  
+							</p:column>
+							<p:column style="width:400px">	
+								<h:outputText value="Vencimento: " for="dtVcto" style="color:black;font-weight:bold"   />	
+								<p:outputLabel style="text-align:left;font-size:14px; color: blue">
+									<f:convertDateTime  locale="pt_BR"></f:convertDateTime>	
+								</p:outputLabel>							
+							</p:column>
+						</p:row>
+						
+						<p:spacer height="5px" />
+						
+						<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="Forma pagamento: " for="formaPagto" style="color:black;font-weight:bold"  />
+        					</p:column>
+							<p:column> 														
+								<p:outputLabel style="text-align:left;padding-top:5px;color: blue" 
+											id="formaPagto" 
+											size="40"
+											maxlength="40" />												
+							</p:column>
+							<p:column style="width:400px">		
+									<h:outputText value="Condição pagamento: " for="condPgto" style="color:black;font-weight:bold"  />	
+									<p:outputLabel style="text-align:left;padding-top:5px;color: blue" 
+											id="condPgto" 
+											 size="40"
+											maxlength="40" />									
+										
+							</p:column>
+						</p:row>
+						
+						<p:spacer height="5px" />
+						<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="Portador: " for="portTitulo" style="color:black;font-weight:bold"  />
+        					</p:column>
+							<p:column> 
+							
+																						
+							</p:column>
+
+						</p:row>
+						<p:spacer height="5px" />	
+        				<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="Carteira " for="instCart" style="color:black;font-weight:bold"  />
+        					</p:column>
+							<p:column> 							
+							</p:column>
+							
+							<p:column style="width:400px">								
+							</p:column>
+						</p:row>						
+						
+						<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="Nosso Número: " for="nsNumCob" style="color:black;font-weight:bold"  />
+        					</p:column>
+							<p:column>
+								<p:inputText style="text-align:left;padding-top:5px;color: blue" 
+											id="nsNumCob" 
+
+											maxlength="40" />	
+							</p:column>
+							<p:column style="width:400px">		
+								<h:outputText value="Remessa nº: " for="nsRemCob" style="color:black;font-weight:bold"  />	
+								<p:inputText style="text-align:left;padding-top:5px;color: blue" 
+											id="nsRemCob" 
+
+											maxlength="40" />							
+							</p:column>
+						</p:row>
+	
+						<p:spacer height="5px" />	
+        				<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="1ª Instrução " for="inst1Cob" style="color:black;font-weight:bold"  />
+        					</p:column>
+							<p:column> 							
+							</p:column>
+							
+							<p:column style="width:400px">								
+							</p:column>
+						</p:row>
+
+						<p:spacer height="5px" />	
+        				<p:row>
+							<p:column style="width:150px"> 
+								<h:outputText value="2ª Instrução " for="inst2Cob" style="color:black;font-weight:bold"  />
+        					</p:column>
+							<p:column> 
+							
+																						
+							</p:column>
+							
+							<p:column style="width:400px">								
+							</p:column>
+						</p:row>
+		
+					</p:panelGrid>
+  
+				
+				
+                <f:facet name="footer">
+                    <div class="align-right" style="padding: 5px;">
+
+                        <p:commandButton value="Salvar"
+                                          styleClass="btn-danger"/>
+ 						<p:spacer height="5"/>                                              
+						                    
+                        <p:commandButton value="Voltar"
+                                         styleClass="btn-danger"/>
+                       
+                        
+                    </div>
+                </f:facet>
+            </p:panel>
+            </h:panelGroup>
+            <br/>     
+            
+            <p:dialog id="dlgPortador" widgetVar="dlgPortador" header="Gerador de Boleto Avulso" modal="true"
+                  resizable="false" closable="true" position="center" 
+                  width="900" >
+				
+            	<p:outputLabel style="text-align:left;padding-top:5px;color: blue" 
+											
+											
+											maxlength="40" />	
+            	<p:panel >
+                    <div class="ui-g ui-fluid" style="padding-top: 15px; ">
+                        <div class="col-md-12">
+
+                            <p:fileUpload id="uploadDocOperador" style="width: 100%"
+                                          label = "Selecionar" uploadLabel="Enviar" cancelLabel="Cancelar"
+                                          fileUploadListener="#{previsaoCicloMB.upload}" fileLimit="5"
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="524288000" mode="advanced"
+                                          invalidFileMessage="Tipo de Arquivo não permitido"
+                                          messageTemplate="Não foi possível enviar para o servidor o arquivo {name}. O servidor aceita apenas imagens."
+                                           />
+                            <p:message id="regUpload" for="uploadDocOperador" />
+                        
+                        	
+                        </div>
+                        
+                    </div>
+
+            	</p:panel>
+
+        	</p:dialog>
+          
+        </h:form>
+    </ui:define>
+</ui:composition>

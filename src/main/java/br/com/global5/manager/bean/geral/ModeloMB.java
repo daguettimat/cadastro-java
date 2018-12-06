@@ -3,6 +3,7 @@ package br.com.global5.manager.bean.geral;
 import br.com.global5.infra.Crud;
 import br.com.global5.infra.CrudService;
 import br.com.global5.infra.model.Filter;
+import br.com.global5.infra.util.ConectionGrLog;
 import br.com.global5.infra.util.checkUsuario;
 import br.com.global5.manager.model.cadastro.Marca;
 import br.com.global5.manager.model.cadastro.Modelo;
@@ -23,6 +24,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -175,7 +181,15 @@ public class ModeloMB implements Serializable {
 			throw new BusinessException("Modelo não foi encontrado pelo id: " + id);
 		}
 	}
-
+	
+	public void testeGR() {
+//		"jdbc:sqlserver://{host}[:{port}][;databaseName={database}]"
+		//"jdbc:sqlserver://localhost:1433;" +	"databaseName=AdventureWorks;integratedSecurity=true;
+		
+		ConectionGrLog.conectar();
+			
+	}
+	
 	public List<String> completeNome(String query) {
 		List<String> result = modeloService.getNome(query);
 		return result;

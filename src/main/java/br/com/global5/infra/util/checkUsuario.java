@@ -19,9 +19,11 @@ public class checkUsuario {
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         try {
             LogonMB logonMB = (LogonMB) session.getAttribute("logonMB");
+           
             if( logonMB == null  ) {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("login.xhtml");
             } else {
+            	
                 return logonMB.getUsuarioLogado();
 
             }

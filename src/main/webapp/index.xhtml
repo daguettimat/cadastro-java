@@ -82,6 +82,10 @@
                 stroke: #3c9ee5;
             }
 
+            .circular-chart.red .circle {
+                stroke: #FF0000;
+            }
+
             .percentage {
                 fill: #666;
                 font-family: sans-serif;
@@ -262,7 +266,7 @@
                             <div class="box-body">
                                 <div class="flex-wrapper">
                                     <div class="single-chart">
-                                        <svg viewbox="0 0 36 36" class="circular-chart orange">
+                                        <svg viewbox="0 0 36 36" class="circular-chart red">
                                             <path class="circle-bg"
                                                   d="M18 2.0845
                                                       a 15.9155 15.9155 0 0 1 0 31.831
@@ -598,7 +602,6 @@
             <p:remoteCommand name="encerrarAviso" actionListener="#{indexMB.encerrarAviso}"/>
 
         </h:form>
-
 
 
         <p:dialog id="dlgPenCliente" widgetVar="dlgPenCliente" header="Controle de Pendências" modal="true"

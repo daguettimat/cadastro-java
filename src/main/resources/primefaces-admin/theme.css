@@ -13992,7 +13992,8 @@ table.text-center, table.text-center td, table.text-center th {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border: 1px solid #374850;
-    margin: 10px 10px
+/*     margin: 10px 10px */
+    margin: 5px 5px
 }
 
 .skin-red .sidebar-form input[type="text"], .skin-red .sidebar-form .btn {

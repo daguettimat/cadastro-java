@@ -3,83 +3,57 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<ul class="sidebar-menu">
-		<li>			
-			<p:link href="/index.xhtml">
+		<li><p:link href="/index.xhtml">
 				<i class="fa fa-home" />
 				<span>Home</span>
-			</p:link>			
-		</li>
-		
-		<ui:fragment rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
-			
-			<li class="treeview">
-				<a href="#"> 
-					<i class="fa fa-laptop" />
-					<span>Administração</span> 
-					<span class="pull-right-container">
+			</p:link></li>
+		<ui:fragment
+			rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
+			<li class="treeview"><a href="#"> <i class="fa fa-laptop" />
+					<span>Administração</span> <span class="pull-right-container">
 						<i class="fa fa-angle-left pull-right" />
-					</span>
-				</a>
-			
+				</span>
+			</a>
 				<ul class="treeview-menu">
-					<li>
-						<p:link href="/pages/areas/arealst.xhtml">
+					<li><p:link href="/pages/areas/arealst.xhtml">
 							<i class="fa fa-stack-overflow" />
 							<span>Áreas</span>
-						</p:link>
-					</li>
-					<li>
-						<p:link href="/pages/areas/nivellst.xhtml">
+						</p:link></li>
+					<li><p:link href="/pages/areas/nivellst.xhtml">
 							<i class="fa fa-stack-overflow" />
 							<span>Níveis</span>
-						</p:link>
-					</li>
-					<li>
-						<p:link href="/pages/areas/funcaolst.xhtml">
+						</p:link></li>
+					<li><p:link href="/pages/areas/funcaolst.xhtml">
 							<i class="fa fa-stack-overflow" />
 							<span>Funções</span>
-						</p:link>
-					</li>
-					<li>
-						<p:link href="/pages/cadastro/usuarioslst.xhtml">
+						</p:link></li>
+					<li><p:link href="/pages/cadastro/usuarioslst.xhtml">
 							<i class="fa fa-address-book-o" />
 							<span>Usuários</span>
-						</p:link>
-					</li>
-					<li>
-						<p:link href="/pages/cadastro/fichaemaillst.xhtml">
+						</p:link></li>
+					<li><p:link href="/pages/cadastro/fichaemaillst.xhtml">
 							<i class="fa fa-industry" />
 							<span>Pré Cadastro de Clientes</span>
-						</p:link>
-					</li>
-					<li>
-						<p:link href="/pages/manutencao/avisolst.xhtml">
+						</p:link></li>
+					<li><p:link href="/pages/manutencao/avisolst.xhtml">
 							<i class="fa fa-envelope-o" />
 							<span>Quadro de Avisos</span>
-						</p:link>
-					</li>
-				</ul>
-			</li>
+						</p:link></li>
+				</ul></li>
 		</ui:fragment>
 		
 		<li class="header">Cadastros</li>
 		
-		<li class="treeview">
-			<a href="#"> 
-				<i class="fa fa-id-card" />
-				<span>Fichas</span> 
-				<span class="pull-right-container"> 
-					<i class="fa fa-angle-left pull-right" />
-				</span>
-			</a>
-			
+		<li class="treeview"><a href="#"> <i class="fa fa-id-card" />
+				<span>Fichas</span> <span class="pull-right-container"> <i
+					class="fa fa-angle-left pull-right" />
+			</span>
+		</a>
 			<ul class="treeview-menu">
-				<li>
-					<p:link href="/pages/fichas/enviarFichaMenu.xhtml">
+				<li><p:link href="/pages/fichas/enviarFichaMenu.xhtml">
 						<i class="fa fa-paper-plane-o" />
 						<span>Enviar Ficha</span>
-					</p:link>
-				</li>
+					</p:link></li>
 
 				<ui:fragment
 					rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
@@ -116,35 +90,25 @@
 
 
 
-			</ul>
-		</li>
+			</ul></li>
 		<ui:fragment
 			rendered="#{indexMB.usuario.interno or indexMB.usuario.tipo == 'H'}">
-	
-			<li class="treeview">
-				<a href="#"> 
-					<i class="fa fa-laptop" />
-						<span>Geral</span> 
-							<span class="pull-right-container"> 
-							<i class="fa fa-angle-left pull-right" />
-						</span>
-				</a>
-				
+			<li class="treeview"><a href="#"> <i class="fa fa-laptop" />
+					<span>Geral</span> <span class="pull-right-container"> <i
+						class="fa fa-angle-left pull-right" />
+				</span>
+			</a>
 				<ul class="treeview-menu">
-					<li>
-						<p:link href="/pages/cadastro/veiculolst.xhtml">
+					<li><p:link href="/pages/cadastro/veiculolst.xhtml">
 							<i class="fa fa-truck" />
 							<span>Veículos</span>
-						</p:link>
-					</li>
-					<li>
-						<p:link href="/pages/cadastro/proprietariolst.xhtml">
+						</p:link></li>
+					<li><p:link href="/pages/cadastro/proprietariolst.xhtml">
 							<i class="fa fa-male" />
 							<span>Proprietários</span>
-						</p:link>
-					</li>
-					<li>
-					<p:link href="/pages/cadastro/motoristalst.xhtml">
+						</p:link></li>
+
+					<li><p:link href="/pages/cadastro/motoristalst.xhtml">
 							<i class="fa fa-drivers-license" />
 							<span>Motoristas</span>
 						</p:link></li>
@@ -164,36 +128,26 @@
 					<li><p:link href="/pages/cadastro/modelolst.xhtml">
 							<i class="fa fa-tags" />
 							<span>Modelos</span>
-						</p:link>
-					</li>
+						</p:link></li>
 					<!-- 					<li> -->
 					<!--                         <p:link href="/pages/bi/bilst.xhtml"> -->
 					<!--                             <i class="fa fa-quote-right"/> -->
 					<!--                             <span>BI</span> -->
 					<!--                         </p:link> -->
 					<!--                     </li> -->
-				</ul>
-			</li>
-			
+				</ul></li>
 			<li class="header">Manutenção</li>
-			
-			<li class="treeview">
-				<a href="#"> 
-				<i class="fa fa-laptop" />
-					<span>Controle de Acesso</span> 
-					<span class="pull-right-container">
+			<li class="treeview"><a href="#"> <i class="fa fa-laptop" />
+					<span>Controle de Acesso</span> <span class="pull-right-container">
 						<i class="fa fa-angle-left pull-right" />
 				</span>
 			</a>
 				<ul class="treeview-menu">
-					<li>
-						<p:link href="/pages/cadastro/paginalst.xhtml">
+					<li><p:link href="/pages/cadastro/paginalst.xhtml">
 							<i class="fa fa-bars" />
 							<span>Páginas</span>
-						</p:link>
-					</li>
-				</ul>
-			</li>
+						</p:link></li>
+				</ul></li>
 			<li class="treeview"><a href="#"> <i class="fa fa-envelope" />
 					<span>Endereçamento</span> <span class="pull-right-container">
 						<i class="fa fa-angle-left pull-right" />

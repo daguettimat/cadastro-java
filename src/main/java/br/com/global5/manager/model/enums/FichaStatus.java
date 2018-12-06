@@ -65,9 +65,9 @@ public class FichaStatus implements BaseEntity {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+//    public void setDescricao(String descricao) {
+//        this.descricao = descricao;
+//    }
 
     public Timestamp getExclusao() {
         return exclusao;

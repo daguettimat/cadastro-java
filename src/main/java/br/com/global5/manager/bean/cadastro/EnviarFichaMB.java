@@ -1211,7 +1211,7 @@ public class EnviarFichaMB implements Serializable {
     		
     		if( qtdCaracteresPlaca == 7 || qtdCaracteresPlaca == 8  ){
     			
-    			caracterPosicao = refVeiculo.getPlaca().substring(3,4);
+    			caracterPosicao = refVeiculo.getPlaca().substring(3,4); 
     			
     			if( caracterPosicao.equals("-") ){
     				
@@ -1234,8 +1234,31 @@ public class EnviarFichaMB implements Serializable {
     					int findHifen = refVeiculo.getPlaca().indexOf("-");					// senão encontrar apresenta -1 senão retorna a posição;
     					
     					if (findHifen == -1) {
-    						return "valido";
+    						//caso a placa não tenha o hifen
+    						List<Character> numbers = new ArrayList<>();
+    						List<Character> letters = new ArrayList<>();
+    						
+    						for(char ch: refVeiculo.getPlaca().toCharArray()) {
+    							
+    							if( Character.isDigit(ch)){
+    								numbers.add(ch);
+    							} else {
+    								letters.add(ch);
+    							}
+    						}
+    						
+    						//Placa Nacional Convencional
+    						if(letters.size() == 3 && numbers.size() == 4) {
+    							return "erro";
+    						}
+
+    						//Placa Nacional padrão Mercosul
+    						if(letters.size() == 4 && numbers.size() == 3) {
+    							return "valido";
+    						}
+    						
     					} else {
+    						
     						return "erro";	
     					}    					
     					
@@ -1297,21 +1320,47 @@ public class EnviarFichaMB implements Serializable {
      * 
      */
     public void findVeiculo(AjaxBehaviorEvent event) {
+    	
+    	String formatoPlaca = "";
 
         String placa = (String) ((UIOutput) event.getSource()).getValue();
 
         if (placa.length() > 0) {
 
-        	Veiculo veiculo;
-        	
+        	Veiculo veiculo = null;
+        	    	
             if (veiculoService.crud().eq("placa", placa.toUpperCase()).count() <= 1) {
             	
-                veiculo = veiculoService.crud().eq("placa", placa.toUpperCase()).find();
+            	if(veiculoNacional) {
+            		
+            		//Valida o formato da placa para o veiculo tipo Nacional            		
+            	    String resultFormatoPlaca = validaFormatoPlacaNacional();
+            	    
+            	    if (resultFormatoPlaca.equals("valido")){
+            	    
+            	    	veiculo = veiculoService.crud().eq("placa", placa.toUpperCase()).find();
+            	    	
+            	    	formatoPlaca = "valido";
+            	    	
+            	    } else {
+            	    	
+            	    	formatoPlaca = "invalido";
+            	    	
+            	    }            		
+            		
+            	} else {
+            		
+            		//Veiculo Estrangeiro
+            		veiculo = veiculoService.crud().eq("placa", placa.toUpperCase()).find();
+            		formatoPlaca = "valido";
+            	}
                 
             } else {
             	
                 veiculo = veiculoService.crud().eq("placa", placa.toUpperCase()).list().get(0);
             }
+            
+            
             
             if (veiculo != null) {
             	
@@ -1322,14 +1371,16 @@ public class EnviarFichaMB implements Serializable {
                 // veiculoNacional = ValidaBrasil.validateRENAVAM(veiculo.getRenavam());
             	if(veiculo.isNacional() == true) {
             		
-            		setBtnSalvarVeiculo(true);
-            		
+            		this.setBtnSalvarVeiculo(true);            		
             		veiculoNacional = veiculo.isNacional();
             	    refVeiculo.setRenavam("00000000000".substring(veiculo.getRenavam().length()) + veiculo.getRenavam());
                     refVeiculo.setNacional(veiculoNacional);
+                    
             	} else {
             		refVeiculo.setRenavam(veiculo.getRenavam());
             		refVeiculo.setNacional(false);
+            		veiculoNacional = false;
+            		this.setBtnSalvarVeiculo(true);
             	}
                                
                 refVeiculo.setMarca(veiculo.getMarca().getId());
@@ -1360,26 +1411,50 @@ public class EnviarFichaMB implements Serializable {
                 RequestContext context = RequestContext.getCurrentInstance();
                 context.update("formVeiculo:veiModelo");
                 context.update("formVeiculo:veiCategoria");
+            	context.update("formVeiculo:btnSalvar");
+
                 return;
                 
             } else {
             	
-            	this.setPlacaEncontrada(false);   	
-            	this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada , continue com a inclusão ou realize uma nova pesquisa.");
-            	setBtnSalvarVeiculo(true);
+            	if ( formatoPlaca.equals("valido") ) {
+
+            		
+                	this.setPlacaEncontrada(false);   	
+                	this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada , continue com a inclusão ou realize uma nova pesquisa.");
+                	
+                	this.setBtnSalvarVeiculo(true);
+                	
+                    refVeiculo = new ReferenciaVeiculos();
+                    refVeiculo.setPlaca(placa.toUpperCase());
+                    refVeiculo.setNacional(true);
+                    refVeiculo.setProprietario(new br.com.global5.manager.model.auxiliar.Proprietario());
+                    refVeiculo.getProprietario().setEndereco(new Endereco());
+                    refVeiculo.getProprietario().setDocumento("");
+                    
+            	} else 
+            		
+            		if ( formatoPlaca.equals("invalido")){
+            			
+            			this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + ". Não permitida a inclusão com formato inválido para o tipo nacional. Permitido, Ex.: ABC-123 , ABC-1234 ou ABC1D23(Padrão Mercosul). Redigite o numero da placa.");
+            	        this.setBtnSalvarVeiculo(false);
+            	        
+                        refVeiculo = new ReferenciaVeiculos();
+                        refVeiculo.setPlaca("");
+                        refVeiculo.setNacional(true);
+                        refVeiculo.setProprietario(new br.com.global5.manager.model.auxiliar.Proprietario());
+                        refVeiculo.getProprietario().setEndereco(new Endereco());
+                        refVeiculo.getProprietario().setDocumento("");                        
+
+            	}
             	
-                refVeiculo = new ReferenciaVeiculos();
-                refVeiculo.setPlaca(placa.toUpperCase());
-                refVeiculo.setNacional(true);
-                refVeiculo.setProprietario(new br.com.global5.manager.model.auxiliar.Proprietario());
-                refVeiculo.getProprietario().setEndereco(new Endereco());
-                refVeiculo.getProprietario().setDocumento("");
+
 
             }
             
         } else {
         
-        this.setMsgResultPesquisaPlaca("Informe uma placa com formato válido para prosseguir! Ex.: ABC-123 , ABC-1234 ou ABC1D23. Veículo Estrangeiro formato livre. ");
+        this.setMsgResultPesquisaPlaca("Informe uma placa com formato válido para prosseguir! Ex.: ABC-123 , ABC-1234 ou ABC1D23 (Mercosul). Veículo Estrangeiro formato livre. ");
         
         setBtnSalvarVeiculo(false);
         

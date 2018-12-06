@@ -1,0 +1,158 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            input[disabled] {
+                background-color: #000;
+                color:#fff !important;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+       Troca de proprietário de veículo
+    </ui:define>
+
+    <ui:define name="description">
+        com base em ficha de análise de cadastro
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Alteração de Proprietáriode Veículo"/>
+        
+        <h:form id="frmAlteraProprietario">
+
+            <h:panelGroup layout="block">
+                <p:panel header="Manutenção" styleClass="box-danger">
+
+					<h4>Dados para Alteração</h4>
+
+                    <div class="ui-g ui-fluid" id="detalhe1">
+						
+                        <div class="col-lg-2">
+                        	
+                        	<p:outputLabel value="Ficha N.º" for="inptNumFicha"/>
+                        	<p:inputText  id="inptNumFicha" value="#{notaFiscalMB.nfs.dadosFatura}" maxlength="80" />
+             
+                        </div>
+
+                        <div class="col-lg-2">
+                        	
+                        	<p:outputLabel value="Placa" />
+                            <p:inputMask mask="aaa-9999"
+                                         onchange="this.value = this.value.toUpperCase();"
+                                         value="#{enviarFichaMB.refVeiculo.placa}"
+                                         style="width:100%">
+                                <p:ajax event="blur" listener="#{enviarFichaMB.findVeiculo}"
+                                        update="frmAlteraProprietario"></p:ajax>
+                            </p:inputMask>
+             
+                        </div>
+
+                        <div class="col-lg-6">
+                            <p:outputLabel value="Nome Atual do Proprietário"/>
+								<p:inputText  value="#{notaFiscalMB.nfs.dadosFatura}" maxlength="80" />                        
+                        </div>
+
+                    </div>
+
+
+					<p:spacer height="25px" />
+
+					<h4>Dados para o novo proprietário</h4>
+
+                    <div class="ui-g ui-fluid" id="detalhe2">
+                         <div class="col-md-2">
+                        	<p:outputLabel for="booleanBtn" value="Nacionalidade"/>
+                        	<p:selectBooleanButton id="booleanBtn" onLabel="Nacional" offLabel="Estrangeiro" onIcon="ui-icon-check"
+                                               offIcon="ui-icon-close" value="#{enviarFichaMB.veiculoNacional}">
+                            <p:ajax listener="#{enviarFichaMB.veiNacional}" />
+                        	</p:selectBooleanButton>
+
+                    	</div>
+                        <div class="col-lg-2">                        	
+                        	<p:outputLabel value="CPF/CNPJ" />
+                        	<p:inputText   value="#{notaFiscalMB.nfs.dadosFatura}" maxlength="80" />
+             
+                        </div>
+
+                        <div class="col-lg-6">
+                            <p:outputLabel value="Nome do novo proprietário"/>
+								<p:inputText  value="#{notaFiscalMB.nfs.dadosFatura}" maxlength="80" />                        
+                        </div>
+                        
+<button type="button" class="btn btn-primary">
+  Profile <span class="badge badge-light">9</span>
+  <span class="sr-only">unread messages</span>
+</button>
+						<span class="badge badge-pill badge-primary">Primary</span>
+                    </div>
+
+                    <f:facet name="footer">
+                        <div class="align-right" style="padding: 5px;">
+
+                            <p:commandButton value="Gravar " 
+                                             update="@form" styleClass="btn-danger"/>
+							<p:spacer height="5"/>
+                                                        
+                            <p:commandButton value="Cancelar" action="#{notaFiscalMB.btnBack}"
+                                             styleClass="btn-danger"/>
+                            <p:spacer height="5"/>
+                                                        
+                            <p:commandButton value="Voltar" action="#{notaFiscalMB.btnBack}"
+                                             styleClass="btn-danger"/>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </h:panelGroup>
+            <br/>
+            <!--  position="center,top"  -->
+            <p:dialog id="dlgAnexoXml" widgetVar="dlgAnexoXml" header="Anexar arquivo de retorno da Prefeitura - Tipo XML" modal="true"
+                  resizable="false" closable="true" position="center" 
+                  width="900" >
+
+            <h1>TESTE Dialog</h1>
+            <p:panel >
+                    <div class="ui-g ui-fluid" style="padding-top: 15px; ">
+                        <div class="col-md-12">
+
+                            <p:fileUpload id="uploadDocOperador" style="width: 100%"
+                                          label = "Selecionar" uploadLabel="Enviar" cancelLabel="Cancelar"
+                                          fileUploadListener="#{previsaoCicloMB.upload}" fileLimit="5"
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="524288000" mode="advanced"
+                                          invalidFileMessage="Tipo de Arquivo não permitido"
+                                          messageTemplate="Não foi possível enviar para o servidor o arquivo {name}. O servidor aceita apenas imagens."
+                                           />
+                            <p:message id="regUpload" for="uploadDocOperador" />
+                        </div>
+                    </div>
+
+            </p:panel>
+
+        </p:dialog>
+       
+        </h:form>
+        
+      
+    </ui:define>
+</ui:composition>

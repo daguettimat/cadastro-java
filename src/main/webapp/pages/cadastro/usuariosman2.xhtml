@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Controle de Usuários
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+    <ui:define name="body">
+        
+        <adm:breadcrumb title="Edição de Usuários"/>
+        
+        <f:metadata>
+        	<f:viewAction action="#{usuarioMB.consultarMenu}" />
+        </f:metadata>
+        
+        <h:form>
+        
+        	<p:panelGrid columns="2" cellpadding="5">
+        		
+        		<h:panelGroup id="pnEstrutura">
+        			
+        			<h:form id="arvore" style="float:left;font-size:16px">
+        				
+						<p:tree value="#{usuarioMB.raizMenu}" 
+							var="node">
+
+							<p:treeNode>
+								<h:outputText value="#{node.titulo}" />
+							</p:treeNode>
+
+						</p:tree>
+						
+        				
+        			</h:form>
+        			
+        		</h:panelGroup>
+        		
+        		<h:panelGroup id="pnCadastro">
+
+
+            <h:panelGroup layout="block">
+            <p:panel header="Manutenção" styleClass="box-danger">
+                <div class="align-right">
+                    <p:outputLabel value="Pesquisar por Id: "/>
+                    <p:spacer height="5"/>
+                    <p:inputText id="inptId" value="#{usuarioMB.id}"/>
+                    <p:commandButton id="brFind"
+                                     value="Pesquisar"
+                                     action="#{usuarioMB.findById(usuarioMB.id)}"
+                                     process="@form"
+                                     update="@form"
+                                     styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                     partialSubmit="true"/>
+                </div>
+                <div class="ui-g ui-fluid">
+                    <div class="col-lg-2">
+                        <p:outputLabel value="Identificador" for="inptIdx"/>
+                        <p:inputText id="inptIdx" disabled="true" value="#{usuarioMB.usuario.id}"/>
+                    </div>
+                    <div class="col-lg-6">
+                        <p:outputLabel value="Nome" for="inptNome"/>
+                        <p:inputText id="inptNome" value="#{usuarioMB.usuario.nome}"/>
+                    </div>
+                    <div class="col-lg-2">
+                        <p:outputLabel value="Login" for="inptLogin"/>
+                        <p:inputText id="inptLogin"   required="true" label="E-Mail" size="40"
+                                     requiredMessage="Por favor digite um login válido"
+                                     validatorMessage="Este login não é válido"
+                                     value="#{usuarioMB.usuario.login}">
+                        </p:inputText>
+                        <p:watermark for="inptLogin" value="Digite um login válido" />
+                        <p:message for="inptLogin" />
+                    </div>
+                </div>
+
+                <div class="ui-g ui-fluid">
+                    <div class="col-lg-2">
+                        <p:outputLabel for="inptTipo" value="Tipo"/>
+                        <p:selectOneMenu id="inptTipo" value="#{usuarioMB.usuario.tipo}" layout="responsive" columns="3">
+                            <f:selectItem itemLabel="&#160;" itemValue=""/>
+                            <f:selectItems value="#{usuarioMB.lstTipo}" var="listTipo" itemValue="#{listTipo.usuario}" itemLabel="#{listTipo.descricao}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-lg-5">
+                        <p:outputLabel value="E-Mail" for="email"/>
+                        <p:inputText id="email" required="true" label="E-Mail" size="40"
+                                     requiredMessage="Por favor digite o e-mail"
+                                     validatorMessage="Este e-mail não é válido"
+                                     value="#{usuarioMB.usuario.email}">
+
+                            <f:validateRegex
+                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                        </p:inputText>
+                        <p:watermark for="email" value="Digite um e-mail válido" />
+                        <p:message for="email" />
+                    </div>
+
+                    <div class="col-lg-2">
+                        <p:outputLabel for="usuExterno" value="Usuário Externo"/>
+                        <p:selectBooleanButton id="usuExterno"
+                                               value = "#{usuarioMB.externo}"
+                                               onLabel="Externo"
+                                               offLabel="Interno"
+                                               onIcon="ui-icon-check"
+                                               offIcon="ui-icon-close"/>
+                    </div>
+                </div>
+
+
+
+                <f:facet name="footer">
+                    <div class="align-right" style="padding: 5px;">
+
+                        <p:commandButton value="Salvar" action="#{usuarioMB.update}"
+                                         update="@form" styleClass="btn-danger"/>
+                        <p:spacer height="5"/>
+                        <p:commandButton id="btRemove" value="Apagar" action="#{usuarioMB.remove}"
+                                         update="@form" styleClass="btn-danger"/>
+
+                        <p:spacer height="5"/>
+                        <p:commandButton value="Voltar" action="#{usuarioMB.btnBack}"
+                                         styleClass="btn-danger"/>
+                    </div>
+                </f:facet>
+            </p:panel>
+            </h:panelGroup>
+          
+
+        		
+        		</h:panelGroup>
+        		        	
+        	</p:panelGrid>
+
+            <br/>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+
