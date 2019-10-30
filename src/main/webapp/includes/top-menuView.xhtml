@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <script>
+        // A $( document ).ready() block.
+        $( document ).ready(function() {
+
+            $("#help").click(function() {
+                introJs().start();
+            });
+        });
+
+    </script>
+
+
+    <ul class="nav navbar-nav">
+        <li>
+          <a href="/manager/pages/bi/bilst.xhtml" style="color: red; font-size:16px;padding-top:10px;text-align:center;display:block"> 
+          		<i class="fa fa-arrow-left" style="color:white" title="Voltar aos Eventos"></i>        
+          </a>          
+        </li>
+        <li>
+        	<h:form>
+   				<p:commandButton id="btnPrint" icon="fa fa-print" value="Imprimir" 
+					styleClass="bg-red"  			 
+					style="padding-top:10px; margin-right:20px; text-shadow:1px 1px 3px #000000;border-radius: 15px;display:block">
+					<p:printer target="viewBI" />			 							
+				</p:commandButton>
+			</h:form>
+        </li>
+
+    </ul>
+
+</ui:composition>

@@ -338,6 +338,16 @@ public class LogonMB implements Serializable {
 	      
     }
     
+    
+    /**
+     * Method: called by method listMenu to implement at generation the sub menu of systems erp with base at access permission
+     * 
+     * created: 2018-12-04
+     * 
+     * @author Francis.Bueno
+     * @return string 
+     * 
+     */
     public List<Formulario> ListMenusFilhos (Integer idNivelPai){
     	
     	EntityManager emF = uService.crud().getEntityManager();
@@ -389,8 +399,7 @@ public class LogonMB implements Serializable {
 	    	  return emF.createNativeQuery(query, "LstFormularioMapping").getResultList() ;
 	      }
     	    	
-    }
-    
+    }    
     
   
     /**

@@ -1,0 +1,684 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+     	<script type="text/javascript">
+			function onTop(args) {
+				window.scrollTo(0, 0);
+				window.location = '#' + args;
+
+			}
+			
+		</script>
+    
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            .center  {
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+        </style>
+    </ui:define>
+	    	
+    <ui:define name="title"  >
+     	Registro de Eventos 
+    </ui:define>
+	 
+    <ui:define name="description">
+        Boletim Informativo        
+    </ui:define>
+ 
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Lista de Eventos para BI"/>
+       
+        <h:form id="frmFiltroPesq">
+       
+        	<div class="align-right" style="padding-right: 10px" >
+           		<p >
+  					<a class="btn btn-info" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" 
+  						aria-controls="multiCollapseExample1" 
+  						title="Amplie as opções de pesquisa">
+  						Filtro de Pesquisa
+  						<span class="pull-right-container">
+							<i class="fa fa-search pull-left" />
+						</span>
+  					</a>
+  					<p:spacer width="3px" />
+  					<p:commandButton id="btnLimpaFiltro" action="#{eventoMB.listarEventosAberto()}" 
+  							value="Eventos Abertos" icon="fa fa-list-ol" title="Lista todos Eventos em Aberto" 
+                          	styleClass="btn-success"/> 
+                    
+  					
+  					<p:commandButton id="btnAddEvento" value="Adicionar Evento" icon="fa fa-crosshairs" title="Adiciona um novo evento com base nº SM"
+                          styleClass="btn-warning"  oncomplete="PF('dlgAddEvento').show();onTop('dlgAddEvento')"/> 
+                                 
+		 		</p>
+		 		
+            </div> 		 
+  		
+			<div class="row" >
+  				<div class="col">
+    				<div class="collapse multi-collapse" id="multiCollapseExample1">
+     					<h:form >
+							<p:panel style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid orange;">
+								<div class="ui-g ui-fluid">
+								
+									<div class="col-lg-2">
+										<p:inputNumber style="width:100%;" id="inptNumSmPesq" inputStyle="text-align:left" 
+											 	size="15" maxlength="15" value="#{eventoMB.numeroSM}" placeholder="SM nº"
+												minValue="0" maxValue="999999999" thousandSeparator="."/>																				
+									</div>
+									
+									<p/>
+									<div class="col-lg-2"/>
+									<div class="col-lg-2">
+										<p:outputLabel value="Evento Finalizado:"></p:outputLabel>
+									</div>
+
+									<div class="col-lg-2">
+
+									<p:selectBooleanButton value="#{eventoMB.eventoFinalizado}" 
+										offLabel="Não" onLabel="Sim">										
+									</p:selectBooleanButton>
+									        								
+        							</div>
+
+									<p/>
+																																																						
+								</div>
+								
+								<p:spacer width="5" />
+								<div class="ui-g ui-fluid" id="filterLn2">
+								
+									<div class="col-lg-8">
+										<p:inputText  
+											style="width:100%" value = "#{eventoMB.nomeCliente}" maxlength="80" disabled="true"
+											placeholder="Cliente" title="Parte do nome do cliente" ></p:inputText>
+									</div>
+			
+								</div>
+								<div class="row" id="filterLn3">
+
+									<div class="align-right" style="padding: 5px;">
+										<p:commandButton id="btnPesquisar" value="Pesquisar"
+										actionListener="#{eventoMB.pesquisarEventosPorCriterios}"
+                                                     update="formListaEventos" process="@form" icon="fa fa-search"  
+											 />
+										<p:spacer height="5" />
+										<p:commandButton id="btnClearFilter" value="Nova Consulta" actionListener="#{eventoMB.limparCamposPesquisa}"
+											  icon="fa fa-filter" update="formListaEventos , frmFiltroPesq" process="@form"
+											 style="text-shadow:1px 1px 3px red;" />
+									 	<p:spacer height="5" />
+									</div>
+								</div>
+							</p:panel>							
+						</h:form>
+    				</div>
+  				</div>
+  			</div>
+        </h:form>
+        		
+		<h:form id="formPosSelecao">
+		
+			<p:growl autoUpdate="true" showDetail="true" severity="info,warn,error,fatal" id="msgPrev" life="5000"/> 		
+			
+			<div class="ui-g" id="dvSubTotais">
+			
+				<div class="ui-g-12 ui-md-4">
+					<p:panel styleClass="bg-yellow">
+						<div class="row">
+							<div class="col-lg-8" >
+								<h:outputText value=" Sinistro de Perdas "
+								style="font-size: 12pt;color: white;font-weight: bold;text-align: center;display:block" />
+							</div>
+							<div class="col-lg-4">
+								<span class="badge">
+									#{eventoMB.qtdBiPerdas}
+								</span>
+							</div>
+						</div>
+					</p:panel>
+				</div>
+				
+				<div class="ui-g-12 ui-md-4">
+				
+					<p:panel styleClass="bg-orange">
+						<div class="row">
+							<div class="col-lg-8">
+								<h:outputText value=" Sinistro de Danos "
+								style="font-size: 12pt;color: white;font-weight: bold;text-align: center;display:block" />
+							</div>
+							<div class="col-lg-4">
+								<span class="badge">
+									#{eventoMB.qtdBiDanos}
+								</span>
+							</div>
+						</div>
+					</p:panel>
+				</div>
+				
+				<div class="ui-g-12 ui-md-4" style="text-align: center">
+					<p:panel styleClass="bg-red">
+						<div class="row">
+							<div class="col-lg-8">
+								<h:outputText value=" Suspeita de Roubo "
+								style="font-size: 12pt;color: white;font-weight: bold;text-align: center;display:block" />
+							</div>
+							<div class="col-lg-4">
+								<span class="badge">
+									#{eventoMB.qtdBiSuspeitas}
+								</span>
+							</div>
+						</div>
+					</p:panel>
+				</div>
+			</div>
+			<!-- final dvSubTotais / to panel -->
+		</h:form>
+		
+        <h:form id="formListaEventos">
+             <p id="demo"></p>       
+            <h:panelGroup layout="block"  >
+    	
+   			<p:dataTable widgetVar="dtEvento" var="c" value="#{eventoMB.listEventos}" rows="20" styleClass="box-danger"
+                             id="tbListEvento"
+                             rowKey="#{c.id}" lazy=""  paginator="true" emptyMessage="Nenhum Evento de Boletim de Informativo cadastrado!"
+                             paginatorPosition="bottom"  
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30,50,100">
+					
+				
+					<f:facet name="header">						
+                    </f:facet>
+
+                    <p:column headerText="ID" style="width:4%" >
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.id}" style="text-align: center;display:block">                                
+                            </p:outputLabel>	
+                        </div>                        
+                    </p:column>
+                    <p:column headerText="SM" style="width:4%" >
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.sincViagem.id}" style="text-align: center;display:block">                                
+                            </p:outputLabel>	
+                        </div>                        
+                    </p:column>
+                    <p:column headerText="Aberto" style="width:5%" >
+                         <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.dtCriacao}" style="text-align: center;display:block">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+                    <p:column headerText="Cliente" style="width:12%" >
+                        <div align="right" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.sincViagem.cliente1.razaoSocial}" style="text-align: left;display:block">                                
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+
+                    <p:column headerText="Evento" style="width:3%" >
+                        <div align="left" style="text-align: center;display:block">
+                            <p:outputLabel value="#{c.nrEvento}" style="text-align: center;display:block">                                
+                            </p:outputLabel>	
+                        </div>                        
+                    </p:column>
+
+                    <p:column headerText="BI" style="width:10%">
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.boletimInformativo.rotulo}" style="text-align: center;display:block">                                
+                            </p:outputLabel>	
+                        </div>                        
+                    </p:column>
+                    
+                    <p:column headerText="E.I." style="width:2%" >
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.tipoInicial}" style="text-align: center;display:block">                                
+                            </p:outputLabel>	
+                        </div>                        
+                    </p:column>
+
+                    <p:column headerText="E.F." style="width:2%" >
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.tipoFinal}" style="text-align: center;display:block">                                
+                            </p:outputLabel>	
+                        </div>                        
+                    </p:column>
+
+                    <p:column headerText="Encerrado" style="width:5%" >
+                         <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.dtFinalizacao}" style="text-align: center;display:block">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>                    
+                    
+                    <p:column headerText="Operações" style="width:8%" >
+                    	<div style="text-align: center ">
+							
+							<div class="col-lg-4">
+						 		<p:commandLink title="Adicionar Boletim" oncomplete="PF('dlgAddBoletim').show();onTop('dlgAddBoletim')"
+						 			actionListener="#{eventoMB.eventoSelecionadoEmissaoBoletim(c.id)}" process="@this" update="@form"
+						 			disabled="#{c.tipoFinal!=null}"	>
+						 			<i class="fa fa-plus"  style="font-size:15px;color:red;text-shadow:1px 1px 3px #000000;"/>	
+						 		</p:commandLink> 
+							</div>
+
+							<div class="col-lg-4">
+						 		<p:commandLink title="Visualizar" oncomplete="PF('dlgViewBoletim').show();onTop('dlgViewBoletim')"
+						 			actionListener="#{eventoMB.eventoSelecionadoViewBoletim(c.id)}" update="@form:frmTbAnexoBoletimB" >
+						 			<i class="fa fa-eye"  style="font-size:15px;color:red;text-shadow:1px 1px 3px #000000;"/>	
+						 		</p:commandLink> 
+							</div>
+							
+							<div class="col-lg-4">
+						 		<p:commandLink title="Anexos" oncomplete="PF('dlgAddAnexosBoletim').show();onTop('dlgAddAnexosBoletim')"
+						 			actionListener="#{eventoMB.eventoSelecionadoEmissaoBoletim(c.id)}" process="@this" update="@form">
+						 			<i class="fa fa-paperclip"  style="font-size:15px;color:red;text-shadow:1px 1px 3px #000000;"/>	
+						 		</p:commandLink> 
+							</div>
+
+                  		 
+                    	</div>
+   
+    				</p:column>  
+    				
+    			
+                </p:dataTable>
+            
+            </h:panelGroup>
+       
+     	    <p:dialog id="dlgAddEvento" widgetVar="dlgAddEvento"
+				header="Deseja gerar um novo evento de Ocorrência?" modal="true" 
+				resizable="false" closable="false" width="500" position="center, center"
+				styleClass="box-danger">
+				
+				<p:outputPanel id="eveDetalhe">
+
+					<div class="ui-g ui-fluid" id="divSM">
+						<div class="col-lg-4">
+							<p:outputLabel value="SM: " />
+						</div>
+						<div class="col-lg-4">
+						
+								<p:inputNumber style="width:100%;" id="inptNumSM" inputStyle="text-align:left" 
+											 	size="15" maxlength="15" value="#{eventoMB.numeroSM}" 
+												minValue="0" maxValue="999999999" decimalSeparator="," placeholder="informe aqui..."
+												thousandSeparator=".">											
+								
+									<p:ajax listener="#{eventoMB.checarSmParaAbrirEvento()}"/>
+									
+								</p:inputNumber>
+						</div>
+										
+					</div>
+
+					<p:spacer width="2px" />
+					<p:separator style="border-color:red" />
+					<div class="align-center">
+
+						<p:commandButton value="Não" onclick="PF('dlgAddEvento').hide()"
+							styleClass="btn btn-danger">
+						</p:commandButton>
+
+						<p:commandButton value="Sim" styleClass="btn btn-success" id="btnAddEvento"
+							actionListener="#{eventoMB.gerarNovoEvento}"
+							onclick="PF('dlgAddEvento').hide()"
+							oncomplete="javascript: window.scrollTo(0, 0);" disabled="#{!eventoMB.habilitarBtnGerarEvento}"
+                            update=":formListaEventos:tbListEvento" process="@form">
+						</p:commandButton>
+						
+
+					</div>
+
+				</p:outputPanel>
+
+			</p:dialog>
+        
+	    	<p:dialog id="dlgAddBoletim" widgetVar="dlgAddBoletim"
+				header="Boletim Informativo - Abertura" modal="true"
+				resizable="false" closable="false" width="800" position="center, center"
+				styleClass="box-danger">
+				
+				<p:outputPanel >
+				
+					<p:outputPanel id="pnTpEvento" style="margin-bottom:10px">
+
+					<div class="ui-g ui-fluid">
+						<div class="col-lg-12" style="font-weight: bold;display: block; text-aling:center;">
+							<h4>Dados do Evento</h4>
+							<p:outputLabel value="SM:"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.sincViagem.id}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Cliente:"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.sincViagem.cliente1.razaoSocial}"></p:outputLabel>							
+						</div>
+					</div>	
+					<div class="ui-g ui-fluid">
+						<div class="col-lg-12" style="font-weight: bold;display: block; text-aling:center;">
+							<p:outputLabel value="Boletim Inicial:"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.tipoInicial}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Boletim Final:"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.tipoFinal}"></p:outputLabel>
+							
+						 </div>					
+					</div>									
+					
+					<p/>
+					
+					<p:separator/>					
+					
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-12" style="font-weight: bold;display: block; text-aling:center;">
+							<h4>Dados para o Boletim</h4>
+						</div>
+					</div>
+					<div class="ui-g ui-fluid" >
+							
+						<div class="col-lg-3" style="font-weight: bold;display: block; text-aling:center;">
+							<p:outputLabel value="Boletim Tipo"></p:outputLabel>
+						</div>
+						<div class="col-lg-9" >
+					        <p:selectOneRadio id="console" value="#{eventoMB.tipoSelecaoBi}" >
+            					<f:selectItem itemLabel="Sinistro de Perdas" itemValue="P" />
+            					<f:selectItem itemLabel="Sinistro de Danos"  itemValue="D" />
+            					<f:selectItem itemLabel="Suspeita de Roubo"  itemValue="S" />
+            					<p:ajax listener="#{eventoMB.selecaoTipoBoletim()}"/>
+        					</p:selectOneRadio>
+						</div>
+					</div>
+					
+					</p:outputPanel>
+					<ui:fragment id="fragBoletimFinal" rendered="#{eventoMB.habilitaDivBoletimFinal}">
+						<div class="ui-g ui-fluid" id="divSM">
+							<div class="col-lg-3">
+                        		<p:outputLabel value="Boletim Final"/>
+	                        </div>
+    	                  
+        	                <div class="col-lg-3">                        	
+								<p:selectBooleanButton value="#{eventoMB.boletimFinal}" 
+										offLabel="Não" onLabel="Sim">
+									<p:ajax listener="#{eventoMB.selecaoBoletimFinal()}"/>
+								</p:selectBooleanButton>
+							</div>
+									
+						</div>
+					</ui:fragment>
+
+					<p:separator style="border-color:red" />
+					
+					<div class="align-center">
+						<div class="col-lg-12">
+                        	<p:outputLabel value="Deseja gerar o boletim informativo para essa SM #{eventoMB.ev.sincViagem.id} deste evento? " style="color:blue;font-size:20px"/>
+                        </div>
+					</div>
+					
+					<p:spacer height="5px" />
+					
+					<div class="align-center">
+
+						<p:commandButton value="Não" onclick="PF('dlgAddBoletim').hide()"
+							styleClass="btn btn-danger" >
+						</p:commandButton>
+
+						<p:commandButton id="btnAddBoletim" value="Sim" styleClass="btn btn-success" partialSubmit="true"						
+							onclick="PF('dlgAddBoletim').hide()" actionListener="#{eventoMB.checarTipoSelecionado()}" 
+							oncomplete="javascript: window.scrollTo(0, 0);" disabled="#{!eventoMB.habilitarBtnAbrirGerarBoletim}">
+							<p:ajax listener="#{boletimInformativoMB.insertBi}" /> 
+
+							
+						</p:commandButton>
+						
+
+					</div>
+
+				</p:outputPanel>
+
+			</p:dialog>
+
+			<p:dialog id="dlgAddAnexosBoletim" widgetVar="dlgAddAnexosBoletim"
+				header="Boletim Informativo - Anexos" modal="true" resizable="false"
+				closable="true" width="800" position="center,center"
+				styleClass="box-danger">
+
+				<h:form id="frmTbAnexoBoletim">
+
+					<div class="ui-g ui-fluid">
+						<div class="col-lg-12"
+							style="font-weight: bold; display: block; text-align: left;">
+							<h4>Dados do Evento</h4>
+							<p:outputLabel value="ID:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.id}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Evento Nº:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.nrEvento}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="SM:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.sincViagem.id}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Cliente:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel
+								value="#{eventoMB.ev.sincViagem.cliente1.razaoSocial}"></p:outputLabel>
+						</div>
+					</div>
+					<p />
+					<div class="ui-g ui-fluid">
+						<div class="col-lg-12"
+							style="font-weight: bold; display: block; text-align: left;">
+							<p:outputLabel value="Aberto em:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.dtCriacao}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Tipo Inicio:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.tipoInicial}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Encerrado em:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.dtFinalizacao}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Tipo Final:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.tipoFinal}"></p:outputLabel>
+						</div>
+					</div>
+
+					<p:separator />
+
+					<p:tabView id="tabAnexosDoEvento">
+						<p:tab title="Anexar Arquivos" titleStyleClass="box-danger">
+							<p:panel>
+								<div class="box-header with-border" style="padding-top: 1px">
+									<h4 style="padding-top: 5px;">Arquivos...</h4>
+								</div>
+								<div class="ui-g ui-fluid" style="padding-top: 5px;">
+									<div class="col-md-12">
+										<h:outputLabel value="Observação o arquivo anexado" />
+										<p:inputTextarea rows="2"
+											style="background-color: beige;width: 98%" id="inptObsAnexo" />
+									</div>
+								</div>
+
+								<h2 style="color: red; text-align: center">EM
+									DESENVOLVIMENTO</h2>
+
+								<ui:fragment>
+									<div class="ui-g ui-fluid" style="padding-top: 15px;">
+										<div class="col-md-12">
+
+											<p:fileUpload id="arqAnexoEvento" style="width: 100%"
+												label="Selecionar Arquivo" uploadLabel="Enviar Arquivo"
+												cancelLabel="Cancelar" fileLimit="5"
+												allowTypes="/(\.|\/)(gif|jpeg|jpg|png|pdf|GIF|JPE?G|PNG|PDF)$/"
+												sizeLimit="6299999" mode="advanced"
+												invalidSizeMessage="Tamanho máximo aceito por arquivo 6MB (megaBytes)."
+												invalidFileMessage="Tipo de Arquivo não permitido"
+												messageTemplate="Não foi possível enviar para o servidor o arquivo {name}."
+												update="regArqAnexoEvento" />
+											<p:message id="regArqAnexoEvento" for="arqAnexoEvento" />
+										</div>
+									</div>
+
+
+								</ui:fragment>
+
+							</p:panel>
+						</p:tab>
+					</p:tabView>
+
+				</h:form>
+
+
+			</p:dialog>
+       
+			<p:dialog id="dlgViewBoletim" widgetVar="dlgViewBoletim"
+				header="Boletim informativo emitidos por Evento" modal="true" resizable="false"
+				closable="true" width="800" position="center,center"
+				styleClass="box-danger">
+
+				<h:form id="frmTbAnexoBoletimB">
+
+					<div class="ui-g ui-fluid">
+						<div class="col-lg-12"
+							style="font-weight: bold; display: block; text-align: left;">
+							<h4>Dados do Evento</h4>
+							<p:outputLabel value="ID:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.id}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Evento Nº:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.nrEvento}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="SM:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.sincViagem.id}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Cliente:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel
+								value="#{eventoMB.ev.sincViagem.cliente1.razaoSocial}"></p:outputLabel>
+						</div>
+					</div>
+					<p />
+					<div class="ui-g ui-fluid">
+						<div class="col-lg-12"
+							style="font-weight: bold; display: block; text-align: left;">
+							<p:outputLabel value="Aberto em:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.dtCriacao}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Tipo Inicio:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.tipoInicial}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Encerrado em:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.dtFinalizacao}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Tipo Final:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.tipoFinal}"></p:outputLabel>
+						</div>
+					</div>
+
+					<p:separator />
+
+					<p:dataTable var="bi" value="#{eventoMB.listBoletimPorEvento}" 
+						id="tbBoletim" rows="8" styleClass="box-danger" rowKey="#{bi.id}"
+						scrollable="true" scrollWidth="true" paginator="true"
+						paginatorPosition="bottom" emptyMessage="Nenhum Evento de Boletim de Informativo cadastrado!"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+						currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+						rowsPerPageTemplate="5,10,15,20,30,50,100">
+
+						<p:column headerText="BI nº" style="width: 7%" >
+							<h:outputText value="#{bi.rotulo}"
+								style="text-align: left;display: block;" />
+						</p:column>
+
+						<p:column headerText="Comunicado" style="width: 10%">
+							<h:outputText value="#{bi.comIniDataHora}"
+								style="text-align: center;display: block;">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Usuário" style="width: 10%">
+							<h:outputText value="#{bi.usuEmissao.nome}"
+								style="text-align: center;display: block;">
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="BI Registrado" style="width: 10%">
+							<h:outputText value="#{bi.dtEmissao}"
+								style="text-align: center;display: block;">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText>
+						</p:column>
+
+  						<p:column headerText="Ver" style="width:3%;" >
+
+							<p:commandButton id="btn2" icon="fa fa-eye" title="ver boletim" update="@form"
+ 		 								styleClass="bg-red"  onclick="this.form.target='_blank'" 			 
+		 								style="width: 10px; height: 20px; text-shadow:1px 1px 3px #000000;border-radius: 15px;">
+		 						<p:ajax listener="#{boletimInformativoViewMB.showBi(bi.id)}" />			
+		 					</p:commandButton>
+         				 </p:column>
+         				             		
+					</p:dataTable>
+
+				</h:form>
+
+			</p:dialog>
+       
+
+       	
+		</h:form>
+  	
+   
+    </ui:define>
+    
+</ui:composition>

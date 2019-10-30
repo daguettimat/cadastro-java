@@ -143,6 +143,7 @@
 
     <ui:define name="body">
         <adm:breadcrumb title="Fichas"/>
+        
         <h:form id="form0"
                 onkeypress="if (event.keyCode == 13) { return false; }"
                 enctype="multipart/form-data">
@@ -152,8 +153,11 @@
                 <div class="col-lg-12 col-md-4 col-sm-12">
                     <div class="row" style="padding-top:20px;">
                         <div class="col-lg-12">
+                        
                             <p:panel id="panelFicha" styleClass="box-danger" widgetVar="panel">
+                            
                                     <f:event type="preRenderView" listener="#{enviarFichaMB.removeTerceiro}"/>
+                                    
                                     <ui:fragment id="fragMotorista" rendered="#{enviarFichaMB.painelMotorista == true}">
                                         <div id="dMotorista" class="box box-solid box-danger">
                                             <div class="box-header with-border" style="padding-top: 1px">
@@ -399,23 +403,26 @@
                                                     <div class="col-lg-2" style="padding-top:25px;">
                                                         <p:panel styleClass="box-danger" widgetVar="panelFoto" header="Foto Motorista" style="text-aling:center">
                                                       
-                                                            <h:graphicImage value="/images/dynamic/?file=#{enviarFichaMB.foto(enviarFichaMB.fichaCliente.motorista.id)}" style="width:100%;padding-bottom: 15px;"/>
+                                                            <h:graphicImage value="/images/dynamic/?file=#{enviarFichaMB.foto(enviarFichaMB.fichaCliente.motorista.id)}" 
+                                                            	style="width:100%;padding-bottom: 15px;border-color:black;border-style:double"/>
                                                             <br/>
-														   	
+														   	 
                                                             <p:fileUpload id="registryUpload"
-                                                                          label ="Adic./Alterar" previewWidth="120"
-                                                                          
+                                                                          label ="Atualizar Foto" previewWidth="120"                                                                      
                                                                           fileUploadListener="#{enviarFichaMB.uploadFoto}" fileLimit="1" fileLimitMessage="Permitido apenas um anexo."
-                                                                          uploadLabel="Enviar ... " cancelLabel="Cancela"
+                                                                          uploadLabel="Confirmar" cancelLabel=".:Cancela:." 
                                                                           allowTypes="/(\.|\/)(gif|jpe?g|png|GIF|JPE?G|PNG)$/" sizeLimit="6299999" mode="advanced"  invalidSizeMessage="Tamanho máximo aceito por arquivo 6MB (megaBytes)."
                                                                           skinSimple="true" invalidFileMessage="Tipo de Arquivo não permitido"
                                                                           messageTemplate="Não foi possível enviar para o servidor o arquivo {name}. O servidor aceita apenas imagens."
-                                                                          update="msgTrocaFoto"  />
+                                                                          update="msgTrocaFoto"  >
+                                                                          
+                                                                          
+                                                             </p:fileUpload>
                                                                                                                         
                                                             <p:growl id="msgTrocaFoto" showDetail="true" />
 															
-														
-															<!-- <p:graphicImage id="bosta" value="#{enviarFichaMB.scImgFile}" rendered="#{enviarFichaMB.scImgFile != null} "/> -->
+															
+															<!-- <p:graphicImage id="" value="#{enviarFichaMB.scImgFile}" rendered="#{enviarFichaMB.scImgFile != null} "/> -->
 															
                                                         </p:panel>
                                                     </div>
@@ -614,7 +621,7 @@
 
                                         <div id="dRefComerciais" class="box box-solid box-default" >
                                             <div class="box-header with-border" style="padding-top: 1px">
-                                                <h4 style="padding-top: 5px;">Referências Comerciais</h4>
+                                                <h4 style="padding-top: 5px;">Referência Profissional</h4>
                                             </div>
                                             <div class="box-body">
 
@@ -665,6 +672,7 @@
 
                                         <br/>
                                     </ui:fragment>
+                                    
                                     <ui:fragment rendered="#{enviarFichaMB.painelVeiculo}">
                                         <div id="dVeiculos" class="box box-solid box-default">
                                             <div class="box-header with-border" style="padding-top: 1px">
@@ -722,7 +730,7 @@
                                                                          action="#{enviarFichaMB.clearVeiculos}"
                                                                          process="@form"
                                                                          partialSubmit="true"
-                                                                         oncomplete="javascript: window.scrollTo(0, 0);"
+                                                                         oncomplete="javascript: window.scrollTo(0,0);"
                                                                          value="Adicionar">
                                                             <f:ajax execute="@form" render="@form"/>
                                                         </p:commandButton>
@@ -733,6 +741,7 @@
                                         </div>
                                         <br/>
                                     </ui:fragment>
+                                   
                                     <br/>
 
                                     <div class="box box-solid box-default">
@@ -750,6 +759,8 @@
                                         </div>
                                     </div>
                                     <br/>
+                                    
+                                    
                                     <ui:fragment id="fragMercadoria" rendered="#{enviarFichaMB.showMercadoria == true}">
                                         <div class="box box-solid box-danger" id="panelMercadoria" >
                                                 <div class="box-header with-border" style="padding-top: 1px">
@@ -884,14 +895,13 @@
                                         </div>
                                     </div>
 
-
-
                             </p:panel>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
         <p:dialog id="dlgFechado" widgetVar="dlgFechado" header="Esta ficha foi enviada com sucesso!" modal="true"
                   resizable="false" closable="false"
                   width="600" >

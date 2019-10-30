@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui">
+
+
+	<p:dataTable var="bi" value="#{eventoMB.listBoletimPorEvento}" 
+		id="tbBoletim" rows="8" styleClass="box-danger" rowKey="#{bi.id}"
+		scrollable="true" scrollWidth="true" paginator="true"
+		paginatorPosition="bottom" emptyMessage="Nenhum Evento de Boletim de Informativo cadastrado!"
+		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+		currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+		rowsPerPageTemplate="5,10,15,20,30,50,100">
+
+ 						
+
+						<p:column headerText="id" style="width: 2%" >
+							<h:outputText value="#{bi.id}"
+								style="text-align: left;display: block;" />
+						</p:column>
+
+
+						<p:column headerText="BI nº" style="width: 7%" >
+							<h:outputText value="#{bi.rotulo}"
+								style="text-align: left;display: block;" />
+						</p:column>
+
+						<p:column headerText="Comunicado" style="width: 10%">
+							<h:outputText value="#{bi.comIniDataHora}"
+								style="text-align: center;display: block;">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Usuário" style="width: 10%">
+							<h:outputText value="#{bi.usuEmissao.nome}"
+								style="text-align: center;display: block;">
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="BI Registrado" style="width: 10%">
+							<h:outputText value="#{bi.dtEmissao}"
+								style="text-align: center;display: block;">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText>
+						</p:column>
+
+  						<p:column headerText="" style="width:3%;" >
+							
+								<p:commandButton id="btn1" ajax="false" icon="fa fa-eye" title="ver boletim"  
+ 		 								styleClass="bg-red" action="#{boletimInformativoViewMB.showBi(bi.id)}" onclick="this.form.target='_blank'"				 
+		 								style="width: 10px; height: 20px; text-shadow:1px 1px 3px #000000;border-radius: 15px;"/>
+         				 </p:column>
+
+            		
+					</p:dataTable>
+                
+                
+</ui:composition>                

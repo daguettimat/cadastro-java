@@ -60,59 +60,21 @@
                         </div>
                     </p:fragment>
                     <br/>
+                    
                 <div class="ui-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-1" style="min-width: 120px;">
-                                    <p:outputLabel value="Identificador" for="inptIdx"/>
-                                    <p:inputText id="inptIdx" style="min-width: 100px;" disabled="true" value="#{veiculoMB.veiculo.id}"/>
-                                </div>
-                                <div class="col-md-1" >
-                                    <p:outputLabel value="Placa" for="inptPlaca" />
-                                    <p:inputText id="inptPlaca" value="#{veiculoMB.veiculo.placa}" disabled="#{! veiculoMB.edit}"/>
-                                </div>
-
-                                <div class="col-md-1" style="min-width: 120px;">
-                                    <p:outputLabel value="Renavam" for="inptRenavam"  />
-                                    <p:inputText id="inptRenavam" style="min-width: 100px;" value="#{veiculoMB.veiculo.renavam}" disabled="#{! veiculoMB.edit}">
-                                    </p:inputText>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <p:outputLabel value="Chassi" for="inptChassi"/>
-                                    <p:inputText id="inptChassi" value="#{veiculoMB.veiculo.chassi}" disabled="#{! veiculoMB.edit}"/>
-                                </div>
-
-                                <div class="col-md-1" style="min-width: 120px;">
-                                    <p:outputLabel value="Documento" for="inptDoc"/>
-                                    <p:inputText id="inptDoc" style="min-width: 100px;" value="#{veiculoMB.veiculo.renavam}" disabled="#{! veiculoMB.edit}"/>
-                                </div>
-                                <div class="col-md-1">
-                                    <p:outputLabel value="UF" for="inptUF"/>
-                                    <p:inputText id="inptUF" value="#{veiculoMB.veiculo.uf}" disabled="#{! veiculoMB.edit}"/>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <p:outputLabel value="Municipio" for="inptMunicipio"/>
-                                    <p:inputText id="inptMunicipio" value="#{veiculoMB.veiculo.municipio}" disabled="#{! veiculoMB.edit}"/>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <p:outputLabel value="Pais" for="inptPais"/>
-                                    <p:inputText id="inptPais" value="#{veiculoMB.veiculo.pais}" disabled="#{! veiculoMB.edit}"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2" >
-                                    <p:outputLabel for="nacional" value="Nacional"/>
-                                    <p:selectBooleanButton id="nacional" class="btn-danger" disabled="#{! veiculoMB.edit}"
-                                                           value = "#{veiculoMB.veiculo.nacional}"
-                                                           onLabel="Sim"
-                                                           offLabel="Não"
-                                                           onIcon="ui-icon-check"
-                                                           offIcon="ui-icon-close"/>
-                                </div>
+						<div class="row">
+							<div class="col-md-1" style="min-width: 120px;">
+								<p:outputLabel value="Identificador" for="inptIdx" />
+								<p:inputText id="inptIdx" style="min-width: 100px;"
+									disabled="true" value="#{veiculoMB.veiculo.id}" />
+							</div>
+							<div class="col-md-1" style="min-width: 120px;">
+								<p:outputLabel value="Placa" for="inptPlaca" />
+								<p:inputText id="inptPlaca" value="#{veiculoMB.veiculo.placa}" maxlength="8" size="8" 
+									disabled="true"  style="min-width: 20px; text-align:center; display: block;">
+									
+								</p:inputText>
+							</div>
 
                                 <div class="col-md-4">
                                     <p:outputLabel value="Marca" for="veiMarca"/>
@@ -142,12 +104,54 @@
                                         <p:ajax listener="#{veiculoMB.onModelo}" />
                                     </h:selectOneMenu>
                                 </div>
-                                <div class="col-md-2">
-                                    <p:outputLabel value="Versão" for="inptVersao"/>
-                                    <p:inputText id="inptVersao" value="#{veiculoMB.veiculo.versao}" disabled="#{! veiculoMB.edit}"/>
+
+                                <div class="col-md-2" >
+                                    <p:outputLabel for="nacional" value="Nacional"/>
+                                    <p:selectBooleanButton id="nacional" class="btn-danger" disabled="#{! veiculoMB.edit}"
+                                                           value = "#{veiculoMB.veiculo.nacional}"
+                                                           onLabel="Sim"
+                                                           offLabel="Não"
+                                                           onIcon="ui-icon-check"
+                                                           offIcon="ui-icon-close"/>
                                 </div>
-                            </div>
+
+
+						</div>
+
+
+						<div class="row">
+                        <div class="col-md-12">
                             <div class="row">
+
+                                <div class="col-md-1" style="min-width: 120px;">
+                                    <p:outputLabel value="Renavam" for="inptRenavam"  />
+                                    <p:inputText id="inptRenavam" style="min-width: 100px;" value="#{veiculoMB.veiculo.renavam}" disabled="#{! veiculoMB.edit}">
+                                    </p:inputText>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Chassi" for="inptChassi"/>
+                                    <p:inputText id="inptChassi" value="#{veiculoMB.veiculo.chassi}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-1" style="min-width: 120px;">
+                                    <p:outputLabel value="Documento" for="inptDoc"/>
+                                    <p:inputText id="inptDoc" style="min-width: 100px;" value="#{veiculoMB.veiculo.documento}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <p:outputLabel value="UF" for="inptUF"/>
+                                    <p:inputText id="inptUF" value="#{veiculoMB.veiculo.uf}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Municipio" for="inptMunicipio"/>
+                                    <p:inputText id="inptMunicipio" value="#{veiculoMB.veiculo.municipio}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Pais" for="inptPais"/>
+                                    <p:inputText id="inptPais" value="#{veiculoMB.veiculo.pais}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
 
                                 <div class="col-md-2" >
                                     <p:outputLabel for="leasing" value="Leasing"/>
@@ -159,16 +163,11 @@
                                                            offIcon="ui-icon-close"/>
                                 </div>
 
-                                <div class="col-md-1">
-                                    <p:outputLabel value="Fabricação" for="inptFab"/>
-                                    <p:inputText id="inptFab" value="#{veiculoMB.veiculo.anoFabricacao}" disabled="#{! veiculoMB.edit}"/>
-                                </div>
-                                <div class="col-md-1">
-                                    <p:outputLabel value="Modelo" for="inptMod"/>
-                                    <p:inputText id="inptMod" value="#{veiculoMB.veiculo.anoModelo}" disabled="#{! veiculoMB.edit}"/>
-                                </div>
+                            </div>
+                            
+                            <div class="row">
 
-                                <div class="col-md-3">
+                                <div class="col-md-3" style="min-width: 290px;">
                                     <p:outputLabel value="Cor" for="veiCor"/>
                                     <h:selectOneMenu id="veiCor"  style="width: 100%;height:34px;" required="true"
                                                      styleClass="form-control bf-no-message has-success"
@@ -182,12 +181,12 @@
                                     </h:selectOneMenu>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <p:outputLabel value="Frota" for="inptFrota"/>
                                     <p:inputText id="inptFrota" value="#{veiculoMB.veiculo.frota}" disabled="#{! veiculoMB.edit}"/>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-1" style="min-width: 120px;">
                                     <p:outputLabel value="Tipo" for="inptTipo"/>
                                     <h:selectOneMenu id="inptTipo" style="width: 100%; height: 34px;" required="true"
                                                      styleClass="form-control bf-no-message has-success"
@@ -200,8 +199,78 @@
 
                                 </div>
 
+                                <div class="col-md-1">
+                                    <p:outputLabel value="Fabricação" for="inptFab"/>
+                                    <p:inputText id="inptFab" value="#{veiculoMB.veiculo.anoFabricacao}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <p:outputLabel value="Modelo" for="inptMod"/>
+                                    <p:inputText id="inptMod" value="#{veiculoMB.veiculo.anoModelo}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <p:outputLabel value="Versão" for="inptVersao"/>
+                                    <p:inputText id="inptVersao" value="#{veiculoMB.veiculo.versao}" disabled="#{! veiculoMB.edit}"/>
+                                </div>
+
                             </div>
+                                                        
+                            
+                            <div class="row">
+
+                            	<div class="col-md-1" style="min-width: 120px;">
+									<p:outputLabel value="Placa Anterior" for="inptPlacaAnterior" />
+									<p:inputText id="inptPlacaAnterior" value="#{veiculoMB.veiculo.placaAnterior}" maxlength="8" size="8"
+									disabled="true"  style="min-width: 20px; text-align:center; display: block;"/>
+								</div>
+								
+								<div class="col-md-3">
+                                    <p:outputLabel value="Alteração da Placa" for="inptdtAltPlaca"/>
+                                    <p:inputText id="inptdtAltPlaca" value="#{veiculoMB.veiculo.dtPlacaConversao}" disabled="true" 
+                                    	style="text-align:center; display: block;"/>
+                                </div>
+								
+                            
+                            </div>
+                            
+                             
+                              <div style="text-align:right;padding: 5px;" >
+
+                               
+                                	<div class="col-md-4">
+                                	<p:commandButton id="idConvertePlaca" value="Converter Mercosul" icon="fa fa-gears"
+                                                     styleClass="btn-danger"   oncomplete="PF('dlgConvertePlaca').show();onTop('dlgConvertePlaca')"
+                                                     disabled="#{veiculoMB.placaAlteradaMercosul}" actionListener="#{veiculoMB.converterPlaca}" /> 
+                                    	                 
+                    				<p:tooltip id="toolTipConvertPlaca" for="idConvertePlaca" value="Converte a placa para o formato padrão Mercosul" position="top" />	
+                                	</div>
+                                	<div class="col-md-2"></div>
+                                	<div class="col-md-2">
+                                    <p:commandButton id="btnEnviarFicha" styleClass="btn-danger"
+                                                     action="#{veiculoMB.update}"
+                                                     oncomplete="javascript: window.scrollTo(0, 0);"
+                                                     value="Salvar"/>                                	
+                                	</div>
+
+                                	<div class="col-md-2">
+                                    <p:commandButton id="btRemove" value="Apagar" 
+                                                     styleClass="btn-danger"/>                                	
+                                	</div>
+
+                                	<div class="col-md-2">
+                                    <p:commandButton value="Voltar" action="#{veiculoMB.btnBack}"
+                                                     styleClass="btn-danger"/>
+                                	
+                                	</div>
+
+                                    
+                                
+
+                            </div>
+                            
                             <br/>
+
+<p:separator/>
 
                             <div id="dProprietario" class="box box-solid box-default">
                                 <div class="box-header with-border" style="padding-top: 1px">
@@ -372,27 +441,7 @@
 
 
                         <f:facet name="footer">
-                            <div class="align-right" style="padding: 5px;">
 
-                                <p:fragment autoUpdate="true" rendered="#{veiculoMB.edit}">
-                                    <p:commandButton id="btnEnviarFicha" styleClass="btn-danger"
-                                                     action="#{veiculoMB.update}"
-                                                     oncomplete="javascript: window.scrollTo(0, 0);"
-                                                     update="@form"
-                                                     process="@form"
-                                                     value="Salvar"/>
-
-                                    <p:spacer height="5"/>
-                                    <p:commandButton id="btRemove" value="Apagar" action="#{veiculoMB.remove}"
-                                                     update="@form" styleClass="btn-danger"/>
-
-
-                                    <p:spacer height="5"/>
-                                    <p:commandButton value="Voltar" action="#{veiculoMB.btnBack}"
-                                                     styleClass="btn-danger"/>
-                                </p:fragment>
-
-                            </div>
                         </f:facet>
                         </div>
                     </div>
@@ -437,6 +486,57 @@
                     </p:column>
                 </p:dataTable>
             </p:panel>
+            
+            
+            
+     	       <p:dialog id="dlgConvertePlaca" widgetVar="dlgConvertePlaca"
+				header="Deseja realizar a conversão da placa para o formato Mercosul?" modal="true"
+				resizable="false" closable="false" width="400" position="center, center"
+				styleClass="box-danger">
+				<p:outputPanel id="fatDetalhe">
+					<div class="ui-g ui-fluid" id="l0">
+						<div class="col-lg-4">
+							<p:outputLabel value="Placa atual: " />
+							<p:outputLabel value="#{veiculoMB.veiculo.placa}" />
+						</div>
+
+						<div class="col-lg-4" align="center">
+						
+						<img src="/manager/resources/images/ref_sign_warning.png"
+                                                         style="width:100%;padding-bottom: 15px;"/>
+						</div>
+
+						<div class="col-lg-4" align="center">
+							<p:outputLabel value="Passará para: "/>
+							<p:outputLabel value="#{veiculoMB.placaPadraoMercosul}" />
+						</div>	
+										
+					</div>
+
+					<p:spacer width="2px" />
+					<p:separator style="border-color:red" />
+					<div class="align-center">
+
+						<p:commandButton value="Não" onclick="PF('dlgConvertePlaca').hide()"
+							styleClass="btn btn-danger">
+						</p:commandButton>
+
+						<p:commandButton value="Sim" styleClass="btn btn-success"
+							actionListener="#{veiculoMB.update}"
+							onclick="PF('dlgCNH').hide()"
+							oncomplete="javascript: window.scrollTo(0, 0);"
+                            update="@form" process="@form">
+						</p:commandButton>
+						
+
+					</div>
+
+				</p:outputPanel>
+
+			</p:dialog>
+     	
+     
+            
         </h:form>
     </ui:define>
 </ui:composition>

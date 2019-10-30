@@ -63,7 +63,9 @@
                     </div>
                     <div class="col-lg-6">
                         <p:outputLabel value="Nome" for="inptNome"/>
-                        <p:inputText id="inptNome" value="#{proprietarioMB.proprietario.nome}"/>
+                        <p:inputText id="inptNome" value="#{proprietarioMB.proprietario.nome}">
+                        <p:ajax listener="#{proprietarioMB.teste}"/>
+                        </p:inputText>
                     </div>
 
                     <div class="col-md-2">

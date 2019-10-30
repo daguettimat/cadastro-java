@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<!--xmlns:f="http://java.sun.com/jsf/core"-->
+
+<h:head >
+
+    <title style="font-size: 16pt;color: #1a2226; font-weight: bold;text-align: left">Boletim Informativo por Evento</title>
+    <style type="text/css">
+        .ui-widget {
+            font-size: 90%;
+        }
+
+    </style>
+
+</h:head>
+<h:body styleClass="ui-widget"	style="padding-left: 25px; padding-top: 10px">
+
+			<p:messages id="msgDialog" showDetail="true" closable="true"
+				autoUpdate="true">
+
+			</p:messages>
+			<p:panel id="pnDetalheBoletim"
+				style="text-align:center;background-color: ">
+
+				<h:form id="frmTbBoletimEvento">
+				
+					<div class="ui-g ui-fluid">
+						<div class="col-lg-12" style="font-weight: bold;display: block; text-align:left;">
+							<h4>Dados do Evento</h4>
+							<p:outputLabel value="ID:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.id}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Evento Nº:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.nrEvento}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="SM:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.sincViagem.id}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Cliente:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.sincViagem.cliente1.razaoSocial}"></p:outputLabel>							
+						</div>
+					</div>
+					<p/>
+					<div class="ui-g ui-fluid">
+						<div class="col-lg-12" style="font-weight: bold;display: block; text-align:left;">							
+							<p:outputLabel value="Aberto em:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.dtCriacao}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Tipo Inicio:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.tipoInicial}"></p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Encerrado em:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.dtFinalizacao}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</p:outputLabel>
+							<p:spacer width="15px;"></p:spacer>
+							<p:outputLabel value="Tipo Final:" style="color:brown"></p:outputLabel>
+							<p:spacer width="5px;"></p:spacer>
+							<p:outputLabel value="#{eventoMB.ev.tipoFinal}"></p:outputLabel>							
+						</div>
+					</div>
+									
+					<p:separator/>
+				
+				<h:form id="frmBoletimPorEvento">
+				
+					<p:dataTable var="bi" value="#{eventoMB.listBoletimPorEvento}" 
+						id="tbBoletim" rows="8" styleClass="box-danger" rowKey="#{bi.id}"
+						scrollable="true" scrollWidth="true" paginator="true"
+						paginatorPosition="bottom" emptyMessage="Nenhum Evento de Boletim de Informativo cadastrado!"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+						currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+						rowsPerPageTemplate="5,10,15,20,30,50,100">
+
+ 						
+
+						<p:column headerText="id" style="width: 7%" >
+							<h:outputText value="#{bi.id}"
+								style="text-align: left;display: block;" />
+						</p:column>
+
+
+						<p:column headerText="BI nº" style="width: 7%" >
+							<h:outputText value="#{bi.rotulo}"
+								style="text-align: left;display: block;" />
+						</p:column>
+
+						<p:column headerText="Comunicado" style="width: 10%">
+							<h:outputText value="#{bi.comIniDataHora}"
+								style="text-align: center;display: block;">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Usuário" style="width: 10%">
+							<h:outputText value="#{bi.usuEmissao.nome}"
+								style="text-align: center;display: block;">
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="BI Registrado" style="width: 10%">
+							<h:outputText value="#{bi.dtEmissao}"
+								style="text-align: center;display: block;">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText>
+						</p:column>
+
+  						<p:column headerText="" style="width:1%;" >
+							
+								<p:commandButton id="btn1" ajax="false" icon="fa fa-eye" title="ver boletim"
+ 		 								styleClass="bg-red" action="#{boletimInformativoViewMB.showBi(bi.id)}" onclick="this.form.target='_blank'"				 
+		 								style="width: 10px; height: 20px; text-shadow:1px 1px 3px #000000;border-radius: 15px;"/>
+         				 </p:column>
+
+  						<p:column headerText="" style="width:1%;" >
+							
+								<p:commandButton id="btn2" icon="fa fa-window-close" title="ver boletim" 
+ 		 								styleClass="bg-red" action="#{eventoMB.biView(bi)}" process="@this"	 			 
+		 								style="width: 10px; height: 20px; text-shadow:1px 1px 3px #000000;border-radius: 15px;"/>
+         				 </p:column>
+         				 
+         				<f:facet name="footer">
+            					<p:commandButton id="btn1c" ajax="false" icon="fa fa-eye" title="ver boletim" process="tbBoletim"
+ 		 								styleClass="bg-red" action="#{boletimInformativoViewMB.showBi(bi.id)}" onclick="this.form.target='_blank'"				 
+		 								style="width: 10px; height: 20px; text-shadow:1px 1px 3px #000000;border-radius: 15px;"/>
+            				
+        				</f:facet>
+            		
+					</p:dataTable>
+					
+					</h:form>
+					
+				</h:form>
+				
+				<br />
+
+			</p:panel>
+
+</h:body>
+
+</html>

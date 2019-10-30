@@ -2,6 +2,11 @@ package br.com.global5.manager.bean.cadastro;
 
 import br.com.global5.infra.Crud;
 import br.com.global5.infra.util.*;
+import br.com.global5.manager.chamado.Chamado;
+import br.com.global5.manager.chamado.ChamadoResposta;
+import br.com.global5.manager.chamado.ChamadoTipo;
+import br.com.global5.manager.chamado.service.ChamadoRespostaService;
+import br.com.global5.manager.chamado.service.ChamadoService;
 import br.com.global5.manager.model.areas.Area;
 import br.com.global5.manager.model.auxiliar.Cor;
 import br.com.global5.manager.model.auxiliar.Endereco;
@@ -29,9 +34,9 @@ import br.com.global5.template.exception.BusinessException;
 import com.google.gson.Gson;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
-
+import org.hibernate.criterion.Restrictions;
 import org.json.CDL;
 import org.json.JSONArray;
 import org.primefaces.context.RequestContext;
@@ -55,6 +60,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
+
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,8 +74,6 @@ import java.util.regex.Pattern;
 
 @Named
 @SessionScoped
-
-
 public class EnviarFichaMB implements Serializable {
 
     /**
@@ -100,14 +105,15 @@ public class EnviarFichaMB implements Serializable {
     private List<Cor> lstCor;
     private List<CNHCategoria> lstCategoriaCNH;
     private int tipoMotorista;
-    private UploadedFile imgFile;
-    private UploadedFile imgCnhFrenteFile;
-    private UploadedFile imgCnhVersoFile;
+    private UploadedFile imgFile = null;
+    private UploadedFile imgCnhFrenteFile = null;
+    private UploadedFile imgCnhVersoFile = null;
     
-    private String stsImgFile;
-    private StreamedContent scImgFile;
-    private String stsImgCnhFrenteFile;
-    private String stsImgCnhVersoFile;
+    private String stsImgFile = "";
+    private StreamedContent scImgFile = null;
+    private String stsImgCnhFrenteFile = "";
+    private String stsImgCnhVersoFile = "";
+    
     private boolean changeImgFile = false;
     private boolean changeImgFileCnhFrente = false;
     private boolean changeImgFileCnhVerso = false;
@@ -162,11 +168,28 @@ public class EnviarFichaMB implements Serializable {
     private String centroCusto;
     
     private Boolean validoDocProprietarioNacional = false;
+    private Boolean renavamDuplicado = false;
+    private Boolean renavamVerificado = false;
     private String  msgResultPesquisaPlaca = "";
     private Boolean btnSalvarVeiculo = false;
     private Boolean placaEncontrada  = false;
-
-
+    
+    private String msgPanelPlaca = "";
+    private String msg1PanelPlaca = "";
+    private String msg2PanelPlaca = "";
+    private boolean atualizaPlaca = false;
+    private boolean aplicarAtualizaPlaca = false;
+    private boolean abrirChamadoPlaca = false;
+    private boolean requisitarAtendimento = false;
+    private String  numRenavamAtualizaPlaca = "";
+    private String  numRenavamInformaCliente = "";
+    private String  numPlacaAnterior = "";
+    private String  msgChamadoCliente = "";
+    private String  placaMercosulConvertidaChamado = "";
+    private String  placaMercosulPesquisadaChamado = "";
+    
+    private List<UploadedFile> uploadedFiles;
+    
     private Motorista motorista;
 
     @Inject
@@ -243,7 +266,13 @@ public class EnviarFichaMB implements Serializable {
 
     @Inject
     private MercadoriaService merService;
-
+    
+    @Inject
+    private ChamadoService chamadoService;
+    
+    @Inject
+    private ChamadoRespostaService chamadoRespostaService;
+    
     private boolean habilitaCidadeDestino;
     private boolean habilitaUFDestino;
     private boolean showMercadoria;
@@ -270,7 +299,7 @@ public class EnviarFichaMB implements Serializable {
         fichaCliente.setTipoTelefone(new TelefoneTipo(79));
         fichaCliente.setCategoria(0);
 
-
+        uploadedFiles = new ArrayList<UploadedFile>();
 
         pais = 31;
 
@@ -293,6 +322,10 @@ public class EnviarFichaMB implements Serializable {
         idMercadoria = 0;
         showMercadoria = false;
 
+        atualizaPlaca = false;
+        aplicarAtualizaPlaca = false;
+        numPlacaAnterior = "";
+        
         lstTipoMotorista = motVinculoService.crud().isNull("exclusao").list();
         lstTipoContatoPessoal = refTipoContatoService.crud().isNull("exclusao").and().eq("referenciasTipo.id", 31).list();
         lstTipoContatoComercial = refTipoContatoService.crud().isNull("exclusao").and().eq("referenciasTipo.id", 32).list();
@@ -364,6 +397,12 @@ public class EnviarFichaMB implements Serializable {
         stsImgFile = "";
         stsImgCnhFrenteFile = "";
         stsImgCnhVersoFile = "";
+        
+        
+        imgFile = null;
+        imgCnhFrenteFile = null;
+        imgCnhVersoFile = null;
+        scImgFile = null;
         
         msgResultPesquisaPlaca = ""; 
         
@@ -867,6 +906,15 @@ public class EnviarFichaMB implements Serializable {
         	
         }
         
+        if ( renavamDuplicado == true && placaEncontrada == false ) {
+        	        	         	
+    		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Salvar",
+                    "O Renavam informado já encontra-se registrado para outro veículo, redigite!"));
+    		
+    		success = false;
+    		
+        }
+        
         if (docProprietario.length() == 0) {
             FacesContext.getCurrentInstance().addMessage(
                     null,
@@ -1124,7 +1172,8 @@ public class EnviarFichaMB implements Serializable {
             fichaCliente.setCep(mot.getLocalizador().getCep());
             fichaCliente.setNumero(mot.getLocalizador().getNumero());
             fichaCliente.setMotorista(mot);
-
+            fichaCliente.getMotorista().setUrlFoto(mot.getUrlFoto());
+            //fichaCliente.motorista.id	
 
             if (fichaCliente.getCep() != null) {
                 if (fichaCliente.getCep().equals("00000-000")) {
@@ -1137,7 +1186,7 @@ public class EnviarFichaMB implements Serializable {
         RequestContext.getCurrentInstance().reset("form0");
 
     }
-
+    
     public void selectTransp(SelectEvent event) {
         area = (Area) event.getObject();
         // areaFilial = null;
@@ -1205,24 +1254,26 @@ public class EnviarFichaMB implements Serializable {
     		
     		qtdCaracteresPlaca = refVeiculo.getPlaca().length();
 
-    		//Nacional Antiga 7 caracteres ABC-123 (hifem na contagem)    	    		
-    		//Nacional Atual 8 caracteres ABC-1234 (hifem na contagem , placa anterior a padrão Mercosul)    		
-    		//Nacional Padrao Mercosul 7 caracteres    		
+    		// Nacional Antiga 7 caracteres ABC-123 (hifem na contagem)    	    		
+    		// Nacional Atual 8 caracteres ABC-1234 (hifem na contagem , placa anterior a padrão Mercosul)    		
+    		// Nacional Padrao Mercosul 7 caracteres ABC1D34 		
     		
     		if( qtdCaracteresPlaca == 7 || qtdCaracteresPlaca == 8  ){
     			
     			caracterPosicao = refVeiculo.getPlaca().substring(3,4); 
     			
+    			// Placa tipo padrao antigo (ABC-1234)
     			if( caracterPosicao.equals("-") ){
     				
     				caracterPosHifen = refVeiculo.getPlaca().substring(4,qtdCaracteresPlaca);    				
     				
     				Boolean checkAlfPosHifen = checarStringAlfabeto(caracterPosHifen);
     				
-    				if( checkAlfPosHifen == true ) {
+    				if( checkAlfPosHifen == true ) {    					
     					return "erro";
     				}  else {
     					return "valido";
+    					//return "oldPlaca";
     				}
     				
     			} else {
@@ -1278,6 +1329,279 @@ public class EnviarFichaMB implements Serializable {
     }
     
     
+    public String conversaoPlacaAntesTipoMercosul(){
+    	
+    	String caracterPosicao = "";
+    	String curingaAlfaNumber = "";
+    	
+    	if( refVeiculo.getPlaca() != null){
+    		
+    		caracterPosicao = refVeiculo.getPlaca().substring(4,5);
+    		
+    		List<String> listaConvert = new ArrayList<>();    			
+    			listaConvert.add(0, "A");
+    			listaConvert.add(1, "B");
+    			listaConvert.add(2, "C");
+    			listaConvert.add(3, "D");
+    			listaConvert.add(4, "E");
+    			listaConvert.add(5, "F");
+    			listaConvert.add(6, "G");
+    			listaConvert.add(7, "H");
+    			listaConvert.add(8, "I");
+    			listaConvert.add(9, "J");
+    			
+    		//int teste = listaConvert.indexOf(caracterPosicao);
+    		//String cht = listaConvert.get(teste);
+    		//String chb = Integer.toString(teste); 
+    		
+    		String digConversao = Integer.toString(listaConvert.indexOf(caracterPosicao));
+    		
+    		String placaOld, placaOldP1, placaOldP2 = "";
+    		
+    		// Recebe a placa digitada formato Mercosul
+    		StringBuilder myString = new StringBuilder(refVeiculo.getPlaca());
+    		// troca o caractere da 4ª posição pelo id da listaConvert baseado na regra de conversão
+    		myString.setCharAt(4, digConversao.charAt(0));			
+    		
+			// Montagem da placa anterior ao formato Mercosul
+    		placaOldP1 = myString.substring(0, 3)+"-";
+			placaOldP2 = myString.substring(3, 7);
+			placaOld = placaOldP1 + placaOldP2;
+    		
+    		//curingaAlfaNumber = listaConvert.get(Integer.parseInt(caracterPosicao));
+    		
+    		String b = "a";
+    		
+    		return placaOld;
+    	}
+    		
+    	
+    	
+    	return "conversaoNull";
+    }
+    
+    
+    /**
+     * created at: 2019/02/21
+     * @author Francis Bueno
+     * 
+     */
+    
+    public void consultaRenavam(){
+
+    	// 
+    	//String numRenavam = (String) ((UIOutput) event.getSource()).getValue();
+    	
+    	if(refVeiculo != null) {
+    		if( numRenavamAtualizaPlaca.equals(numRenavamInformaCliente)) {
+    			
+    			String msg1a = "Placa verificada: " + refVeiculo.getPlaca() + " . Está válida para o veículo cadastrado em nosso sistema com a placa: " + numPlacaAnterior +
+    					".  Deseja realizar a conversão para o formato padrão Mercosul?" ;
+
+    			this.setMsg1PanelPlaca(msg1a);
+    			this.setMsgPanelPlaca("");
+    			this.setMsg2PanelPlaca("");
+    			
+    			aplicarAtualizaPlaca = true;				// Parece que não esta fazendo atualização VERIFICAR
+    			abrirChamadoPlaca = false;
+    			requisitarAtendimento = false;
+    			
+    	    	//atualizaPlaca = false;
+    	    	
+    	    	RequestContext context = RequestContext.getCurrentInstance();
+    			context.update("formVeiculo:idPnAtualizaPlaca");
+    			//context.update("formVeiculo:IdPnVeiculos");		
+    		
+    		} else {
+    			
+    			String msg1a = "O Renavam informado não corresponde com a nossa base de dados para o veículo de placa: "  + refVeiculo.getPlaca() + "." + 
+    							" Você pode nos enviar uma cópia da foto do documento do veículo para o registro de chamado automático no sistema. Para isso clique no botão Chamado";
+
+    			this.setMsg2PanelPlaca(msg1a);
+    			this.setMsgPanelPlaca("");
+    			this.setMsg1PanelPlaca("");
+    			
+    			abrirChamadoPlaca = true;
+    			
+    			aplicarAtualizaPlaca = false;    							// Parece que não esta fazendo atualização VERIFICAR
+    	    	
+    	    	RequestContext context = RequestContext.getCurrentInstance();
+    			context.update("formVeiculo:idPnAtualizaPlaca");   			
+    	    	
+    		}
+    	}
+		
+    }
+    
+    /**
+     * created at: 2019/02/22
+     * @author Francis Bueno
+     */
+    public void habilitarSuporte(){
+    	
+    	if(refVeiculo != null) {
+    		
+    		requisitarAtendimento = true;
+    		
+	    	RequestContext context = RequestContext.getCurrentInstance();
+			context.update("formVeiculo:idPnAtualizaPlaca");   			
+    	}
+    }
+    
+    /**
+     * created at: 2019/02/22
+     * @author Francis Bueno
+     */
+    public void aplicarAlteracaoPadraoMercosul(){
+    	
+    	
+    	Veiculo veiAtualiza = new Veiculo();
+    	
+    	veiAtualiza = veiculoService.crud().eq("placa", numPlacaAnterior.toUpperCase()).find();
+    	
+    	veiAtualiza.setPlaca(refVeiculo.getPlaca());
+    	veiAtualiza.setPlacaAnterior(numPlacaAnterior);
+    	veiAtualiza.setDtPlacaConversao(new Date());
+    	
+    	veiculoService.update(veiAtualiza);
+
+
+    	atualizaPlaca = false;
+    	aplicarAtualizaPlaca = false;
+    	msgPanelPlaca = "";
+    	numRenavamInformaCliente = "";
+    	//refVeiculo.setPlaca("");
+    	
+    	RequestContext context = RequestContext.getCurrentInstance();
+    	
+    	context.update("formVeiculo:idPnAtualizaPlaca");
+    	context.update("formVeiculo:IdPnVeiculos");
+
+    	//RequestContext.getCurrentInstance().reset("formVeiculo");
+    	
+    	//msgRetorno();
+    	
+    	findVeiculoPlaca(refVeiculo.getPlaca());
+    }
+    
+    public void teste(){
+    	atualizaPlaca = false;
+    	aplicarAtualizaPlaca = false;
+    	msgPanelPlaca = "";
+    	numRenavamInformaCliente = "";
+    	//refVeiculo.setPlaca("");
+    	
+    	RequestContext context = RequestContext.getCurrentInstance();
+    	
+    	context.update("formVeiculo:idPnAtualizaPlaca");
+    	context.update("formVeiculo:IdPnVeiculos");
+    	
+	findVeiculoPlaca("DTC-9534");
+
+    }
+    
+    public void msgRetorno(){
+    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "A placa do veículo foi atualizada para o formato padrão Mercosul! Entre e adicione a placa"));
+    	return;
+    }
+    
+    /**
+     * created at: 2019/02/22
+     * @author Francis Bueno
+     */
+    public void naoAplicaPadraoMercosul(){
+    	
+    	atualizaPlaca = false;
+    	aplicarAtualizaPlaca = false;
+    	abrirChamadoPlaca = false;
+    	requisitarAtendimento = false;
+    	
+    	msgPanelPlaca = "";
+    	msg1PanelPlaca = "";
+    	msg2PanelPlaca = "";
+    	
+    	numRenavamInformaCliente = "";
+    	//refVeiculo.setPlaca("");
+    	
+    	RequestContext context = RequestContext.getCurrentInstance();
+    	
+    	context.update("formVeiculo:idPnAtualizaPlaca");
+    	context.update("formVeiculo:IdPnVeiculos");
+    	
+    	
+    }
+    
+    
+    
+    /**
+     * created at: 2019/02/19
+     * @author Francis Bueno
+     * @param placa
+     * @return
+     */
+    public String checarTipoDaPlaca(String placa){
+    		
+
+        Integer qtdCaracteresPlaca = null;
+        String caracterPosicao = "";
+
+        qtdCaracteresPlaca = refVeiculo.getPlaca().length();
+        
+        if( refVeiculo.getPlaca() != null){
+
+            if( qtdCaracteresPlaca == 7 || qtdCaracteresPlaca == 8  ){ 
+
+                caracterPosicao = refVeiculo.getPlaca().substring(3,4);
+
+
+                    if( !caracterPosicao.equals("-") ){
+                        
+                        if ( qtdCaracteresPlaca == 7) { 
+
+                            // localiza se o codigo tem hifem (caso exista não permite a inclusão)
+                            // senão encontrar apresenta -1 senão retorna a posição;
+                            int findHifen = refVeiculo.getPlaca().indexOf("-");
+                            
+                            if (findHifen == -1) {
+        						//caso a placa não tenha o hifen tipo Mercosul
+        						List<Character> numbers = new ArrayList<>();
+        						List<Character> letters = new ArrayList<>();
+        						
+        						for(char ch: refVeiculo.getPlaca().toCharArray()) {
+        							
+        							if( Character.isDigit(ch)){
+        								numbers.add(ch);
+        							} else {
+        								letters.add(ch);
+        							}
+        						}
+        						
+        						//Placa Nacional Tipo Convencional
+        						if(letters.size() == 3 && numbers.size() == 4) {
+        							return "tipoAnterior";
+        						}
+
+        						//Placa Nacional padrão Mercosul
+        						if(letters.size() == 4 && numbers.size() == 3) {
+        							return "tipoMercosul";
+        						}
+        						
+        					} else {
+        						
+        						return "erro";	
+        					} 
+
+                        }
+
+                    }
+
+            }
+
+        }
+    	
+    	return "outrosTpPlaca";
+    }
+    
     /**
      * Method: check if string received contains alphabet or not 
      * 
@@ -1298,6 +1622,104 @@ public class EnviarFichaMB implements Serializable {
     	   return false;
     }
   
+    public void upload(FileUploadEvent event){
+    	uploadedFiles.add(event.getFile());
+    }
+    
+    /**
+     * @author francis
+     */
+    public void RequisitarAtendimento2(){
+    	String m = "n";
+    	String n = m;
+    }
+    
+    /**
+     * created at: 2019/02/19 
+     * @author francis2577
+     */
+    public void RequisitarAtendimento(){
+    	
+    	// Area que pertence o usuario
+    	Integer areaUsu  = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();
+    	 
+    	
+    	// Persistir chamado para ter id do diretorio que reserva a imagem
+    	Chamado cha = new Chamado();
+    		
+    		cha.setTipoChamado(new ChamadoTipo(688));    		
+    		cha.setArea(new Area(areaUsu));
+    		cha.setDescricao("-");
+    		cha.setDtAbertura(new Date());
+    		cha.setUsuAbertura(checkUsuario.valid());
+    		
+    		chamadoService.crud().save(cha);
+    		
+    	// Persistir chamadoResposta 
+    	ChamadoResposta chaRes = new ChamadoResposta();
+    		
+    	chaRes.setDtMensagem(new Date());
+    		chaRes.setMensagem(this.getMsgChamadoCliente());
+    		chaRes.setChamado(cha);    		
+    		chaRes.setUsuInterno(false);
+    		chaRes.setUsuario(checkUsuario.valid());
+    	
+    	chamadoRespostaService.crud().save(chaRes);
+    	    	
+    	/* Registro do anexo no servidor */
+    	// Diretorio de armazenamento das imagens do chamado
+    	
+    	String dir = AppUtils.dirImagensChamados + cha.getId() + "/"; //"idChamado/idseqchamoid-arquivo" 
+    	
+    	File files = new File(dir);
+    	
+    	if( !files.exists()){
+    		if(files.mkdirs()){
+    			System.out.println("Diretorio criado com sucesso! ( " + dir + " ) ");
+    		} else {
+    			System.out.println("Não foi possível criar o diretório ! ( " + dir + " ) ");
+    		}
+    	}
+    	
+    	// Nome do arquivo que será armazenado
+    	String tipo = "CRV";
+    	String fileName = "";
+    	
+    	for ( UploadedFile uploadedFile : uploadedFiles ){
+    		
+    		fileName = AppUtils.saveImagemChamado(dir, uploadedFile, chaRes.getId(), tipo);
+    		
+    	}
+    	
+    	// Persistencia - atualização ChamadoResposta 
+    	chaRes.setArquivoEnviado(fileName);
+    	
+    	chamadoRespostaService.crud().update(chaRes);
+    
+    	//"9 - Renavam não coincide com placa: Original para conversão Mercosul, placa: xxxxx"
+    	
+    	String assuntoChamado = "Placa Mercosul | Renavam digitado " + numRenavamInformaCliente + 
+    							" não coincide com a placa: " + placaMercosulConvertidaChamado  + 
+    							" para a conversão formato Mercosul, placa: " +  refVeiculo.getPlaca() ; 
+    	
+    	cha.setDescricao(assuntoChamado);
+    	chamadoService.crud().update(cha);
+    	
+    	
+    	uploadedFiles.clear();
+
+    	requisitarAtendimento = false;				// disable tela chamado
+    	abrirChamadoPlaca = false;					// disable btn chamado
+    	numRenavamInformaCliente = "";				// clear input renavam pesquisa
+    	msgChamadoCliente = "";						// clear input msg do cliente no chamado
+    	placaMercosulConvertidaChamado = "";
+    	
+    	RequestContext context = RequestContext.getCurrentInstance();
+    	context.update("formVeiculo:fragAtualizaPlaca");
+    	
+    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Chamado aberto com sucesso. Aguarde o contato. Nº Atendimento: " + cha.getId()));
+    	
+    }
 
     /**    	   
      * Method: find vehicle by code license plate and case found add record at class 'ref Veiculo' and report the informations for  client side requester
@@ -1320,16 +1742,110 @@ public class EnviarFichaMB implements Serializable {
      * 
      */
     public void findVeiculo(AjaxBehaviorEvent event) {
+        String placa = (String) ((UIOutput) event.getSource()).getValue();
+        findVeiculoPlaca(placa);
+    }
+    public void findVeiculoPlaca(String placa) {
     	
     	String formatoPlaca = "";
+    	
+    	numRenavamInformaCliente = ""; 
+    	aplicarAtualizaPlaca = false;
+    	abrirChamadoPlaca = false;
 
-        String placa = (String) ((UIOutput) event.getSource()).getValue();
+
 
         if (placa.length() > 0) {
 
         	Veiculo veiculo = null;
+        	
+        	String resultadoFormatoPlaca = validaFormatoPlacaNacional();
+        	        	
+           if ( resultadoFormatoPlaca.equals("valido") && veiculoService.crud().eq("placaAnterior", placa.toUpperCase()).count() == 1 ){
+        			// Encontrado apenas uma placa - veiculo trocou a placa p padrao Mercosul
+        			String msg = "Consta que a placa " + placa + " está no novo formato padrão Mercosul. " + 
+        						 "Para continuar informe a nova placa Mercosul" ;
+        			
+        			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", msg ));
+        			return;
+        	} else 
+        		if ( resultadoFormatoPlaca.equals("valido") && veiculoService.crud().eq("placaAnterior", placa.toUpperCase()).count() > 1 ){
+        			// Encontrado mais de uma placa
+        		
+        			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Atenção", "Placa Duplicada, Erro"));
+        			return;
+        	}
+        	
         	    	
             if (veiculoService.crud().eq("placa", placa.toUpperCase()).count() <= 1) {
+
+    	    	// Se Placa Mercosul não foi encontrada então fazer varedura da placa anterior mercosul no campo placa(vei_placa)
+    	    	// Se encontrar 1º solicitar o Renavam para averiguação
+    	    	// se for igual ao cadastro então fazer processo de update conversão de placas
+    	    	// se nao for igual ao cadastro então não continuar com a inclusão do veículo gerar aviso ao usuario sobre o fato e 
+    	    	// permitir que seja possível adicionar um chamado de suporte ao atendimento do cadastro com a upção de enviar arquivo
+    	    	// em anexo.  
+            		
+            	if(veiculoService.crud().eq("placa", placa.toUpperCase()).count() == 0 ){
+            		
+            		String tipoPlaca = checarTipoDaPlaca(placa);            		
+            		
+            		if ( tipoPlaca.equals("tipoMercosul")){
+            			
+            			String placaMercosulConvertida = conversaoPlacaAntesTipoMercosul();
+            			
+            			// Checar placa anterior para verificar a existência da conversão 
+            			if( ! placaMercosulConvertida.equals("conversaoNull") ) {
+            				
+            				if (veiculoService.crud().eq("placa", placaMercosulConvertida.toUpperCase()).count() == 1) {
+            					
+            					placaMercosulConvertidaChamado = placaMercosulConvertida; 		// var para uso do chamado.
+            					
+//          						 " Porém o cadastro deste veículo em nosso sistema não foi atualizado. Placa: " + placaMercosulConvertida + "\r\n" +            					
+                    			String msg1 = " Esta placa " + placa + " ,está no formato padrão Mercosul e ainda  não foi atualizada em nosso sistema!" + "\n" +
+                    				 "  Por gentileza nos informe o número do Renavam deste veículo para verificação. " ;
+                    			
+                    			msgResultPesquisaPlaca = "<<< Digite uma outra placa para uma nova inclusão.";
+                    			
+                    			Veiculo vei = new Veiculo();
+                    			
+                    			vei = veiculoService.crud().eq("placa", placaMercosulConvertida.toUpperCase()).find();
+                    			
+                    			numRenavamAtualizaPlaca = vei.getRenavam();
+                    			numPlacaAnterior = placaMercosulConvertida;
+                    			
+                    			this.setAtualizaPlaca(true);
+
+                    			RequestContext context = RequestContext.getCurrentInstance();
+                    			context.update("formVeiculo:idPnAtualizaPlaca");
+                    			context.update("formVeiculo:IdPnVeiculos");
+                    			
+                    			this.setMsgPanelPlaca(msg1);
+                    			msg1PanelPlaca="";
+                    			msg2PanelPlaca="";
+            					
+//                    			String msg = "Está placa " + placa + " está formato padrão Mercosul. " + 
+//               						 " Porém o cadastro deste veículo em nosso sistema não foi atualizado. Placa: " + placaMercosulConvertida + " Por gentileza nos informe o número do  Renavam para realizarmos a atualização! " ;
+//               			
+//                    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", msg ));
+                    			return;
+                    			
+            				} else {
+            					
+            					this.setAtualizaPlaca(false);
+
+                    			RequestContext context = RequestContext.getCurrentInstance();
+                    			context.update("formVeiculo:idPnAtualizaPlaca");
+                    			context.update("formVeiculo:IdPnVeiculos");
+            					
+            				}
+            				
+            			}
+            			//Conversão da placa 
+            			
+            		}
+            		
+            	}
             	
             	if(veiculoNacional) {
             		
@@ -1432,6 +1948,12 @@ public class EnviarFichaMB implements Serializable {
                     refVeiculo.getProprietario().setEndereco(new Endereco());
                     refVeiculo.getProprietario().setDocumento("");
                     
+                    RequestContext context = RequestContext.getCurrentInstance();
+                    context.update("formVeiculo:veiModelo");
+                    context.update("formVeiculo:veiCategoria");
+                	context.update("formVeiculo:btnSalvar");
+
+                    
             	} else 
             		
             		if ( formatoPlaca.equals("invalido")){
@@ -1448,8 +1970,6 @@ public class EnviarFichaMB implements Serializable {
 
             	}
             	
-
-
             }
             
         } else {
@@ -1462,6 +1982,7 @@ public class EnviarFichaMB implements Serializable {
 
     }
 
+ 
     public Endereco getEndereco(Localizador end) {
 
         Endereco endereco = new Endereco();
@@ -1994,7 +2515,14 @@ public class EnviarFichaMB implements Serializable {
 
     }
     
+    public void verTeste(){
+    	this.setChangeImgFile(true);
+    	boolean a = isChangeImgFile();
+    	boolean b = a;
+    }
+    
     public void uploadFoto(FileUploadEvent event){
+    	
     	this.setImgFile(event.getFile());    	
     	this.setChangeImgFile(true);
         if (this.getImgFile() != null) {
@@ -2140,6 +2668,7 @@ public class EnviarFichaMB implements Serializable {
 
         painelMotorista = true;
         painelVeiculo = true;
+        
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("enviarFicha.xhtml");
         } catch (IOException e) {
@@ -2155,18 +2684,45 @@ public class EnviarFichaMB implements Serializable {
 
 
     public void checkRenavam(AjaxBehaviorEvent event) {
-        String renavam =  (String) ((UIOutput)event.getSource()).getValue();
+        
+    	String renavam =  (String) ((UIOutput)event.getSource()).getValue();
 
 
         if( ! veiculoNacional )
             return;
 
         if( renavam.length() == 0  || ! ValidaBrasil.validateRENAVAM(renavam))  {
+
+        	renavamDuplicado = false;
+        	
             FacesContext.getCurrentInstance().addMessage(
                     null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Esse RENAVAM não pode ser "
                             + " validado confira e digite novamente!", "Erro"));
             return;
+            
+        } else 
+        	
+        	if(renavam.length() == 0  || ValidaBrasil.validateRENAVAM(renavam)){
+        		// RENAVAM - não aceita duplicidade do renavam para novos veiculos
+        		if ( placaEncontrada == false) {
+        			
+                	Criteria criteria = veiculoService.crud().getSession().createCriteria(Veiculo.class);
+                	
+                	criteria.add(Restrictions.eq("renavam", renavam));
+                	
+                	int result = criteria.list().size();
+                	
+                	if( result >= 1){
+                		renavamDuplicado = true;
+                        FacesContext.getCurrentInstance().addMessage(
+                                null,
+                                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção", "RENAVAM informado pertence a outro veículo. Por gentileza confira e digite novamente."));
+                        return;	
+        		}
+                	
+        	}
+        	
         }
 
     }
@@ -3096,7 +3652,117 @@ public class EnviarFichaMB implements Serializable {
 	public void setPlacaEncontrada(Boolean placaEncontrada) {
 		this.placaEncontrada = placaEncontrada;
 	}
-	
-	
-	    
+
+	public String getMsgPanelPlaca() {
+		return msgPanelPlaca;
+	}
+
+	public void setMsgPanelPlaca(String msgPanelPlaca) {
+		this.msgPanelPlaca = msgPanelPlaca;
+	}
+
+	public boolean isAtualizaPlaca() {
+		return atualizaPlaca;
+	}
+
+	public void setAtualizaPlaca(boolean atualizaPlaca) {
+		this.atualizaPlaca = atualizaPlaca;
+	}
+
+	public boolean isAplicarAtualizaPlaca() {
+		return aplicarAtualizaPlaca;
+	}
+
+	public void setAplicarAtualizaPlaca(boolean aplicarAtualizaPlaca) {
+		this.aplicarAtualizaPlaca = aplicarAtualizaPlaca;
+	}
+
+	public String getNumRenavamAtualizaPlaca() {
+		return numRenavamAtualizaPlaca;
+	}
+
+	public void setNumRenavamAtualizaPlaca(String numRenavamAtualizaPlaca) {
+		this.numRenavamAtualizaPlaca = numRenavamAtualizaPlaca;
+	}
+
+	public String getNumPlacaAnterior() {
+		return numPlacaAnterior;
+	}
+
+	public void setNumPlacaAnterior(String numPlacaAnterior) {
+		this.numPlacaAnterior = numPlacaAnterior;
+	}
+
+	public String getNumRenavamInformaCliente() {
+		return numRenavamInformaCliente;
+	}
+
+	public void setNumRenavamInformaCliente(String numRenavamInformaCliente) {
+		this.numRenavamInformaCliente = numRenavamInformaCliente;
+	}
+
+	public String getMsg1PanelPlaca() {
+		return msg1PanelPlaca;
+	}
+
+	public void setMsg1PanelPlaca(String msg1PanelPlaca) {
+		this.msg1PanelPlaca = msg1PanelPlaca;
+	}
+
+	public String getMsg2PanelPlaca() {
+		return msg2PanelPlaca;
+	}
+
+	public void setMsg2PanelPlaca(String msg2PanelPlaca) {
+		this.msg2PanelPlaca = msg2PanelPlaca;
+	}
+
+	public boolean isAbrirChamadoPlaca() {
+		return abrirChamadoPlaca;
+	}
+
+	public void setAbrirChamadoPlaca(boolean abrirChamadoPlaca) {
+		this.abrirChamadoPlaca = abrirChamadoPlaca;
+	}
+
+	public boolean isRequisitarAtendimento() {
+		return requisitarAtendimento;
+	}
+
+	public void setRequisitarAtendimento(boolean requisitarAtendimento) {
+		this.requisitarAtendimento = requisitarAtendimento;
+	}
+
+	public Boolean getRenavamDuplicado() {
+		return renavamDuplicado;
+	}
+
+	public void setRenavamDuplicado(Boolean renavamDuplicado) {
+		this.renavamDuplicado = renavamDuplicado;
+	}
+
+	public Boolean getRenavamVerificado() {
+		return renavamVerificado;
+	}
+
+	public void setRenavamVerificado(Boolean renavamVerificado) {
+		this.renavamVerificado = renavamVerificado;
+	}
+
+	public List<UploadedFile> getUploadedFiles() {
+		return uploadedFiles;
+	}
+
+	public void setUploadedFiles(List<UploadedFile> uploadedFiles) {
+		this.uploadedFiles = uploadedFiles;
+	}
+
+	public String getMsgChamadoCliente() {
+		return msgChamadoCliente;
+	}
+
+	public void setMsgChamadoCliente(String msgChamadoCliente) {
+		this.msgChamadoCliente = msgChamadoCliente;
+	}
+		
 }

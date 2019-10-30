@@ -2,6 +2,8 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                xmlns:c="http://java.sun.com/jstl/core"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:b="http://bootsfaces.net/ui">
 
@@ -19,22 +21,153 @@
             }
         </style>
 
-
     </h:head>
+        
     <h:form id="formVeiculo" onkeypress="if (event.keyCode == 13) { return false; }">
+    	<p:growl id="growlMsg" showDetail="true" autoUpdate="true" />
+<!--         <p:messages showDetail="true" autoUpdate="true" closable="true" /> -->
+<!-- 		rendered="#{enviarFichaMB.atualizaPlaca}" -->		
     
-        <p:messages showDetail="true" autoUpdate="true" closable="true" />
-        
-       
-        
-        <p:panel widgetVar="panelPesqVeiculos">
-        	
+    	<ui:fragment id="fragAtualizaPlaca" rendered="#{ enviarFichaMB.atualizaPlaca}"		>
+		
+		<p:panel widgetVar="pnAtualizaPlaca"  styleClass="btn-info" id="idPnAtualizaPlaca" >
+			
+			<div class="row" style="padding-right: 15px;">
+			
+				<div style="text-align:right">
+						<p:commandButton  styleClass="btn-danger" icon="fa fa-close"
+								actionListener="#{enviarFichaMB.naoAplicaPadraoMercosul}"  partialSubmit="true"
+								onclick="PF('dlgVeiculo').hide();onTop('dVeiculos');">
+						</p:commandButton>						
+				</div>
+			
+			</div>
+			
+			<div class="row">
+				<h:outputText value=" Atenção "
+						style="font-size: 16pt;color: white;text-shadow:1px 1px 2px #000000;font-weight: bold;text-align: center;display:block" />									
+			</div>
+			
+			<div class="row" style="padding-left: 15px; padding-right: 15px;">
+				<h:outputText value="#{enviarFichaMB.msgPanelPlaca}"
+						style="font-size: 14pt;color: #FAEBD7;text-shadow:1px 1px 2px #000000;font-weight: bold;text-align: center;display:block;" />									
+			</div>
+			<div class="row" style="padding-left: 15px; padding-right: 15px;">
+				<h:outputText value="#{enviarFichaMB.msg1PanelPlaca}"
+						style="font-size: 14pt;color:#BCEE68;text-shadow:1px 1px 2px #000000;font-weight: bold;text-align: center;display:block;" />									
+			</div>
+			<div class="row" style="padding-left: 15px; padding-right: 15px;">
+				<h:outputText value="#{enviarFichaMB.msg2PanelPlaca}"
+						style="font-size: 14pt;color: #FF8C00;text-shadow:1px 1px 2px #000000;font-weight: bold;text-align: center;display:block;" />									
+			</div>
 
+			<BR/>
+						
+			<div class="row">				
+				<div class="col-lg-4">
+				</div>
+				
+				<div class="col-lg-4" style="text-align:center">
+					<p:inputText style="width: 100%;" placeholder="informe aqui o renavam" value="#{enviarFichaMB.numRenavamInformaCliente}">					
+					</p:inputText>
+				</div>
+
+				<div class="col-lg-4">
+
+					<div style="text-align:left">
+					
+					<p:commandButton  value="Verificar" actionListener="#{enviarFichaMB.consultaRenavam}" 
+						partialSubmit="true"
+						styleClass="btn-primary" icon="fa fa-gears" >
+					</p:commandButton>
+					</div>										
+					
+				</div>
+				
+			</div>
+			
+			<BR/>
+			
+			<div class="row">
+			
+				<div class="col-lg-6">
+					 <div style="text-align:right">
+						<p:commandButton  value="Confirmar" styleClass="btn-primary" disabled="#{!enviarFichaMB.aplicarAtualizaPlaca}" 
+							id="btnConfirmar" 
+							actionListener="#{enviarFichaMB.aplicarAlteracaoPadraoMercosul}" partialSubmit="true" 
+							 process="@this"  update="@form" >
+						</p:commandButton>
+					</div>										
+				</div>
+				<div class="col-lg-6">
+					 <div style="text-align:left">
+						<p:commandButton  value="Chamado" styleClass="btn-danger" disabled="#{!enviarFichaMB.abrirChamadoPlaca}" 
+							actionListener="#{enviarFichaMB.habilitarSuporte}" partialSubmit="true">
+						</p:commandButton>
+					</div>										
+				</div>							
+			</div>
+			
+			<BR/>
+			
+			<ui:fragment id="fragAbreChamado" rendered="#{ enviarFichaMB.requisitarAtendimento}">
+				<p:panel widgetVar="pnAbreChamado"  id="idPnAbreChamado"> 
+					<div class="box-header with-border" style="padding-top: 1px">
+                        <h4 style="padding-top: 5px;">Sistema de Chamado</h4>
+                    </div>
+					
+					<div class="ui-g ui-fluid" style="padding-top: 5px;">
+                        <div class="col-md-12">
+                            <h:outputLabel value="Informações Adicionais(se julgar necessário)"/>
+                            <p:inputTextarea rows="2" value="#{enviarFichaMB.msgChamadoCliente}" style="background-color: beige;width: 100%" id="inptPendencia" />
+                        </div>
+                    </div>
+                    							
+					<h4>Anexar Imagem ou Pdf</h4>	
+					<p:panel>
+						<div class="ui-g ui-fluid" style="padding-top: 15px; ">
+                            <div class="col-md-12">
+
+                                <p:fileUpload id="imgPendencia" style="width: 100%"
+                                              label = "Selecionar Arquivo" uploadLabel="Enviar Arquivo" cancelLabel="Cancelar"
+                                              fileUploadListener="#{enviarFichaMB.upload}" fileLimit="1"
+                                              allowTypes="/(\.|\/)(gif|jpeg|jpg|png|pdf|GIF|JPE?G|PNG|PDF)$/" sizeLimit="6299999" mode="advanced"  invalidSizeMessage="Tamanho máximo aceito por arquivo 6MB (megaBytes)."
+                                              invalidFileMessage="Tipo de Arquivo não permitido"
+                                              messageTemplate="Não foi possível enviar para o servidor o arquivo {name}."
+                                              update="regImgChamado"  />
+                                <p:message id="regImgChamado" for="imgPendencia" />                               
+                            </div>
+                        </div>
+                        
+                    	<div class="row" id="aplicarArquivo">
+										<div class="align-center" style="padding: 5px;">
+						 		
+						 		<p:commandButton value="Requisitar Atendimento" ajax="true" styleClass="btn-danger" id="btnRequisitarAtendimento" 
+						 				update="@form" action="#{enviarFichaMB.RequisitarAtendimento}"						 		/>
+						    
+								<p:spacer height="5" />
+							</div>
+							
+						</div>
+                    </p:panel>
+					<p:separator />					
+				</p:panel>						
+			</ui:fragment>			
+			
+		</p:panel>
+
+		<BR/>
+		
+		</ui:fragment>
+    
+    
+                
+        <p:panel widgetVar="panelPesqVeiculos" id="idPnPesqVeiculos">
         
 			<div class="ui-fluid">
 				<div class="row">
 					 <div class="col-md-2" id="idPesqPlaca">
-                            <p:outputLabel value="Pesquisa de Placa"/>
+                            <p:outputLabel value="Pesquisa de Placa"/>						                                                        
                             <p:inputText maxlength="8" 
                                          onchange="this.value = this.value.toUpperCase();" 
                                          value="#{enviarFichaMB.refVeiculo.placa}"
@@ -54,11 +187,15 @@
                                                                                     
 				</div>
 			</div>
+						
 		</p:panel>
         
-        <p:spacer width="5px"/>
+        <p:spacer width="5px"/>        
+        	
+    	
+     	<ui:fragment id="fragPanelVeiculos" rendered="#{! enviarFichaMB.atualizaPlaca}">	     
         
-        <p:panel widgetVar="panelVeiculos">
+        <p:panel widgetVar="panelVeiculos" id="IdPnVeiculos">
 			
             <div class="ui-fluid">
             
@@ -366,13 +503,16 @@
                             <f:ajax execute="@form" render="@form" />
                         </p:commandButton>
 
-                        <b:button value="Cancelar" look="danger" 
-                                  onclick="PF('dlgVeiculo').hide();onTop('dVeiculos');"/>
+                        <p:button value="Cancelar"  styleClass="btn-danger"                         			
+                                    onclick="PF('dlgVeiculo').hide();onTop('dVeiculos');"/>
                     </div>
                 </div>
             </f:facet>
             <br/>
         </p:panel>
+    
+     	</ui:fragment> 
+     	     	
     </h:form>
 
 

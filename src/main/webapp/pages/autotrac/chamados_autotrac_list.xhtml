@@ -1,0 +1,585 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:adm="http://global5.com.br/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+.ui-datatable table tbody tr td {
+	padding: 3px; ! important;
+	padding-left: 5px;
+}
+
+.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+	padding: 0;
+	margin-left: 10px;
+}
+
+.ui-orderlist .ui-orderlist-list {
+	height: 30px;
+}
+
+.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+	{
+	padding: 0;
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="title">
+     	Autotrac Lista de Veículos
+    </ui:define>
+
+	<ui:define name="description">
+
+	</ui:define>
+
+
+	<ui:define name="body">
+	
+		<adm:breadcrumb title="Lista de Veículos Registrados" />
+
+		<h:form id="frmFiltroPesq">
+
+			<div class="align-left" style="padding-right: 10px">
+
+				<p:commandButton id="btnInsert" value="Novo Registro"
+					action="#{autotracSinalMB.insert}" icon="fa fa-pencil"
+					styleClass="btn-danger" />
+			</div>
+
+			<BR/>
+  		
+			<div class="row" >
+			
+  				<div class="col">
+  				
+    				<div class="multi-collapse" id="multiCollapseExample1" >
+    				
+     					<h:form >
+							<p:panel style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid orange;">
+								<div class="ui-g ui-fluid">
+									<div class="col-lg-2">										
+										<p:calendar id="dataInicial" placeholder="Dt Início"
+											 value="#{autotracSinalMB.pesqDtInicio}"
+											 inputStyle="text-align:center"
+											 locale="pt_BR" navigator="true" pattern="dd-MM-yyyy"
+											 showButtonPanel="true" title="Data inicial vencimento - a partir do dia">
+										</p:calendar>
+									</div>
+
+									<div class="col-lg-2">										
+										<p:calendar id="dataFinal" placeholder="Dt Final" 
+											value="#{autotracSinalMB.pesqDtFinal}"
+											inputStyle="text-align:center"
+											locale="pt_BR" navigator="true" pattern="dd-MM-yyyy"
+										    showButtonPanel="true" title="Data final vencimento - até o dia.">
+										</p:calendar>										
+									</div>
+								
+									<div class="col-lg-2">
+										<p:inputText value="#{autotracSinalMB.pesqMCT}" maxlength="12"											
+											style="width:100%" placeholder="MCT" title="Parte do MCT Veículo do cliente">
+											</p:inputText>
+									</div>
+									<div class="col-lg-2">
+										<p:inputText  value="#{autotracSinalMB.pesqPlaca}"	maxlength="8"
+											style="width:100%" placeholder="Placa" title="Parte da Placa do Veículo do cliente"></p:inputText>
+									</div>
+									
+									<div class="col-lg-4">
+									<p:selectOneButton value="#{autotracSinalMB.pesqStsStatus}"  >
+            							<f:selectItem itemLabel="Iniciado" itemValue="iniciado" />            							
+            							<f:selectItem itemLabel="Finalizado" itemValue="finalizado" />
+            							<f:selectItem itemLabel="Cancelado" itemValue="cancelado" />            							
+        							</p:selectOneButton>
+        								
+        							</div>								
+																																																							
+								</div>
+								
+								<p:spacer width="5" />
+								<div class="ui-g ui-fluid" id="filterLn2">
+								
+									<div class="col-lg-4">
+										<p:inputText value="#{autotracSinalMB.pesqNomeCliente}"											
+											style="width:100%" placeholder="Cliente" title="Parte do nome do cliente">
+											</p:inputText>
+									</div>
+									<div class="col-lg-4">
+										<p:inputText  value="#{autotracSinalMB.pesqNomeRequisitante}"	
+											style="width:100%" placeholder="Requisitante" title="Parte do nome do Requisitante"></p:inputText>
+									</div>
+
+									<div class="col-lg-4">
+										<p:inputText  value="#{autotracSinalMB.pesqEmailCliente}"	
+											style="width:100%" placeholder="e-mail requisitante" title="Parte do email do Requisitante"></p:inputText>        								
+        							</div>
+			
+								</div>
+
+								<p:spacer width="5" />
+
+								<div class="row" id="filterLn4">
+
+									<div class="align-right" style="padding: 5px;">
+										<p:commandButton id="btnPesquisar" value="Pesquisar"
+											icon="fa fa-search" action="#{autotracSinalMB.listarVeiculoAutotrac}" 
+											
+											 />
+										<p:spacer height="5" />
+										<p:commandButton id="btnClearFilter" value="Nova Consulta" 
+											  icon="fa fa-filter" 
+											  action="#{autotracSinalMB.limparVariaveis}"
+											 style="text-shadow:1px 1px 3px red;" />
+									 	<p:spacer height="5" />
+									</div>
+								</div>
+							</p:panel>
+														
+						</h:form>
+						
+    				</div>
+  				</div>
+  			</div>
+        			
+            <BR/>
+
+		</h:form>
+
+
+		<h:form id="frmListaChamados">
+			<h:panelGroup layout="block">
+
+				<p:dataTable widgetVar="dtChamado" id="tbListRec" var="c" lazy="true"
+					value="#{autotracSinalMB.listAutotracSinal}" rows="20"
+					styleClass="box-danger" sortMode="multiple" rowKey="#{c.id}"
+					selection="#{autotracSinalMB.autotracSinal}" 
+					paginator="true" paginatorPosition="bottom"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+					currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+					rowsPerPageTemplate="5,10,15,20,30,50,100,200,300">
+
+					<f:facet name="header">
+						Lista de Chamados						
+                    </f:facet>
+
+					<p:column headerText="id" style="width:5%"
+						sortBy="#{c.id}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.id}"
+								style="text-align: center;display:block">
+							</p:outputLabel>
+						</div>
+					</p:column>
+
+					<p:column headerText="Inicio" style="width:7%"
+						sortBy="#{c.inicioVigencia}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.inicioVigencia}"
+								style="text-align: center;display:block">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</div>
+					</p:column>
+
+					<p:column headerText="Final" style="width:7%"
+						sortBy="#{c.finalVigencia}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.finalVigencia}"
+								style="text-align: center;display:block">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</div>
+					</p:column>
+
+					<p:column headerText="MCT" style="width:7%"
+						sortBy="#{c.mct}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.mct}"
+								style="text-align: left;display:block">
+							</p:outputLabel>
+						</div>
+					</p:column>
+					
+					<p:column headerText="Placa" style="width:7%"
+						sortBy="#{c.placa}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.placa}"
+								style="text-align: left;display:block">
+							</p:outputLabel>
+						</div>
+					</p:column>
+					
+					<p:column headerText="Cliente" style="width:20%"
+						sortBy="#{c.areaCliente.nome}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.areaCliente.nome}"
+								style="text-align: left;display:block">
+							</p:outputLabel>
+						</div>
+					</p:column>
+	
+					<p:column headerText="Requisitante" style="width:10%"
+						sortBy="#{c.nomeRequisitante}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.nomeRequisitante}"
+								style="text-align: left;display:block">
+							</p:outputLabel>
+						</div>
+					</p:column>				
+
+
+					<p:column headerText="e-mail" style="width:15%"
+						sortBy="#{c.emailRequisitante}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.emailRequisitante}"
+								style="text-align: left;display:block">
+							</p:outputLabel>
+						</div>
+					</p:column>						
+					
+					<p:column headerText="Aberto por" style="width:10%"
+						sortBy="#{c.usuInclusao.login}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.usuInclusao.login}"
+								style="text-align: center;display:block">
+							</p:outputLabel>
+						</div>
+					</p:column>
+
+					<p:column headerText="Final por" style="width:10%"
+						sortBy="#{c.usuExclusao.login}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{c.usuExclusao.login}"
+								style="text-align: center;display:block">
+							</p:outputLabel>
+						</div>
+					</p:column>
+
+<!-- 					<p:column headerText="Dt Inclusão" style="width:8%" -->
+<!-- 						sortBy="#{c.dtInclusao}"> -->
+<!-- 						<div align="left" style="padding-right: 10px;"> -->
+<!-- 							<p:outputLabel value="#{c.dtInclusao}" -->
+<!-- 								style="text-align: center;display:block"> -->
+<!-- 								<f:convertDateTime pattern="dd/MM/yyyy" /> -->
+<!-- 							</p:outputLabel> -->
+<!-- 						</div> -->
+<!-- 					</p:column> -->
+
+<!-- 					<p:column headerText="Finalização" style="width:8%" -->
+<!-- 						sortBy="#{c.dtFinalizacao}"> -->
+<!-- 						<div align="left" style="padding-right: 10px;"> -->
+<!-- 							<p:outputLabel value="#{c.dtFinalizacao}" -->
+<!-- 								style="text-align: center;display:block"> -->
+<!-- 								<f:convertDateTime pattern="dd/MM/yyyy" /> -->
+<!-- 							</p:outputLabel> -->
+<!-- 						</div> -->
+<!-- 					</p:column> -->
+
+					<p:column headerText="Cancel" style="width:5%"
+						sortBy="#{c.cancelado}">
+						<div align="center" style="padding-right: 10px;">
+						 <p:selectBooleanCheckbox value="#{c.cancelado}" disabled="true"						
+								style="text-align: center;display:block"/>
+							
+						</div>
+					</p:column>
+
+					<p:column headerText="View" style="width:4%">
+						<div class="align-right" style="text-align: center">
+
+							<div class="col-lg-12">
+							
+                               	<p:commandLink id="idView" 
+                               				actionListener="#{autotracSinalMB.abrirMensagem(c.id)}"
+                               				update="@form" process="@this"
+                               				oncomplete="PF('dlgView').show();onTop('dlgView')" > 
+                                    	 <i class="fa fa fa-desktop" 
+										style="font-size: 15px; color: #e51212; text-shadow: 1px 1px 3px white;"/>
+								</p:commandLink>
+								    <p:tooltip id="toolTipView" for="idView"
+										value="Visualizar na Requisição" position="left">
+									</p:tooltip>	
+							</div>
+							
+						</div>
+					
+					</p:column>
+
+
+					<p:column headerText="Ação" style="width:6%">
+						<div class="align-right" style="text-align: center">
+					
+							<ui:fragment id="fragDetalheFinal" rendered="#{autotracSinalMB.dcFinalizarOperacao}">
+						
+							<div class="col-lg-6">
+								<p:commandLink 
+									action="#{autotracSinalMB.solicitarFinalizacaoDeRequisicaoAutotrac(c.id)}"
+									update="@form" process="@this"
+									id="idActionSave">
+									<i class="fa fa fa-thumbs-o-up"
+										style="font-size: 15px; color: #e51212; text-shadow: 1px 1px 3px white;" />
+
+								</p:commandLink>
+								<p:tooltip id="toolTipSave" for="idActionSave"
+									value="Finalizar a Requisição" position="left"></p:tooltip>
+							</div>
+
+							<div class="col-lg-6">
+							   <p:commandLink id="idActionCancel"  
+							   				actionListener="#{autotracSinalMB.solicitarCancelamentoDeRequisicaoAutotrac(c.id)}"
+							   				update="@form" process="@this"                             				
+                               				oncomplete="PF('dlgCancel').show();onTop('dlgCancel')" > 
+									<i class="fa fa fa-times"
+										style="font-size: 15px; color: #e51212; text-shadow: 1px 1px 3px white;" />
+
+								</p:commandLink>
+								<p:tooltip id="toolTipCancel" for="idActionCancel"
+									value="Cancelar a Requisição" position="left"></p:tooltip>
+							</div>
+					
+						</ui:fragment>
+						
+						</div>
+
+					</p:column>
+				
+
+				</p:dataTable>
+				
+				
+			  <p:dialog id="dlgView" widgetVar="dlgView"
+				header="Requisição do Cliente" modal="true"
+				resizable="false" closable="false" width="600" position="center, center"
+				styleClass="box-danger">
+				<p:outputPanel id="fatDetalhe">
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="id: " />
+						</div>
+						<div class="2">
+							<p:outputLabel value=" #{autotracSinalMB.autotracSinal.id} " style="color: #1266e5;" />
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="Cliente: " />
+						</div>
+						<div class="col-lg-8">
+						<p:outputLabel value=" #{autotracSinalMB.autotracSinal.areaCliente.nome} " style="color: #1266e5;" />
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="Requisitante: " />
+						</div>
+						<div class="col-lg-8">
+						<p:outputLabel value=" #{autotracSinalMB.autotracSinal.nomeRequisitante} " style="color: #1266e5;" />
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="e-mail: " />
+						</div>
+						<div class="col-lg-8">
+						<p:outputLabel value=" #{autotracSinalMB.autotracSinal.emailRequisitante} " style="color: #1266e5;" />
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="MCT: " />
+						</div>
+						<div class="col-lg-4">
+							<p:outputLabel value=" #{autotracSinalMB.autotracSinal.mct} " style="color: #1266e5;" />
+						</div>
+						<div class="col-lg-2">
+							<p:outputLabel value="Placa: " />
+						</div>
+						<div class="col-lg-4">
+							<p:outputLabel value=" #{autotracSinalMB.autotracSinal.placa} " style="color: #1266e5;" />
+						</div>
+						
+					</div>
+
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="Início: " />
+						</div>
+						<div class="col-lg-4">
+							<p:outputLabel value=" #{autotracSinalMB.autotracSinal.inicioVigencia} " style="color: #1266e5;">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</div>						
+					</div>
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="Final: " />
+						</div>
+						<div class="col-lg-4">
+							<p:outputLabel value=" #{autotracSinalMB.autotracSinal.finalVigencia} " style="color: #1266e5;">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</div>						
+					</div>
+					<BR/>
+					
+					<div class="ui-g ui-fluid" id="l0">
+						<div class="col-lg-4">
+							<p:outputLabel value="e-mail cliente: " />
+						</div>
+
+					</div>
+					<BR/>
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-12">
+							<p:outputLabel value="#{autotracSinalMB.autotracSinal.requisicao}"  style="color: #1266e5;"/>
+						</div>
+
+					</div>
+
+					<p:spacer width="2px" />
+					<p:separator style="border-color:red" />
+					<div class="align-center">
+
+						<p:commandButton value="OK" onclick="PF('dlgView').hide()"
+							styleClass="btn btn-danger" process="@this">
+						</p:commandButton>
+
+					</div>
+
+				</p:outputPanel>
+
+			</p:dialog>
+						  
+   			<p:dialog id="dlgCancel" widgetVar="dlgCancel"
+				header="Deseja Cancelar a Requisição do Cliente?" modal="true"
+				resizable="false" closable="false" width="600" position="center, center"
+				styleClass="box-danger">
+				<p:outputPanel id="fatDetalheCancel">
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="id: " />
+						</div>
+						<div class="2">
+							<p:outputLabel value=" #{autotracSinalMB.autotracSinal.id} " style="color: #1266e5;" />
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="Cliente: " />
+						</div>
+						<div class="col-lg-8">
+						<p:outputLabel value=" #{autotracSinalMB.autotracSinal.areaCliente.nome} " style="color: #1266e5;" />
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="Requisitante: " />
+						</div>
+						<div class="col-lg-8">
+						<p:outputLabel value=" #{autotracSinalMB.autotracSinal.nomeRequisitante} " style="color: #1266e5;" />
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="e-mail: " />
+						</div>
+						<div class="col-lg-8">
+						<p:outputLabel value=" #{autotracSinalMB.autotracSinal.emailRequisitante} " style="color: #1266e5;" />
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="MCT: " />
+						</div>
+						<div class="col-lg-4">
+							<p:outputLabel value=" #{autotracSinalMB.autotracSinal.mct} " style="color: #1266e5;" />
+						</div>
+						<div class="col-lg-2">
+							<p:outputLabel value="Placa: " />
+						</div>
+						<div class="col-lg-4">
+							<p:outputLabel value=" #{autotracSinalMB.autotracSinal.placa} " style="color: #1266e5;" />
+						</div>
+						
+					</div>
+
+
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-2">
+							<p:outputLabel value="Início: " />
+						</div>
+						<div class="col-lg-4">
+							<p:outputLabel value=" #{autotracSinalMB.autotracSinal.inicioVigencia} " style="color: #1266e5;">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</div>						
+					</div>
+					<BR/>
+					<div class="ui-g ui-fluid" id="l0">
+						<div class="col-lg-4">
+							<p:outputLabel value="e-mail cliente: " />
+						</div>
+
+					</div>
+					<BR/>
+					<div class="ui-g ui-fluid" >
+						<div class="col-lg-12">
+							<p:outputLabel value="#{autotracSinalMB.autotracSinal.requisicao}"  style="color: #1266e5;"/>
+						</div>
+
+					</div>
+
+					<p:spacer width="2px" />
+					<p:separator style="border-color:red" />
+					<div class="align-center">
+
+						<p:commandButton value="Voltar" onclick="PF('dlgCancel').hide()"
+							
+							styleClass="btn btn-danger">
+						</p:commandButton>
+
+						<p:commandButton value="Cancelar" styleClass="btn btn-success"
+							actionListener="#{autotracSinalMB.cancelarRequisicaoAutotrac}"
+							onclick="PF('dlgCancel').hide()"
+							oncomplete="javascript: window.scrollTo(0, 0);"
+                            update="@form" process="@this">
+						</p:commandButton>
+
+					</div>
+
+				</p:outputPanel>
+
+			</p:dialog>
+							
+			</h:panelGroup>
+			<br />
+			
+		</h:form>
+
+
+
+
+	</ui:define>
+</ui:composition>

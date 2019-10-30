@@ -1,0 +1,838 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/templateoffmenu.xhtml">
+
+<ui:define name="head-end">
+<style type="text/css">
+.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+	padding: 0.5em 0;
+	margin-left: 10px;
+}
+
+.ui-orderlist .ui-orderlist-list {
+	height: auto;
+}
+
+.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+	{
+	padding: 0;
+}
+
+input[disabled] {
+	background-color: #000;
+	color: #fff !important;
+}
+
+.ui-sticky {
+	top: 5px !important;
+}
+
+@media ( max-width : 960px) {
+	.ui-sticky {
+		top: 110px !important;
+	}
+}
+</style>
+    
+
+    </ui:define>
+	    	
+    <ui:define name="title"  >
+     	
+    </ui:define>
+	 
+    <ui:define name="description">
+        visualizador        
+    </ui:define>
+ 
+
+    <ui:define name="body">
+      
+        <adm:breadcrumb title="BI"/>
+
+		<h:form id="viewBI">
+
+			<h:panelGroup layout="block">
+
+				<p:panel styleClass="box-danger">
+
+					<div class="ui-g-12 ui-md-6 ui-lg-12">
+						<p:panelGrid columns="3" styleClass="ui-panelgrid-blank"
+							style="text-align:center">
+							<h:graphicImage library="images" name="logo.png" width="90%"
+								height="90%" />
+							<h3>Boletim Informativo</h3>
+						</p:panelGrid>
+					</div>
+
+					<p:panelGrid columns="8" styleClass="ui-panelgrid-blank">
+
+						<h:outputText value="Tipo do Boletim: "	style="color:black;font-weight:bold;font-size:12px" />
+						<h:outputText value="#{boletimInformativoViewMB.tipoBoletimEmitido}" style="color:brown;font-weight:bold;font-size:12px" />
+						<p:spacer width="50px" />
+						<h:outputText value=" SM Nº: " style="color:black;font-weight:bold;font-size:12px" />
+						<h:outputText value="#{boletimInformativoViewMB.biV.evento.sincViagem.id}"
+							style="color:brown;font-style:italic;font-weight:bold;font-size:12px" />
+						<p:spacer width="50px" />
+						<h:outputText value=" Nº: " style="color:black;font-weight:bold;font-size:12px" />
+						<h:outputText value="#{boletimInformativoViewMB.biV.rotulo}"
+							style="color:brown;font-style:italic;font-weight:bold;font-size:12px" />
+
+					</p:panelGrid>
+
+					<h:form id="frmBoletim">
+
+						<h:form id="frmDadosBoletim">
+
+							<p:panel id="pnDadosCliente" styleClass="box-danger">
+
+								<div class="col-lg-12" style="text-align: left">
+									<H4 style="color: brown; font-weight: bold;">Dados do Cliente</H4>
+								</div>
+
+								<p:panelGrid columns="2" styleClass="ui-panelgrid-blank" >
+
+									<h:outputText value="Cliente: " 
+										style="color:black;font-weight:bold;font-size:12px;size:60" />
+									<h:outputText
+										value="#{boletimInformativoViewMB.eiv.nomeCliente}"
+										style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="Seguradora: " for="idSeguradora"
+										style="color:black;font-weight:bold;font-size:12px" />
+									<h:outputText
+										value="#{boletimInformativoViewMB.eiv.nomeSeguradora}"
+										style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="Corretora: " for="idCorretora"
+										style="color:black;font-weight:bold;font-size:12px" />
+									<h:outputText
+										value="#{boletimInformativoViewMB.eiv.nomeCorretora}"
+										style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="Transportadora: " for="idTransportadora"
+										style="color:black;font-weight:bold;font-size:12px" />
+									<h:outputText
+										value="#{boletimInformativoViewMB.eiv.nomeTransportadora}"
+										style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="Gerente Resp. pela Conta: "
+										for="idGerenteResp"
+										style="color:black;font-weight:bold;font-size:12px" />
+									<h:outputText value="FILIPE EDUARDO DELL'AIRA"
+										style="color:red;font-style:italic;font-size:12px" />
+
+
+								</p:panelGrid>
+
+							</p:panel>
+
+							<p:panel id="pnDadosCavalo" styleClass="box-danger">
+
+								<div class="col-lg-12" style="text-align: left">
+									<H4 style="color: brown; font-weight: bold;">Dados do Cavalo</H4>
+								</div>
+
+							<h:form id="frmDadosCavalo">
+								
+								<p:panelGrid columns="6" styleClass="ui-panelgrid-blank" >
+
+									<h:outputText value="Placa: "  style="color:black;font-weight:bold;font-size:12px" />								
+									<h:outputText value="#{boletimInformativoViewMB.eiv.veiculoPlaca}" style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="Marca: "  style="color:black;font-weight:bold;font-size:12px" />								
+									<h:outputText value="#{boletimInformativoViewMB.eiv.veiculoMarca}" style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="Ano: "  style="color:black;font-weight:bold;font-size:12px" />								
+									<h:outputText value="#{boletimInformativoViewMB.eiv.veiculoAno}" style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="ID Rastreador: "  style="color:black;font-weight:bold;font-size:12px" />								
+									<h:outputText value="#{boletimInformativoViewMB.eiv.veiculoIdRastreador}" style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="Cor: "  style="color:black;font-weight:bold;font-size:12px" />								
+									<h:outputText value="#{boletimInformativoViewMB.eiv.veiculoCor}" style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="Modelo: "  style="color:black;font-weight:bold;font-size:12px" />								
+									<h:outputText value="#{boletimInformativoViewMB.eiv.veiculoModelo}" style="color:red;font-style:italic;font-size:12px" />
+
+									<h:outputText value="Tecnologia de Rastreamento: "  style="color:black;font-weight:bold;font-size:12px" />								
+									<h:outputText value="#{boletimInformativoViewMB.eiv.veiculoIdTecnologia}" style="color:red;font-style:italic;font-size:12px" />
+
+
+								</p:panelGrid>
+	
+							</h:form>
+
+							</p:panel>
+
+							<ui:fragment id="subPnCarreta"	rendered="#{boletimInformativoViewMB.subPnDadosCarreta}">
+							<p:panel id="pnDadosCarreta" styleClass="box-danger">
+
+								<div class="col-lg-12" style="text-align: left">
+									<H4 style="color: brown; font-weight: bold;">Dados da Carreta</H4>
+								</div>
+								
+								<p:panelGrid columns="1" styleClass="ui-panelgrid-blank" >
+									
+									<ui:fragment id="subPnCarreta1"	rendered="#{boletimInformativoViewMB.subPnDadosCarreta1}">
+									<p:row>
+										<p:panelGrid columns="10" styleClass="ui-panelgrid-blank" >
+											
+											<h:outputText value="Placa1: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaPlaca1}" style="color:red;font-style:italic;font-size:12px" />
+	
+											<h:outputText value="Marca1: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaMarca1}" style="color:red;font-style:italic;font-size:12px" />								
+
+											<h:outputText value="Ano1: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaAno1}" style="color:red;font-style:italic;font-size:12px" />								
+
+											<h:outputText value="Cor1: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaCor1}" style="color:red;font-style:italic;font-size:12px" />								
+
+											<h:outputText value="Carroceria1: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaTipo1}" style="color:red;font-style:italic;font-size:12px" />								
+																			
+										</p:panelGrid>
+									</p:row>
+									</ui:fragment>
+									
+									<ui:fragment id="subPnCarreta2"	rendered="#{boletimInformativoViewMB.subPnDadosCarreta2}">
+									<p:row>
+										<p:panelGrid columns="10" styleClass="ui-panelgrid-blank" >
+
+											<h:outputText value="Placa2: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaPlaca2}" style="color:red;font-style:italic;font-size:12px" />
+											
+											<h:outputText value="Marca2: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaMarca2}" style="color:red;font-style:italic;font-size:12px" />								
+
+											<h:outputText value="Ano2: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaAno2}" style="color:red;font-style:italic;font-size:12px" />								
+
+											<h:outputText value="Cor2: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaCor2}" style="color:red;font-style:italic;font-size:12px" />								
+
+											<h:outputText value="Carroceria2: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaTipo2}" style="color:red;font-style:italic;font-size:12px" />								
+																			
+										</p:panelGrid>
+									</p:row>
+									</ui:fragment>
+									<ui:fragment id="subPnCarreta3"	rendered="#{boletimInformativoViewMB.subPnDadosCarreta3}">
+									<p:row>
+										<p:panelGrid columns="10" styleClass="ui-panelgrid-blank" >
+
+											<h:outputText value="Placa3: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaPlaca3}" style="color:red;font-style:italic;font-size:12px" />
+											
+											<h:outputText value="Marca3: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaMarca3}" style="color:red;font-style:italic;font-size:12px" />								
+
+											<h:outputText value="Ano3: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaAno3}" style="color:red;font-style:italic;font-size:12px" />								
+
+											<h:outputText value="Cor3: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaCor3}" style="color:red;font-style:italic;font-size:12px" />								
+
+											<h:outputText value="Carroceria3: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.carretaTipo3}" style="color:red;font-style:italic;font-size:12px" />								
+																			
+										</p:panelGrid>
+									</p:row>
+									</ui:fragment>
+									
+								</p:panelGrid>
+							
+							</p:panel>
+							</ui:fragment>
+							
+							<p:panel id="pnDadosMotorista" styleClass="box-danger">
+
+								<div class="col-lg-12" style="text-align: left">
+									<H4 style="color: brown; font-weight: bold;">Dados do Motorista</H4>
+								</div>
+
+							<h:form id="frmDadosMotorista">
+							
+								<p:panelGrid columns="1" styleClass="ui-panelgrid-blank" >
+									
+									<ui:fragment id="subPnMotorista1" rendered="#{boletimInformativoViewMB.subPnDadosMotorista1}">
+									<p:row>
+										<p:panelGrid columns="8" styleClass="ui-panelgrid-blank" >
+
+											<h:outputText value="CPF: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.motoristaCpf1}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Nome: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.motoristaNome1}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Fone: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.motoristaFone1}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Vinculo: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.motoristaVinculo1}" style="color:red;font-style:italic;font-size:12px" />
+										
+										</p:panelGrid>
+									</p:row>
+									</ui:fragment>
+									<ui:fragment id="subPnMotorista2" rendered="#{boletimInformativoViewMB.subPnDadosMotorista2}">
+									<p:row>
+										<p:panelGrid columns="8" styleClass="ui-panelgrid-blank" >
+
+											<h:outputText value="CPF: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.motoristaCpf2}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Nome: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.motoristaNome2}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Fone: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.motoristaFone2}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Vinculo: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.motoristaVinculo2}" style="color:red;font-style:italic;font-size:12px" />
+										
+										</p:panelGrid>
+									</p:row>
+									</ui:fragment>
+								</p:panelGrid>
+									
+							</h:form>
+							
+							</p:panel>
+
+							<p:panel id="pnDadosViagem" styleClass="box-danger">
+								
+								<div class="col-lg-12" style="text-align: left">
+									<H4 style="color: brown; font-weight: bold;">Dados da Viagem</H4>
+								</div>
+					
+								<h:form id="frmDadosViagem">
+							
+								<p:panelGrid columns="1" styleClass="ui-panelgrid-blank" >
+									
+									<p:row>
+										<p:panelGrid columns="10" styleClass="ui-panelgrid-blank" >
+
+											<h:outputText value="Nº SM: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.viagem.id}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Origem: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.origemCidade}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="UF: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.origemUf}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Destino: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.destinoCidade}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="UF: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.destinoUf}" style="color:red;font-style:italic;font-size:12px" />
+										
+										</p:panelGrid>
+									</p:row>
+									
+									<p:row>
+										<p:panelGrid columns="4" styleClass="ui-panelgrid-blank" >
+
+											<h:outputText value="Embarcador Origem: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.embarcadorOrigem}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Embarcador Destino: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.embarcadorDestino}" style="color:red;font-style:italic;font-size:12px" />
+										
+										</p:panelGrid>
+									</p:row>
+
+									<p:row>
+										<p:panelGrid columns="6" styleClass="ui-panelgrid-blank" >
+
+											<h:outputText value="Tipo de Mercadoria: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.mercadoria}" style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Valor: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.valor}" style="color:red;font-style:italic;font-size:12px">
+												<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR" currencySymbol="R$ " type="currency"/>
+											</h:outputText>
+
+											<h:outputText value="Tipo de Operação: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.eiv.tipoOperacao}" style="color:red;font-style:italic;font-size:12px" />
+										
+										</p:panelGrid>
+									</p:row>
+									
+								</p:panelGrid>
+									
+							</h:form>
+																									
+							</p:panel>
+
+						</h:form>
+						
+						<p:spacer/>
+						
+						<ui:fragment id="fragSinistro"	rendered="#{boletimInformativoViewMB.painelDadosSinistro}">
+						
+						<div id="pnComSinistro" class="box box-solid box-danger">
+							
+							<div class="box-header with-board" style="padding-top: 1px">								
+								<h4>Dados do Comunicado do Sinistro</h4>
+							</div>
+						
+							 <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" >
+							 
+								<p:row>
+									<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+
+										<h:outputText value="Data/Hora do Comunicado: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniDataHora}" style="color:red;font-style:italic;font-size:12px">
+											<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy HH:mm"/>
+										</h:outputText>
+
+										<h:outputText value="Data/Hora do Sinistro: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniDataHora}" style="color:red;font-style:italic;font-size:12px">
+											<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy HH:mm"/>
+										</h:outputText>
+
+									</p:panelGrid>
+								</p:row>
+
+								<p:row>
+									<p:panelGrid columns="6" styleClass="ui-panelgrid-blank">
+
+										<h:outputText value="Nome do Comunicante/Empresa: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniNome}" style="color:red;font-style:italic;font-size:12px"/>
+											
+										<h:outputText value="Fone: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniFone}" style="color:red;font-style:italic;font-size:12px"/>
+
+										<h:outputText value="Dia da Semana: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.diaDaSemana}" style="color:red;font-style:italic;font-size:12px"/>
+
+									</p:panelGrid>
+								</p:row>
+								
+							</p:panelGrid>
+						
+						</div>
+
+						<p/>
+						
+						<div id="pnLocalSinistro" class="box box-solid box-danger">
+							
+							<div class="box-header with-board" style="padding-top: 1px">								
+								<h4>Dados do Local do Sinistro</h4>
+							</div>
+						
+							 <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" >
+							 
+								<p:row>
+									<p:panelGrid columns="8" styleClass="ui-panelgrid-blank">
+
+										<h:outputText value="Rodovia: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniRodovia}" style="color:red;font-style:italic;font-size:12px"/>
+
+										<h:outputText value="KM: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniKm}" style="color:red;font-style:italic;font-size:12px"/>
+
+										<h:outputText value="Rua/AV "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniRua}" style="color:red;font-style:italic;font-size:12px"/>
+
+										<h:outputText value="Nº: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniNumero}" style="color:red;font-style:italic;font-size:12px"/>										
+
+									</p:panelGrid>
+								</p:row>
+
+								<p:row>
+									<p:panelGrid columns="6" styleClass="ui-panelgrid-blank">
+
+										<h:outputText value="Município: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniCidade}" style="color:red;font-style:italic;font-size:12px"/>
+											
+										<h:outputText value="UF: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniUf}" style="color:red;font-style:italic;font-size:12px"/>
+
+										<h:outputText value="Ponto Referência(Posto,etc): "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniPontoReferencia}" style="color:red;font-style:italic;font-size:12px"/>
+
+									</p:panelGrid>
+								</p:row>
+								
+								<p:row>
+									<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+
+										<h:outputText value="Coordenada (Latitude): "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniLatitude}" style="color:red;font-style:italic;font-size:12px"/>
+											
+										<h:outputText value="Coordenada (Longitude): "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniLongitude}" style="color:red;font-style:italic;font-size:12px"/>
+
+									</p:panelGrid>
+								</p:row>
+								
+							</p:panelGrid>
+						
+						</div>					
+						
+						<div id="pnClassificacao" class="box box-solid box-danger">
+							<div class="box-header with-board" style="padding-top: 1px">
+								<h4>Classificação do Sinistro</h4>
+							</div>
+																		 
+								 <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" >
+									
+									<ui:fragment id="fragClassSinistroDanos" rendered="#{boletimInformativoViewMB.painelClassSinistroDano}">
+								 	<p:row>
+								 		<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+								 			<h:outputText value="Acidentes ou Avarias (Danos): "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.classificacao}" style="color:red;font-style:italic;font-size:12px"/>
+								 		</p:panelGrid>
+								 	</p:row>
+									</ui:fragment>
+									
+									<ui:fragment id="fragClassSinistroPerda" rendered="#{boletimInformativoViewMB.painelClassSinistroPerda}" >
+								 	<p:row>
+								 		<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+								 			<h:outputText value="Crimes Contra o Patrimônio (Perdas): "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.classificacao}" style="color:red;font-style:italic;font-size:12px"/>
+								 		</p:panelGrid>
+								 	</p:row>
+								
+								 	<p:row>
+								 		<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+								 			<h:outputText value="Tipo de Subtração: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.tipoSubtracao}" style="color:red;font-style:italic;font-size:12px"/>
+								 		</p:panelGrid>
+								 	</p:row>
+
+								 	<p:row>
+								 		<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+								 			<h:outputText value="Tipo de Abordagem: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.tipoAbordagem}" style="color:red;font-style:italic;font-size:12px"/>
+								 		</p:panelGrid>
+								 	</p:row>
+									</ui:fragment>
+									
+									<ui:fragment id="fragClassSinistroPerdaDanos" rendered="#{boletimInformativoViewMB.painelClassSinistroPerdaDano}">
+								 	<p:row>
+								 		<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+								 			<h:outputText value="Situação do Motorista: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.situacaoMotorista}" style="color:red;font-style:italic;font-size:12px"/>
+								 		</p:panelGrid>
+								 	</p:row>
+
+								 	<p:row>
+								 		<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+								 			<h:outputText value="Avarias: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.avarias}" style="color:red;font-style:italic;font-size:12px"/>
+								 		</p:panelGrid>
+								 	</p:row>
+									</ui:fragment>
+									 	
+								 </p:panelGrid>
+									
+								
+						</div>
+						
+						</ui:fragment>
+						
+						<ui:fragment id="fragSuspeitaRoubo" rendered= "#{boletimInformativoViewMB.painelDadosSuspeita}">
+						<div id="pnSuspeitaRoubo" class="box box-solid box-danger">
+							<div class="box-header with-board" style="padding-top: 1px">
+								<h4>Dados da Suspeita de Roubo</h4>
+							</div>
+
+								<p:panelGrid columns="1" styleClass="ui-panelgrid-blank">									
+									<p:row>
+										<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+											<h:outputText value="Evento Inicial"  style="color:brown;font-weight:bold;font-size:14px" />																					
+											<h:outputText value=""  style="color:bronw;font-weight:bold;font-size:14px" />
+											<h:outputText value="Tipo Evento de Suspeita de Roubo: "  style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText value="#{boletimInformativoViewMB.tipoEventoSuspeitaRoubo}" style="color:red;font-style:italic;font-size:12px" />
+											<h:outputText value="Data/Hora: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.biV.comIniDataHora}" style="color:red;font-style:italic;font-size:12px">
+												<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy HH:mm"/>
+											</h:outputText>
+										</p:panelGrid>
+									</p:row>
+									
+									<p:row>
+										<p:panelGrid columns="8" styleClass="ui-panelgrid-blank">
+
+											<h:outputText value="Rodovia: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.comIniRodovia}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="KM: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.comIniKm}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Rua/AV "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.comIniRua}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Nº: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.comIniNumero}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+										</p:panelGrid>
+									</p:row>
+
+									<p:row>
+										<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+
+											<h:outputText value="Local - Município: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.comIniCidade}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="UF: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.comIniUf}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+										</p:panelGrid>
+									</p:row>
+
+									<p:row>
+										<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+
+											<h:outputText value="Coordenada (Latitude): "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.comIniLatitude}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Coordenada (Longitude): "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.comIniLongitude}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+										</p:panelGrid>
+									</p:row>
+								</p:panelGrid>
+
+								<ui:fragment id="fragBoletimFinalSuspeita"	rendered="#{boletimInformativoViewMB.painelBoletimFinalSuspeita}">
+								<p:panelGrid columns="1" styleClass="ui-panelgrid-blank">									
+									<p:row>
+										<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+											<h:outputText value="Evento Final"  style="color:brown;font-weight:bold;font-size:14px" />																					
+											<h:outputText value=""  style="color:bronw;font-weight:bold;font-size:14px" />
+											<h:outputText value="Data/Hora: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="#{boletimInformativoViewMB.biV.suspFimDataHora}" style="color:red;font-style:italic;font-size:12px">
+												<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy HH:mm"/>
+											</h:outputText>
+										</p:panelGrid>
+									</p:row>
+									
+									<p:row>
+										<p:panelGrid columns="8" styleClass="ui-panelgrid-blank">
+
+											<h:outputText value="Rodovia: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.suspFimRodovia}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="KM: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.suspFimKm}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Rua/AV "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.suspFimRua}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Nº: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.suspFimNumero}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+										</p:panelGrid>
+									</p:row>
+
+									<p:row>
+										<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+
+											<h:outputText value="Local - Município: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.suspFimCidade}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="UF: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.suspFimUf}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+										</p:panelGrid>
+									</p:row>
+
+									<p:row>
+										<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+
+											<h:outputText value="Coordenada (Latitude): "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.suspFimLatitude}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+											<h:outputText value="Coordenada (Longitude): "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.suspFimLongitude}"
+												style="color:red;font-style:italic;font-size:12px" />
+
+										</p:panelGrid>
+									</p:row>
+								</p:panelGrid>
+								</ui:fragment>
+								
+							</div>
+						</ui:fragment>
+
+
+						
+																								
+						<p:dataTable var="b" value="#{boletimInformativoViewMB.listBiRelato}">
+							<f:facet name="header" >
+								<h4 style="font-weight:bold">Histórico de Boletim</h4>						
+                    		</f:facet>
+																			
+                    	<p:column headerText="Data/Hora" style="width:20%;font-size:12px;border: 1px; border-radius: 5px; border-style: solid; border-color:black">
+                        	<div align="left" style="padding-right: 10px;">
+                        		<p:outputLabel value="#{b.dtCriacao}"  
+                        		 	style="text-align: center;display:block;font-size:12px">
+                                	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                            	</p:outputLabel>
+                        	</div>                        
+                    	</p:column>
+                    					
+                    	<p:column headerText="Tipo" style="width:10%;font-size:12px;border: 1px; border-radius: 5px; border-style: solid; border-color:black">
+                        	<div align="left" style="padding-right: 10px;">
+                        		<p:outputLabel value="BI- #{b.boletimInformativo.tipo}"  
+                        			style="text-align: center;display:block;font-size:12px">
+                        			<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                            	</p:outputLabel>
+                        	</div>                        
+                    	</p:column>
+                    					
+                    	<p:column headerText="Relato" style="width:80%;font-size:12px;border: 1px; border-radius: 5px; border-style: solid; border-color:black">
+                        	<div align="left" style="padding-right: 10px;">
+                        		<h:outputText value="#{b.relato}" style="font-size:12px" escape="false" ></h:outputText>
+                        	</div>                        
+                    	</p:column>
+ 																				
+					</p:dataTable>
+
+					<ui:fragment id="fragBoletimFinal"	rendered="#{boletimInformativoViewMB.painelBoletimFinal}">
+												
+							<div id="pnFinalizacao" class="box box-solid box-danger">
+								<div class="box-header with-board" style="padding-top: 1px">
+									<h4>Registro de Finalização do Boletim</h4>
+								</div>
+
+								<div class="box-body">
+
+									<div id="pnTercProcedimento" class="box box-solid box-default">
+										<div class="box-body" style="padding-left: 25px">
+
+											<div class="row">
+												<p:outputLabel style="padding-left: 25px;color:brown;font-size:12px" value="Descritivo do Registro Final"></p:outputLabel>
+												<p/>
+											</div>
+											
+											<div class="col-lg-12" align="left" style="padding-right: 10px;">
+                        						<h:outputText value="#{boletimInformativoViewMB.biV.fimRelato}" style="font-size:12px" escape="false" ></h:outputText>
+                        					</div>                        
+
+											<p:panelGrid style="margin-top: 15px"
+												styleClass="ui-panelgrid-blank">
+												<p:row>
+													<p:column rowspan="1"
+														style="width:40%;font-weight:bold;text-align:center;font-size:12px">Valor Estimado do Prejuízo </p:column>
+													<p:column rowspan="1" style="width:10%;">
+															<p:outputLabel value="#{boletimInformativoViewMB.biV.fimValorPrejuizo}">
+																<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR" currencySymbol="R$ " type="currency"/>
+															</p:outputLabel>																
+													</p:column>
+
+													<p:column rowspan="1"
+														style="width:40%;font-weight:bold;text-align:center;font-size:12px">Percentual Estimado</p:column>
+													<p:column rowspan="1" style="width:10%;">
+															<p:outputLabel value="#{boletimInformativoViewMB.biV.fimPercentualEstimado}"/>																
+															<p:outputLabel value="%"/>																																													
+													</p:column>
+
+												</p:row>
+											</p:panelGrid>
+										</div>
+
+									</div>
+
+
+								</div>
+							</div>
+		
+						</ui:fragment>
+
+						
+						<p/>
+								
+								<p:row >
+									<p:panelGrid columns="6" styleClass="ui-panelgrid-blank" style="text-align:center;display:block">
+									<f:facet name="header" >
+										<h4 style="font-weight:bold">Responsável pelo atendimento e registro das informações</h4>						
+                    				</f:facet>
+										<h:outputText value="Nome: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.usuEmissao.nome}" style="color:red;font-style:italic;font-size:12px" />
+
+										<h:outputText value="Cargo: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.usuEmissao.pessoa.funcao.nome}" style="color:red;font-style:italic;font-size:12px" />
+
+										<h:outputText value="Data/Hora Preenchimento: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.dtEmissao}" style="color:red;font-style:italic;font-size:12px"> 
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss "/>
+										</h:outputText> 
+									</p:panelGrid>
+								</p:row>
+								
+
+
+
+					</h:form>
+
+				</p:panel>
+
+			</h:panelGroup>
+			
+			
+			
+		</h:form>
+
+		<adm:sidebar collapsed="true"/>
+           
+    </ui:define>
+    
+</ui:composition>

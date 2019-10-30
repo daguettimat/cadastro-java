@@ -1,0 +1,694 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            .center  {
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Relatório de Faturamento Mensal
+    </ui:define>
+
+    <ui:define name="description">
+        
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title=""/>
+        <h:form id="formRelatorioCliente" >
+            
+
+            <h:panelGroup layout="block">
+                <div class="align-center" style="padding: 5px;">
+                	
+<!--                 		<p:inputText  value="#{areaClienteMB.numContratoPesq}" maxlength="9" -->
+<!-- 						 			style="width:100%" placeholder="Numero Contrato" title="Parte do nome do cliente"/> -->
+                		
+<!-- 						<p:spacer height="5"/> -->
+						
+                	 	<p:calendar id="dataInicial"
+                	 				placeholder="Mês/Ano" mindate="01/06/2019" 
+									value="#{areaClienteMB.dtPesquisa}" inputStyle="text-align:center"
+											 locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+											 showButtonPanel="true" >
+						</p:calendar>
+                		                	
+                	<p:spacer height="5"/>
+              		
+                
+                    <p:commandButton id="btnPesquisar" value="Pesquisar" action="#{areaClienteMB.acesso}"
+                                     icon="fa fa-search" update="@form" styleClass="btn-danger"/>
+                    <p:spacer height="5"/>
+
+                </div>
+            </h:panelGroup>
+
+			<BR/>
+
+			<p:tabView id="tbView" >
+				<p:tab id="tbView01" title="Rastreamento">
+        	    <h:panelGroup layout="block" id="pnGroupLista">
+
+				
+				 <div class="row">
+					<div class="col-md-2">
+						<h4 style="padding_left: 250px">Fatura do Mês  : 
+							<p:outputLabel value="#{areaClienteMB.dtPesqMesAno}" style="font-size: 16px; " />
+						</h4>							
+					</div>
+
+				 <div class="col-md-4">
+					<h4> Numero Nfse: 
+							<p:outputLabel value="#{areaClienteMB.msgNfseRastreamento}" style="font-size: 16px; "/>
+						</h4>				
+					</div>
+
+				 </div>
+						
+				 <div class="row">								
+				<p:panelGrid id="pnResumo" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+  		  		
+  		  			<f:facet name="header">
+    			
+    			    	<p:row>
+            				<p:column colspan="#{areaClienteMB.colspanServicosResumo}" style="color:#4682B4;font-weight: bold;text-align: left;">Resumo da Fatura</p:column>
+            			</p:row>
+            			<p:row>
+    	    				<ui:fragment id="fragResumoVlrConsumo" rendered="#{areaClienteMB.liberadoResumoVlrConsumo}" >            				
+            					<p:column colspan="1">Consumo Viagens</p:column>
+            				</ui:fragment>
+            				<ui:fragment id="fragResumoVlrFaturaMinima" rendered="#{areaClienteMB.liberadoResumoVlrFaturaMinima}" >
+	            				<p:column colspan="1">Fatura Mínima (viagens)</p:column>
+	            			</ui:fragment>
+            				<p:column colspan="1">Outros</p:column>
+            				<ui:fragment id="fragResumoVlrAjustes" rendered="#{areaClienteMB.liberadoResumoVlrAjustes}" >
+            					<p:column colspan="1">Ajustes</p:column>
+            				</ui:fragment>
+            				<p:column colspan="1">Total</p:column>
+            				<p:column colspan="1">Vencimento</p:column>
+        				</p:row>
+        			</f:facet>
+        			
+        		   <p:row>
+
+     	    			<ui:fragment id="fragResumoVlrConsumoVlr" rendered="#{areaClienteMB.liberadoResumoVlrConsumo}" >
+        					<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+        				</ui:fragment>
+        				<ui:fragment id="fragResumoVlrFaturaMinimaVlr" rendered="#{areaClienteMB.liberadoResumoVlrFaturaMinima}" >
+    	    				<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+    	    		 	</ui:fragment>
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+    	    			<ui:fragment id="fragResumoVlrAjustesVlr" rendered="#{areaClienteMB.liberadoResumoVlrAjustes}" >
+        					<p:column rowspan="1" style="font-weight: bold;text-align: center;">Valor</p:column>
+        				</ui:fragment>
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Dia</p:column>
+        			
+    				</p:row>
+
+        		   <p:row>
+
+ 						<ui:fragment id="fragResumoVlrConsumoVlrConteudo" rendered="#{areaClienteMB.liberadoResumoVlrConsumo}" >
+        					<p:column style="color:red;font-weight: bold; text-align: center;">
+        						<p:outputLabel value="#{areaClienteMB.gerVlrConsumo}">
+        						 	<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+        						</p:outputLabel>
+        					</p:column>
+        				</ui:fragment>
+						<ui:fragment id="fragResumoVlrFaturaMinimaVlrConteudo" rendered="#{areaClienteMB.liberadoResumoVlrFaturaMinima}" >
+    	    				<p:column  style="color:red;font-weight: bold; text-align: center;">
+    	    					<p:outputLabel value="#{areaClienteMB.gerVlrFaturamMinima}" >
+    	    					 	<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>	
+    	    					</p:outputLabel>
+    	    				</p:column>
+    	    			</ui:fragment>
+    	    			
+    	    			<p:column  style="color:red;font-weight: bold;text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.gerVlrTotalOutros}" >
+    	    					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+    	    				</p:outputLabel>
+    	    			</p:column>
+    	    			
+    	    			<ui:fragment id="fragResumoVlrAjustesVlrConteudo" rendered="#{areaClienteMB.liberadoResumoVlrAjustes}" >
+	        				<p:column  style="color:red;font-weight: bold;text-align: center;">
+	        			 		<p:outputLabel value="#{areaClienteMB.gerVlrAjustes}" >
+	        			 			<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+	        			 		</p:outputLabel>
+	        				</p:column>
+	        			</ui:fragment>
+    	    			<p:column  style="color:red;font-weight: bold;text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.gerVlrTotalFinal}" >
+    	    					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+    	    				</p:outputLabel>
+    	    			</p:column>
+	        			<p:column  style="color:tomato;font-weight: bold;text-align: center;">
+	        			 	<p:outputLabel value="#{areaClienteMB.diaVencimento}" ></p:outputLabel>
+	        			</p:column>
+        			
+    				</p:row>
+        			
+    			</p:panelGrid>
+				 
+				 </div>
+				<BR/>
+
+				<p:separator/>
+
+				<h4  style="padding_left:250px">Detalhamento de Consumo</h4>
+
+
+				<p:panelGrid id="pnViagem" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+  		  		
+  		  			<f:facet name="header">
+    			
+    			    	<p:row>
+            				<p:column colspan="4" style="color:#4682B4;font-weight: bold;text-align: left;">Viagens</p:column>
+            			</p:row>
+            			<p:row>
+            				<p:column colspan="2" style="width:250px">Viagem Veículo Fixo</p:column>
+            				<p:column colspan="2" style="width:250px">Viagem Avulsa</p:column>
+        				</p:row>
+        			</f:facet>
+        			
+        		   <p:row>
+ 
+        				<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Qtd Veículos</p:column>
+ 	
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+	        			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Qtd Veículos</p:column>
+        			
+    				</p:row>
+
+        		   <p:row>
+        				<p:column style="color:red;font-weight: bold; text-align: center;">
+        					<p:outputLabel value="#{areaClienteMB.vlrViagFixo}" >
+        					</p:outputLabel>
+        				</p:column>
+    	    			<p:column  style="color:tomato;font-weight: bold; text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.qtdViagFixo}" ></p:outputLabel>
+    	    			</p:column>
+    	    			<p:column  style="color:red;font-weight: bold;text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.vlrViagAvulsa}" ></p:outputLabel>
+    	    			</p:column>
+	        			<p:column  style="color:tomato;font-weight: bold;text-align: center;">
+	        			 	<p:outputLabel value="#{areaClienteMB.qtdViagAvulsa}" ></p:outputLabel>
+	        			</p:column>
+        			
+    				</p:row>
+        			
+    			</p:panelGrid>
+				
+				<BR/>
+				
+				<p:panelGrid id="pnCheckList" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+  		  		
+  		  			<f:facet name="header">
+    			
+    			    	<p:row>
+            				<p:column colspan="2" style="color:#4682B4;font-weight: bold;text-align: left;">CheckList</p:column>
+            			</p:row>
+            			<p:row>
+            				<p:column colspan="2">CheckList</p:column>
+        				</p:row>
+        			</f:facet>
+        			
+        		   <p:row>
+ 
+        				<p:column rowspan="1" style="width:150px;font-weight: bold; text-align: center;">Valor</p:column>
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold; text-align: center;">Qtd CheckList</p:column>
+    	    			        			
+    				</p:row>
+
+        		   <p:row>
+ 
+        				<p:column style="color:red;font-weight: bold; text-align: center;">
+        					<p:outputLabel value="#{areaClienteMB.vlrCheckList}" ></p:outputLabel>
+        				</p:column>
+    	    			<p:column  style="color:tomato;font-weight: bold; text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.qtdCheckList}" ></p:outputLabel>
+    	    			</p:column>
+        			
+    				</p:row>
+        			
+    			</p:panelGrid>
+
+				<BR/>
+				
+				<p:panelGrid id="pnMonitoramentoAdicional" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+  		  		
+  		  			<f:facet name="header">
+    			
+    			    	<p:row>
+            				<p:column colspan="6" style="color:#4682B4;font-weight: bold;text-align: left;">Monitoramento Adicional</p:column>
+            			</p:row>
+            			<p:row>
+            				<p:column colspan="2">Iscas Fixo</p:column>
+            				<p:column colspan="2">Isca Viagem Avulsa</p:column>
+            				<p:column colspan="2">Escolta</p:column>
+        				</p:row>
+        			</f:facet>
+        			
+        		   <p:row>
+ 
+        				<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Qtd Iscas</p:column>
+ 	
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+	        			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Qtd Viagens</p:column>
+
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+	        			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Qtd Viagens</p:column>
+        			
+    				</p:row>
+
+        		   <p:row>
+ 
+        				<p:column style="color:red;font-weight: bold; text-align: center;">
+        					<p:outputLabel value="#{areaClienteMB.vlrIscaFixo}" ></p:outputLabel>
+        				</p:column>
+    	    			<p:column  style="color:tomato;font-weight: bold; text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.qtdIscaFixo}" ></p:outputLabel>
+    	    			</p:column>
+    	    			<p:column  style="color:red;font-weight: bold;text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.vlrIscaAvulsa}" ></p:outputLabel>
+    	    			</p:column>
+	        			<p:column  style="color:tomato;font-weight: bold;text-align: center;">
+	        			 	<p:outputLabel value="#{areaClienteMB.qtdIscaAvulsa}" ></p:outputLabel>
+	        			</p:column>
+    	    			<p:column  style="color:red;font-weight: bold;text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.vlrEscolta}" ></p:outputLabel>
+    	    			</p:column>
+	        			<p:column  style="color:tomato;font-weight: bold;text-align: center;">
+	        			 	<p:outputLabel value="#{areaClienteMB.qtdEscolta}" ></p:outputLabel>
+	        			</p:column>
+        			
+    				</p:row>
+        			
+    			</p:panelGrid>
+
+				<BR/>
+				
+				<p:panelGrid id="pnConsumoSatelite" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+  		  		
+  		  			<f:facet name="header">
+    			
+    			    	<p:row>
+            				<p:column colspan="2" style="color:#4682B4;font-weight: bold;text-align: left;">Consumo Satelital</p:column>
+            			</p:row>
+            			<p:row>
+            				<p:column colspan="2">Satelital - Autotrac</p:column>
+        				</p:row>
+        			</f:facet>
+        			
+        		   <p:row>
+ 
+        				<p:column rowspan="1" style="width:150px;font-weight: bold; text-align: center;">Taxa ADE</p:column>
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold; text-align: center;">Consumo</p:column>
+    	    			        			
+    				</p:row>
+
+        		   <p:row>
+ 
+        				<p:column style="color:red;font-weight: bold; text-align: center;">
+        					<p:outputLabel value="#{areaClienteMB.taxaADE}" ></p:outputLabel>
+        				</p:column>
+    	    			<p:column  style="color:red;font-weight: bold; text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.consumoSatelital}" ></p:outputLabel>
+    	    			</p:column>
+        			
+    				</p:row>
+        			
+    			</p:panelGrid>
+
+				<BR/>
+				
+				<p:panelGrid id="pnLogistica" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+  		  		
+  		  			<f:facet name="header">
+    			
+    			    	<p:row>
+            				<p:column colspan="3" style="color:#4682B4;font-weight: bold;text-align: left;">Logística</p:column>
+            			</p:row>
+            			<p:row>
+            				<p:column colspan="1">Controle de Jornada</p:column>
+            				<p:column colspan="1">Módulo Logístico</p:column>
+            				<p:column colspan="1">BI</p:column>
+        				</p:row>
+        			</f:facet>
+        			
+        		   <p:row>
+ 
+        				<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+ 	
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+
+    	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+    	    			
+        			
+    				</p:row>
+
+        		   <p:row>
+ 
+        				<p:column style="color:red;font-weight: bold; text-align: center;">
+        					<p:outputLabel value="#{areaClienteMB.vlrControleJornada}" ></p:outputLabel>
+        				</p:column>
+    	    			<p:column  style="color:red;font-weight: bold; text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.vlrModuloLogistico}" ></p:outputLabel>
+    	    			</p:column>
+    	    			<p:column  style="color:red;font-weight: bold;text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.vlrBi}" ></p:outputLabel>
+    	    			</p:column>
+        			
+    				</p:row>
+        			
+    			</p:panelGrid>
+
+				<BR/>
+			
+				<ui:fragment id="fragServicosAdicionais" rendered="#{areaClienteMB.liberadoServicosAdicionais}" >	
+				
+				<p:panelGrid id="pnServicosAdicionais" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+  		  		
+  		  			<f:facet name="header">
+    			
+    			    	<p:row>
+            				<p:column colspan="#{areaClienteMB.colspanServicosAdicionais}" style="color:#4682B4;font-weight: bold;text-align: left;">Serviços Adicionais</p:column>
+            			</p:row>
+            			<p:row>
+            				<ui:fragment id="fragServicosAdicionaisGerente" rendered="#{areaClienteMB.liberadoServicosAdicionaisGerente}" >	
+            					<p:column colspan="1">Gerente de Conta</p:column>
+							</ui:fragment>
+							<ui:fragment id="fragServicosAdicionaisPARemota" rendered="#{areaClienteMB.liberadoServicosAdicionaisPARemota}" >
+            					<p:column colspan="1">P.A. Remota</p:column>
+            				</ui:fragment>
+            				<ui:fragment id="fragServicosAdicionaisAdicionais" rendered="#{areaClienteMB.liberadoServicosAdicionaisAdicionais}" >
+            					<p:column colspan="1">Adicionais</p:column>
+            				</ui:fragment>
+        				</p:row>
+        			</f:facet>
+        			
+        		   <p:row>
+        				
+ 						<ui:fragment id="fragServicosAdicionaisGerenteVlr" rendered="#{areaClienteMB.liberadoServicosAdicionaisGerente}" >
+        					<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+ 						</ui:fragment>
+ 						<ui:fragment id="fragServicosAdicionaisPARemotaVlr" rendered="#{areaClienteMB.liberadoServicosAdicionaisPARemota}" >
+    	    				<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+    	    			</ui:fragment>
+            			<ui:fragment id="fragServicosAdicionaisAdicionaisVlr" rendered="#{areaClienteMB.liberadoServicosAdicionaisAdicionais}" >
+    	    				<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+    	    			</ui:fragment>
+        			
+    				</p:row>
+
+        		   <p:row>
+  						
+  						<ui:fragment id="fragServicosAdicionaisGerenteVlrConteudo" rendered="#{areaClienteMB.liberadoServicosAdicionaisGerente}" >
+        					<p:column style="color:red;font-weight: bold; text-align: center;">
+        						<p:outputLabel value="#{areaClienteMB.vlrResultadoSomaGerente }" ></p:outputLabel>
+        					</p:column>
+    	    			</ui:fragment>
+    	    			<ui:fragment id="fragServicosAdicionaisPARemotaVlrConteudo" rendered="#{areaClienteMB.liberadoServicosAdicionaisPARemota}" >
+    	    				<p:column  style="color:red;font-weight: bold; text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.vlrResultadoPaRemota}" ></p:outputLabel>
+    	    				</p:column>
+    	    			</ui:fragment>
+    	    			<ui:fragment id="fragServicosAdicionaisAdicionaisVlrConteudo" rendered="#{areaClienteMB.liberadoServicosAdicionaisAdicionais}" >
+    	    				<p:column  style="color:red;font-weight: bold;text-align: center;">
+    	    				<p:outputLabel value="#{areaClienteMB.vlrResultadoAdicionais}" ></p:outputLabel>
+    	    				</p:column>
+    	    			</ui:fragment>
+        			
+    				</p:row>
+        			
+    			</p:panelGrid>
+				
+				</ui:fragment>
+				
+				<BR/>
+
+		</h:panelGroup>
+
+				</p:tab>
+
+
+
+				<!-- APURAÇÃO CADASTRO DAQUI PARA BAIXO -->
+
+				<p:tab id="tbView02" title="Cadastro">
+
+					<h:panelGroup layout="block" id="pnGroupListaCad">
+
+						 <div class="row">
+							<div class="col-md-2">
+								<h4 style="padding_left: 250px">Fatura do Mês  : 
+									<p:outputLabel value="#{areaClienteMB.dtPesqMesAno}" style="font-size: 16px; " />
+								</h4>							
+							</div>
+
+							<div class="col-md-4">
+								<h4> Numero Nfse: 
+									<p:outputLabel value="#{areaClienteMB.msgNfseCadastro}" style="font-size: 16px; "/>
+								</h4>				
+							
+							</div>
+
+						</div>
+						
+						 <div class="row">
+						<p:panelGrid id="pnResumoCad"
+							style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+
+							<f:facet name="header">
+
+								<p:row>
+									<p:column colspan="#{areaClienteMB.colspanServicosCadResumo}"
+										style="color:#4682B4;font-weight: bold;text-align: left;">Resumo da Fatura</p:column>
+								</p:row>
+								<p:row>
+									<ui:fragment id="fragResumoVlrConsumoCad"
+										rendered="#{areaClienteMB.liberadoResumoCadVlrConsumoFichas}">
+										<p:column colspan="1">Fichas</p:column>
+									</ui:fragment>
+									
+									<ui:fragment id="fragResumoVlrFaturaMinimaCad"
+										rendered="#{areaClienteMB.liberadoResumoCadVlrFaturaMinima}">
+										<p:column colspan="1">Fatura Mínima (fichas)</p:column>
+									</ui:fragment>
+									
+									<ui:fragment id="fragResumoVlrOutrosCad"
+										rendered="#{areaClienteMB.liberadoResumoCadVlrOutros}">
+										<p:column colspan="1">Outros</p:column>
+									</ui:fragment>
+									
+									<ui:fragment id="fragResumoVlrAjustesCad"
+										rendered="#{areaClienteMB.liberadoResumoCadVlrAjustes}">
+										<p:column colspan="1">Ajustes</p:column>
+									</ui:fragment>
+									
+									<p:column colspan="1">Total</p:column>
+									<p:column colspan="1">Vencimento</p:column>
+								</p:row>
+							</f:facet>
+
+							<p:row>
+
+								<ui:fragment id="fragResumoVlrConsumoVlrCad"
+									rendered="#{areaClienteMB.liberadoResumoCadVlrConsumoFichas}">
+									<p:column rowspan="1"
+										style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+								</ui:fragment>
+								
+								<ui:fragment id="fragResumoVlrFaturaMinimaVlrCad"
+									rendered="#{areaClienteMB.liberadoResumoCadVlrFaturaMinima}">
+									<p:column rowspan="1"
+										style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+								</ui:fragment>
+								
+								<ui:fragment id="fragResumoVlrOutrosVlrCad"
+										rendered="#{areaClienteMB.liberadoResumoCadVlrOutros}">
+									<p:column rowspan="1"	style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+								</ui:fragment>
+								
+								<ui:fragment id="fragResumoVlrAjustesVlrCad"
+									rendered="#{areaClienteMB.liberadoResumoCadVlrAjustes}">
+									<p:column rowspan="1"
+										style="font-weight: bold;text-align: center;">Valor</p:column>
+								</ui:fragment>
+								
+								<p:column rowspan="1"
+									style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+								<p:column rowspan="1"
+									style="width:150px;font-weight: bold;text-align: center;">Dia</p:column>
+
+							</p:row>
+
+							<p:row>
+
+								<ui:fragment id="fragResumoVlrConsumoVlrConteudoCad"
+									rendered="#{areaClienteMB.liberadoResumoCadVlrConsumoFichas}">
+									<p:column
+										style="color:red;font-weight: bold; text-align: center;">
+										<p:outputLabel value="#{areaClienteMB.gerCdVlrConsumoFichas}">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+										</p:outputLabel>
+									</p:column>
+								</ui:fragment>
+								
+								<ui:fragment id="fragResumoVlrFaturaMinimaVlrConteudoCad"
+									rendered="#{areaClienteMB.liberadoResumoCadVlrFaturaMinima}">
+									<p:column
+										style="color:red;font-weight: bold; text-align: center;">
+										<p:outputLabel value="#{areaClienteMB.gerCdVlrFaturamMinima}">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+										</p:outputLabel>
+									</p:column>
+								</ui:fragment>
+								
+								<ui:fragment id="fragResumoVlrOutrosConteudoCad"
+										rendered="#{areaClienteMB.liberadoResumoCadVlrOutros}">
+									<p:column style="color:red;font-weight: bold;text-align: center;">
+										<p:outputLabel value="#{areaClienteMB.gerCdVlrOutros}">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+										</p:outputLabel>
+									</p:column>
+								</ui:fragment>
+								
+								<ui:fragment id="fragResumoVlrAjustesVlrConteudoCad"
+									rendered="#{areaClienteMB.liberadoResumoCadVlrAjustes}">
+									<p:column
+										style="color:red;font-weight: bold;text-align: center;">
+										<p:outputLabel value="#{areaClienteMB.gerCdVlrAjustes}">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+										</p:outputLabel>
+									</p:column>
+								</ui:fragment>
+								
+								<p:column
+									style="color:red;font-weight: bold;text-align: center;">
+									<p:outputLabel value="#{areaClienteMB.gerCdVlrTotalFinal}">
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" locale="pt_BR"/>
+									</p:outputLabel>
+								</p:column>
+								
+								<p:column
+									style="color:tomato;font-weight: bold;text-align: center;">
+									<p:outputLabel value="#{areaClienteMB.cdVencimento}"></p:outputLabel>
+								</p:column>
+
+							</p:row>
+
+						</p:panelGrid>
+						</div>
+						<BR />
+
+						<p:separator />
+
+						<h4 style="padding_left: 250px">Detalhamento de Consumo</h4>
+
+
+						<p:panelGrid id="pnCadastro"
+							style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+
+							<f:facet name="header">
+
+								<p:row>
+									<p:column colspan="6"
+										style="color:#4682B4;font-weight: bold;text-align: left;">Fichas</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" style="width:250px">Cadastro</p:column>
+									<p:column colspan="2" style="width:250px">Consulta</p:column>
+									<p:column colspan="2" style="width:250px">Renovação</p:column>
+								</p:row>
+							</f:facet>
+
+							<p:row>
+
+								<p:column rowspan="1"
+									style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+								<p:column rowspan="1"
+									style="width:150px;font-weight: bold;text-align: center;">Qtd</p:column>
+
+								<p:column rowspan="1"
+									style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+								<p:column rowspan="1"
+									style="width:150px;font-weight: bold;text-align: center;">Qtd </p:column>
+
+								<p:column rowspan="1"
+									style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
+								<p:column rowspan="1"
+									style="width:150px;font-weight: bold;text-align: center;">Qtd</p:column>
+
+							</p:row>
+
+							<p:row>
+								<p:column
+									style="color:red;font-weight: bold; text-align: center;">
+									<p:outputLabel value="#{areaClienteMB.cdCadastro}"></p:outputLabel>
+								</p:column>
+								<p:column
+									style="color:tomato;font-weight: bold; text-align: center;">
+									<p:outputLabel value="#{areaClienteMB.cdCadastroQtd}"></p:outputLabel>
+								</p:column>
+								<p:column
+									style="color:red;font-weight: bold;text-align: center;">
+									<p:outputLabel value="#{areaClienteMB.cdConsulta}"></p:outputLabel>
+								</p:column>
+								<p:column
+									style="color:tomato;font-weight: bold;text-align: center;">
+									<p:outputLabel value="#{areaClienteMB.cdConsultaQtd}"></p:outputLabel>
+								</p:column>
+								<p:column
+									style="color:red;font-weight: bold;text-align: center;">
+									<p:outputLabel value="#{areaClienteMB.cdRenovacao}"></p:outputLabel>
+								</p:column>
+								<p:column
+									style="color:tomato;font-weight: bold;text-align: center;">
+									<p:outputLabel value="#{areaClienteMB.cdRenovacaoQtd}"></p:outputLabel>
+								</p:column>
+
+							</p:row>
+
+						</p:panelGrid>
+
+					</h:panelGroup>
+
+				</p:tab>
+			</p:tabView>
+
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

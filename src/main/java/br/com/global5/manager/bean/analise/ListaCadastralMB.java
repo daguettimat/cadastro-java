@@ -5,20 +5,28 @@ import br.com.global5.infra.util.AppUtils;
 import br.com.global5.infra.util.ValidaBrasil;
 import br.com.global5.infra.util.checkUsuario;
 import br.com.global5.manager.bean.geral.LogonMB;
+import br.com.global5.manager.chamado.Chamado;
+import br.com.global5.manager.chamado.service.ChamadoService;
 import br.com.global5.manager.model.analise.acCadastro;
 import br.com.global5.manager.model.analise.acListaFicha;
+import br.com.global5.manager.model.cadastro.Veiculo;
 import br.com.global5.manager.model.enums.FichaStatus;
 import br.com.global5.manager.model.enums.FichaTipo;
 import br.com.global5.manager.model.enums.MotoristaVinculo;
 import br.com.global5.manager.model.geral.Usuario;
 import br.com.global5.manager.service.analise.CadastroService;
+import br.com.global5.manager.service.cadastro.VeiculoService;
 import br.com.global5.manager.service.enums.FichaStatusService;
 import br.com.global5.manager.service.enums.FichaTipoService;
 import br.com.global5.manager.service.enums.MotoristaVinculoService;
 import br.com.global5.manager.service.geral.UsuarioService;
 import br.com.global5.template.exception.BusinessException;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
+import org.bouncycastle.asn1.isismtt.x509.Restriction;
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.UnselectEvent;
 
@@ -102,6 +110,12 @@ public class ListaCadastralMB implements Serializable {
     @Inject
     private MotoristaVinculoService motVinculoService;
 
+    @Inject
+    private VeiculoService veiculoService;
+    
+    @Inject
+    private ChamadoService chamadoService;
+    
     public ListaCadastralMB() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
@@ -297,8 +311,66 @@ public class ListaCadastralMB implements Serializable {
                 }
 
                 if( ! placa.isEmpty() ) {
-                    parameters += " vei_placa = '" + placa + "' AND ";
-                    haveParameters = true;
+                	
+                	String placaAnterior = "";
+                	String placaAtual = "";
+                	
+                	Veiculo vei = new Veiculo();
+                	Veiculo veiAnt = new Veiculo();
+                	
+                	int countVei = veiculoService.crud().eq("placa", placa.toUpperCase()).count();
+                	int countVeiAnt = veiculoService.crud().eq("placaAnterior", placa.toUpperCase()).count();
+                	
+                	
+                	if (countVei == 0 && countVeiAnt == 0){
+                		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Placa pesquisada não existe em nosso cadastro!"));
+                		return;
+                	}
+                	
+                	// Placa Mercosul
+                	if (countVei > 0) {
+                	
+                		vei = veiculoService.crud().eq("placa", placa.toUpperCase()).find();
+                		
+                		if ( vei != null && vei.getPlacaAnterior() != null) {
+                    		
+                    		placaAtual = vei.getPlaca();
+                    		placaAnterior = vei.getPlacaAnterior();
+                    		
+                            parameters += " vei_placa in ('" + placaAtual + "', '" + placaAnterior + "')  AND ";
+                            haveParameters = true;
+                            
+                    	} else 
+                    		if ( vei != null && vei.getPlacaAnterior() == null) {
+                            parameters += " vei_placa = '" + placa + "' AND ";
+                            haveParameters = true;
+                            
+                    	}
+                	}
+
+                	// Placa Anterior
+                	if (countVeiAnt > 0) {
+                		
+                		veiAnt = veiculoService.crud().eq("placaAnterior", placa.toUpperCase()).find();
+                	
+                     	if ( veiAnt != null && veiAnt.getPlacaAnterior() != null) {
+                    		
+                    		placaAtual = veiAnt.getPlaca();
+                    		placaAnterior = veiAnt.getPlacaAnterior();
+                    		
+                            parameters += " vei_placa in ('" + placaAtual + "', '" + placaAnterior + "')  AND ";
+                            haveParameters = true;
+                            
+                    	} else 
+                    		if ( veiAnt != null && veiAnt.getPlacaAnterior() == null) {
+                            parameters += " vei_placa = '" + placa + "' AND ";
+                            haveParameters = true;
+                            
+                    	}
+                     	
+                	}
+                	           
+                	
                 }
 
                 if( idFichaTipo >  0 ) {
@@ -393,6 +465,8 @@ public class ListaCadastralMB implements Serializable {
                             "    enum_ficha_status.enum_nome as statusFicha, " +
                             "    anacv_tipo as tipoAcVeiculo, " +
                             "    vei_placa as placaVeiculo, " +
+                            "    vei_placa_anterior as placaVeiculoAnterior, " +
+                            "    vei_dt_placa_conversao as placaDataConversao, " +
                             "    veioid as idVeiculo, " +
                             "    vei_tipo as tipoVeiculo, " +
                             "    (select usu_nome from usuario where usuoid=anac_usuoid_criacao) as usuCriacao, " +
@@ -469,6 +543,28 @@ public class ListaCadastralMB implements Serializable {
         acCadastro = new acCadastro();
     }
 
+
+    public Integer verificarChamados(){
+    	    	
+    		Number size = 0;
+    		
+    		Criteria criteria = chamadoService.crud().getSession().createCriteria(Chamado.class);
+    		criteria.add(Restrictions.isNull("dtFinalizacao"));
+    		
+    		size =  ((Long) criteria.setProjection(Projections.count("id")).uniqueResult());
+    		
+    		int result = size.intValue();
+    		
+    		if(result > 0) {
+    			return result;
+    		} else {
+    			return result = 0;
+    		}
+    	
+    }
+    
+    
+    
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -712,4 +808,14 @@ public class ListaCadastralMB implements Serializable {
     public void setMotVinculoService(MotoristaVinculoService motVinculoService) {
         this.motVinculoService = motVinculoService;
     }
+
+	public VeiculoService getVeiculoService() {
+		return veiculoService;
+	}
+
+	public void setVeiculoService(VeiculoService veiculoService) {
+		this.veiculoService = veiculoService;
+	}
+    
+    
 }

@@ -1,0 +1,335 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            .center  {
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+        </style>
+    </ui:define>
+	    	
+    <ui:define name="title"  >
+     	Chamados -
+    </ui:define>
+	 
+    <ui:define name="description">
+        suporte e apoio aos clientes
+    </ui:define>
+ 
+    <ui:define name="body">
+        <adm:breadcrumb title="Registros de Chamados/Suporte ao Cliente"/>
+               
+        <h:form id="frmChamadoSuporte">
+  		
+			<div class="row" style="padding-bottom:15px;">
+			
+  				<div class="col">
+    				<div class="multi-collapse" id="divChamado">
+    				
+     					<h:form id="frmPainelChamado" >
+							<p:panel id="pnChamado" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid  #dd4b39;">
+								<BR/>
+								<div class="ui-g ui-fluid">
+										<div class="col-lg-2">
+											<p:outputLabel value="Chamado Nº"></p:outputLabel>
+										</div>
+										<div class="col-lg-8">
+											<p:outputLabel value="#{chamadoBean.cham.id}"></p:outputLabel>
+										</div>
+								</div>
+								<BR/>
+								<div class="ui-g ui-fluid">
+										<div class="col-lg-2">
+											<p:outputLabel value="Cliente:"></p:outputLabel>
+										</div>
+										<div class="col-lg-8">
+											<p:outputLabel value="#{chamadoBean.cham.area.nome}"></p:outputLabel>
+										</div>
+								</div>
+								<div class="ui-g ui-fluid">
+										<div class="col-lg-2">
+											<p:outputLabel value="Requisitante:"></p:outputLabel>
+										</div>
+										<div class="col-lg-4">
+											<p:outputLabel value="#{chamadoBean.cham.usuAbertura.nome}"></p:outputLabel>
+										</div>
+										<div class="col-lg-2">
+											<p:outputLabel value="Aberto em:">
+											</p:outputLabel>
+										</div>
+										<div class="col-lg-2">
+											<p:outputLabel value="#{chamadoBean.cham.dtAbertura}">
+												<f:convertDateTime pattern="dd/MM/yyyy"/>
+											</p:outputLabel>
+										</div>
+								</div>
+								<BR/>
+								<div class="ui-g ui-fluid">
+										<div class="col-lg-2">
+											<p:outputLabel value="Assunto:"></p:outputLabel>
+										</div>
+										<div class="col-lg-10">
+											<p:outputLabel value="#{chamadoBean.cham.descricao}"></p:outputLabel>
+										</div>
+								</div>
+								
+								<p:separator/>
+								
+								<div class="ui-g ui-fluid">
+									<div class="col-lg-2">
+										<p:outputLabel value="Atendente:"></p:outputLabel>
+									</div>
+									<div class="col-lg-2">
+										<p:outputLabel id="outAtendente" value="#{chamadoBean.cham.usuAtendimento.nome}"></p:outputLabel>
+									</div>
+									<div class="col-lg-2">
+										<p:outputLabel value="Início:">
+										</p:outputLabel>
+									</div>
+									<div class="col-lg-2">
+										<p:outputLabel id="outDtAtendimento" value="#{chamadoBean.cham.dtAtendimento}">
+											<f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss"/>
+										</p:outputLabel>
+									</div>
+									<div class="col-lg-2">
+										<p:outputLabel value="Término:">
+										</p:outputLabel>
+									</div>
+									<div class="col-lg-2">
+										<p:outputLabel id="outDtFinalizacao" value="#{chamadoBean.cham.dtFinalizacao}">
+											<f:convertDateTime pattern="dd/MM/yyyy  hh:mm:ss"/>
+										</p:outputLabel>
+									</div>								
+								</div>
+								
+								<p:separator/>
+								
+								<div class="ui-g ui-fluid">
+										<div class="col-lg-2"></div>
+										<div class="col-lg-8">
+											<div class="row">
+												<div class="col-lg-1"></div>
+												<div class="col-lg-3">
+													<p:commandButton value="Registrar Atendimento" styleClass="btn-danger" 
+														disabled="#{chamadoBean.chamadoEncerrado}"
+														oncomplete="PF('dlgRegistraAtendimento').show();onTop('dlgRegistraAtendimento')"
+														update="dlgRegistraAtendimento">
+													</p:commandButton>
+												</div>
+												
+												<div class="col-lg-3">
+													<p:commandButton value="Encerrar Atendimento" styleClass="btn-warning"
+														disabled="#{chamadoBean.chamadoEncerrado}"
+														oncomplete="PF('dlgFinalizaChamado').show();onTop('dlgFinalizaChamado')"
+														update="dlgFinalizaChamado">
+													</p:commandButton>
+												</div>												
+
+												<div class="col-lg-3">
+													<p:commandButton value="Voltar a Lista de Chamados" styleClass="btn-danger" 
+													 action="#{chamadoBean.btnBackListChamados}" update="frmListaChamadoResposta">
+													</p:commandButton>
+												</div>												
+												<div class="col-lg-1"></div>
+											</div>
+										</div>										
+										<div class="col-lg-2"></div>
+								</div>		
+								
+							</p:panel>
+
+     	    <p:dialog id="dlgRegistraAtendimento" widgetVar="dlgRegistraAtendimento"
+				header="Registro de Atendimento" modal="true"
+				resizable="false" closable="false" width="800" position="center, center"
+				styleClass="box-danger">
+				<p:outputPanel id="fatDetalhe">
+					
+					<div class="ui-g ui-fluid" id="l0">
+						<div class="col-lg-12">
+							<p:outputLabel value="Descrição: " />
+<!-- 							<p:inputText value="#{chamadoRespostaBean.msgSuporteAoCliente}" ></p:inputText> -->
+							<p:inputTextarea rows="4" cols="120" id="inptDesChamado" value="#{chamadoRespostaBean.msgSuporteAoCliente}"
+                                             counter="display" maxlength="800" counterTemplate="caracteres {0}" autoResize="false">
+
+                            </p:inputTextarea>
+                            <p:message id="inptDesChamadoInfo" for="inptDesChamado" />
+                            <h:outputText id="display"/>
+							
+                			
+						</div>
+					</div>
+
+					<p:spacer width="2px" />
+					<p:separator style="border-color:red" />
+					<div class="align-center">
+
+						<p:commandButton value="Registrar" styleClass="btn btn-info"
+							action="#{chamadoBean.refreshChamado}"
+							actionListener="#{chamadoRespostaBean.updateRegistro(chamadoBean.cham.id,chamadoRespostaBean.msgSuporteAoCliente)}" partialSubmit="true"
+							onclick="PF('dlgRegistraAtendimento').hide()" 
+							oncomplete="javascript: window.scrollTo(0, 0);"
+							update=":frmListaChamadoResposta:tbListResp">
+                            
+						</p:commandButton>
+
+						<p:commandButton value="Cancelar" onclick="PF('dlgRegistraAtendimento').hide()"
+							styleClass="btn btn-danger">
+						</p:commandButton>						
+
+					</div>
+
+				</p:outputPanel>
+
+			</p:dialog>
+			
+			<p:dialog id="dlgFinalizaChamado" widgetVar="dlgFinalizaChamado"
+				header="Deseja encerrar o atendimento ao chamado?" modal="true"
+				resizable="false" closable="false" width="400" position="center, center"
+				styleClass="box-danger">
+				<p:outputPanel id="chaDetalhe">
+					<div class="ui-g ui-fluid" id="l0">
+						<div class="col-lg-4">
+						</div>
+						<div class="col-lg-4" align="center">
+						
+						<img src="/manager/resources/images/ref_sign_warning.png"
+                                                         style="width:100%;padding-bottom: 15px;"/>
+						</div>
+
+						<div class="col-lg-4" align="center">
+						</div>	
+										
+					</div>
+
+					<p:spacer width="2px" />
+					<p:separator style="border-color:red" />
+					<div class="align-center">
+
+						<p:commandButton value="Não" onclick="PF('dlgFinalizaChamado').hide()"
+							styleClass="btn btn-danger">
+						</p:commandButton>
+
+						<p:commandButton value="Sim" styleClass="btn btn-success"
+							action="#{chamadoBean.refreshChamado}"
+							actionListener="#{chamadoBean.finalizarChamado}"
+							onclick="PF('dlgFinalizaChamado').hide()"
+							oncomplete="javascript: window.scrollTo(0, 0);"
+							partialSubmit="true"  
+                            >
+                            
+						</p:commandButton>
+						
+
+					</div>
+
+				</p:outputPanel>
+
+			</p:dialog>
+			
+							
+						</h:form>
+    				</div>
+  				</div>
+  			
+  			</div>
+
+
+	
+		</h:form>
+			               
+      	<h:form id="frmListaChamadoResposta">
+
+			<h:panelGroup layout="block">
+
+				<p:dataTable widgetVar="dtChamadoResp" var="r"
+					value="#{chamadoBean.listChamadoResp}" rows="15"
+					styleClass="box-danger" id="tbListResp" rowKey="#{r.id}"
+					lazy="true" paginator="true"
+					emptyMessage="Nenhum Chamado ainda cadastrado!"
+					paginatorPosition="bottom" selectionMode="single"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+					currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+					rowsPerPageTemplate="5,10,15,20,30,50,100">
+					
+					<f:facet name="header">
+						Lista de Atedimento
+					</f:facet>
+					
+					<p:column headerText="Id" style="width:5%" sortBy="#{c.id}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{r.id}"
+								style="text-align: center;display:block" />
+
+						</div>
+					</p:column>
+
+					<p:column headerText="Data" style="width:8%"
+						sortBy="#{r.dtMensagem}">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{r.dtMensagem}"
+								style="text-align: center;display:block">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:outputLabel>
+						</div>
+					</p:column>
+
+					<p:column headerText="Mensagem" style="width:30%">
+						<div align="left" style="padding-right: 10px;">
+							<p:outputLabel value="#{r.mensagem}"
+								style="text-align: left;display:block">
+							</p:outputLabel>
+						</div>
+					</p:column>
+
+					<p:column headerText="Anexo" style="width:20%">
+						<div align="left" style="padding-right: 10px;">
+							
+							<h:commandLink id="downXml" value="#{r.arquivoEnviado}"
+								action="#{chamadoRespostaBean.downLoadFileChamado(r.id)}"
+								immediate="true">
+								
+							</h:commandLink>								
+							
+						</div>
+					</p:column>
+
+				</p:dataTable>
+			
+			</h:panelGroup>
+
+			<br />
+			
+		</h:form>
+
+
+		
+		
+
+	</ui:define>
+</ui:composition>

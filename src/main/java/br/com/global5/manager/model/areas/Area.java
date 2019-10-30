@@ -103,7 +103,6 @@ public class Area implements BaseEntity {
     @JoinColumn(name = "area_pesoid_responsavel")
     private Pessoa pessoaResponsavel;
 
-
     @ManyToOne(
             fetch = FetchType.LAZY,
             targetEntity = AreaNivel.class,

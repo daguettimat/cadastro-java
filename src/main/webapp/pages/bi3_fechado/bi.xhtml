@@ -1,0 +1,2528 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:adm="http://global5.com.br/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+
+		<style type="text/css">
+.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+	padding: 0.5em 0;
+	margin-left: 10px;
+}
+
+.ui-orderlist .ui-orderlist-list {
+	height: auto;
+}
+
+.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+	{
+	padding: 0;
+}
+
+input[disabled] {
+	background-color: #000;
+	color: #fff !important;
+}
+
+.ui-sticky {
+	top: 5px !important;
+}
+
+@media ( max-width : 960px) {
+	.ui-sticky {
+		top: 110px !important;
+	}
+}
+</style>
+
+	</ui:define>
+
+	<ui:define name="title">
+        BI - Boletim Informativo
+    </ui:define>
+
+	<ui:define name="description">
+        inclusão de dados
+    </ui:define>
+
+	<ui:define name="body">
+
+		<adm:breadcrumb title="Registro de BI" />
+
+
+		<h:form id="frmRegistro">
+		
+			
+
+			<h:panelGroup layout="block">
+
+				<p:panel styleClass="box-danger" >
+
+					<!-- Tipo Boletim -->
+					<div class="row" style="padding-top: 10px" >
+
+						<div class="col-lg-4">
+							<h:outputText value="Tipo Boletim: " for="numBI"
+								style="color:black;font-weight:bold" />
+						</div>
+
+						<div class="col-lg-8">
+							<p:selectOneRadio id="radioTipoBoletim"
+								value="#{boletimInformativoMB.tipoSelecaoBi}" disabled="true">
+								<f:selectItem itemLabel="Sinistro de Perdas" itemValue="P"  />
+								<f:selectItem itemLabel="Sinistro de Danos" itemValue="D" />
+								<f:selectItem itemLabel="Suspeita de Roubo" itemValue="S" />								 
+							</p:selectOneRadio>
+						</div>
+
+					</div>
+
+					<!-- Dados do Evento de Origem -->
+					<div class="row" style="padding-top: 10px">
+
+						<div class="col-lg-1">
+							<h:outputText value="SM: " style="color:black;font-weight:bold" />
+						</div>
+
+						<div class="col-lg-1">
+							<h:outputText value="#{boletimInformativoMB.eiv.viagem.id}"
+								style="color:red;font-style:italic" />
+						</div>
+
+						<div class="col-lg-1">
+							<h:outputText value="Cliente: "
+								style="color:black;font-weight:bold" />
+						</div>
+
+						<div class="col-lg-4">
+							<h:outputText value="#{boletimInformativoMB.eiv.nomeCliente}"
+								style="color:red;font-style:italic;font-size:16px" />
+						</div>
+
+						<div class="col-lg-2">
+							<h:outputText value="Boletim Baseado BI: "
+								style="color:black;font-weight:bold" />
+						</div>
+
+						<div class="col-lg-3">
+							<h:outputText
+								value="#{boletimInformativoMB.ev.boletimInformativo.rotulo}"
+								style="color:red;font-style:italic;font-size:16px" />
+						</div>
+
+
+					</div>
+
+					<p:separator />
+
+					<h:form id="frmBoletim">
+
+						<h:form id="frmDadosBoletim">
+						
+						<p:accordionPanel multiple="true" >
+
+						<p:tab title="Dados do Cliente">
+
+							<h:form id="frmDadosCliente">
+
+								<div id="pnDadosCliente" class="box box-solid box-default">
+
+									<div class="box-body" style="background: #eeeeec">
+
+										<div class="row">
+
+											<div class="col-lg-2">
+												<h:outputText value="Cliente: " for="idCliente"
+													style="color:black;font-weight:bold" />
+											</div>
+
+											<div class="col-lg-8">
+												<h:outputText value="#{boletimInformativoMB.eiv.nomeCliente}"
+													style="color:red;font-style:italic;font-size:16px" />
+											</div>
+
+										</div>
+
+										<div class="row">
+
+											<div class="col-lg-2">
+												<h:outputText value="Seguradora: " for="idSeguradora"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-8">
+												<h:outputText value="#{boletimInformativoMB.eiv.nomeSeguradora}"
+													style="color:red;font-style:italic;font-size:16px" />
+											</div>
+
+										</div>
+
+										<div class="row">
+
+											<div class="col-lg-2">
+												<h:outputText value="Corretora: " for="idCorretora"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-8">
+												<h:outputText value="#{boletimInformativoMB.eiv.nomeCorretora}"
+													style="color:red;font-style:italic;font-size:16px" />
+											</div>
+										</div>
+
+										<div class="row">
+
+											<div class="col-lg-2">
+												<h:outputText value="Transportadora: "
+													for="idTransportadora" style="color:black;font-weight:bold" />
+											</div>
+
+											<div class="col-lg-8">
+												<h:outputText value="#{boletimInformativoMB.eiv.nomeTransportadora}"
+													style="color:red;font-style:italic;font-size:16px" />
+											</div>
+
+										</div>
+
+
+									</div>
+
+								</div>
+
+							</h:form>
+
+						</p:tab>
+
+						<p:tab title="Dados do Cavalo">
+
+							<h:form id="frmDadosCavalo">
+
+								<div id="pnDadosCavalo" class="box box-solid box-default">
+
+									<div class="box-body" style="background: #eeeeec">
+
+										<div class="row">
+
+											<div class="col-lg-1">
+												<h:outputText value="Placa: " for="idPlaca"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.veiculoPlaca}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Marca: " for="idMarca"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.veiculoMarca}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Ano: " for="idAno"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.veiculoAno}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-2">
+												<h:outputText value="ID Rastreador: " for="idIdRastreador"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.veiculoIdRastreador}"
+													style="color:red;font-style:italic" />
+											</div>
+
+										</div>
+
+										<div class="row">
+
+											<div class="col-lg-1">
+												<h:outputText value="Cor " for="idCor"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.veiculoCor}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Modelo: " for="idModelo"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.veiculoModelo}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-3">
+												<h:outputText value="Tecnologia de Rastreamento: "
+													for="idTecnologia" style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.veiculoIdTecnologia}"
+													style="color:red;font-style:italic" />
+											</div>
+
+										</div>
+
+
+									</div>
+
+								</div>
+
+							</h:form>
+
+						</p:tab>
+
+						<p:tab title="Dados da Carreta">
+
+							<h:form id="frmDadosCarreta">
+
+								<div id="pnDadosCarreta" class="box box-solid box-default">
+
+									<div class="box-body" style="background: #eeeeec">
+
+										<div id="carretas">
+
+										<div class="row" id="carreta1">
+
+											<div class="col-lg-1">
+												<h:outputText value="Placa 1: " for="idPlaca1"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaPlaca1}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Marca1: " for="idMarca1"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaMarca1}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Ano1: " 
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaAno1}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Cor 1: " for="idCor1"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaCor1}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-2">
+												<h:outputText value="Tipo Carroceria 1: " for="idCarroceria1"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaTipo1}"
+													style="color:red;font-style:italic" />
+											</div>
+
+										</div>
+
+										<p:separator/>
+
+										<div class="row" id="carreta2">
+
+											<div class="col-lg-1">
+												<h:outputText value="Placa 2: " for="idPlaca2"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaPlaca2}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Marca2: " for="idMarca2"
+													style="color:black;font-weight:bold" />
+											</div>
+											
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaMarca2}"
+													style="color:red;font-style:italic" />
+											</div>
+																						
+											<div class="col-lg-1">
+												<h:outputText value="Ano2: " 
+													style="color:black;font-weight:bold" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaAno2}"
+													style="color:red;font-style:italic" />
+											</div>											
+
+											<div class="col-lg-1">
+												<h:outputText value="Cor 2: " for="idCor2"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaCor2}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-2">
+												<h:outputText value="Tipo Carroceria 2: " for="idCarroceria2"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaTipo2}"
+													style="color:red;font-style:italic" />
+											</div>
+
+										</div>
+
+										<p:separator/>
+
+
+										<div class="row" id="carreta3" >
+
+											<div class="col-lg-1">
+												<h:outputText value="Placa 3: " for="idPlaca3"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaPlaca3}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Marca3: " for="idMarca3"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaMarca3}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Ano3: " 
+													style="color:black;font-weight:bold" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaAno3}"
+													style="color:red;font-style:italic" />
+											</div>											
+
+											<div class="col-lg-1">
+												<h:outputText value="Cor 3: " for="idCor3"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaCor3}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-2">
+												<h:outputText value="Tipo Carroceria 3: " for="idCarroceria3"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.carretaTipo3}"
+													style="color:red;font-style:italic" />
+											</div>
+
+										</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</h:form>
+
+						</p:tab>
+
+						<p:tab title="Dados do Motorista">
+
+							<h:form id="frmDadosMotorista">
+
+								<div id="pnDadosMotorista" class="box box-solid box-default">
+
+									<div class="box-body" style="background: #eeeeec">
+
+										<div class="row">
+												
+											<div class="col-lg-1">
+												<h:outputText value="CPF: " for="idCpfM1"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.motoristaCpf1}" 
+													style="color:red;font-style:italic">
+																									
+												</h:outputText>
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Nome: " 
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-3">
+												<h:outputText value="#{boletimInformativoMB.eiv.motoristaNome1}"
+													style="color:red;font-style:italic" />
+											</div>
+											
+											<div class="col-lg-1">
+												<h:outputText value="Fone: " 
+													style="color:black;font-weight:bold" />
+											</div>
+											
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.motoristaFone1}"
+													style="color:red;font-style:italic" />
+											</div>
+											
+											<div class="col-lg-1">
+												<h:outputText value="Vinculo: " for="idVinculoM1"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.motoristaVinculo1}" 
+													style="color:red;font-style:italic">												
+												</h:outputText>
+											</div>
+
+										</div>
+										
+										<p:separator/>
+
+										<div class="row">
+												
+											<div class="col-lg-1">
+												<h:outputText value="CPF: " for="idCpfM2"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.motoristaCpf2}" 
+													style="color:red;font-style:italic">												
+												</h:outputText>
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Nome: " 
+													style="color:black;font-weight:bold" />
+											</div>
+											
+											<div class="col-lg-3">
+												<h:outputText value="#{boletimInformativoMB.eiv.motoristaNome2}"
+													style="color:red;font-style:italic" />
+											</div>
+											
+											<div class="col-lg-1">
+												<h:outputText value="Fone: " 
+													style="color:black;font-weight:bold" />
+											</div>
+											
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.motoristaFone2}"
+													style="color:red;font-style:italic" />
+											</div>
+											
+											
+											<div class="col-lg-1">
+												<h:outputText value="Vinculo: " 
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.motoristaVinculo2}" 
+													style="color:red;font-style:italic">												
+												</h:outputText>
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</h:form>
+
+						</p:tab>
+
+						<p:tab title="Dados da Viagem">
+
+							<h:form id="frmDadosViagem">
+
+								<div id="pn" class="box box-solid box-default">
+								
+									<div class="box-body" style="background: #eeeeec">
+
+										<div class="row">
+
+											<div class="col-lg-1">
+												<h:outputText value="Nº SM" for="idSM"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.viagem.id}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Origem" for="idOrigem"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.origemCidade}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="UF" for="idUfOrigem"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.origemUf}" style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="Destino" for="idODestino"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-2">
+												<h:outputText value="#{boletimInformativoMB.eiv.destinoCidade}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-1">
+												<h:outputText value="UF" for="idUfDestino"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-1">
+												<h:outputText value="#{boletimInformativoMB.eiv.destinoUf}" style="color:red;font-style:italic" />
+											</div>
+
+										</div>
+
+										<div class="row">
+
+											<div class="col-lg-2">
+												<h:outputText value="Embarcador Origem"
+													for="idEmbarcadorOrigem"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-3">
+												<h:outputText value="#{boletimInformativoMB.eiv.embarcadorOrigem}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-2">
+												<h:outputText value="Embarcador Destino"
+													for="idEmbarcadorDestino"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-3">
+												<h:outputText value="#{boletimInformativoMB.eiv.embarcadorDestino}"
+													style="color:red;font-style:italic" />
+											</div>
+
+										</div>
+
+										<div class="row">
+
+											<div class="col-lg-2">
+												<h:outputText value="Tipo de Mercadoria"
+													for="idTipoMercadoria" style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-3">
+												<h:outputText value="#{boletimInformativoMB.eiv.mercadoria}"
+													style="color:red;font-style:italic" />
+											</div>
+
+											<div class="col-lg-2">
+												<h:outputText value="Valor" for="idVlrMercadoria"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-3">
+												<h:outputText value="#{boletimInformativoMB.eiv.valor}"
+													style="color:red;font-style:italic" >
+													<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
+										locale="pt_BR" currencySymbol="R$ " type="currency"/>
+												</h:outputText>
+											</div>
+
+										</div>
+
+										<div class="row">
+
+											<div class="col-lg-2">
+												<h:outputText value="Tipo de Operação" for="idTipoOperacao"
+													style="color:black;font-weight:bold" />
+											</div>
+											<div class="col-lg-3">
+												<h:outputText value="#{boletimInformativoMB.eiv.tipoOperacao}"
+													style="color:red;font-style:italic" />
+											</div>
+
+										</div>
+
+
+									</div>
+
+								</div>
+
+							</h:form>
+
+						</p:tab>
+
+						</p:accordionPanel>
+
+						<p:separator />
+
+						<ui:fragment id="fragSinistro"	rendered="#{boletimInformativoMB.painelDadosSinistro}">
+
+							<div id="pnComSinistro" class="box box-solid box-danger">
+								<div class="box-header with-board" style="padding-top: 1px">
+									<h4>Dados do Comunicado do Sinistro</h4>
+								</div>
+
+								<div class="box-body">
+									<!-- Data/Hora Sinistro -->
+									<div class="row  ui-fluid">
+
+										<div class="col-lg-3">
+											<p:outputLabel value="Data/Hora do Comunicado: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-lg-3">
+											<p:calendar id="dtComunicado" showOn="button"
+												value="#{boletimInformativoMB.bi.comIniDataHora}"
+												pattern="dd/MM/yyyy HH:mm" showButtonPanel="true"></p:calendar>
+										</div>
+
+										<div class="col-lg-3">
+											<p:outputLabel value="Data/Hora do Sinistro: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-lg-3">
+											<p:calendar value="#{boletimInformativoMB.bi.comIniDataHora}"
+												showOn="button" pattern="dd/MM/yyyy HH:mm"
+												showButtonPanel="true"></p:calendar>
+										</div>
+
+									</div>
+									<p />
+
+									<div class="row ui-fluid">
+
+										<div class="col-md-3">
+											<p:outputLabel value="Nome do Comunicante/Empresa: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-5">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniNome}"
+												style="color:red;font-style:italic">
+
+											</p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<p:outputLabel value="Fone: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-3">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniFone}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+
+									<div class="row ui-fluid">
+
+										<div class="col-md-3">
+											<p:outputLabel value="Dia da Semana: "
+												style="color:black;font-weight:bold;padding-top:10px" />
+										</div>
+
+										<p />
+										<div class="col-md-3">
+											<p:selectOneMenu
+												value="#{boletimInformativoMB.bi.comIniDiaSemana}">
+												<f:selectItem itemLabel="&#160;" itemValue="" />
+												<f:selectItem itemLabel="Segunda-Feira" itemValue="2" />
+												<f:selectItem itemLabel="Terça-Feira" itemValue="3" />
+												<f:selectItem itemLabel="Quarta-Feira" itemValue="4" />
+												<f:selectItem itemLabel="Quinta-Feira" itemValue="5" />
+												<f:selectItem itemLabel="Sexta-Feira" itemValue="6" />
+												<f:selectItem itemLabel="Sábado" itemValue="7" />
+												<f:selectItem itemLabel="Domingo" itemValue="1" />
+											</p:selectOneMenu>
+										</div>
+
+										<div class="col-md-6"></div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+							<div id="pnLocalSinistro" class="box box-solid box-danger">
+								<div class="box-header with-board" style="padding-top: 1px">
+									<h4>Dados do Local do Sinistro</h4>
+								</div>
+
+								<div class="box-body">
+
+									<div class="row ui-fluid">
+
+										<div class="col-md-1">
+											<p:outputLabel value="Rodovia: "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-2">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniRodovia}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<p:outputLabel value="KM "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-1">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniKm}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<p:outputLabel value="Rua/AV "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-4">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniRua}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<p:outputLabel value="Nº "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-1">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniNumero}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+									<p />
+									<div class="row ui-fluid">
+
+										<div class="col-md-1">
+											<p:outputLabel value="Município: "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-9">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniCidade}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<p:outputLabel value="UF: "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-1">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniUf}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+									<p />
+									<div class="row ui-fluid">
+
+										<div class="col-md-3">
+											<p:outputLabel value="Ponto Referência(Posto,etc): "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-9">
+											<p:inputText
+												value="#{boletimInformativoMB.bi.comIniPontoReferencia}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+									<p />
+									<div class="row ui-fluid">
+
+										<div class="col-md-3">
+											<p:outputLabel value="Coordenada (Latitude): "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-3">
+											<p:inputText
+												value="#{boletimInformativoMB.bi.comIniLatitude}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-3">
+											<p:outputLabel value="Coordenada (Longitude): "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-3">
+											<p:inputText
+												value="#{boletimInformativoMB.bi.comIniLongitude}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+							<div id="pnClassificacao" class="box box-solid box-danger">
+
+								<div class="box-header with-board" style="padding-top: 1px">
+									<h4>Classificação do Sinistro</h4>
+								</div>
+
+								<div class="box-body">
+
+									<!-- Divisão de Classificação para Sinistro de Perdas -->
+								<ui:fragment id="fragClassSinistroPerda" rendered="#{boletimInformativoMB.painelClassSinistroPerda}" >
+								
+									<div id="pnClassSinistroPerdas">
+
+										<div id="pnBox" class="box-body">
+
+											<div id="pnClassPerdas" class="inner ui-g">
+
+												<div class="ui-g-12 ui-md-6 ui-lg-3 small-box bg-yellow"
+													style="font-weight: bold; align-items: center; display: flex; text-aling: center; border-radius: 10px;">
+													Crimes Contra o Patrimônio (Perdas)</div>
+
+												<div
+													class="ui-g-12 ui-md-6 ui-lg-9 small-box bg-white text-black"
+													style="border: 2px; border-radius: 15px; border-style: solid; border-color: #f39c12">
+
+													<h5 style="text-align: center; font-weight: bold">Escolha
+														Única</h5>
+
+													<p:outputPanel id="customPanel" style="margin-bottom:10px">
+
+														<p:selectOneRadio id="customRadio"
+															value="#{boletimInformativoMB.tipoPerdaSel}"
+															layout="custom">
+															<f:selectItem itemLabel="Furto" itemValue="furto" />
+															<f:selectItem itemLabel="Furto Qualificado"
+																itemValue="furtoQualificado" />
+															<f:selectItem itemLabel="Roubo" itemValue="roubo" />
+															<f:selectItem itemLabel="Extorsão" itemValue="extorsao" />
+															<f:selectItem itemLabel="Apropriação Indébita"
+																itemValue="apropriacaoIndebita" />
+															<f:selectItem itemLabel="Estelionato"
+																itemValue="estelionato" />
+															<f:selectItem itemLabel="Receptação"
+																itemValue="receptacao" />
+															<f:selectItem itemLabel="Falsidade Ideológica"
+																itemValue="falsidadeIdeologica" />
+															<p:ajax
+																listener="#{boletimInformativoMB.tipoPerdaSelecionada()}" />
+														</p:selectOneRadio>
+
+														<p:panelGrid columns="9" styleClass="ui-panelgrid-blank">
+
+															<p:radioButton id="radPd0" for="customRadio"
+																itemIndex="0" />
+															<h:outputLabel for="radPd0" value="Furto"
+																style="padding-top:5px" />
+															<p:graphicImage id="imgRdPd0" library="resources"
+																value="/resources/images/info.png" style="width: 12px" />
+
+															<p:radioButton id="radPd1" for="customRadio"
+																itemIndex="1" />
+															<h:outputLabel for="radPd1" value="Furto Qualificado"
+																style="padding-top:5px" />
+															<p:graphicImage id="imgRdPd1" library="resources"
+																value="/resources/images/info.png" style="width: 12px" />
+
+															<p:radioButton id="radPd2" for="customRadio"
+																itemIndex="2" />
+															<h:outputLabel for="radPd2" value="Roubo"
+																style="padding-top:5px" />
+															<p:graphicImage id="imgRdPd2" library="resources"
+																value="/resources/images/info.png" style="width: 12px" />
+
+															<p:radioButton id="radPd3" for="customRadio"
+																itemIndex="3" />
+															<h:outputLabel for="radPd3" value="Extorsão"
+																style="padding-top:5px" />
+															<p:graphicImage id="imgRdPd3" library="resources"
+																value="/resources/images/info.png" style="width: 12px" />
+
+															<p:radioButton id="radPd4" for="customRadio"
+																itemIndex="4" />
+															<h:outputLabel for="radPd4" value="Apropriação Indébita"
+																style="padding-top:5px" />
+															<p:graphicImage id="imgRdPd4" library="resources"
+																value="/resources/images/info.png" style="width: 12px" />
+
+															<p:radioButton id="radPd5" for="customRadio"
+																itemIndex="5" />
+															<h:outputLabel for="radPd5" value="Estelionato"
+																style="padding-top:5px" />
+															<p:graphicImage id="imgRdPd5" library="resources"
+																value="/resources/images/info.png" style="width: 12px" />
+
+															<p:radioButton id="radPd6" for="customRadio"
+																itemIndex="6" />
+															<h:outputLabel for="radPd6" value="Receptação"
+																style="padding-top:5px" />
+															<p:graphicImage id="imgRdPd6" library="resources"
+																value="/resources/images/info.png" style="width: 12px" />
+
+															<p:radioButton id="radPd7" for="customRadio"
+																itemIndex="7" />
+															<h:outputLabel for="radPd7" value="Falsidade Ideológica"
+																style="padding-top:5px" />
+															<p:graphicImage id="imgRdPd7" library="resources"
+																value="/resources/images/info.png" style="width: 12px" />
+
+														</p:panelGrid>
+
+														<p:tooltip for="imgRdPd0" trackMouse="true"
+															value="Furto – Subtrair para si ou para outrem, coisa alheia móvel. (ART. 155 do CP)."
+															hideEffect="slide" />
+
+														<p:tooltip for="imgRdPd1" trackMouse="true"
+															value="Furto qualificado – Subtração para si ou para outrem de coisa alheia móvel, mediante: abuso de confiança: fraude; escala; destreza; uso de chave falsa; concurso de duas ou mais pessoas; destruição ou rompimento de obstáculos à subtração de coisa. ART. 155 § 4º do CP."
+															hideEffect="slide" />
+
+														<p:tooltip for="imgRdPd2" trackMouse="true"
+															value="Roubo - É a subtração do bem segurado para si ou para outrem mediante grave ameaça ou violência à pessoa, ou depois de haver, por qualquer meio, reduzido a possibilidade de resistência  (ART. 157 do CP)."
+															hideEffect="slide" />
+
+														<p:tooltip for="imgRdPd3" trackMouse="true"
+															value="Extorsão – Constranger alguém, mediante violência ou grave ameaça, e com o intuito de obter para si ou para outrem indevida vantagem econômica, a fazer, tolerar que se faça ou deixar de fazer alguma coisa. (ART. 158 do CP)."
+															hideEffect="slide" />
+
+														<p:tooltip for="imgRdPd4" trackMouse="true"
+															value="Apropriação Indébita – Apropriar-se de coisa alheia móvel, de que tem a posse ou a detenção (fiel depositário). (ART. 168 do CP)."
+															hideEffect="slide" />
+
+														<p:tooltip for="imgRdPd5" trackMouse="true"
+															value="Estelionato – Obter, para si ou para outrem, vantagem ilícita, em prejuízo alheio, induzindo ou mantendo alguém em erro, mediante artifício, ardil, ou qualquer outro meio fraudulento. (ART. 171 do CP)."
+															hideEffect="slide" />
+
+														<p:tooltip for="imgRdPd6" trackMouse="true"
+															value="Receptação – Adquirir, receber, transportar, conduzir ou ocultar, em proveito próprio ou alheio, coisa que sabe ser produto de crime, ou influir para que terceiro, de boa fé, a adquira, receba ou oculte. ART. 180 do CP."
+															hideEffect="slide" />
+
+														<p:tooltip for="imgRdPd7" trackMouse="true"
+															value="Falsidade ideológica – Omitir, em documento público ou particular, declaração que dele devia constar, ou nele inserir ou fazer inserir declaração falsa ou diversa da que devia ser escrita, com o fim de prejudicar direito, criar obrigação ou alterar a verdade sobre o fato juridicamente relevante. (ART. 299 do CPB)"
+															hideEffect="slide" />
+
+													</p:outputPanel>
+
+												</div>
+
+											</div>
+
+											<p:spacer />
+
+											<div id="pnClassPerdasTpSubtracao" class="inner ui-g">
+
+												<div class="ui-g-12 ui-md-6 ui-lg-3 small-box bg-orange"
+													style="font-weight: bold; align-items: center; display: flex; text-aling: center; border-radius: 10px;">
+													Tipo de Subtração</div>
+
+												<div
+													class="ui-g-12 ui-md-6 ui-lg-9 small-box bg-white text-black"
+													style="border: 2px; border-radius: 15px; border-style: solid; border-color: #ff851b">
+
+													<p:outputPanel id="customPanelPerdaSubtracao"
+														style="margin-bottom:10px">
+
+														<h5 style="text-align: center; font-weight: bold">Escolha
+															Múltipla</h5>
+														<p:outputPanel id="customPanel1"
+															style="margin-bottom:20px">
+															<p:selectManyCheckbox id="custom" layout="custom">
+																<f:selectItem itemLabel="Veículo e Carga"
+																	itemValue="veiculoCarga" />
+																<f:selectItem itemLabel="Carga" itemValue="carga" />
+																<f:selectItem itemLabel="Veículo" itemValue="veiculo" />
+																<f:selectItem itemLabel="Pertences Pessoais"
+																	itemValue="pertencesPessoais" />
+																<f:selectItem itemLabel="Estepe/Pneus"
+																	itemValue="estepePneus" />
+																<f:selectItem itemLabel="Rastreador"
+																	itemValue="rastreador" />
+																<f:selectItem itemLabel="Tacógrafo"
+																	itemValue="tacografo" />
+																<f:selectItem itemLabel="Combustível"
+																	itemValue="combustivel" />
+
+															</p:selectManyCheckbox>
+
+															<div class="ui-grid ui-grid-responsive">
+																<div class="ui-grid-row">
+																	<!-- ckb_0 -->
+																	<div class="ui-grid-col-4" style="text-align: center">
+																		<h:outputLabel value="Veículo e Carga"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.perdaTpVeiCarga}" />
+																	</div>
+																	<!-- ckb_1 -->
+																	<div class="ui-grid-col-4" style="text-align: center">
+																		<h:outputLabel value="Carga"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.perdaTpCarga}" />
+																	</div>
+																	<!-- ckb_2 -->
+																	<div class="ui-grid-col-4" style="text-align: center">
+																		<h:outputLabel value="Veículo"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.perdaTpVei}" />
+																	</div>
+																	<!-- ckb_3 -->
+																	<div class="ui-grid-col-4" style="text-align: center">
+																		<h:outputLabel value="Pertences Pessoais"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.perdaTpPertences}" />
+																	</div>
+																</div>
+															</div>
+
+															<p:separator />
+
+															<div class="ui-grid ui-grid-responsive">
+																<div class="ui-grid-row">
+																	<!-- ckb_4 -->
+																	<div class="ui-grid-col-4" style="text-align: center">
+																		<h:outputLabel value="Estepe/Pneus"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.perdaTpPneus}" />
+																	</div>
+																	<!-- ckb_5 -->
+																	<div class="ui-grid-col-4" style="text-align: center">
+																		<h:outputLabel value="Rastreador"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.perdaTpRastreador}" />
+																	</div>
+																	<!-- ckb_6 -->
+																	<div class="ui-grid-col-4" style="text-align: center">
+																		<h:outputLabel value="Tacógrafo"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.perdaTpTacografo}" />
+																	</div>
+																	<!-- ckb_7 -->
+																	<div class="ui-grid-col-4" style="text-align: center">
+																		<h:outputLabel value="Combustível"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.perdaTpCombustivel}" />
+																	</div>
+																</div>
+															</div>
+
+														</p:outputPanel>
+
+													</p:outputPanel>
+												</div>
+
+											</div>
+
+											<p:spacer />
+
+											<div id="pnClassPerdasTpAbordagem" class="inner ui-g">
+
+												<div class="ui-g-12 ui-md-6 ui-lg-3 small-box bg-yellow"
+													style="font-weight: bold; align-items: center; display: flex; text-aling: center; border-radius: 10px;">
+													Tipo de Abordagem</div>
+
+
+												<div
+													class="ui-g-12 ui-md-6 ui-lg-9 small-box bg-white text-black "
+													style="border: 2px; border-radius: 15px; border-style: solid; border-color: #f39c12">
+
+													<p:outputPanel id="customPanelPerdaAbordagem"
+														style="margin-bottom:10px">
+
+														<h5 style="text-align: center; font-weight: bold">Escolha</h5>
+
+														<p:outputPanel id="customPanelAbordagem"
+															style="margin-bottom:20px">
+
+															<p:selectOneButton id="btnPerdaVeiMovto" styleClass="align-center"
+																value="#{boletimInformativoMB.bi.perdaAbordagemMovimento}">
+																<f:selectItem itemLabel="Veículo em Movimento"
+																	itemValue="true" />
+																<f:selectItem itemLabel="Veículo Parado"
+																	itemValue="false" />
+
+															</p:selectOneButton>
+
+														</p:outputPanel>
+													</p:outputPanel>
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								
+								</ui:fragment>
+
+									<!-- Divisão de Classificação para Sinistro tipo Danos -->
+								<ui:fragment id="fragClassSinistroDanos" rendered="#{boletimInformativoMB.painelClassSinistroDano}">
+								
+									<div id="pnClassSinistroDanos">
+										<div id="pnBoxPD" class="box-body">
+											<!-- Acidentes ou Avarias = DANOS -->
+											<div id="pnClassDanos" class="inner ui-g">
+
+												<div class="ui-g-12 ui-md-6 ui-lg-3 small-box bg-yellow"
+													style="font-weight: bold; align-items: center; display: flex; text-aling: center; border-radius: 10px;">
+													Acidentes ou Avarias (Danos)</div>
+
+												<div
+													class="ui-g-12 ui-md-6 ui-lg-9 small-box bg-white text-black"
+													style="border: 2px; border-radius: 15px; border-style: solid; border-color: #f39c12">
+
+													<p:outputPanel id="customPanelDano"
+														style="margin-bottom:10px">
+
+														<h5 style="text-align: center; font-weight: bold">Evento
+															Originário</h5>
+
+														<p:outputPanel id="customPanelDanoItens"
+															style="margin-bottom:20px">
+
+															<p:selectOneRadio id="customRadioDanos"
+																value="#{boletimInformativoMB.tipoDanoSel}"
+																layout="custom">
+
+																<f:selectItem itemLabel="Choque" itemValue="choque" />
+																<f:selectItem itemLabel="Saída de Pista"
+																	itemValue="saidaPista" />
+																<f:selectItem itemLabel="Adernamento"
+																	itemValue="adernamento" />
+																<f:selectItem itemLabel="Incêndio" itemValue="incendio" />
+
+																<f:selectItem itemLabel="Amassamento"
+																	itemValue="amassamento" />
+																<f:selectItem itemLabel="Vazamento"
+																	itemValue="vazamento" />
+																<f:selectItem itemLabel="Arranhadura"
+																	itemValue="arranhadura" />
+																<f:selectItem itemLabel="Quebra" itemValue="quebra" />
+
+																<f:selectItem itemLabel="Quebra de Mercadoria"
+																	itemValue="quebraMercadoria" />
+																<f:selectItem itemLabel="Colisão" itemValue="colisao" />
+																<f:selectItem itemLabel="Abalroamento"
+																	itemValue="abalroamento" />
+																<f:selectItem itemLabel="Tombamento"
+																	itemValue="tombamento" />
+
+																<f:selectItem itemLabel="Deslocamento de Carga"
+																	itemValue="deslocamentoCarga" />
+																<f:selectItem itemLabel="Contaminação"
+																	itemValue="contaminacao" />
+																<f:selectItem itemLabel="Derrame" itemValue="derrame" />
+																<f:selectItem itemLabel="Derrapagem"
+																	itemValue="derrapagem" />
+
+																<f:selectItem itemLabel="Engavetamento"
+																	itemValue="engavetamento" />
+																<f:selectItem itemLabel="Queda de Nível ou de Veículo"
+																	itemValue="quedaNivelVeiculo" />
+																<f:selectItem itemLabel="Molhadura"
+																	itemValue="molhadura" />
+																<f:selectItem itemLabel="Atolamento"
+																	itemValue="atolamento" />
+
+																<f:selectItem itemLabel="Atropelamento"
+																	itemValue="atropelamento" />
+																<f:selectItem itemLabel="Desatreamento"
+																	itemValue="desatreamento" />
+																<f:selectItem itemLabel="Má Estiva" itemValue="maEstiva" />
+																<f:selectItem itemLabel="Amolgamento"
+																	itemValue="amolgamento" />
+
+																<f:selectItem itemLabel="Capotamento"
+																	itemValue="capotamento" />
+
+																<p:ajax
+																	listener="#{boletimInformativoMB.tipoDanoSelecionada()}" />
+
+															</p:selectOneRadio>
+
+															<p:panelGrid columns="9" styleClass="ui-panelgrid-blank">
+
+																<p:radioButton id="radDn0" for="customRadioDanos"
+																	itemIndex="0" />
+																<h:outputLabel for="radDn0" value="Choque"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn0" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn1" for="customRadioDanos"
+																	itemIndex="1" />
+																<h:outputLabel for="radDn1" value="Saída de Pista"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn1" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn2" for="customRadioDanos"
+																	itemIndex="2" />
+																<h:outputLabel for="radDn2" value="Adernamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn2" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn3" for="customRadioDanos"
+																	itemIndex="3" />
+																<h:outputLabel for="radDn3" value="Incêndio"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn3" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+
+																<p:radioButton id="radDn4" for="customRadioDanos"
+																	itemIndex="4" />
+																<h:outputLabel for="radDn4" value="Amassamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn4" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn5" for="customRadioDanos"
+																	itemIndex="5" />
+																<h:outputLabel for="radDn5" value="Vazamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn5" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn6" for="customRadioDanos"
+																	itemIndex="6" />
+																<h:outputLabel for="radDn6" value="Arranhadura"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn6" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn7" for="customRadioDanos"
+																	itemIndex="7" />
+																<h:outputLabel for="radDn7" value="Quebra"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn7" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+
+																<p:radioButton id="radDn8" for="customRadioDanos"
+																	itemIndex="8" />
+																<h:outputLabel for="radDn8" value="Quebra de Mercadoria"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn8" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn9" for="customRadioDanos"
+																	itemIndex="9" />
+																<h:outputLabel for="radDn9" value="Colisão"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn9" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn10" for="customRadioDanos"
+																	itemIndex="10" />
+																<h:outputLabel for="radDn10" value="Abalroamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn10" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn11" for="customRadioDanos"
+																	itemIndex="11" />
+																<h:outputLabel for="radDn11" value="Tombamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn11" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+
+																<p:radioButton id="radDn12" for="customRadioDanos"
+																	itemIndex="12" />
+																<h:outputLabel for="radDn12"
+																	value="Deslocamento de Carga" style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn12" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn13" for="customRadioDanos"
+																	itemIndex="13" />
+																<h:outputLabel for="radDn13" value="Contaminação"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn13" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn14" for="customRadioDanos"
+																	itemIndex="14" />
+																<h:outputLabel for="radDn14" value="Derrame"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn14" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn15" for="customRadioDanos"
+																	itemIndex="15" />
+																<h:outputLabel for="radDn15" value="Derrapagem"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn15" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+
+																<p:radioButton id="radDn16" for="customRadioDanos"
+																	itemIndex="16" />
+																<h:outputLabel for="radDn16" value="Engavetamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn16" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn17" for="customRadioDanos"
+																	itemIndex="17" />
+																<h:outputLabel for="radDn17"
+																	value="Queda de Nível ou de Véiculo"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn17" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn18" for="customRadioDanos"
+																	itemIndex="18" />
+																<h:outputLabel for="radDn18" value="Molhadura"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn18" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn19" for="customRadioDanos"
+																	itemIndex="19" />
+																<h:outputLabel for="radDn19" value="Atolamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn19" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+
+																<p:radioButton id="radDn20" for="customRadioDanos"
+																	itemIndex="20" />
+																<h:outputLabel for="radDn20" value="Atropelamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn20" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn21" for="customRadioDanos"
+																	itemIndex="21" />
+																<h:outputLabel for="radDn21" value="Desatreamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn21" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn22" for="customRadioDanos"
+																	itemIndex="22" />
+																<h:outputLabel for="radDn22" value="Má Estiva"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn22" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn23" for="customRadioDanos"
+																	itemIndex="23" />
+																<h:outputLabel for="radDn23" value="Amolgamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn23" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+																<p:radioButton id="radDn24" for="customRadioDanos"
+																	itemIndex="24" />
+																<h:outputLabel for="radDn24" value="Capotamento"
+																	style="padding-top:5px" />
+																<p:graphicImage id="imgRdDn24" library="resources"
+																	value="/resources/images/info.png" style="width: 12px" />
+
+
+															</p:panelGrid>
+
+															<p:tooltip for="imgRdDn0" trackMouse="true"
+																value="Choque - É o impacto de um veículo, em trânsito, contra qualquer obstáculo: poste, árvore, muro, etc.; inclusive outro veículo que esteja estacionado;"
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn1" trackMouse="true"
+																value="Saída de Pista - Acidente em que o veículo envolvido em acidente sai da pista de rolamento."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn2" trackMouse="true"
+																value="Adernamento - É quando o bem segurado, por motivo de força maior, sofre inclinação,  ficando fora de sua arrumação inicial"
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn3" trackMouse="true"
+																value="Incêndio – É quando o bem segurado é danificado ou destruído através de processo de combustão."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn4" trackMouse="true"
+																value="Amassamento – É quando o bem segurado é danificado ou destruído através da ação de força externa, geralmente pressão de outra caixa, pés dos ajudantes, freada brusca, etc."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn5" trackMouse="true"
+																value="Vazamento – Perda de produtos por defeito do fabricante, impacto por frenagem ou orifícios, fendas, rachaduras e furos anteriormente não existentes."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn6" trackMouse="true"
+																value="Arranhadura - Danos causados por atrito, choque, deslocamento."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn7" trackMouse="true"
+																value="Quebra - Danos causados por rachadura, rompimento, quebra, etc."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn8" trackMouse="true"
+																value="Quebra de Mercadoria – Ocorre quando por mal acondicionamento, amarração ou posicionamento da carga, o produto transportado cai."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn9" trackMouse="true"
+																value="Colisão – É o impacto de dois veículos em trânsito independente do sentido que estão transitando."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn10" trackMouse="true"
+																value="Abalroamento – Ocorre quando um veículo, em trânsito, é colhido lateralmente por outro veículo, também em movimento, ambos transitando no mesmo sentido de direção ou em sentidos opostos."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn11" trackMouse="true"
+																value="Tombamento – Ocorre quando o veículo em trânsito tomba lateral ou frontalmente."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn12" trackMouse="true"
+																value="Deslocamento de Carga - Acidente que ocorre quando a carreta desengata involuntariamente do cavalo mecânico;"
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn13" trackMouse="true"
+																value="Contaminação (CO) - Ação de agentes exteriores que venham a comprometer a mercadoria na sua utilidade final e especifica."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn14" trackMouse="true"
+																value="Derrame - Danos causados por espalhamento, propagação, corrimento ou mau acondicionamento."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn15" trackMouse="true"
+																value="Derrapagem - Quando o veículo sai da pista de rolamento devido a ação de um agente externo causado por situações fortuítas como excesso de água da chuva, oléo, etc."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn16" trackMouse="true"
+																value="Engavetamento – Ocorre quando três ou mais veículos, transitando pela mesma via, sentido e direção, se envolvem em sucessivas colisões traseiras."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn17" trackMouse="true"
+																value="Queda de Nível – Ocorre quando o veículo se precipita, sofrendo uma queda de nível em que se encontrava transitando."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn18" trackMouse="true"
+																value="Molhadura água doce ou chuva – Danos causados por enchentes, transbordamento de cursos de água, danos à lona e infiltração pelo assoalho ou partes da carroceria (molhadura)."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn19" trackMouse="true"
+																value="Atolamento - Acidente que ocorre quando o veículo fica com o(s) rodados presos em lama, areia ou outro terreno não asfáltico."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn20" trackMouse="true"
+																value="Atropelamento – Acidente em que o veículo, em movimento, colhe uma pessoa ou animal."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn21" trackMouse="true"
+																value="Desatreamento - Acidente que ocorre quando por falha mecanica ou manobra brusca,  o cavalo mecânico separa-se da carreta."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn22" trackMouse="true"
+																value="Má Estiva - Queda da carga quando mal amarrada ou quebra de cordas e cabos."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn23" trackMouse="true"
+																value="Amolgamento – Danos causados por deformação, entortamento, fungos, mofos e umidade."
+																hideEffect="slide" />
+
+															<p:tooltip for="imgRdDn24" trackMouse="true"
+																value="Capotamento...(sem instruções)"
+																hideEffect="slide" />
+
+														</p:outputPanel>
+
+													</p:outputPanel>
+
+												</div>
+
+											</div>
+										</div>
+									</div>
+								
+								</ui:fragment>
+
+									<!-- Divisão de Classificação para Sinistro de Perdas e Danos -->
+								<ui:fragment id="fragClassSinistroPerdaDanos" rendered="#{boletimInformativoMB.painelClassSinistroPerdaDano}">
+								
+									<div id="pnClassSinistroPerdasDanos">
+
+										<div id="pnBoxPD" class="box-body">
+
+											<!-- Situação do Motorista -->
+											<div id="pnClassPerdasDanosSitMotorista" class="inner ui-g">
+
+												<div class="ui-g-12 ui-md-6 ui-lg-3 small-box bg-orange"
+													style="font-weight: bold; align-items: center; display: flex; text-aling: center; border-radius: 10px;">
+													Situação do Motorista</div>
+												<div
+													class="ui-g-12 ui-md-6 ui-lg-9 small-box bg-white text-black"
+													style="border: 2px; border-radius: 15px; border-style: solid; border-color: #ff851b">
+
+													<p:outputPanel id="customPanelPerdaDano"
+														style="margin-bottom:10px">
+
+														<h5 style="text-align: center; font-weight: bold">Escolha
+															Múltipla</h5>
+
+														<p:outputPanel id="customPanelPerdaDanoItens"
+															style="margin-bottom:20px">
+
+															<p:selectManyCheckbox id="customSelectPerdaDanos"
+																layout="custom">
+																<f:selectItem itemLabel="Localizado"
+																	itemValue="motoristaLocalizado" />
+																<f:selectItem itemLabel="Passa Bem" itemValue="passaBem" />
+																<f:selectItem itemLabel="Hospitalizado"
+																	itemValue="hospitalizado" />
+																<f:selectItem itemLabel="Ferido Levemente"
+																	itemValue="feridoLevemente" />
+																<f:selectItem itemLabel="Em Óbito" itemValue="obito" />
+																<f:selectItem itemLabel="Ferido Gravemente"
+																	itemValue="feridoGravemento" />
+															</p:selectManyCheckbox>
+
+															<div class="ui-grid ui-grid-responsive">
+
+																<div class="ui-grid-row">
+																	<!-- ckbPN_0 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+																		<h:outputLabel value="Localizado"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.motLocalizado}" />
+																	</div>
+
+																	<!-- ckbPN_1 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+																		<h:outputLabel value="Passa Bem"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.motFeridoPassaBem}" />
+																	</div>
+
+																	<!-- ckbPN_2 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+																		<h:outputLabel value="Hospitalizado"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.motHospitalizado}" />
+																	</div>
+
+																	<!-- ckbPN_3 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+																		<h:outputLabel value="Ferido Levemente"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.motFeridoLevemente}" />
+																	</div>
+																</div>
+
+																<p:separator />
+
+																<div class="ui-grid-row">
+
+																	<!-- ckbPN_5 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+
+																		<h:outputLabel value="Em Óbito"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.motObito}" />
+																	</div>
+
+																	<!-- ckbPN_6 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+																		<h:outputLabel value="Ferido Gravemente"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.motFeridoGravemente}" />
+																	</div>
+
+																</div>
+															</div>
+
+														</p:outputPanel>
+
+
+													</p:outputPanel>
+
+												</div>
+											</div>
+
+
+											<!-- Situação - Avarias -->
+											<div id="pnClassPerdasDanosSitAvarias" class="inner ui-g">
+
+												<div class="ui-g-12 ui-md-6 ui-lg-3 small-box bg-yellow"
+													style="font-weight: bold; align-items: center; display: flex; text-aling: center; border-radius: 10px;">
+													Avarias</div>
+												<div
+													class="ui-g-12 ui-md-6 ui-lg-9 small-box bg-white text-black"
+													style="border: 2px; border-radius: 15px; border-style: solid; border-color: #f39c12">
+
+													<p:outputPanel id="customPanelPerdaDanoAvarias"
+														style="margin-bottom:10px">
+
+														<h5 style="text-align: center; font-weight: bold">Escolha
+															Múltipla</h5>
+
+														<p:outputPanel id="customPanelPerdaDanoAvariasItens"
+															style="margin-bottom:20px">
+
+															<p:selectManyCheckbox id="customSelectPerdaDanosAvarias"
+																layout="custom">
+																<f:selectItem itemLabel="Cavalo" itemValue="cavalo" />
+																<f:selectItem itemLabel="Carreta" itemValue="carreta" />
+																<f:selectItem itemLabel="Carga" itemValue="carga" />
+																<f:selectItem itemLabel="Saque de Mercadoria"
+																	itemValue="saqueMercadoria" />
+															</p:selectManyCheckbox>
+
+															<div class="ui-grid ui-grid-responsive">
+
+																<div class="ui-grid-row">
+																	<!-- ckbPNa_0 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+
+																		<h:outputLabel value="Cavalo"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.avariaCavalo}" />
+																	</div>
+
+																	<!-- ckbPNa_1 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+
+																		<h:outputLabel value="Carreta"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.avariaCarreta}" />
+
+																	</div>
+
+																	<!-- ckbPNa_2 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+
+																		<h:outputLabel value="Carga"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.avariaCarga}" />
+																	</div>
+
+																	<!-- ckbPNa_3 -->
+																	<div class="ui-grid-col-3" style="text-align: center">
+
+																		<h:outputLabel value="Saque de Mercadoria"
+																			style="display:block;margin-bottom: 8px" />
+																		<p:selectBooleanCheckbox
+																			value="#{boletimInformativoMB.bi.avariaSaqueMercadoria}" />
+																	</div>
+
+																</div>
+
+															</div>
+
+														</p:outputPanel>
+
+
+													</p:outputPanel>
+
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+
+								</ui:fragment>
+
+									<!-- Divisão de Classificação para Suspeita de Roubo -->
+									<!-- 						<ui:fragment id="fragClassSuspeitaRoubo" -->
+									<!-- 							rendered="#{boletimInformativoMB.painelClassSuspeitaRoubo}"> -->
+
+
+									<!-- 						</ui:fragment> -->
+									<!-- final classificação p Suspeita de Roubo -->
+
+
+								</div>
+								<!-- final class box-body -->
+
+							</div>
+						
+						</ui:fragment>					
+	
+	
+						<ui:fragment id="fragSuspeitaRoubo" rendered= "#{boletimInformativoMB.painelDadosSuspeita}">
+							<div id="pnSuspeitaRoubo" class="box box-solid box-danger">
+								<div class="box-header with-board" style="padding-top: 1px">
+									<h4>Dados da Suspeita de Roubo</h4>
+								</div>
+
+								<div class="box-body">
+
+									<div class="row ui-fluid" >
+
+										<div class="col-lg-3">
+											<h:outputText value="Tipo Evento de Suspeita de Roubo: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-lg-9">
+
+											<p:selectOneMenu
+												value="#{boletimInformativoMB.bi.tipoSuspeita.id}" >
+												<f:selectItem itemLabel="&#160;" itemValue="" />
+												<f:selectItems
+													value="#{boletimInformativoMB.lstTipoSuspeita}"
+													var="listTpSusp" itemValue="#{listTpSusp.id}"
+													itemLabel="#{listTpSusp.descricao}"></f:selectItems>
+													
+													 <p:ajax event="valueChange" listener="#{boletimInformativoMB.onTipoEventoSuspeitaRoubo}" 
+													 process="@this"/>
+											</p:selectOneMenu>
+
+										</div>
+
+									</div>
+									
+									<p:separator />
+
+									<div class="row ">
+										<div class="col-lg-12">
+											<p:outputLabel value="Evento Inicial "
+												style="color:brown;font-weight:bold;font-size:16px" />
+										</div>
+									</div>
+
+									<p />
+
+									<div class="row ui-fluid">
+
+										<div class="col-lg-2">
+											<p:outputLabel value="Data/Hora: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-lg-3">
+											<p:calendar showOn="button"
+												value="#{boletimInformativoMB.bi.comIniDataHora}"
+												pattern="dd/MM/yyyy HH:mm" showButtonPanel="true"></p:calendar>
+										</div>
+
+									</div>
+
+									<p />
+
+									<div class="row ui-fluid">
+
+										<div class="col-md-2">
+											<h:outputText value="Rodovia:"
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-3">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniRodovia}"
+												style="font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<h:outputText value="KM:"
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-1">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniKm}"
+												style="font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+
+									<p />
+
+									<div class="row ui-fluid">
+
+										<div class="col-md-2">
+											<h:outputText value="Rua/Av:"
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-7">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniRua}"
+												style="font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<h:outputText value="Nº:"
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-1">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniNumero}"
+												style="font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+
+									<p />
+									<div class="row ui-fluid">
+
+										<div class="col-md-2">
+											<h:outputText value="Local - Município: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-7">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniCidade}"
+												style="font-style:italic" placeholder="Município/UF"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<p:outputLabel value="UF: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-1">
+											<p:inputText value="#{boletimInformativoMB.bi.comIniUf}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+									<p />
+
+									<div class="row ui-fluid">
+
+										<div class="col-md-2">
+											<p:outputLabel value="Coord.Latitude: "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-3">
+											<p:inputText
+												value="#{boletimInformativoMB.bi.comIniLatitude}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-3">
+											<p:outputLabel value="Coord.Longitude: "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-3">
+											<p:inputText
+												value="#{boletimInformativoMB.bi.comIniLongitude}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+
+								<ui:fragment id="fragBoletimFinalSuspeita"	rendered="#{boletimInformativoMB.painelBoletimFinalSuspeita}">
+									<p:separator />
+
+									<p />
+
+									<div class="row ">
+										<div class="col-lg-12">
+											<p:outputLabel value="Evento Final "
+												style="color:brown;font-weight:bold;font-size:16px" />
+										</div>
+									</div>
+
+									<p />
+
+									<div class="row ui-fluid">
+
+										<div class="col-lg-2">
+											<p:outputLabel value="Data/Hora: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-lg-3">
+											<p:calendar showOn="button"
+												value="#{boletimInformativoMB.bi.suspFimDataHora}"
+												pattern="dd/MM/yyyy HH:mm" showButtonPanel="true"></p:calendar>
+										</div>
+
+									</div>
+
+									<p />
+
+									<div class="row ui-fluid">
+
+										<div class="col-md-2">
+											<h:outputText value="Rodovia: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-3">
+											<p:inputText
+												value="#{boletimInformativoMB.bi.suspFimRodovia}"
+												style="font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<h:outputText value="KM: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-1">
+											<p:inputText value="#{boletimInformativoMB.bi.suspFimKm}"
+												style="font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+
+									<p />
+
+									<div class="row ui-fluid">
+
+										<div class="col-md-2">
+											<h:outputText value="Rua/Av: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-7">
+											<p:inputText value="#{boletimInformativoMB.bi.suspFimRua}"
+												style="font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<h:outputText value="Nº: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+
+										<div class="col-md-1">
+											<p:inputText value="#{boletimInformativoMB.bi.suspFimNumero}"
+												style="font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+
+									<p />
+									<div class="row ui-fluid">
+
+										<div class="col-md-2">
+											<h:outputText value="Local - Município: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-7">
+											<p:inputText value="#{boletimInformativoMB.bi.suspFimCidade}"
+												style="font-style:italic" placeholder="Município/UF"></p:inputText>
+										</div>
+
+										<div class="col-md-1">
+											<p:outputLabel value="UF: "
+												style="color:black;font-weight:bold" />
+										</div>
+
+										<div class="col-md-1">
+											<p:inputText value="#{boletimInformativoMB.bi.suspFimUf}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+
+									</div>
+
+									<p />
+
+									<div class="row ui-fluid">
+
+										<div class="col-md-2">
+											<p:outputLabel value="Coord.Latitude: "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-3">
+											<p:inputText
+												value="#{boletimInformativoMB.bi.suspFimLatitude}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+										<div class="col-md-3">
+											<p:outputLabel value="Coord.Longitude Fim:"
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-3">
+											<p:inputText
+												value="#{boletimInformativoMB.bi.suspFimLongitude}"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+									</div>
+
+								</ui:fragment>
+
+								</div>
+
+							</div>
+						
+						</ui:fragment>
+						
+							<div id="pnAcionamento" class="box box-solid box-danger">
+								<div class="box-header with-board" style="padding-top: 1px">
+									<h4>Dados do Acionamento</h4>
+								</div>
+
+								<div class="box-body">
+
+									<div class="box ui-fluid" id="idProntaResposta">
+
+										<p:panelGrid style="margin-top: 15px"
+											styleClass="ui-panelgrid-blank">
+
+											<p:row>
+												<p:column rowspan="4" colspan="4"
+													style="width:250px;font-weight:bold;text-align:center;border-radius:10px;">PRONTA RESPOSTA</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nome Empresa/Região:</p:column>
+
+												<p:column rowspan="1" style="width:350px;">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.prontaEmpresaNome}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Data/Hora:</p:column>
+												<p:column rowspan="1" style="width:180px;">
+													<p:calendar value="#{boletimInformativoMB.bi.prontaDthora}"
+														showOn="button" pattern="dd/MM/yyyy HH:mm"
+														showButtonPanel="true"></p:calendar>
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nome da Atendente Empresa de P.R.:</p:column>
+												<p:column rowspan="1">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.prontaAtendenteNome}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Telefone:</p:column>
+												<p:column rowspan="1">
+													<p:inputMask
+														value="#{boletimInformativoMB.bi.prontaAtendenteFone}"
+														mask="(99) 9999-9999" style="font-style:italic"></p:inputMask>
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nome do Agente:</p:column>
+												<p:column rowspan="1">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.prontaAgenteNome}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Celular Agente:</p:column>
+												<p:column rowspan="1">
+													<p:inputMask
+														value="#{boletimInformativoMB.bi.prontaAgenteFone}"
+														mask="(99) 99999-9999" style="font-style:italic"></p:inputMask>
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Previsão Chegada:</p:column>
+												<p:column rowspan="1">
+													<p:calendar value="#{boletimInformativoMB.bi.prontaPrevisaoChegada}"
+														showOn="button" pattern="dd/MM/yyyy HH:mm"
+														showButtonPanel="true"></p:calendar>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nº do Processo:</p:column>
+												<p:column rowspan="1">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.prontaNrProcesso}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+											</p:row>
+
+										</p:panelGrid>
+
+
+									</div>
+
+									<div class="box ui-fluid" id="idSeguradora">
+
+										<p:panelGrid style="margin-top: 15px"
+											styleClass="ui-panelgrid-blank">
+
+											<p:row>
+												<p:column rowspan="4" colspan="3"
+													style="width:250px;font-weight:bold;text-align:center;border-radius:10px;">SEGURADORA</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nome Empresa Seguradora / Região:</p:column>
+
+												<p:column rowspan="1" style="width:350px;">
+													<p:inputText value="#{boletimInformativoMB.bi.segNome}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Data/Hora:</p:column>
+												<p:column rowspan="1" style="width:180px;">
+													<p:calendar value="#{boletimInformativoMB.bi.segDthora}"
+														showOn="button" pattern="dd/MM/yyyy HH:mm"
+														showButtonPanel="true"></p:calendar>
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nome do Responsável:</p:column>
+												<p:column rowspan="1">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.segNomeResponsavel}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Telefone:</p:column>
+												<p:column rowspan="1">
+													<p:inputMask value="#{boletimInformativoMB.bi.segFone}"
+														mask="(99) 9999-9999" style="font-style:italic"></p:inputMask>
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nº do Processo:</p:column>
+												<p:column rowspan="1" colspan="3">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.segNrProcesso}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+											</p:row>
+
+										</p:panelGrid>
+
+									</div>
+
+									<div class="box ui-fluid" id="idReguladora">
+
+										<p:panelGrid style="margin-top: 15px"
+											styleClass="ui-panelgrid-blank">
+											<p:row>
+												<p:column rowspan="4" colspan="4"
+													style="width:250px;font-weight:bold;text-align:center">REGULADORA</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nome Empresa Reguladora / Região:</p:column>
+
+												<p:column rowspan="1" style="width:350px;">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.regEmpresaNome}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Data/Hora:</p:column>
+												<p:column rowspan="1" style="width:180px;">
+													<p:calendar value="#{boletimInformativoMB.bi.regDthora}"
+														showOn="button" pattern="dd/MM/yyyy HH:mm"
+														showButtonPanel="true"></p:calendar>
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nome atendente Empresa Reguladora:</p:column>
+												<p:column rowspan="1">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.regAtendenteNome}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Telefone:</p:column>
+												<p:column rowspan="1">
+													<p:inputMask
+														value="#{boletimInformativoMB.bi.regAtendenteFone}"
+														mask="(99) 9999-9999" style="font-style:italic"></p:inputMask>
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nome do Perito:</p:column>
+												<p:column rowspan="1">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.regPeritoNome}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Celular Períto:</p:column>
+												<p:column rowspan="1">
+													<p:inputMask
+														value="#{boletimInformativoMB.bi.regPeritoFone}"
+														mask="(99) 9999-9999" style="font-style:italic"></p:inputMask>
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Previsão Chegada do Períto:</p:column>
+												<p:column rowspan="1">
+													<p:calendar value="#{boletimInformativoMB.bi.regPrevisaoChegada}"
+														showOn="button" pattern="dd/MM/yyyy HH:mm"
+														showButtonPanel="true"></p:calendar>
+												</p:column>
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Nº do Processo:</p:column>
+												<p:column rowspan="1">
+													<p:inputText
+														value="#{boletimInformativoMB.bi.regNrProcesso}"
+														style="font-style:italic"></p:inputText>
+												</p:column>
+											</p:row>
+
+										</p:panelGrid>
+
+									</div>
+
+								</div>
+
+							</div>
+
+							<div id="pnRelatoOcorrencia" class="box box-solid box-danger">
+							<div class="box-header with-board" style="padding-top: 1px">
+								<h4>Relatos da Ocorrência</h4>
+							</div>
+							
+							<div class="box-body">
+								
+								<div id="pnPrimProcedimento" class="box box-solid box-danger" >
+									<div class="box-header with-board" style="padding-top: 1px">
+										<h4 style="cor:whithe">1º Procedimento - Informe de Sinistro</h4>
+									</div>
+								
+								<div class="box-body" style="padding-left: 25px">
+									
+									<div class="row">
+										<p:outputLabel style="padding-left: 25px;color:brown" value="Relato do Boletim Informativo"></p:outputLabel>
+									</div>
+									
+									<div class="ui-g-12">
+									
+										<p:textEditor widgetVar="editor1" value="#{boletimInformativoMB.bi.relato}" height="300" style="margin-bottom:10px"/>
+										
+									</div>
+								
+								</div>
+					
+								</div>
+								
+								<p:spacer/>
+								
+								<div id="pnSegProcedimento" class="box box-solid box-warning" >
+									<div class="box-header with-board" style="padding-top: 1px">
+										<h4>2º Procedimento - Informativo de Sinistro</h4>
+									</div>
+								
+								<div class="box-body" style="padding-left: 25px">
+									
+									
+									<div class="col-lg-12">
+									
+																		
+									<p:dataTable widgetVar="dtBi" var="b" value="#{boletimInformativoMB.listBiRelato}" rows="10" styleClass="box-danger"
+                             			id="tbListBiRelato"	style="background:#eeeeec"
+                             			rowKey="#{b.id}" lazy=""  paginator="true" emptyMessage="Nenhum histórico anterior de boletim para este evento!"
+                             			paginatorPosition="bottom"  
+                             			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             			currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             			rowsPerPageTemplate="5,10,15,20,30,50,100">
+										
+										<f:facet name="header">
+											<h4>Histórico de Relato de Boletins</h4>						
+                    					</f:facet>
+										
+                    					<p:column headerText="Data/Hora" style="width:10%" sortBy="#{b.dtCriacao}">
+                         					<div align="left" style="padding-right: 10px;">
+                            					<p:outputLabel value="#{b.dtCriacao}" style="text-align: center;display:block">
+                                					<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                            					</p:outputLabel>
+                        					</div>                        
+                    					</p:column>
+
+                    					<p:column headerText="Tipo" style="width:5%" >
+                        					<div align="center" style="padding-right: 10px;">
+                            					<p:outputLabel value="#{b.tipo}" style="text-align: left;display:block">                                
+                            				</p:outputLabel>
+                        					</div>                        
+                    					</p:column>
+
+                    					<p:column headerText="Relato" style="width:50%">
+                        					<div align="left" style="padding-right: 10px;">
+                        					<p:textEditor value="#{b.relato}" height="100" style="margin-bottom:10px" readonly="true" >
+                        						 <f:facet name="toolbar">
+										             <span class="ql-formats">
+										             	<p:outputLabel value="#{b.boletimInformativo.rotulo}"
+										             		style="font-size:15px;color:#008b8b;text-shadow:1px 1px 1px #000000;padding-top:5px">
+										             	</p:outputLabel>
+										            </span>
+										            <span class="ql-formats">
+										            </span>
+										         </f:facet>
+                        					</p:textEditor>
+                            					                                
+                            				
+                        					</div>                        
+                    					</p:column>
+
+					                    <p:column headerText="Operações" style="width:10%" >
+					                    	<div style="text-align: center ">
+					
+												<div class="col-lg-12">
+													<p:link href="_blank" title="Em desenvolvimento" >
+														<i class="fa fa-eye"  style="font-size:15px;color:red;text-shadow:1px 1px 3px #000000;"/>									
+													</p:link>
+												</div>
+					                  		 
+					                    	</div>
+   
+    									</p:column>  
+										
+									</p:dataTable>
+								
+								</div>
+									
+								
+								</div>
+					
+								</div>								
+								
+								<p:spacer/>
+
+							</div>
+							
+							</div>
+
+						<ui:fragment id="fragBoletimFinal"	rendered="#{boletimInformativoMB.painelBoletimFinal}">
+												
+							<div id="pnFinalizacao" class="box box-solid box-danger">
+								<div class="box-header with-board" style="padding-top: 1px">
+									<h4>Registro de Finalização do Boletim</h4>
+								</div>
+
+								<div class="box-body">
+
+									<div id="pnTercProcedimento" class="box box-solid box-default">
+										<div class="box-header with-board" style="padding-top: 1px">
+											<h4>3º Procedimento - Fechamento do Sinistro</h4>
+										</div>
+
+										<div class="box-body" style="padding-left: 25px">
+
+											<div class="row">
+												<p:outputLabel style="padding-left: 25px;color:brown" value="Descritivo para Registro Final"></p:outputLabel>
+												<p/>
+											</div>
+
+											<div class="col-lg-12">
+
+												<p:textEditor widgetVar="editor2" value="#{boletimInformativoMB.bi.fimRelato}" height="300" style="margin-bottom:10px"/>
+
+											</div>
+											
+											<p:separator/>
+
+											<p:panelGrid style="margin-top: 15px"
+												styleClass="ui-panelgrid-blank">
+												<p:row>
+													<p:column rowspan="1"
+														style="width:40%;font-weight:bold;text-align:center">Valor Estimado do Prejuízo </p:column>
+													<p:column rowspan="1" style="width:10%;">
+															<p:inputNumber value="#{boletimInformativoMB.bi.fimValorPrejuizo}" symbol=" R$ "
+																inputStyle="text-align:center; font-weight: bold; color: red; font-size: 16px"
+																minValue="0" maxValue="99999999" decimalSeparator="," thousandSeparator="." size="16">																
+															</p:inputNumber>
+													</p:column>
+
+													<p:column rowspan="1"
+														style="width:40%;font-weight:bold;text-align:center">Percentual Estimado</p:column>
+													<p:column rowspan="1" style="width:10%;">
+															<p:inputNumber value="#{boletimInformativoMB.bi.fimPercentualEstimado}" symbol=" % " symbolPosition="s"  emptyValue="zero"
+																inputStyle="text-align:center; font-weight: bold; color: red; font-size: 16px"
+																minValue="0" maxValue="999" decimalSeparator="," thousandSeparator="." size="5">																
+															</p:inputNumber>														
+													</p:column>
+
+												</p:row>
+											</p:panelGrid>
+										</div>
+
+									</div>
+
+
+								</div>
+							</div>
+		
+						</ui:fragment>
+
+						</h:form>
+
+
+					</h:form>
+
+
+					<f:facet name="footer">
+						<div class="align-right" style="padding: 5px;">
+
+							<p:commandButton value="Salvar Boletim" disabled="#{boletimInformativoMB.boletimSalvo}"
+								action="#{boletimInformativoMB.salvarBoletimT}" update="@form"
+								styleClass="btn-danger" />
+							<p:spacer height="5" />
+
+						</div>
+					</f:facet>
+
+				</p:panel>
+
+			</h:panelGroup>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

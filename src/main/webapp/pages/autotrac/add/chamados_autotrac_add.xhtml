@@ -1,0 +1,262 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:adm="http://global5.com.br/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+			.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+				padding: 0.5em 0;
+				margin-left: 10px;
+		}
+
+		.ui-orderlist .ui-orderlist-list {
+		height: auto;
+		}
+
+		.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+		{
+			padding: 0;
+		}
+
+input[disabled] {
+	background-color: #000;
+	color: #fff !important;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="title">
+     	
+    </ui:define>
+
+	<ui:define name="description">
+
+	</ui:define>
+
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Lista de Veículos Registrados" />
+
+		<h:form id="formAddAutotrac" >
+	
+			<p:panel header="Adição de Veículos em Lista Autotrac "
+				style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid orange;">
+
+				<div class="ui-g ui-fluid" id="detalhe0">
+
+
+					<div class="col-lg-12">
+
+						<p:panel style=" border: 2px solid #DF0101;" header="Cliente">
+							
+							<div class="ui-g ui-fluid">
+								<div class="col-lg-1">
+
+									<p:commandButton icon="ui-icon-search"
+										title="pesquisar cliente" value="Cliente"
+										disabled="#{autotracSinalMB.liberarAcessoEmissao}"
+										action="#{autotracSinalMB.openDlgPesqCliente}" process="@this"
+										update="@none">
+
+										<p:ajax event="dialogReturn"
+											listener="#{autotracSinalMB.clienteSelecionado}"
+											process="@this" update="nomeCliente , nomeCliente1" />
+
+										<p:resetInput target="nomeCliente , nomeCliente1 " />
+
+									</p:commandButton>
+
+								</div>
+
+								<div class="col-lg-8">
+									<p:outputLabel style="text-align:left; padding-top:5px"
+										id="nomeCliente"
+										value="#{autotracSinalMB.autotracSinal.areaCliente.id}"
+										size="40" maxlength="8" />
+
+									<p:outputLabel style="text-align:left;padding-top:5px"									    
+										id="nomeCliente1" value="#{autotracSinalMB.nomeCliente}"
+										size="40" maxlength="40" />
+								</div>
+
+							</div>
+
+							<p:separator />
+					
+							<h4>Dados do Veículo</h4>
+
+							<div class="ui-g ui-fluid">
+								<div class="col-lg-2">
+									<p:outputLabel style="text-align:left; padding-top:5px"
+										value="ID:"
+										size="40" maxlength="8" />
+								</div>
+								<div class="col-lg-4">
+									<p:outputLabel style="text-align:left; padding-top:5px"
+										value="#{autotracSinalMB.autotracSinal.id}"
+										size="40" maxlength="8" />
+								</div>
+							</div>
+
+							<BR />
+
+							<div class="ui-g ui-fluid">
+
+								<div class="col-lg-2">
+
+									<p:outputLabel style="text-align:left; padding-top:5px"
+										value="MCT" maxlength="8" />
+
+								</div>
+
+								<div class="col-lg-1">
+									<p:inputText value="#{autotracSinalMB.autotracSinal.mct}"
+										maxlength="15" required="true"
+										requiredMessage="Adicione o código do MCT para continuar"></p:inputText>
+
+								</div>
+
+							</div>
+
+							<BR />
+
+							<div class="ui-g ui-fluid">
+
+								<div class="col-lg-2">
+
+									<p:outputLabel style="text-align:left; padding-top:5px"
+										value="Placa" maxlength="8" />
+								</div>
+								<div class="col-lg-1">
+									<p:inputText value="#{autotracSinalMB.autotracSinal.placa}"
+										maxlength="8" required="true"
+										requiredMessage="Adicione a placa para continuar"></p:inputText>
+								</div>
+
+							</div>
+
+							<BR />
+
+							<div class="ui-g ui-fluid">
+
+								<div class="col-lg-2">
+									<p:outputLabel style="text-align:left; padding-top:5px"
+										value="Data Início" size="40" maxlength="8" />
+								</div>
+
+								<div class="col-lg-2">
+									<p:calendar inputStyle="text-align:center"
+										value="#{autotracSinalMB.autotracSinal.inicioVigencia}"
+										locale="pt_BR" navigator="true" pattern="dd-MM-yyyy"
+										showButtonPanel="true"
+										required="true"
+										requiredMessage="Adicione a Data inicial da Inclusão no Autotrac para continuar"
+										title="Data inicial da Inclusão no Autotrac">
+									</p:calendar>
+								</div>
+
+							</div>
+
+							<BR />
+
+							<div class="ui-g ui-fluid">
+
+								<div class="col-lg-2">
+									<p:outputLabel style="text-align:left; padding-top:5px"
+										value="Nome Requisitante" size="40" maxlength="8" />
+								</div>
+
+								<div class="col-lg-4">
+									<p:inputText
+										value="#{autotracSinalMB.autotracSinal.nomeRequisitante}"
+										maxlength="80" required="true" 
+										requiredMessage="Adicione o código do MCT para continuar"></p:inputText>
+								</div>
+
+							</div>
+
+							<BR />
+
+							<div class="ui-g ui-fluid">
+
+								<div class="col-lg-2">
+									<p:outputLabel style="text-align:left; padding-top:5px"
+										value="email requisitante" size="40" maxlength="8" />
+								</div>
+
+								<div class="col-lg-4">
+									<p:inputText
+										value="#{autotracSinalMB.autotracSinal.emailRequisitante}"
+										maxlength="120" required="true"
+										requiredMessage="Adicionar o e-mail do cliente que enviou a requisição.">
+										<f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+										</p:inputText>
+								</div>
+
+							</div>
+
+							<BR />
+
+
+								<div id="pnDadosEmailRecebido" class="box box-solid box-default">
+
+									<div class="box-body" style="background: #eeeeec">
+
+										<div class="box box-solid box-danger">
+
+											<p:outputLabel value="Dados do Email Recebido do Cliente"
+												for="inptObsCliente" />
+
+											<p:inputTextarea rows="10" cols="100" id="inptObsCliente"
+												value="#{autotracSinalMB.autotracSinal.requisicao}"
+												required="true" placeholder="cole aqui o email recebido" 
+												requiredMessage="Adicionar os dados do e-mail recebido do cliente."
+												counter="display" maxlength="5040"
+												counterTemplate="caracteres {0}" autoResize="false">
+
+											</p:inputTextarea>
+											<p:message id="inptObsClienteInfo" for="inptObsCliente" />
+											<h:outputText id="display" />
+
+										</div>
+
+									</div>
+
+								</div>
+
+				
+
+						</p:panel>
+
+									<f:facet name="footer">
+					<div class="align-right" style="padding: 5px;">
+
+						<p:commandButton value="Gravar" update="@form"
+							action="#{autotracSinalMB.update}" styleClass="btn-danger" />
+						<p:spacer height="5" />
+
+						<p:commandButton value="volta" actionListener="#{autotracSinalMB.voltarListaVeiculos}"							
+							styleClass="btn-danger" />
+							
+					</div>
+				</f:facet>
+
+					</div>
+
+				</div>
+
+
+
+			</p:panel>
+
+
+			<br />
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

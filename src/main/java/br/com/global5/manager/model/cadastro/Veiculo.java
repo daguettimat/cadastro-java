@@ -167,6 +167,15 @@ public class Veiculo implements BaseEntity {
     @JoinColumn(name = "vei_usuoid_exclusao")
     private Usuario usuExclusao;
 
+    @Column(name="vei_placa_anterior")
+    private String placaAnterior;
+    
+    @Column(name="vei_dt_placa_conversao")
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dtPlacaConversao;
+    
+    
     public Veiculo() {
     }
 
@@ -432,4 +441,22 @@ public class Veiculo implements BaseEntity {
         return leasing;
     }
 
+	public String getPlacaAnterior() {
+		return placaAnterior;
+	}
+
+	public void setPlacaAnterior(String placaAnterior) {
+		this.placaAnterior = placaAnterior;
+	}
+
+	public Date getDtPlacaConversao() {
+		return dtPlacaConversao;
+	}
+
+	public void setDtPlacaConversao(Date dtPlacaConversao) {
+		this.dtPlacaConversao = dtPlacaConversao;
+	}
+
+    
+    
 }

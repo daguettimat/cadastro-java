@@ -239,11 +239,25 @@
                         <h:commandLink action="#{motoristaMB.showFicha(c.idMotorista)}" value="#{c.nomeMotorista}" />
                     </p:column>
 
-                    <p:column headerText="Placa" sortBy="#{c.placaVeiculo}" style="width:10%" visible="false">
-                        <h:commandLink action="#{veiculoMB.showFicha(c.idVeiculo)}" value="#{c.placaVeiculo}" />
+                    <p:column headerText="Placa" sortBy="#{c.placaVeiculo}" style="width:12%" visible="true">
+                    	<div style=" text-align:right; padding-right: 6px ">
+                        <div class="ui-g-12 ui-md-8 ui-lg-8">
+                        	<h:commandLink action="#{veiculoMB.showFicha(c.idVeiculo)}" value="#{c.placaVeiculo}" />
+                        </div>                        
+                        <div class="ui-g-12 ui-md-4 ui-lg-2" style=" text-align:right;">
+                        	<p:link href="" title="#{c.placaVeiculoAnterior != null ? c.placaVeiculoAnterior : 'Sem Mercosul' }"  >
+									<i class="fa fa-eye"  style="font-size:15px;
+									color:#{c.placaVeiculoAnterior != null ? '#008B8B' : 'gray' };
+									text-shadow:1px 1px 3px #000000;" 
+									title="#{c.placaVeiculoAnterior != null ? 'placa anterior' : '' }"/>									
+							</p:link>
+                        </div>                        
+                        </div>
                     </p:column>
 
                 </p:dataTable>
+                
+                
             </h:panelGroup>
             <br/>
             <h:panelGroup layout="block">

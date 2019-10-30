@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"               
+                template="/resources/adminoffmenu.xhtml">
+
+    <f:view contentType="text/html" ></f:view>
+
+    <ui:define name="head">
+
+        <h:outputStylesheet library="css" name="showcase.css"/>
+        <h:outputStylesheet library="css" name="bootdoc.css"/>
+        <h:outputStylesheet library="css" name="prism.css"/>
+        <h:outputStylesheet library="css" name="dropzone.css"/>
+        <h:outputStylesheet library="css" name="introjs.css"/>
+        <h:outputStylesheet library="css" name="font-awesome.css"/>
+        <h:outputStylesheet library="css" name="ionicons.min.css"/>
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/js/bootstrap-dialog.min.js"></script>
+     
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
+
+        <title>global 5 - Boletim Informativo</title>
+
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+
+            .ui-datatable-empty-message {
+                display: none;
+            }
+
+            .dock ul {
+                display: inline-block;
+                float: left;
+                width: 100%;
+                margin: 5px;
+                padding: 0px;
+                list-style: none;
+                background: rgba(0, 0, 0, 0.3);
+
+            }
+
+            .dock ul li {
+                width: auto;
+                height: auto;
+                display: inline-block;
+                bottom: 0;
+                vertical-align: bottom;
+                margin-top: -43px;
+            }
+
+            .dock ul li a {
+                display: block;
+                height: 140px;
+                width: 140px;
+                position: relative;
+                -webkit-transition-property: width, height, margin-top;
+                -webkit-transition-duration: 0.5s;
+                -o-transition-property: width, height, margin-top;
+                -o-transition-duration: 0.5s;
+                -moz-transition-property: width, height, margin-top;
+                -moz-transition-duration: 0.5s;
+            }
+
+            .dock ul li a:hover {
+                width: 170px;
+                height: 170px;
+                margin-top: -50px;
+            }
+
+            .dock ul li a img {
+                width: 100%;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                border: none;
+                padding: 0px 0px 0px 30px;
+            }
+
+            .dock_left {
+                width: 31px;
+                -webkit-transform: rotate(33deg);
+                -moz-transform: rotate(33deg);
+                -o-transform: rotate(33deg);
+                position: relative;
+                background: #EEE;
+                overflow: hidden;
+                float: left;
+                height: 100px;
+                z-index: 2;
+                margin: -18px;
+            }
+
+            .dock_right {
+                width: 36px;
+                -webkit-transform: rotate(-33deg);
+                -moz-transform: rotate(-33deg);
+                -o-transform: rotate(-33deg);
+                position: relative;
+                background: #EEE;
+                overflow: hidden;
+                float: left;
+                height: 100px;
+                z-index: 2;
+                margin: -18px;
+            }
+
+            .under {
+                position: absolute;
+                z-index: 2;
+                top: 25px;
+                left: 175px;
+
+            }
+
+            .over {
+                z-index: 1;
+                position: relative;
+                left: 0;
+                top: 0;
+            }
+
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            input[disabled] {
+                background-color: #000;
+                color:#fff !important;
+            }
+
+            .box-header {
+                padding: 2px !important;
+                padding-left: 10px !important;
+
+            }
+
+            .clock{
+                display:inline;
+            }
+
+            .alarm{
+                display:none;
+                margin:10px 0px 0px 0px;
+            }
+
+            .alarm a{
+                text-decoration:none;
+                padding:5px 10px 5px 10px;
+                color:#FFF;
+                background-color:#026729;
+                border-radius:5px;
+            }
+
+            .alarm a:hover{
+                text-decoration:none;
+                padding:4px 9px 4px 9px;
+                color:#fefefe;
+                background-color:#026729;
+                border-radius:5px;
+            }
+
+            #set{
+                text-decoration:none;
+                padding:5px 10px 5px 10px;
+                color:#FFF;
+                background-color:#F3A829;
+                border-radius:5px;
+            }
+
+            #set:hover{
+                text-decoration:none;
+                padding:4px 9px 4px 9px;
+                color:#fefefe;
+                background-color:#F3A829;
+                border-radius:5px;
+            }
+
+            .ui-datatable table tbody tr td {
+              padding: 3px;
+            !important;
+              padding-left: 5px;
+              }
+
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+
+
+    </ui:define>
+
+    <ui:define name="logo-mini">
+        g<sup>5</sup>
+        
+    </ui:define>
+    
+    <ui:define name="top-menu">
+        <ui:include src="/includes/top-menuView.xhtml"/>
+    </ui:define>
+    
+    <ui:define name="content-end">
+        <section class="content" >
+            <ui:insert name="code"/>
+
+        </section>
+
+    </ui:define>
+
+	<ui:define name="footer">
+
+		<a href="http://www.global5.com.br"> <img
+			style="width: 10%; height: 10%;" alt="\"
+			src="/manager/resources/images/logo.png" />
+		</a>
+
+		<ul class="nav navbar-nav">
+			<li><a href="/manager/pages/bi/bilst.xhtml"
+				style="color: red; font-size: 16px; padding-top: 10px; text-align: center; display: block">
+					<i class="fa fa-arrow-left" style="color: red"
+					title="Voltar aos Eventos"></i>
+			</a></li>
+			<li><h:form>
+					<p:commandButton id="btnPrint" icon="fa fa-print" value="Imprimir"
+						styleClass="bg-red"
+						style="padding-top:10px; margin-right:20px; text-shadow:1px 1px 3px #000000;border-radius: 15px;display:block">
+						<p:printer target="viewBI" />
+					</p:commandButton>
+				</h:form></li>
+		</ul>
+
+		<div class="pull-right hidden-xs" style="color: gray">
+			<i>#{adm['admin.version']}</i>
+		</div>
+
+
+		<h:outputScript library="js" name="prism.js" target="head" />
+		<h:outputScript library="js" name="maskedinput.js" target="head" />
+		<h:outputScript library="js" name="dropzone.js" target="head" />
+		<h:outputScript library="js" name="intro.js" target="head" />
+		<h:outputScript library="clock" name="js/jquery.thooClock.js" />
+
+
+		<script type="text/javascript">
+            // document.oncontextmenu=function(){return false};
+
+            $(document).ready(function(){
+                $(window).scroll(function () {
+                    if ($(this).scrollTop() > 50) {
+                        $('#back-to-top').fadeIn();
+                    } else {
+                        $('#back-to-top').fadeOut();
+                    }
+                });
+                // scroll body to 0px on click
+                $('#back-to-top').click(function () {
+                    $('#back-to-top').tooltip('hide');
+                    $('body,html').animate({
+                        scrollTop: 0
+                    }, 200);
+                    return false;
+                });
+
+              //  $('#back-to-top').tooltip('show');
+
+                onTop = function(args) {
+                    window.scrollTo(0, 0);
+                    window.location='#'+ args;
+                }
+
+                mascara = function(o,f){
+                    v_obj=o;
+                    v_fun=f;
+                    setTimeout("execmascara()",1)
+                };
+                execmascara = function(){
+                    v_obj.value=v_fun(v_obj.value)
+                };
+                moeda = function(v){
+                    v=v.replace(/\D/g,""); // permite digitar apenas numero
+                    v=v.replace(/(\d{1})(\d{15})$/,"$1.$2"); // coloca ponto antes dos ultimos digitos
+                    v=v.replace(/(\d{1})(\d{11})$/,"$1.$2"); // coloca ponto antes dos ultimos 11 digitos
+                    v=v.replace(/(\d{1})(\d{8})$/,"$1.$2"); // coloca ponto antes dos ultimos 8 digitos
+                    v=v.replace(/(\d{1})(\d{5})$/,"$1.$2"); // coloca ponto antes dos ultimos 5 digitos
+                    v=v.replace(/(\d{1})(\d{1,2})$/,"$1,$2"); // coloca virgula antes dos ultimos 2 digitos
+                    return v;
+                }
+
+                $('input[type=text]').val (function () {
+                    return this.value.toUpperCase();
+                })
+
+            });
+        </script>
+	</ui:define>
+
+
+</ui:composition>

@@ -149,6 +149,13 @@ public class ProprietarioMB implements Serializable {
 		return propList;
 	}
 
+	public void teste(){
+		if(prop.getNome() != null){
+		String a = prop.getNome();
+		String b = a;
+		}
+	}
+	
 	public void remove() {
 		if( prop != null && prop.getId() != null) {
 			propService.remove(prop);

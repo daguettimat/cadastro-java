@@ -47,7 +47,6 @@ public class ColaboradorService extends CrudService<Colaborador> {
                 .projection(Projections.property("nome")).list();
     }	
 	
-
     @Override
     public void beforeInsert(Colaborador Colaborador) {
         if (!Colaborador.hasNome()) {

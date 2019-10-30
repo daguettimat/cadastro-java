@@ -40,10 +40,6 @@
         <myfaces.version>2.2.4</myfaces.version>
         <jetty.version>8.1.16.v20140903</jetty.version>
         <juel.version>2.2.6</juel.version>
-    
-        
-        
-        
         
     </properties>
 
@@ -488,13 +484,21 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.8.0</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
+<!--             <plugin> -->
+<!--                 <artifactId>maven-compiler-plugin</artifactId> -->
+<!--                 <version>3.1</version> -->
+<!--                 <configuration> -->
+<!--                     <source>1.7</source> -->
+<!--                     <target>1.7</target> -->
+<!--                 </configuration> -->
+<!--             </plugin> -->
         </plugins>
     </build>
 

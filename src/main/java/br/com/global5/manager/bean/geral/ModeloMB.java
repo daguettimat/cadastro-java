@@ -1,17 +1,22 @@
 package br.com.global5.manager.bean.geral;
 
+
 import br.com.global5.infra.Crud;
 import br.com.global5.infra.CrudService;
 import br.com.global5.infra.model.Filter;
 import br.com.global5.infra.util.ConectionGrLog;
 import br.com.global5.infra.util.checkUsuario;
+import br.com.global5.manager.model.areacliente.Virtual;
 import br.com.global5.manager.model.cadastro.Marca;
 import br.com.global5.manager.model.cadastro.Modelo;
 import br.com.global5.manager.model.geral.Usuario;
+import br.com.global5.manager.service.areacliente.VirtualService;
 import br.com.global5.manager.service.cadastro.MarcaService;
 import br.com.global5.manager.service.cadastro.ModeloService;
 import br.com.global5.template.exception.BusinessException;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
@@ -22,13 +27,21 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.json.Json;
+import javax.persistence.StoredProcedureQuery;
+
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.security.KeyStore;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +63,15 @@ public class ModeloMB implements Serializable {
 	private Filter<Modelo> filter = new Filter<Modelo>(new Modelo());
 	private Usuario usuario;
 
-
+	
+	// Teste 
+	private List<Virtual> tableVirtual;	
+		@Inject
+		VirtualService virtualService;
+		@Inject
+		private Crud<Virtual> virtualCrud;
+		private Date dtPesquisa = null;
+		
 	@Inject
 	ModeloService modeloService;
 
@@ -190,6 +211,32 @@ public class ModeloMB implements Serializable {
 			
 	}
 	
+	public void testaCertificado(){
+		try { 
+			
+			String caminhoDoCertificadoDaEmpresa = "/var/www/certificado/pilotoIss.pfx";
+			String senhaDoCertificado = "teste123";
+			
+			InputStream entrada = new FileInputStream(caminhoDoCertificadoDaEmpresa);
+			KeyStore ks = KeyStore.getInstance("pkcs12");
+			
+			
+			try{
+				
+				ks.load(entrada, senhaDoCertificado.toCharArray());
+				
+			} catch (Exception e) {
+					
+				throw new Exception("Senha do Certificado Digital incorreta ou Certificado inválido!");	
+				
+			}
+			
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
 	public List<String> completeNome(String query) {
 		List<String> result = modeloService.getNome(query);
 		return result;
@@ -222,6 +269,39 @@ public class ModeloMB implements Serializable {
 		}
 	}
 
+	// TESTE
+	public void acesso(){
+		
+		String nomeProcedureChamada = "usuario_mensal_monitoramento";
+
+        
+		StoredProcedureQuery queryPv = virtualCrud.getEntityManager()
+				.createNamedStoredProcedureQuery(nomeProcedureChamada);
+		
+		queryPv.setParameter("dt_mes", this.getDtPesquisa());
+		queryPv.setParameter("id_area"  , 1947);
+		
+		queryPv.execute();
+		
+		String text = queryPv.getResultList().toString();
+		String textb = queryPv.getResultList().get(0).toString();
+		
+		JSONObject obj = new  JSONObject(textb);
+		
+		obj.opt("consumo_viagens");
+		
+		JSONArray arrayJson = obj.getJSONArray("consumo_viagens");
+	
+		//JSONArray objJsonArray 
+		
+		
+		String b = "a";
+		String a = b;
+		
+		
+	}
+	
+	
 	public void onRowUnselect(UnselectEvent event) {
 		modelo = new Modelo();
 	}
@@ -305,4 +385,22 @@ public class ModeloMB implements Serializable {
 	public void setMarcaService(MarcaService marcaService) {
 		this.marcaService = marcaService;
 	}
+
+	public List<Virtual> getTableVirtual() {
+		return tableVirtual;
+	}
+
+	public void setTableVirtual(List<Virtual> tableVirtual) {
+		this.tableVirtual = tableVirtual;
+	}
+
+	public Date getDtPesquisa() {
+		return dtPesquisa;
+	}
+
+	public void setDtPesquisa(Date dtPesquisa) {
+		this.dtPesquisa = dtPesquisa;
+	}
+	
+	
 }

@@ -80,7 +80,15 @@ public class VeiculoMB implements Serializable {
 	//Variaveis para SelectItens
 	private Integer numCodModelo;
 	
-
+	
+	// Variaveis validação da placa
+	private String numPlacaOld = "";
+	private Boolean placaAlteradaMercosul = true;
+	private Boolean aplicadoProcAltPlaca  = false;
+	private String placaPadraoMercosul = "";
+	private String placaAnterior = "";
+	
+	
 	@Inject
 	VeiculoService veiculoService;
 
@@ -179,13 +187,16 @@ public class VeiculoMB implements Serializable {
 	}
 	
 	public void update() {
+		
 		String msg;
 
 		if (veiculo.getId() == null) {
 			veiculo.setTipo(this.veiculo.getTipo());
 			veiculoService.insert(veiculo);
 			msg = "Veículo " + veiculo.getPlaca() + " criado com sucesso!";
+			
 		} else {
+			
 		    if(this.getNumMarca()!=null){
                 this.veiculo.setMarca(new Marca(this.getNumMarca()));
             }
@@ -198,9 +209,22 @@ public class VeiculoMB implements Serializable {
             if(this.getNumTipo()!=null){
                 this.veiculo.setTipo(new VeiculoTipo(this.getNumTipo()));
             }
-
+		    
+            if(aplicadoProcAltPlaca == true ) {
+            	this.veiculo.setPlaca(placaPadraoMercosul);
+            	this.veiculo.setPlacaAnterior(placaAnterior);
+            	this.veiculo.setDtPlacaConversao(new Date());
+            	aplicadoProcAltPlaca = false;
+            	placaAlteradaMercosul = true;
+            }
+                       
 			veiculoService.update(veiculo);
+			
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update("formVeiculo:idConvertePlaca");
+			
 			msg = "Veículo " + veiculo.getPlaca() + " alterado com sucesso!";
+			
 		}
 
 		FacesContext.getCurrentInstance().addMessage(null,
@@ -232,9 +256,10 @@ public class VeiculoMB implements Serializable {
 		veiculo.setTipo(new VeiculoTipo());
 
 		usuario = checkUsuario.valid();
-
+		
 		id = null;
 		edit = true;
+		placaAlteradaMercosul = true;
 	}
 
 	public void findById(Integer id) {
@@ -243,6 +268,13 @@ public class VeiculoMB implements Serializable {
 		}
 
 		veiculo = veiculoCrud.get(id);
+		
+		if (veiculo.getPlacaAnterior() == null) {
+			placaAlteradaMercosul = false;		
+		} else {
+			placaAlteradaMercosul = true;
+		}
+		
 		if (veiculo == null) {
 			throw new BusinessException("Registro não foi encontrado pelo id: " + id);
 		}
@@ -311,7 +343,7 @@ public class VeiculoMB implements Serializable {
         this.setNumMarca(marca);
 
         lstModelo = new ArrayList<Modelo>();
-
+        
         lstModelo = modeloService.crud().criteria().eq("marca.id", marca)
                 .list();
 
@@ -341,6 +373,7 @@ public class VeiculoMB implements Serializable {
 
 	public void btnBack() {
 		try {
+			placaAlteradaMercosul = true;
 			FacesContext.getCurrentInstance().getExternalContext().redirect("../cadastro/veiculolst.xhtml");
 		} catch (IOException e) {
 			FacesContext.getCurrentInstance().addMessage(
@@ -348,6 +381,86 @@ public class VeiculoMB implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO,"A lista de veículos " + getId()
 							+ " não pode ser carregada. Informe ao suporte técnico.",null));
 		}
+	}
+
+	
+	public void findVeiculo(AjaxBehaviorEvent event){
+		
+		String placa = (String) ((UIOutput) event.getSource()).getValue();
+		
+		String placaAnterior = veiculo.getPlacaAnterior();
+		
+		
+		if (veiculo.getPlacaAnterior() == null) {
+			findVeiculoPlaca(placa);
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "A Placa: " + placa + " não será alterada." + 
+					" Já existe um processo de conversão realizado na placa anterior: " + placaAnterior));
+		}
+		
+		
+	}
+			
+	public void findVeiculoPlaca(String placa) {
+		 
+		if (placa.length() > 0) {
+			
+			Veiculo vei = null; 
+			
+		 } 
+		
+	}
+	/**
+	 * Method: utilizado para o processo de conversão da placa convencional ex.:"ABC-1234" para placa padrão mercosul
+	 * created at: fev/2019
+	 * @author Francis Carlos
+	 */
+	public void converterPlaca(){
+		
+	  	String caracterPosicao = "";
+    	
+    	if( veiculo.getPlaca() != null){
+    		
+    		caracterPosicao = veiculo.getPlaca().substring(5,6);
+    		
+    		List<String> listaConvert = new ArrayList<>();    			
+    			listaConvert.add(0, "A");
+    			listaConvert.add(1, "B");
+    			listaConvert.add(2, "C");
+    			listaConvert.add(3, "D");
+    			listaConvert.add(4, "E");
+    			listaConvert.add(5, "F");
+    			listaConvert.add(6, "G");
+    			listaConvert.add(7, "H");
+    			listaConvert.add(8, "I");
+    			listaConvert.add(9, "J");
+    		
+    		String digConversao = Integer.toString(listaConvert.indexOf(caracterPosicao));
+    		
+    		String placaNew, placaOldP1, placaOldP2 , placaOldP3= "";
+    		
+    		// Recebe a placa anterior ao mercosul
+    		StringBuilder myString = new StringBuilder(veiculo.getPlaca());
+    		// troca o caractere da 5ª posição pelo id da listaConvert baseado na regra de conversão
+    		myString.setCharAt(5, digConversao.charAt(1));			
+    		
+    		String charPlacaPos5 = listaConvert.get( Integer.valueOf(caracterPosicao)); 
+    		
+			// Montagem da formato Mercosul
+    		placaOldP1 = myString.substring(0, 3);
+			placaOldP2 = myString.substring(4, 5) + charPlacaPos5 ;
+			placaOldP3 = myString.substring(6, 8) ;
+			placaNew = placaOldP1 + placaOldP2 + placaOldP3;
+    		
+    		placaPadraoMercosul = placaNew;
+    		placaAnterior = veiculo.getPlaca();
+    		aplicadoProcAltPlaca = true;
+    		
+    		RequestContext context = RequestContext.getCurrentInstance();
+    		context.update("formVeiculo:dlgConvertePlaca");
+    	}
+    	
+		
 	}
 
 	public void onRowUnselect(UnselectEvent event) {
@@ -563,5 +676,45 @@ public class VeiculoMB implements Serializable {
 		this.numTipo = numTipo;
 	}
 
+	public String getNumPlacaOld() {
+		return numPlacaOld;
+	}
+
+	public void setNumPlacaOld(String numPlacaOld) {
+		this.numPlacaOld = numPlacaOld;
+	}
+
+	public Boolean getPlacaAlteradaMercosul() {
+		return placaAlteradaMercosul;
+	}
+
+	public void setPlacaAlteradaMercosul(Boolean placaAlteradaMercosul) {
+		this.placaAlteradaMercosul = placaAlteradaMercosul;
+	}
+
+	public String getPlacaPadraoMercosul() {
+		return placaPadraoMercosul;
+	}
+
+	public void setPlacaPadraoMercosul(String placaPadraoMercosul) {
+		this.placaPadraoMercosul = placaPadraoMercosul;
+	}
+
+	public String getPlacaAnterior() {
+		return placaAnterior;
+	}
+
+	public void setPlacaAnterior(String placaAnterior) {
+		this.placaAnterior = placaAnterior;
+	}
+
+	public Boolean getAplicadoProcAltPlaca() {
+		return aplicadoProcAltPlaca;
+	}
+
+	public void setAplicadoProcAltPlaca(Boolean aplicadoProcAltPlaca) {
+		this.aplicadoProcAltPlaca = aplicadoProcAltPlaca;
+	}
+	
     
 }

@@ -38,6 +38,8 @@ import java.util.Date;
                         @FieldResult(name = "statusFicha", column = "statusFicha"),
                         @FieldResult(name = "tipoAcVeiculo", column = "tipoAcVeiculo"),
                         @FieldResult(name = "placaVeiculo", column = "placaVeiculo"),
+                        @FieldResult(name = "placaVeiculoAnterior", column = "placaVeiculoAnterior"),
+                        @FieldResult(name = "placaDataConversao", column = "placaDataConversao"),                        
                         @FieldResult(name = "idVeiculo", column = "idVeiculo"),
                         @FieldResult(name = "tipoVeiculo", column = "tipoVeiculo"),
                         @FieldResult(name = "usuCriacao", column = "usuCriacao"),
@@ -78,6 +80,8 @@ public class acListaFicha {
     private String  statusFicha;
     private Integer tipoAcVeiculo;
     private String  placaVeiculo;
+    private String  placaVeiculoAnterior;
+    private Date	placaDataConversao;
     private String  idVeiculo;
     private String  tipoVeiculo;
     private String  usuCriacao;
@@ -278,9 +282,25 @@ public class acListaFicha {
 
     public void setPlacaVeiculo(String placaVeiculo) {
         this.placaVeiculo = placaVeiculo;
-    }
+    }    
+    
+    public String getPlacaVeiculoAnterior() {
+		return placaVeiculoAnterior;
+	}
 
-    public String getIdVeiculo() {
+	public void setPlacaVeiculoAnterior(String placaVeiculoAnterior) {
+		this.placaVeiculoAnterior = placaVeiculoAnterior;
+	}
+
+	public Date getPlacaDataConversao() {
+		return placaDataConversao;
+	}
+
+	public void setPlacaDataConversao(Date placaDataConversao) {
+		this.placaDataConversao = placaDataConversao;
+	}
+
+	public String getIdVeiculo() {
         return idVeiculo;
     }
 

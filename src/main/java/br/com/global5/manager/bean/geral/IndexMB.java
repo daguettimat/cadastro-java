@@ -2,6 +2,8 @@ package br.com.global5.manager.bean.geral;
 
 import br.com.global5.infra.util.AppUtils;
 import br.com.global5.infra.util.checkUsuario;
+import br.com.global5.manager.chamado.Chamado;
+import br.com.global5.manager.chamado.service.ChamadoService;
 import br.com.global5.manager.model.analise.acResumoFichas;
 import br.com.global5.manager.model.analise.acTimeLine;
 import br.com.global5.manager.model.geral.Avisos;
@@ -12,7 +14,11 @@ import br.com.global5.manager.service.analise.MotoristaService;
 import br.com.global5.manager.service.cadastro.FichaRenovacaoService;
 import br.com.global5.manager.service.geral.AvisosLidosService;
 import br.com.global5.manager.service.geral.AvisosService;
+
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.primefaces.model.chart.*;
 
 import javax.annotation.PostConstruct;
@@ -25,6 +31,7 @@ import javax.persistence.*;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,6 +66,10 @@ public class IndexMB implements Serializable {
 
     @Inject
     private FichaRenovacaoService renovacaoService;
+    
+    
+    @Inject
+    private ChamadoService chamadoService;
 
     private  Date today;
     private  Date past;
@@ -79,8 +90,21 @@ public class IndexMB implements Serializable {
     private Integer reprovadas;
 
     private BarChartModel model;
+    
+    
+    private BarChartModel modelCre;
+    private List<Object> lstResumoCRE;
+    private Integer totalCRE;
+    private Integer abertosCRE;
+    private Integer bancosCRE;
+    
+    private BarChartModel modelCreT;
+    private List<Object> lstResumoCRET;
+    private BigDecimal totalCRET;
+    private BigDecimal abertosCRET;
+    private BigDecimal bancosCRET;
 
-
+    
     public IndexMB() {
 
         try {
@@ -121,7 +145,8 @@ public class IndexMB implements Serializable {
         }
 
     }
-
+    
+    
     public void resumoGeral() {
 
         usuario = checkUsuario.valid();
@@ -202,7 +227,7 @@ public class IndexMB implements Serializable {
         yAxis.setMin(0);
         yAxis.setMax(abs(Max * 1.10));
     }
-
+    
     public void enviarFicha() {
         try {
             usuario = checkUsuario.valid();
@@ -298,8 +323,10 @@ public class IndexMB implements Serializable {
         past = now.getTime();
 
         resumoGeral();
-
+        
     }
+    
+    
     public int aprovadas() {
         if( usuario == null ) {
             return 0;
@@ -823,4 +850,101 @@ public class IndexMB implements Serializable {
     public void setReprovadas(Integer reprovadas) {
         this.reprovadas = reprovadas;
     }
+
+
+	public BarChartModel getModelCre() {
+		return modelCre;
+	}
+
+
+	public void setModelCre(BarChartModel modelCre) {
+		this.modelCre = modelCre;
+	}
+
+
+	public BarChartModel getModelCreT() {
+		return modelCreT;
+	}
+
+
+	public void setModelCreT(BarChartModel modelCreT) {
+		this.modelCreT = modelCreT;
+	}
+
+
+	public List<Object> getLstResumoCRE() {
+		return lstResumoCRE;
+	}
+
+
+	public void setLstResumoCRE(List<Object> lstResumoCRE) {
+		this.lstResumoCRE = lstResumoCRE;
+	}
+
+
+	public Integer getTotalCRE() {
+		return totalCRE;
+	}
+
+
+	public void setTotalCRE(Integer totalCRE) {
+		this.totalCRE = totalCRE;
+	}
+
+
+	public Integer getAbertosCRE() {
+		return abertosCRE;
+	}
+
+
+	public void setAbertosCRE(Integer abertosCRE) {
+		this.abertosCRE = abertosCRE;
+	}
+
+
+	public List<Object> getLstResumoCRET() {
+		return lstResumoCRET;
+	}
+
+
+	public void setLstResumoCRET(List<Object> lstResumoCRET) {
+		this.lstResumoCRET = lstResumoCRET;
+	}
+
+
+	public BigDecimal getTotalCRET() {
+		return totalCRET;
+	}
+
+
+	public void setTotalCRET(BigDecimal totalCRET) {
+		this.totalCRET = totalCRET;
+	}
+
+
+	public BigDecimal getAbertosCRET() {
+		return abertosCRET;
+	}
+
+
+	public void setAbertosCRET(BigDecimal abertosCRET) {
+		this.abertosCRET = abertosCRET;
+	}
+
+
+	public BigDecimal getBancosCRET() {
+		return bancosCRET;
+	}
+
+
+	public void setBancosCRET(BigDecimal bancosCRET) {
+		this.bancosCRET = bancosCRET;
+	}
+
+
+	
+	
+	
+    
+    
 }

@@ -4,9 +4,12 @@ import br.com.global5.infra.Crud;
 import br.com.global5.infra.CrudService;
 import br.com.global5.infra.model.Filter;
 import br.com.global5.manager.model.areas.Area;
+import br.com.global5.manager.model.areas.AreaQry;
 import br.com.global5.manager.service.areas.AreaService;
+import br.com.global5.manager.service.geral.UsuarioService;
 import br.com.global5.template.exception.BusinessException;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
@@ -17,6 +20,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -37,6 +42,9 @@ public class AreaMB implements Serializable {
 	private Area area;
 	private Filter<Area> filter = new Filter<Area>(new Area());
 	private Integer areaID;
+	
+	private String nomePesq = "";
+	private List<AreaQry> lstAreaQry;
 
 	@Inject
 	AreaService areaService;
@@ -46,6 +54,9 @@ public class AreaMB implements Serializable {
 
 	@Inject
 	CrudService<Area> areaCrudService;
+	
+	@Inject
+	UsuarioService usuService;
 
     @PostConstruct
     public void init() {
@@ -190,6 +201,70 @@ public class AreaMB implements Serializable {
 		}
 	}
 
+	public void btnPespCliente(){
+		
+		boolean temCriteriosPesq;
+		
+		try{
+		
+			EntityManager em = areaService.crud().getEntityManager();
+			
+			String parametrosSql = " ";
+			
+			try{
+				// Nome do Cliente a ser pesquisado
+				if( nomePesq == ""){
+					temCriteriosPesq = false;
+				} else {
+					parametrosSql += " AND area_nome ~* '" + nomePesq + "' AND ";
+					temCriteriosPesq = true;
+				}
+			} catch ( Exception e) {
+				e.printStackTrace();
+				temCriteriosPesq = false;
+			}
+		
+			parametrosSql += " 0 = 0 " ;
+			
+			EntityManager emPes = usuService.crud().getEntityManager();
+			
+			/*"  where pesoid in (select area_pesoid_sacado from area where area_anvloid = 2 )  and   pes_pessoa_fisica = false "*/						
+			
+			String query = 	" Select area.areaoid as idcliente, area.area_nome as razao " +
+					" from java.contrato, java.contrato_produto , java.area " +
+					" where " +
+					"      areaoid = con_areaoid and " +
+					"      con_enumoid_status not in (650,767)  and " +
+					"      conoid = conp_conoid and conp_produto_ativo is true and " +
+					"      conp_prodoid = 22 and " +
+					"      con_enumoid_produto_tipo = 16 "
+					+ parametrosSql ;
+		
+	
+		lstAreaQry =  emPes.createNativeQuery(query,"ListAreaClienteMapping").getResultList();
+		
+		Integer registrosArea = lstAreaQry.size();
+		
+		if(registrosArea == 0){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Aviso","Nenhum registro encontrado." ));
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update("formPesqCliente:tablePesqCli");
+		}
+		try {
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update("formPesqCliente:tablePesqCli");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			temCriteriosPesq = false;
+		}
+		
+	}
+	
     public List<Area> getLstAreas() {
         return lstAreas;
     }
@@ -273,4 +348,21 @@ public class AreaMB implements Serializable {
     public void setAreaID(Integer areaID) {
         this.areaID = areaID;
     }
+
+	public String getNomePesq() {
+		return nomePesq;
+	}
+
+	public void setNomePesq(String nomePesq) {
+		this.nomePesq = nomePesq;
+	}
+
+	public List<AreaQry> getLstAreaQry() {
+		return lstAreaQry;
+	}
+
+	public void setLstAreaQry(List<AreaQry> lstAreaQry) {
+		this.lstAreaQry = lstAreaQry;
+	}
+    
 }

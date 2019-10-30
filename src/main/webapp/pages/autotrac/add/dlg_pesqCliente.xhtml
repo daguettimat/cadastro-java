@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<!--xmlns:f="http://java.sun.com/jsf/core"-->
+<h:head >
+    <title style="font-size: 16pt;color: #1a2226; font-weight: bold;text-align: left">Busca de Cliente</title>
+    <style type="text/css">
+        .ui-widget {
+            font-size: 90%;
+        }
+
+    </style>
+
+</h:head>
+
+<h:body styleClass="ui-widget"	style="padding-left: 25px; padding-top: 10px">
+
+	<p:growl autoUpdate="true" showDetail="true" sticky="true" severity="info,warn,error,fatal" />
+	
+	<p:ajax event="load" update="formPesqCliente" process="@all" />
+	
+	<h:form id="formPesqCliente">
+	
+	 <p:focus/>
+		<div class="ui-g ui-fluid">
+			<div class="col-lg-8">
+				<p:inputText id="nome" size="85" value="#{areaMB.nomePesq}" 
+				placeholder=" digite o nome do cliente para pesquisar." maxlength="85"/>
+			</div>
+			<div class="col-lg-2">
+				<p:commandButton value="Pesquisar" update="@form" icon="ui-icon-search" 
+				action="#{areaMB.btnPespCliente}"/>	
+			</div>					
+		</div>
+		<p:spacer width="2px"/>
+		<p:separator/>
+		<p:spacer width="2px"/>
+		
+		
+
+		<p:dataTable  		 value="#{areaMB.lstAreaQry}" var="cli"
+							 emptyMessage="Nenhum cliente foi encontrado." rows="10" rowKey="#{cli.idcliente}" id="tablePesqCli" 
+			  				 lazy="true"  paginator="true" 
+                             paginatorPosition="bottom" selectionMode="simple" 
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                             currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                             rowsPerPageTemplate="5,10,15,20,30,50,100">
+			
+			<p:column headerText="Código" style="text-align: center; width:7%">
+				<h:outputText value="#{cli.idcliente}" />
+			</p:column>
+
+			<p:column headerText="Razão Social" style="width:83%" >
+				<h:outputText value="#{cli.razao}" />
+			</p:column>
+
+			<p:column headerText="Selecione"
+				style="text-align: center; width:10%">
+				<p:commandButton icon="ui-icon-check" 
+						action="#{autotracSinalMB.clienteSelPesq(cli)}" 
+						process="@this"	/>
+			</p:column>
+
+		</p:dataTable>
+	
+	</h:form>
+
+</h:body>
+
+</html>

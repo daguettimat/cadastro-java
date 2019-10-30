@@ -66,6 +66,8 @@ public class AppUtils {
     // load a properties file
 
 	public static final String dirImagens = "/var/www/fotos/";
+	public static final String dirImagensChamados = "/var/www/chamados/";
+	public static final String dirAnexosBI = "/var/www/anexos_bi/";
 	public static final boolean enviarEmail = true;
 
     public static String regex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
@@ -121,6 +123,62 @@ public class AppUtils {
 		return null;
 	}
 
+	public static String saveFile(String path, UploadedFile upload){
+		
+		if( upload == null ){
+			return null;
+		}
+		
+		try {
+			
+			InputStream is = upload.getInputstream();
+			byte[] bytes = IOUtils.toByteArray(is);
+			FileOutputStream fileOutputStream = new FileOutputStream(path + upload.getFileName());
+			fileOutputStream.write(bytes);
+			fileOutputStream.close();
+			
+			return upload.getFileName();
+			
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Arquivo  " + upload.getFileName() +
+							" não será enviado por um erro não tratado.", null));
+		}
+		
+		return null;
+	}
+	
+	
+	public static String saveImagemChamado(String path, UploadedFile upload, int id, String tipo) {
+		if (upload == null) {
+			return null;
+		}
+		String extesion = FilenameUtils.getExtension(upload.getFileName());
+		try {
+			
+			InputStream is = upload.getInputstream();
+			byte[] bytes = IOUtils.toByteArray(is);
+			FileOutputStream fileOuputStream = new FileOutputStream(path +  id +"-"+tipo +"." + extesion);
+			fileOuputStream.write(bytes);
+			fileOuputStream.close();
+
+			//return tipo + " - " +  id + "." + extesion;
+			return id + "-"+ tipo + "." + extesion;
+			
+
+		} catch (IOException e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Documentos  " + id
+							+ " não terá sua imagem enviada por um erro não tratado.", null));
+
+		}
+		return null;
+	}
+
+	
+	
     public static String foto(int id, String urlfoto) {
         String result = "";
 
