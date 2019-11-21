@@ -205,35 +205,40 @@ public class PendenciasMB implements Serializable {
                 AppUtils.formataCompetencia(pendencias.getDtCriacao()) + "/" );
 
         DirectoryStream<Path> stream = Files.newDirectoryStream( dir, "DPC" + cadastro.getId() + " - "
-                + pendencias.getId() + "*.{jpg,jpeg,png,gif,bmp,JPG,JPEG,PNG,GIF,BMP}" );
+        		+ pendencias.getId() + "*.{jpg,jpeg,png,gif,bmp,JPG,JPEG,PNG,GIF,BMP}" );
 
+        //+ pendencias.getId()
+        
         images = new ArrayList<>();
+        
         for (Path path : stream) {
+        	
             images.add( AppUtils.imageName(  "/" + AppUtils.formataCompetencia(pendencias.getDtCriacao()) +
                     "/"  + path.getFileName().toString(), true));
 
         }
+        
         stream.close();
 
     }
 
     private void loadPdfs() throws IOException {
-    	
-    	Path dir = FileSystems.getDefault().getPath(AppUtils.dirImagens + 
-    			AppUtils.formataCompetencia(pendencias.getDtCriacao()) + "/" );
-    	
-    	DirectoryStream<Path> stream = Files.newDirectoryStream(dir,"DPC" + cadastro.getId() + " - "
-                + pendencias.getId() + "*.{pdf,PDF}" );
-    	
+    	    	
+    	Path dir = FileSystems.getDefault().getPath(AppUtils.dirImagens + AppUtils.formataCompetencia(pendencias.getDtCriacao()) + "/" );
+    	    	
     	pdfFiles = new ArrayList<>();
-    	pdfFileNames = new ArrayList<>();
-    	
-    	
+    	pdfFileNames = new ArrayList<>();   	
+     	
+	   DirectoryStream<Path> stream = Files.newDirectoryStream(dir,"DPC" + cadastro.getId() + " - "
+		                + pendencias.getId() + "*.{pdf,PDF}" );
+		
     
     	for (Path path : stream){
-    		pdfFiles.add(AppUtils.pdfName(  "/" + AppUtils.formataCompetencia(pendencias.getDtCriacao()) +
-                    "/"  + path.getFileName().toString(), true));
+    		
+    		pdfFiles.add(AppUtils.pdfName(  "/" + AppUtils.formataCompetencia(pendencias.getDtCriacao()) + "/"  + path.getFileName().toString(), true));
+    		
     		pdfFileNames.add(path.getFileName().toString());
+    		
     		/*pdfFiles.add(AppUtils.pdfName(  "/" + AppUtils.formataCompetencia(pendencias.getDtCriacao()) +
                     "/"  + path.getFileName().toString(), true));*/
     		System.out.println(path.getFileName());
@@ -490,8 +495,38 @@ public class PendenciasMB implements Serializable {
 //	    int cliente = usuario.getPessoa().getFuncao().getArea().getRoot().getId();
 //        int filial = usuario.getPessoa().getFuncao().getArea().getId();
 
-	    String dir = AppUtils.dirImagens + AppUtils.formataCompetencia(pendencias.getDtCriacao() ) + "/" ; // + (cliente > 0 ? cliente + "/" : "") + (filial > 0 ? filial + "/" : "");
+    // Saber a quantidade de arquivos
+    	
+    	
+    // Salvar o Arquivo...
+	    String dir = AppUtils.dirImagens + AppUtils.formataCompetencia(pendencias.getDtCriacao() ) + "/" ; 
+	    // + (cliente > 0 ? cliente + "/" : "") + (filial > 0 ? filial + "/" : "");
+	    	    
         File files = new File(dir);
+        
+	    // Saber a quantia de arquivos dentro da pasta
+    		File[] filesQtd = files.listFiles();
+    			
+    			int aux = 0;
+    			
+    				if ( filesQtd != null ) {
+    					
+    					int length = filesQtd.length;
+    					
+    						for ( int i = 0; i < length; i++) {
+    							
+    							File f = filesQtd[i];
+    								
+    								if ( f.isFile() ) {
+    									aux++;
+    								}    							
+    						}
+    					
+    					
+    				}
+
+        // Outras funçõs do salvar
+        
         if (!files.exists()) {
             if (files.mkdirs()) {
                 System.out.println("Diretorios Criados com sucesso! (" + dir + ")");
@@ -501,9 +536,11 @@ public class PendenciasMB implements Serializable {
         }
 
 	    int idx = 1;
-        String filename = "DPC" + pendencias.getCadastro().getId() + " - " + pendencias.getId();
-
+        //String filename = "DPC" + pendencias.getCadastro().getId() + " - " + pendencias.getId();
+	    String filename = "DPC" + pendencias.getCadastro().getId() + " - " +  pendencias.getId() + " " + aux;
+	    
         for (UploadedFile uploadedFile : uploadedFiles) {
+        	
             AppUtils.saveImage(dir, uploadedFile, idx++, filename);
         }
 

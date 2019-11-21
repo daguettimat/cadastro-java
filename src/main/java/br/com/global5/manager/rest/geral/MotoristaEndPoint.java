@@ -136,7 +136,7 @@ public class MotoristaEndPoint {
      */
     @GET
     public Response list(@QueryParam("start") @DefaultValue("0") Integer startPosition,
-                          @QueryParam("max") @DefaultValue("10") Integer maxResult,
+                          @QueryParam("max") @DefaultValue("100") Integer maxResult,
                           @QueryParam("nome") String nome) {
         Filter<Motorista> filter = new Filter<>();
         Motorista mercadoria = new Motorista();

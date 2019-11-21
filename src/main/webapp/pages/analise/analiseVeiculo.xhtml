@@ -254,15 +254,6 @@
                                             </div>
                                         </div>
                                     </ui:fragment>
-                                    <div class="row" style="padding-top: 30px;">
-                                        <div class="col-lg-12">
-                                            <p:gmap id="geoGmap" widgetVar="geoMap" center="#{veiAnaliseMB.centerGeoMap}" zoom="#{veiAnaliseMB.zoomMap}"
-                                                    type="HYBRID" style="width:95%;height:400px" streetView="true" model="#{veiAnaliseMB.geoModel}" >
-                                                <p:ajax event="geocode" listener="#{veiAnaliseMB.onGeocode}" update="@this" />
-                                            </p:gmap>
-
-                                        </div>
-                                    </div>
                                 </p:panel>
                             </p:tab>
                             <p:tab title="Observações" titleStyleClass="box-danger" >
@@ -483,16 +474,6 @@
         </h:form>
 
         <script type="text/javascript">
-
-            $(document).ready(function(){
-
-                PF('geoMap').geocode('#{veiAnaliseMB.veiculo.proprietario.endereco.cidade} #{veiAnaliseMB.veiculo.proprietario.endereco.logradouro} #{veiAnaliseMB.veiculo.proprietario.endereco.numero}'  );
-
-            });
-
-            function geocode() {
-                PF('geoMap').geocode(document.getElementById('infEnd').value);
-            }
 
             function handleResponse(xhr, status, args) {
                 if (args.validationFailed) {

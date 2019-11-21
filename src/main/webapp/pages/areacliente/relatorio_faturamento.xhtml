@@ -74,14 +74,14 @@
             </h:panelGroup>
 
 			<BR/>
+ 
 
 			<p:tabView id="tbView" >
 				<p:tab id="tbView01" title="Rastreamento">
         	    <h:panelGroup layout="block" id="pnGroupLista">
-
-				
+			
 				 <div class="row">
-					<div class="col-md-2">
+					<div class="col-md-3">
 						<h4 style="padding_left: 250px">Fatura do Mês  : 
 							<p:outputLabel value="#{areaClienteMB.dtPesqMesAno}" style="font-size: 16px; " />
 						</h4>							
@@ -181,6 +181,22 @@
 				 
 				 </div>
 				<BR/>
+				
+				<ui:fragment id="fragBotoesRastreamento" rendered="#{areaClienteMB.liberadoBotoesRastreamento}" >
+					<div class="row" >
+						<div class="align-right" style="padding: 5px;">
+							<p:commandButton id="btnPesquisarViagem" value="Consumo do Período Viagem" styleClass="btn-success"
+								icon="fa fa-search" action="#{areaClienteMB.verConsumoViagem}"/>
+							<p:spacer height="5" />
+							<p:commandButton id="btnPesquisarCheckList" value="Consumo do Período Checklist" styleClass="btn-info"
+								icon="fa fa-search" action="#{areaClienteMB.verConsumoCheckList}"/>
+							<p:spacer height="5" />						
+							<p:commandButton id="btnPesquisarAutotrac" value="Consumo do Período Autotrac" styleClass="btn-warning"
+								icon="fa fa-search" action="#{areaClienteMB.verConsumoAutotrac}"/>
+							<p:spacer height="15" />												
+						</div>
+					</div>
+				</ui:fragment>
 
 				<p:separator/>
 
@@ -395,7 +411,7 @@
     			</p:panelGrid>
 
 				<BR/>
-			
+						
 				<ui:fragment id="fragServicosAdicionais" rendered="#{areaClienteMB.liberadoServicosAdicionais}" >	
 				
 				<p:panelGrid id="pnServicosAdicionais" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
@@ -471,7 +487,7 @@
 					<h:panelGroup layout="block" id="pnGroupListaCad">
 
 						 <div class="row">
-							<div class="col-md-2">
+							<div class="col-md-3">
 								<h4 style="padding_left: 250px">Fatura do Mês  : 
 									<p:outputLabel value="#{areaClienteMB.dtPesqMesAno}" style="font-size: 16px; " />
 								</h4>							
@@ -612,7 +628,17 @@
 						</p:panelGrid>
 						</div>
 						<BR />
-
+						
+						<ui:fragment id="fragBotoesCadastro" rendered="#{areaClienteMB.liberadoBotoesCadastro}" >
+							<div class="row" >
+								<div class="align-right" style="padding: 5px;">
+									<p:commandButton id="btnPesquisar" value="Consumo do Período Cadastro" styleClass="btn-primary"
+										icon="fa fa-search" action="#{areaClienteMB.verConsumoCadastro}"/>
+									<p:spacer height="5" />
+								</div>
+							</div>
+						</ui:fragment>
+						
 						<p:separator />
 
 						<h4 style="padding_left: 250px">Detalhamento de Consumo</h4>

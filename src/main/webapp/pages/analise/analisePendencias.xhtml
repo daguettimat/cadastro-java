@@ -179,7 +179,8 @@
                                 <p:fileUpload id="imgPendencia" style="width: 100%"
                                               label = "Selecionar Arquivo" uploadLabel="Enviar Arquivo" cancelLabel="Cancelar"
                                               fileUploadListener="#{pendenciasMB.upload}" fileLimit="5"
-                                              allowTypes="/(\.|\/)(gif|jpeg|jpg|png|pdf|GIF|JPE?G|PNG|PDF)$/" sizeLimit="6299999" mode="advanced"  invalidSizeMessage="Tamanho máximo aceito por arquivo 6MB (megaBytes)."
+                                              allowTypes="/(\.|\/)(gif|jpeg|jpg|png|pdf|GIF|JPE?G|PNG|PDF)$/" sizeLimit="6299999" mode="advanced"  
+                                              invalidSizeMessage="Tamanho máximo aceito por arquivo 6MB (megaBytes)."
                                               invalidFileMessage="Tipo de Arquivo não permitido"
                                               messageTemplate="Não foi possível enviar para o servidor o arquivo {name}."
                                               update="regImgPendencia"  />

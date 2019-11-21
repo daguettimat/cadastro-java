@@ -425,6 +425,7 @@
 
 
     </dependencies>
+    
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -446,6 +447,7 @@
 
     <build>
         <finalName>manager</finalName>
+
         <resources>
             <resource>
                 <filtering>true</filtering>

@@ -67,6 +67,7 @@
         <param-value>true</param-value>
     </context-param>
 
+
     <filter>
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <filter-class>
@@ -164,6 +165,7 @@
             br.com.global5.template.session.AdminServletContextListener
         </listener-class>
     </listener>
+
 
 
 </web-app>

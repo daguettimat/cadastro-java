@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<!--xmlns:f="http://java.sun.com/jsf/core"-->
+<h:head >
+    <title style="font-size: 16pt;color: #1a2226; font-weight: bold;text-align: left">Relatório de Consumo de Check-List</title>
+    <style type="text/css">
+        .ui-widget {
+            font-size: 90%;
+        }
+
+    </style>
+
+</h:head>
+<h:body styleClass="ui-widget"	style="padding-left: 25px; padding-top: 10px">
+
+	<p:growl autoUpdate="true" showDetail="true" sticky="true" severity="info,warn,error,fatal" />
+	
+	<p:ajax event="load" update="formRelatorioCheck" process="@all" />
+	
+	<h:form id="formRelatorioCheck">
+	
+	 <p:focus/>
+	 
+		<p:spacer width="2px"/>
+		<p:separator/>
+		<p:spacer width="2px"/>		
+
+		<p:dataTable  
+		 	value="#{areaClienteMB.lstRelCheckList}" var="c"
+			emptyMessage="Nenhum registro foi encontrado." 
+			rows="1000" rowKey="#{c.id}" id="tbRelCad" 
+			lazy="true"  paginator="true" 
+            paginatorPosition="bottom" selectionMode="simple" 
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+            currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+            rowsPerPageTemplate="100,200,300,400,500,1000,2000,3000">
+
+			<f:facet name="header" >
+						<h4 style="padding_left: 250px">Referente Fatura Mês  : 
+							<p:outputLabel value="#{areaClienteMB.dtPesqMesAno}" style="font-size: 16px; " />
+							<p:separator/>
+						</h4>							
+           </f:facet>
+
+			<p:column headerText="Id" style="color:red;width:6%" >
+				<h:outputText value="#{c.id}" style="color:black;text-align: center;display:block"/>
+			</p:column>
+
+			<p:column headerText="Data" style="color:red;width:10%;" >
+				<h:outputText value="#{c.data}" style="color:black;text-align: center;display:block"  />
+			</p:column>
+
+			<p:column headerText="Cavalo" style="color:red;width:5%;">
+				<h:outputText value="#{c.cavalo}" style="color:black;text-align: center;display:block" />
+			</p:column>		
+			
+			<p:column headerText="Status" style="color:red;width:6%;" >
+				<h:outputText value="#{c.status}" style="color:black;text-align:center;display:block" />
+			</p:column>
+			
+			<p:column headerText="Valor" style="color:red;width:10%;">
+				<h:outputText value="#{c.valor}" style="color:black;text-align: right;display:block" />
+			</p:column>
+
+			<p/>
+
+
+					<p:columnGroup type="footer" >
+						<p:row>							
+
+							<p:column colspan="4" footerText="Total :" style="text-align:right;width: 175px;font-weight:bold;background:gray;color:white">
+							</p:column>
+							
+							<p:column colspan="1" style="background:gray;color:white;text-align:right">
+								<f:facet name="footer" >
+								   <h:outputText value="#{areaClienteMB.vlrRelatorioCheckList}">
+                    				<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
+										locale="pt_BR" currencySymbol="R$ " type="currency"/>
+                				</h:outputText>
+                				</f:facet>
+							
+							</p:column>
+															
+						</p:row>
+
+					</p:columnGroup>
+
+
+		</p:dataTable>
+
+		
+	</h:form>
+
+	
+
+</h:body>
+
+</html>

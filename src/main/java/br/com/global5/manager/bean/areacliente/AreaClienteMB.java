@@ -3,7 +3,11 @@ package br.com.global5.manager.bean.areacliente;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -19,8 +23,13 @@ import org.primefaces.context.RequestContext;
 
 import br.com.global5.infra.Crud;
 import br.com.global5.infra.util.checkUsuario;
+import br.com.global5.manager.model.areacliente.AutotracCliente;
+import br.com.global5.manager.model.areacliente.CadastroCliente;
+import br.com.global5.manager.model.areacliente.CheckListCliente;
+import br.com.global5.manager.model.areacliente.ViagemCliente;
 import br.com.global5.manager.model.areacliente.Virtual;
 import br.com.global5.manager.model.geral.Usuario;
+//import br.com.global5.manager.service.areacliente.CadastroClienteService;
 import br.com.global5.manager.service.areacliente.VirtualService;
 
 @Named
@@ -90,7 +99,9 @@ public class AreaClienteMB implements Serializable{
 	private boolean liberadoServicosAdicionais = false;
 	private boolean liberadoServicosAdicionaisGerente = false;
 	private boolean liberadoServicosAdicionaisPARemota = false;
-	private boolean liberadoServicosAdicionaisAdicionais = false;
+	private boolean liberadoServicosAdicionaisAdicionais = false;	
+	private boolean liberadoBotoesRastreamento = false;
+	private boolean liberadoBotoesCadastro = false;
 	
 	private String msgNfseRastreamento = "";
 	
@@ -136,8 +147,42 @@ public class AreaClienteMB implements Serializable{
 	private boolean liberadoResumoCadVlrOutros 	  		= false;
 	private boolean liberadoResumoCadVlrAjustes 	  	= false;
 
+	
+	// relatório Consumo Cadastro
+	
+	private BigDecimal relCadValor = BigDecimal.ZERO;
+	private BigDecimal vlrRelatorioCadastro = BigDecimal.ZERO;
+	ArrayList<CadastroCliente> lstRelCadastro = new ArrayList<CadastroCliente>();
+	
+	// relatório Consumo Viagem
+	private BigDecimal relViagemValor = BigDecimal.ZERO;
+	private BigDecimal vlrRelatorioViagem = BigDecimal.ZERO;
+	ArrayList<ViagemCliente> lstRelViagem = new ArrayList<ViagemCliente>();
+	
+
+	// relatório Consumo CheckList
+	private BigDecimal relCheckListValor = BigDecimal.ZERO;
+	private BigDecimal vlrRelatorioCheckList = BigDecimal.ZERO;
+	ArrayList<CheckListCliente> lstRelCheckList = new ArrayList<CheckListCliente>();
+
+	// relatório Consumo Autotrac
+	private BigDecimal relAutotracValor = BigDecimal.ZERO;
+	private BigDecimal relAutotracComunicacaoValor = BigDecimal.ZERO;
+	private BigDecimal relTotalAutotracValor = BigDecimal.ZERO;
+	private BigDecimal vlrRelatorioAutotrac = BigDecimal.ZERO;
+	private BigDecimal vlrRelatorioAutotracComunicacao = BigDecimal.ZERO;
+	ArrayList<AutotracCliente> lstRelAutotrac = new ArrayList<AutotracCliente>();
+	
+	
+	// Variaveis para Dlg
+	private Map<String, Object> options;
+	
 	@Inject
 	VirtualService virtualService;
+	
+	//@Inject
+	//CadastroClienteService cadClienteService;
+	
 	
 	@Inject
 	private Crud<Virtual> virtualCrud;
@@ -146,6 +191,13 @@ public class AreaClienteMB implements Serializable{
 	public void init() {
 
 		clear();
+		
+		options = new HashMap<String, Object>();
+		options.put("draggable", true);
+		options.put("modal", true);
+		options.put("contentWidth", "96%");
+		options.put("contentheight", "30%");
+		options.put("resizable", false);
 
 	}
 	
@@ -156,6 +208,11 @@ public class AreaClienteMB implements Serializable{
 		msgNfseCadastro = "";
 		msgNfseRastreamento = "";
 		usuario = checkUsuario.valid();
+		colspanServicosResumo = 3;
+		colspanServicosCadResumo = 2;
+		vlrRelatorioCadastro = BigDecimal.ZERO;
+		lstRelCadastro = new ArrayList<CadastroCliente>();
+		
 	}
 	
 
@@ -163,7 +220,8 @@ public class AreaClienteMB implements Serializable{
 	
 	 SimpleDateFormat formatter = new SimpleDateFormat("MM/yyyy");
 	 if ( this.getDtPesquisa() != null) {
-	 dtPesqMesAno = formatter.format(this.getDtPesquisa());	
+		 dtPesqMesAno = formatter.format(this.getDtPesquisa());
+
 	 } else {
 		 limparVariaveis();
 		 limparVariaveisCadastro();
@@ -174,13 +232,23 @@ public class AreaClienteMB implements Serializable{
 	// Processo do Monitoramento
 		String nomeProcedureChamada = "usuario_mensal_monitoramento";
 
-        
+		Date dtMes = null;	
+
+		Calendar now = Calendar.getInstance();
+		now.setTime(this.getDtPesquisa());
+		now.set(Calendar.HOUR, 23);
+		now.set(Calendar.MINUTE, 00);
+		now.set(Calendar.SECOND, 00);
+
+		dtMes = now.getTime();
+
+		
 		StoredProcedureQuery queryPv = virtualCrud.getEntityManager()
 				.createNamedStoredProcedureQuery(nomeProcedureChamada);
 		
-		Integer numIDArea = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());
+		Integer numIDArea = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());		
 		
-		queryPv.setParameter("dt_mes", this.getDtPesquisa());
+		queryPv.setParameter("dt_mes", dtMes);
 		queryPv.setParameter("id_area"  , numIDArea);
 		queryPv.execute();
 		
@@ -324,7 +392,7 @@ public class AreaClienteMB implements Serializable{
 
 			// Serviços Adicionais	--> Apenas mostrar se algum deste for apresentado	
 				
-				Integer contaColspanServAdic = 1;
+				Integer contaColspanServAdic = 0;
 				
 				String gerContaCompart = "";
 				int resultContaCompart = 0;
@@ -343,7 +411,7 @@ public class AreaClienteMB implements Serializable{
 				if (!obj.isNull("ger_conta_dedic")) {
 					gerContaDedic = obj.opt("ger_conta_dedic").toString();
 					vlrGerContaDedic   = new BigDecimal(gerContaDedic);
-					resultContaDedic   = vlrGerContaCompart.compareTo(BigDecimal.ZERO);
+					resultContaDedic   = vlrGerContaDedic.compareTo(BigDecimal.ZERO);
 				}
 										
 				// Quando os valores forem iguais a Zero
@@ -425,11 +493,10 @@ public class AreaClienteMB implements Serializable{
 				if ( contaColspanServAdic > 1) {
 					this.setColspanServicosAdicionais(contaColspanServAdic);
 					this.setLiberadoServicosAdicionais(true);
-					contaColspanServAdic = 0;
+					contaColspanServAdic++;
 				} else {
 					
-					this.setLiberadoServicosAdicionais(false);
-					contaColspanServAdic = 0;
+					this.setLiberadoServicosAdicionais(false);				
 					
 				}
 				
@@ -437,7 +504,7 @@ public class AreaClienteMB implements Serializable{
 				
 			// Resumo Rastreamento				
 				
-				Integer contaColspanResumo = 4;
+				Integer contaColspanResumo = 0;
 				
 				String gerConsumoViagem = obj.opt("consumo_viagens").toString();
 				String gerFaturaMinima  = obj.opt("fat_minima").toString();						
@@ -449,13 +516,13 @@ public class AreaClienteMB implements Serializable{
 				
 				if ( resultVlrConsumoVlrFaturaMinima == 0 ) {
 					
-					vlrConsumoViagem	=	obj.opt("consumo_viagens").toString();
+					//vlrConsumoViagem	=	obj.opt("consumo_viagens").toString();
 					vlrFaturaMinima		=	obj.opt("fat_minima").toString();
 		
-					this.setLiberadoResumoVlrConsumo(true);
+					//this.setLiberadoResumoVlrConsumo(true);
 					this.setLiberadoResumoVlrFaturaMinima(true);
 					
-					contaColspanResumo++;
+					//contaColspanResumo++;
 					contaColspanResumo++;
 				} 
 				
@@ -503,34 +570,40 @@ public class AreaClienteMB implements Serializable{
 					contaColspanResumo++;
 				}
 				
-				contaColspanResumo++;
-				contaColspanResumo++;
-				contaColspanResumo++;
+				this.setLiberadoBotoesRastreamento(true);
 				
-				this.setColspanServicosResumo(contaColspanResumo);
 			
 				gerVlrTotalOutros		=	new BigDecimal(obj.opt("total_outros").toString());		
 				gerVlrTotalFinal		=	new BigDecimal(obj.opt("total_final").toString());	
 				diaVencimento			= 	obj.opt("vencimento").toString();
-			
+
+				contaColspanResumo++;
+				contaColspanResumo++;
+				contaColspanResumo++;
+
+				this.setColspanServicosResumo(contaColspanResumo);
+
+				
 				RequestContext context = RequestContext.getCurrentInstance();
 				context.update("formRelatorioCliente:tbView:tbView01");
 							
 			
 		} else {
 			limparVariaveis();
+			 msgNfseRastreamento = "Não há Faturamento para o Período Selecionado!";
+			 setLiberadoBotoesRastreamento(false);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Não há apuração para esse período selecionado para Rastreamento!"));
 		}
 		
 		// Processo do Faturamento Cadastro
 		String nomeProcedureChamadaCadastro = "usuario_mensal_cadastro";
-        
+		
 		StoredProcedureQuery queryPvc = virtualCrud.getEntityManager()
 				.createNamedStoredProcedureQuery(nomeProcedureChamadaCadastro);
 		
 		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); //Integer.valueOf(this.getNumContratoPesq());
 		
-		queryPvc.setParameter("dt_mes", this.getDtPesquisa());
+		queryPvc.setParameter("dt_mes", dtMes);
 		queryPvc.setParameter("id_area"  , numIDAreaC);
 		queryPvc.execute();
 		
@@ -584,18 +657,7 @@ public class AreaClienteMB implements Serializable{
 
 				
 			// Ficha Resumo Cadastro								
-				
-				//vlrTotalOutros		=	obj.opt("total_outros").toString();		
-				//vlrTotalFinal		=	obj.opt("total_final").toString();	
-				//diaVencimento		= 	obj.opt("vencimento").toString();				
-				
-				//cdConsumoFichas = obj.opt("consumo_fichas").toString();				
-				//cdFaturaMinima  = obj.opt("fat_minima").toString();
-				//cdAdicionais  	= obj.opt("adicionais").toString();
-				//cdAjustes 		= obj.opt("ajustes").toString();
-				//cdTotalFinal	= obj.opt("total_final").toString();
-				//cdVencimento	= obj.opt("vencimento").toString();
-				
+								
 				Integer contaColspanResumo = 0;
 				
 				String gerConsumoFichas = obj.opt("consumo_fichas").toString();
@@ -608,10 +670,10 @@ public class AreaClienteMB implements Serializable{
 				
 				if ( resultVlrConsumoFichasVlrFaturaMinima == 0 ) {
 					
-					cdConsumoFichas = obj.opt("consumo_fichas").toString();				
+					//cdConsumoFichas = obj.opt("consumo_fichas").toString();				
 					cdFaturaMinima  = obj.opt("fat_minima").toString();					
 					
-					contaColspanResumo++;
+					//contaColspanResumo++;
 					contaColspanResumo++;
 				} 
 				
@@ -686,13 +748,14 @@ public class AreaClienteMB implements Serializable{
 
 				// Vencimento
 						if (!obj.isNull("vencimento")) {	
-							cdVencimento = obj.opt("vencimento").toString();				
+							cdVencimento = obj.opt("vencimento").toString();	
+							contaColspanResumo++;
 						}
 												
 				
 				this.setColspanServicosCadResumo(contaColspanResumo);
 				
-				
+				this.setLiberadoBotoesCadastro(true);				
 				
 				RequestContext context = RequestContext.getCurrentInstance();
 				context.update("formRelatorioCliente:tbView:tbView02");
@@ -700,11 +763,503 @@ public class AreaClienteMB implements Serializable{
 				
 		} else {
 			limparVariaveisCadastro();
+			setLiberadoBotoesCadastro(false);
+		    msgNfseCadastro = "Não há Faturamento para o Período Selecionado!";
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Não há apuração para esse período selecionado para Cadastro!"));
 		}
 
 	}
 
+	public void verConsumoCadastro(){
+		// Processo do Faturamento Cadastro
+		String nomeProcedureChamadaCadastro = "usuario_detalhe_cadastro";
+		
+		Date dtMes = null;	
+
+		Calendar now = Calendar.getInstance();
+		now.setTime(this.getDtPesquisa());
+		now.set(Calendar.HOUR, 23);
+		now.set(Calendar.MINUTE, 00);
+		now.set(Calendar.SECOND, 00);
+
+		dtMes = now.getTime();
+
+		
+		this.setVlrRelatorioCadastro(BigDecimal.ZERO);
+		
+		StoredProcedureQuery queryPvCad = virtualCrud.getEntityManager()
+				.createNamedStoredProcedureQuery(nomeProcedureChamadaCadastro);
+		
+		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); //Integer.valueOf(this.getNumContratoPesq());
+		
+		queryPvCad.setParameter("dt_mes", dtMes);
+		queryPvCad.setParameter("id_area"  , numIDAreaC);
+		queryPvCad.execute();
+		
+		String textbCad = queryPvCad.getResultList().get(0).toString();
+		
+		lstRelCadastro = new ArrayList<CadastroCliente>();
+		
+		if (!textbCad.equals("[{")){
+			
+			
+			JSONArray arrayJson = new JSONArray(textbCad);
+			
+			if ( arrayJson != null ){
+				
+				int listCountArray = arrayJson.length();
+
+		
+				
+				for( int i = 0; i < listCountArray ; i++){
+					
+					JSONObject objCad = arrayJson.getJSONObject(i);
+					
+					CadastroCliente cad = new CadastroCliente();
+
+					// Tipo Motorista
+					// !obj.isNull("conoid")
+					if(!objCad.isNull("mottipo")){
+						cad.setMottipo(objCad.optString("mottipo"));
+					} else {
+						cad.setMottipo("");
+					}
+					
+					// Vencimento
+					if(!objCad.opt("vencimento").toString().equals(null)){
+						cad.setVencimento(objCad.optString("vencimento"));
+					}
+					
+					// Tipo
+					if(!objCad.opt("tipo").toString().equals(null)){
+						cad.setTipo(objCad.optString("tipo"));
+					}
+					
+					// Cpf
+					if(!objCad.optString("motcpf").toString().equals(null)){
+						cad.setMotcpf(objCad.optString("motcpf"));
+					}
+
+					// Data_termino
+					if(!objCad.optString("dt_termino").toString().equals(null)){
+						cad.setDt_termino(objCad.optString("dt_termino"));
+					}
+
+					// cavalo
+					if(!objCad.optString("cavalo").toString().equals(null)){
+						cad.setCavalo(objCad.optString("cavalo"));
+					}
+					
+					// motorista
+					if(!objCad.optString("motorista").toString().equals(null)){
+						cad.setMotorista(objCad.optString("motorista"));
+					}					
+					
+					// cliente
+					if(!objCad.optString("unidade").toString().equals(null)){
+						cad.setUnidade(objCad.optString("unidade"));
+					}
+					
+					// ficha
+					if(!objCad.optString("ficha").toString().equals(null)){
+						cad.setFicha(objCad.optString("ficha"));
+					}
+					
+					// reboque1
+					if(!objCad.optString("reboque1").toString().equals(null)){
+						cad.setReboque1(objCad.optString("reboque1"));
+					}
+					
+					// reboque2
+					if(!objCad.optString("reboque2").toString().equals(null)){
+						cad.setReboque2(objCad.optString("reboque2"));
+					}
+					// reboque3
+					if(!objCad.optString("reboque3").toString().equals(null)){
+						cad.setReboque3(objCad.optString("reboque3"));
+					}
+					
+					// valor
+					if(!objCad.optString("valor").toString().equals(null)){
+						relCadValor = new BigDecimal(objCad.opt("valor").toString());
+						
+						cad.setValor(relCadValor.setScale(2, BigDecimal.ROUND_CEILING));
+						vlrRelatorioCadastro = vlrRelatorioCadastro.add(relCadValor.setScale(2, BigDecimal.ROUND_CEILING));
+					}					
+					
+					cad.setId(i + 1);
+					
+					lstRelCadastro.add(cad);
+					
+					
+				}				
+				
+			} else {
+				//TODO Nada consta no Json
+			}
+			
+			String b = "a";
+			String c = b;
+			
+			openDlgRelatorioCadastro();
+			
+			//JSONObject obj = new  JSONObject(textbCad);
+			
+			// Nao foi encontrado relação com esses campos
+		//	if (!obj.isNull("valor")) {
+		//		codContrato 	=	obj.opt("valor").toString();				
+		//	}
+			
+			
+		}
+		
+	}
+		
+	public void openDlgRelatorioCadastro() {
+		options.put("width", "96%");
+		options.put("height", "80%");
+
+		RequestContext.getCurrentInstance().openDialog("dlg_relatorioCadastro", options, null);
+		RequestContext.getCurrentInstance().execute("onTop('dlg_relatorioCadastro')");
+	}
+
+	public void verConsumoViagem(){
+		// Processo do Faturamento Cadastro
+		String nomeProcedureChamadaViagem = "usuario_detalhe_viagens";
+		
+		Date dtMes = null;	
+
+		Calendar now = Calendar.getInstance();
+		now.setTime(this.getDtPesquisa());
+		now.set(Calendar.HOUR, 23);
+		now.set(Calendar.MINUTE, 00);
+		now.set(Calendar.SECOND, 00);
+
+		dtMes = now.getTime();
+		
+		this.setVlrRelatorioViagem(BigDecimal.ZERO);
+		
+		StoredProcedureQuery queryPvViagem = virtualCrud.getEntityManager()
+				.createNamedStoredProcedureQuery(nomeProcedureChamadaViagem);
+		
+		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); 
+		
+		queryPvViagem.setParameter("dt_mes", dtMes);
+		queryPvViagem.setParameter("id_area"  , numIDAreaC);
+		queryPvViagem.execute();
+		
+		String textViagem = queryPvViagem.getResultList().get(0).toString();
+		
+		lstRelViagem = new ArrayList<ViagemCliente>();
+		
+		if (!textViagem.equals("[{")){
+			
+			
+			JSONArray arrayJson = new JSONArray(textViagem);
+			
+			if ( arrayJson != null ){
+				
+				int listCountArray = arrayJson.length();
+				
+				for( int i = 0; i < listCountArray ; i++){
+					
+					JSONObject objViagem = arrayJson.getJSONObject(i);
+					
+					ViagemCliente viag = new ViagemCliente();
+
+					// SM
+					if(!objViagem.isNull("sm")){
+						viag.setSm( Integer.valueOf(objViagem.optString("sm")));
+					} else {
+						viag.setSm(null);
+					}
+					
+					// Data Inicio
+					if(!objViagem.opt("dt_inicio").toString().equals(null)){
+						viag.setDt_inicio(objViagem.optString("dt_inicio"));
+					}
+					
+					// Data Termino
+					if(!objViagem.opt("dt_termino").toString().equals(null)){
+						viag.setDt_termino(objViagem.optString("dt_termino"));
+					}
+					
+					// cavalo
+					if(!objViagem.optString("cavalo").toString().equals(null)){
+						viag.setCavalo(objViagem.optString("cavalo"));
+					}
+	
+					// cidade origem
+					if(!objViagem.optString("cid_origem").toString().equals(null)){
+						viag.setCid_origem(objViagem.optString("cid_origem"));
+					}
+					
+					// cidade destino
+					if(!objViagem.optString("cid_destino").toString().equals(null)){
+						viag.setCid_destino(objViagem.optString("cid_destino"));
+					}
+
+					// tecnologia
+					if(!objViagem.optString("tecnologia").toString().equals(null)){
+						viag.setTecnologia(objViagem.optString("tecnologia"));
+					}
+
+					// produto
+					if(!objViagem.optString("produto").toString().equals(null)){
+						viag.setProduto(objViagem.optString("produto"));
+					}					
+										
+					// valor
+					if(!objViagem.optString("valor").toString().equals(null)){
+						
+						relViagemValor = new BigDecimal(objViagem.opt("valor").toString());
+						
+						viag.setValor(relViagemValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+						vlrRelatorioViagem = vlrRelatorioViagem.add(relViagemValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+					}					
+					
+					viag.setId(i + 1);
+					
+					lstRelViagem.add(viag);					
+					
+				}
+				
+				
+			} else {
+				//TODO Nada consta no Json
+			}
+						
+			openDlgRelatorioViagem();
+						
+		}
+		
+	}
+		
+	public void openDlgRelatorioViagem() {
+		options.put("width", "96%");
+		options.put("height", "80%");
+
+		RequestContext.getCurrentInstance().openDialog("dlg_relatorioViagem", options, null);
+		RequestContext.getCurrentInstance().execute("onTop('dlg_relatorioViagem')");
+	}
+	
+	public void verConsumoCheckList(){
+		// Processo do Faturamento Cadastro
+		String nomeProcedureChamadaCheckList = "usuario_detalhe_checklists";
+
+		Date dtMes = null;	
+
+		Calendar now = Calendar.getInstance();
+		now.setTime(this.getDtPesquisa());
+		now.set(Calendar.HOUR, 23);
+		now.set(Calendar.MINUTE, 00);
+		now.set(Calendar.SECOND, 00);
+
+		dtMes = now.getTime();
+				
+		
+		this.setVlrRelatorioCheckList(BigDecimal.ZERO);
+		
+		StoredProcedureQuery queryPvCheck = virtualCrud.getEntityManager()
+				.createNamedStoredProcedureQuery(nomeProcedureChamadaCheckList);
+		
+		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); 
+		
+		queryPvCheck.setParameter("dt_mes", dtMes);
+		queryPvCheck.setParameter("id_area"  , numIDAreaC);
+		queryPvCheck.execute();
+		
+		String textCheck = queryPvCheck.getResultList().get(0).toString();
+		
+		lstRelCheckList = new ArrayList<CheckListCliente>();
+		
+		if (!textCheck.equals("[{")){
+			
+			
+			JSONArray arrayJson = new JSONArray(textCheck);
+			
+			if ( arrayJson != null ){
+				
+				int listCountArray = arrayJson.length();
+				
+				for( int i = 0; i < listCountArray ; i++){
+					
+					JSONObject objCheck = arrayJson.getJSONObject(i);
+					
+					CheckListCliente check = new CheckListCliente();
+
+					// ID
+					if(!objCheck.isNull("id")){
+						check.setId(Integer.valueOf(objCheck.optString("id")));
+					} else {
+						check.setId(null);
+					}
+					
+					// Data 
+					if(!objCheck.opt("data").toString().equals(null)){
+						check.setData(objCheck.optString("data"));
+					}
+					
+					// cavalo
+					if(!objCheck.optString("cavalo").toString().equals(null)){
+						check.setCavalo(objCheck.optString("cavalo"));
+					}
+
+					// status
+					if(!objCheck.optString("status").toString().equals(null)){
+						check.setStatus(objCheck.optString("status"));
+					}
+										
+					// valor
+					if(!objCheck.optString("valor").toString().equals(null)){
+						
+						relCheckListValor = new BigDecimal(objCheck.opt("valor").toString());
+						
+						check.setValor(relCheckListValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+						vlrRelatorioCheckList = vlrRelatorioCheckList.add(relCheckListValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+					}					
+										
+					lstRelCheckList.add(check);
+										
+				}
+				
+				
+			} else {
+				//TODO Nada consta no Json
+			}
+						
+			openDlgRelatorioChecklist();
+						
+		}
+		
+	}
+		
+	public void openDlgRelatorioChecklist() {
+		options.put("width", "96%");
+		options.put("height", "80%");
+
+		RequestContext.getCurrentInstance().openDialog("dlg_relatorioCheckList", options, null);
+		RequestContext.getCurrentInstance().execute("onTop('dlg_relatorioCheckList')");
+	}
+	
+	public void verConsumoAutotrac(){
+		// Processo do Faturamento Cadastro
+		String nomeProcedureChamadaAutotrac = "usuario_detalhe_autotrac";
+
+		Date dtMes = null;	
+
+		Calendar now = Calendar.getInstance();
+		now.setTime(this.getDtPesquisa());
+		now.set(Calendar.HOUR, 23);
+		now.set(Calendar.MINUTE, 00);
+		now.set(Calendar.SECOND, 00);
+
+		dtMes = now.getTime();
+		
+		this.setVlrRelatorioAutotrac(BigDecimal.ZERO);
+		this.setVlrRelatorioAutotracComunicacao(BigDecimal.ZERO);
+		this.setRelTotalAutotracValor(BigDecimal.ZERO);
+		
+		StoredProcedureQuery queryPvAuto = virtualCrud.getEntityManager()
+				.createNamedStoredProcedureQuery(nomeProcedureChamadaAutotrac);
+		
+		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); 
+		
+		queryPvAuto.setParameter("dt_mes", dtMes);
+		queryPvAuto.setParameter("id_area"  , numIDAreaC);
+		queryPvAuto.execute();
+		
+		String textAuto = queryPvAuto.getResultList().get(0).toString();
+		
+		lstRelAutotrac = new ArrayList<AutotracCliente>();
+		
+		if (!textAuto.equals("[{")){
+			
+			
+			JSONArray arrayJson = new JSONArray(textAuto);
+			
+			if ( arrayJson != null ){
+				
+				int listCountArray = arrayJson.length();
+				
+				for( int i = 0; i < listCountArray ; i++){
+					
+					JSONObject objAuto = arrayJson.getJSONObject(i);
+					
+					AutotracCliente auto = new AutotracCliente();
+
+					// mct
+					if(!objAuto.isNull("mct")){
+						auto.setMct(Integer.valueOf(objAuto.optString("mct")));
+					} else {
+						auto.setMct(null);
+					}
+					
+					// cavalo
+					if(!objAuto.optString("cavalo").toString().equals(null)){
+						auto.setCavalo(objAuto.optString("cavalo"));
+					}
+
+					// sm
+					if(!objAuto.optString("sm").toString().equals(null)){
+						auto.setSm(objAuto.optString("sm"));
+					}
+										
+					// valor_ade
+					if(!objAuto.optString("valor_ade").toString().equals(null)){
+						
+						relAutotracValor = new BigDecimal(objAuto.opt("valor_ade").toString());
+						
+						auto.setValor_ade(relAutotracValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+						vlrRelatorioAutotrac = vlrRelatorioAutotrac.add(relAutotracValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+						relTotalAutotracValor = relTotalAutotracValor.add(relAutotracValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+					}		
+					
+					// valor_comunicacao
+					if(!objAuto.optString("valor_comunicacao").toString().equals(null)){
+						
+						relAutotracComunicacaoValor = new BigDecimal(objAuto.opt("valor_comunicacao").toString());
+						
+						auto.setValor_comunicacao(relAutotracComunicacaoValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+						vlrRelatorioAutotracComunicacao = vlrRelatorioAutotracComunicacao.add(relAutotracComunicacaoValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+						relTotalAutotracValor = relTotalAutotracValor.add(relAutotracComunicacaoValor.setScale(2, BigDecimal.ROUND_CEILING));
+						
+					}						
+					
+					auto.setId(i + 1);
+					
+					lstRelAutotrac.add(auto);
+										
+				}
+				
+				
+			} else {
+				//TODO Nada consta no Json
+			}
+						
+			openDlgRelatorioAutotrac();
+						
+		}
+		
+	}
+		
+	public void openDlgRelatorioAutotrac() {
+		options.put("width", "96%");
+		options.put("height", "80%");
+
+		RequestContext.getCurrentInstance().openDialog("dlg_relatorioAutotrac", options, null);
+		RequestContext.getCurrentInstance().execute("onTop('dlg_relatorioAutotrac')");
+	}
+	
 	
 	public void limparVariaveis(){
 		
@@ -1516,6 +2071,142 @@ public class AreaClienteMB implements Serializable{
 	public void setGerVlrTotalFinal(BigDecimal gerVlrTotalFinal) {
 		this.gerVlrTotalFinal = gerVlrTotalFinal;
 	}
-		
+
+	public BigDecimal getRelCadValor() {
+		return relCadValor;
+	}
+
+	public void setRelCadValor(BigDecimal relCadValor) {
+		this.relCadValor = relCadValor;
+	}
+
+	public ArrayList<CadastroCliente> getLstRelCadastro() {
+		return lstRelCadastro;
+	}
+
+	public void setLstRelCadastro(ArrayList<CadastroCliente> lstRelCadastro) {
+		this.lstRelCadastro = lstRelCadastro;
+	}
+
+	public BigDecimal getVlrRelatorioCadastro() {
+		return vlrRelatorioCadastro;
+	}
+
+	public void setVlrRelatorioCadastro(BigDecimal vlrRelatorioCadastro) {
+		this.vlrRelatorioCadastro = vlrRelatorioCadastro;
+	}
+
+	public BigDecimal getRelViagemValor() {
+		return relViagemValor;
+	}
+
+	public void setRelViagemValor(BigDecimal relViagemValor) {
+		this.relViagemValor = relViagemValor;
+	}
+
+	public BigDecimal getVlrRelatorioViagem() {
+		return vlrRelatorioViagem;
+	}
+
+	public void setVlrRelatorioViagem(BigDecimal vlrRelatorioViagem) {
+		this.vlrRelatorioViagem = vlrRelatorioViagem;
+	}
+
+	public ArrayList<ViagemCliente> getLstRelViagem() {
+		return lstRelViagem;
+	}
+
+	public void setLstRelViagem(ArrayList<ViagemCliente> lstRelViagem) {
+		this.lstRelViagem = lstRelViagem;
+	}
+
+	public BigDecimal getRelCheckListValor() {
+		return relCheckListValor;
+	}
+
+	public void setRelCheckListValor(BigDecimal relCheckListValor) {
+		this.relCheckListValor = relCheckListValor;
+	}
+
+	public BigDecimal getVlrRelatorioCheckList() {
+		return vlrRelatorioCheckList;
+	}
+
+	public void setVlrRelatorioCheckList(BigDecimal vlrRelatorioCheckList) {
+		this.vlrRelatorioCheckList = vlrRelatorioCheckList;
+	}
+
+	public ArrayList<CheckListCliente> getLstRelCheckList() {
+		return lstRelCheckList;
+	}
+
+	public void setLstRelCheckList(ArrayList<CheckListCliente> lstRelCheckList) {
+		this.lstRelCheckList = lstRelCheckList;
+	}
+
+	public BigDecimal getRelAutotracValor() {
+		return relAutotracValor;
+	}
+
+	public void setRelAutotracValor(BigDecimal relAutotracValor) {
+		this.relAutotracValor = relAutotracValor;
+	}
+
+	public BigDecimal getVlrRelatorioAutotrac() {
+		return vlrRelatorioAutotrac;
+	}
+
+	public void setVlrRelatorioAutotrac(BigDecimal vlrRelatorioAutotrac) {
+		this.vlrRelatorioAutotrac = vlrRelatorioAutotrac;
+	}
+
+	public ArrayList<AutotracCliente> getLstRelAutotrac() {
+		return lstRelAutotrac;
+	}
+
+	public void setLstRelAutotrac(ArrayList<AutotracCliente> lstRelAutotrac) {
+		this.lstRelAutotrac = lstRelAutotrac;
+	}
+
+	public BigDecimal getRelAutotracComunicacaoValor() {
+		return relAutotracComunicacaoValor;
+	}
+
+	public void setRelAutotracComunicacaoValor(BigDecimal relAutotracComunicacaoValor) {
+		this.relAutotracComunicacaoValor = relAutotracComunicacaoValor;
+	}
+
+	public BigDecimal getRelTotalAutotracValor() {
+		return relTotalAutotracValor;
+	}
+
+	public void setRelTotalAutotracValor(BigDecimal relTotalAutotracValor) {
+		this.relTotalAutotracValor = relTotalAutotracValor;
+	}
+
+	public BigDecimal getVlrRelatorioAutotracComunicacao() {
+		return vlrRelatorioAutotracComunicacao;
+	}
+
+	public void setVlrRelatorioAutotracComunicacao(BigDecimal vlrRelatorioAutotracComunicacao) {
+		this.vlrRelatorioAutotracComunicacao = vlrRelatorioAutotracComunicacao;
+	}
+
+	public boolean isLiberadoBotoesRastreamento() {
+		return liberadoBotoesRastreamento;
+	}
+
+	public void setLiberadoBotoesRastreamento(boolean liberadoBotoesRastreamento) {
+		this.liberadoBotoesRastreamento = liberadoBotoesRastreamento;
+	}
+
+	public boolean isLiberadoBotoesCadastro() {
+		return liberadoBotoesCadastro;
+	}
+
+	public void setLiberadoBotoesCadastro(boolean liberadoBotoesCadastro) {
+		this.liberadoBotoesCadastro = liberadoBotoesCadastro;
+	}
 	
+
 }

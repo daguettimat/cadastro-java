@@ -43,7 +43,9 @@ import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 @Named
 @ViewAccessScoped
@@ -67,12 +69,14 @@ public class ListaCadastralMB implements Serializable {
     private int tipoMotorista;
 	private acCadastro acCadastro;
 	private Usuario usuario;
-
+	
 	//
     // Variáveis de Filtro
     //
 
-    private int nFicha;
+
+
+	private int nFicha;
     private int nLiberacao;
     private int nRenavam;
     private String nChassis;

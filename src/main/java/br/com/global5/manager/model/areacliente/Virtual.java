@@ -1,5 +1,6 @@
 package br.com.global5.manager.model.areacliente;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -39,7 +40,43 @@ import br.com.global5.infra.model.BaseEntity;
                     @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "id_area")
 
             }
-    )    
+    ),
+    @NamedStoredProcedureQuery(
+            name = "usuario_detalhe_cadastro",
+            procedureName = "usuario_detalhe_cadastro",
+            parameters = {
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Date.class, name = "dt_mes"),
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "id_area")
+
+            }
+    ),
+    @NamedStoredProcedureQuery(
+            name = "usuario_detalhe_viagens",
+            procedureName = "usuario_detalhe_viagens",
+            parameters = {
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Date.class, name = "dt_mes"),
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "id_area")
+
+            }
+    ),
+    @NamedStoredProcedureQuery(
+            name = "usuario_detalhe_checklists",
+            procedureName = "usuario_detalhe_checklists",
+            parameters = {
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Date.class, name = "dt_mes"),
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "id_area")
+
+            }
+    ) ,
+    @NamedStoredProcedureQuery(
+            name = "usuario_detalhe_autotrac",
+            procedureName = "usuario_detalhe_autotrac",
+            parameters = {
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Date.class, name = "dt_mes"),
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "id_area")
+
+            }
+    )     
 }
 )
 public class Virtual implements BaseEntity {
