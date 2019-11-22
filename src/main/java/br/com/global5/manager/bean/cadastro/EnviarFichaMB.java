@@ -36,6 +36,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.json.CDL;
 import org.json.JSONArray;
@@ -200,7 +201,7 @@ public class EnviarFichaMB implements Serializable {
 
     @Inject
     private MotoristaVinculoService motVinculoService;
-
+    
 //    @Inject
 //    private FichaClienteService fichaClienteService;
 
@@ -499,14 +500,39 @@ public class EnviarFichaMB implements Serializable {
             context.execute("cnhSHOW();");
             showCNH = true;
 
-        } else {
-            context.execute("cnhHIDE();");
-            showCNH = false;
+        } else {        	
+        	
+            //lstTipoMotorista = new ArrayList<MotoristaVinculo>();
+        	
+            //setLstTipoMotorista(motVinculoService.crud().criteria().between("id", 92, 93).list());
+            //context.update("form0:tipoMotorista");
+            
+        	context.execute("cnhHIDE();");
+            showCNH = false;            
+        }
+
+       
+    }
+
+    public void nacionalb() {
+
+        RequestContext context = RequestContext.getCurrentInstance();
+      
+        if (fichaCliente.isNacional()) {
+      
+
+        } else {        	
+        	
+            lstTipoMotorista = new ArrayList<MotoristaVinculo>();
+        	
+            lstTipoMotorista = motVinculoService.crud().criteria().between("id", 92, 93).list();
+            context.update("form0:tipoMotorista");
+            
         }
 
 
     }
-
+    
     public void veiNacional() {
 
         RequestContext context = RequestContext.getCurrentInstance();
@@ -628,6 +654,7 @@ public class EnviarFichaMB implements Serializable {
                 showMercadoria = true;
                 break;
         }
+        
         RequestContext context = RequestContext.getCurrentInstance();
 
         context.update("form0:btnRefRC");
@@ -3070,7 +3097,30 @@ public class EnviarFichaMB implements Serializable {
     }
 
     public List<MotoristaVinculo> getLstTipoMotorista() {
-        return lstTipoMotorista;
+    	
+
+        
+        if (fichaCliente.isNacional()) {
+      
+        	  lstTipoMotorista = new ArrayList<MotoristaVinculo>();
+          	
+              //lstTipoMotorista = motVinculoService.crud().criteria().between("id", 92, 98).list();
+        	  lstTipoMotorista = motVinculoService.crud().criteria().isNull("exclusao").between("id", 92, 98).list() ;
+              
+        	return lstTipoMotorista;
+
+        } else {        	
+        	
+            lstTipoMotorista = new ArrayList<MotoristaVinculo>();
+            	            
+            lstTipoMotorista = motVinculoService.crud().criteria().isNull("exclusao").between("id", 92, 96).ne("id",94).ne("id",95).list(); 
+         
+            return lstTipoMotorista;
+            
+            
+        }
+    	
+
     }
 
     public void setLstTipoMotorista(List<MotoristaVinculo> lstTipoMotorista) {
