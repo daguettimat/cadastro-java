@@ -8,12 +8,14 @@ import br.com.global5.infra.util.ViaCEPEndereco;
 import br.com.global5.infra.util.checkUsuario;
 import br.com.global5.manager.model.cadastro.Localizador;
 import br.com.global5.manager.model.cadastro.Pessoa;
+import br.com.global5.manager.model.cadastro.PessoaQry;
 import br.com.global5.manager.model.areas.AreaFuncao;
 import br.com.global5.manager.model.ect.Logradouro;
 import br.com.global5.manager.model.enums.DocumentoTipo;
 import br.com.global5.manager.service.cadastro.PessoaService;
 import br.com.global5.manager.service.ect.LogradouroService;
 import br.com.global5.manager.service.enums.DocumentoTipoService;
+import br.com.global5.manager.service.geral.UsuarioService;
 import br.com.global5.template.exception.BusinessException;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.hibernate.Hibernate;
@@ -29,6 +31,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
@@ -59,6 +63,10 @@ public class PessoaMB implements Serializable {
 	private Date dtInicial;
 	private Date dtFinal;
 
+	// pesquisa Pessoa
+	private String nomePesq;
+	private List<PessoaQry> lstPessoaQry;
+	
 	@Inject
 	PessoaService pesService;
 
@@ -68,6 +76,9 @@ public class PessoaMB implements Serializable {
 	@Inject
 	DocumentoTipoService docTipoService;
 
+	@Inject
+	UsuarioService usuService;
+	
 	@PostConstruct
 	public void init() {
 
@@ -283,6 +294,67 @@ public class PessoaMB implements Serializable {
 							+ " não pode ser carregada. Informe ao suporte técnico.",null));
 		}
 	}
+	
+	public void btnPespCliente(){
+		boolean temCriteriosPesq;
+		try{
+			EntityManager em = pesService.crud().getEntityManager();
+			
+			String parametrosSql = " ";
+			
+			try{
+				// Nome do Cliente a ser pesquisado
+				if( nomePesq == ""){
+					temCriteriosPesq = false;
+				} else {
+					parametrosSql += " AND pes_nome ~* '" + nomePesq + "' AND ";
+					temCriteriosPesq = true;
+				}
+			} catch ( Exception e) {
+				e.printStackTrace();
+				temCriteriosPesq = false;
+			}
+		
+			parametrosSql += " 0 = 0 " ;
+			
+			EntityManager emPes = usuService.crud().getEntityManager();
+			
+			/*"  where pesoid in (select area_pesoid_sacado from area where area_anvloid = 2 )  and   pes_pessoa_fisica = false "*/			
+			
+			
+			String query = 	" select  pesoid as idcliente, " +
+					" pes_nome as razao, " +
+					" pes_nome_fantasia as fantasia, " +
+					" pes_documento1 as cnpj, " +
+					" pes_email as email, " +
+					" (select a.afun_areaoid from area_funcao a where a.afunoid = pes_afunoid) as idArea " +
+					" from pessoa  " +
+					"  where pesoid in ( select area_pesoid_sacado from area )  and   pes_pessoa_fisica = false "
+					+ parametrosSql ;
+		
+		lstPessoaQry =  emPes.createNativeQuery(query,"ListPessoaClienteMapping").getResultList();
+		
+		Integer registrosPessoa = lstPessoaQry.size();
+		
+		if(registrosPessoa == 0){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Aviso","Nenhum registro encontrado." ));
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update("formPesqCliente:tablePesqCli");
+		}
+		try {
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update("formPesqCliente:tablePesqCli");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			temCriteriosPesq = false;
+		}
+		
+	}	
 
 	public void onRowUnselect(UnselectEvent event) {
 		pessoa = new Pessoa();
@@ -399,4 +471,22 @@ public class PessoaMB implements Serializable {
     public void setMostrarExcluidos(boolean mostrarExcluidos) {
         this.mostrarExcluidos = mostrarExcluidos;
     }
+
+	public String getNomePesq() {
+		return nomePesq;
+	}
+
+	public void setNomePesq(String nomePesq) {
+		this.nomePesq = nomePesq;
+	}
+
+	public List<PessoaQry> getLstPessoaQry() {
+		return lstPessoaQry;
+	}
+
+	public void setLstPessoaQry(List<PessoaQry> lstPessoaQry) {
+		this.lstPessoaQry = lstPessoaQry;
+	}
+    
+    
 }

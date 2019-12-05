@@ -501,36 +501,12 @@ public class EnviarFichaMB implements Serializable {
             showCNH = true;
 
         } else {        	
-        	
-            //lstTipoMotorista = new ArrayList<MotoristaVinculo>();
-        	
-            //setLstTipoMotorista(motVinculoService.crud().criteria().between("id", 92, 93).list());
-            //context.update("form0:tipoMotorista");
             
         	context.execute("cnhHIDE();");
             showCNH = false;            
         }
 
        
-    }
-
-    public void nacionalb() {
-
-        RequestContext context = RequestContext.getCurrentInstance();
-      
-        if (fichaCliente.isNacional()) {
-      
-
-        } else {        	
-        	
-            lstTipoMotorista = new ArrayList<MotoristaVinculo>();
-        	
-            lstTipoMotorista = motVinculoService.crud().criteria().between("id", 92, 93).list();
-            context.update("form0:tipoMotorista");
-            
-        }
-
-
     }
     
     public void veiNacional() {
@@ -3097,29 +3073,8 @@ public class EnviarFichaMB implements Serializable {
     }
 
     public List<MotoristaVinculo> getLstTipoMotorista() {
-    	
-
         
-        if (fichaCliente.isNacional()) {
-      
-        	  lstTipoMotorista = new ArrayList<MotoristaVinculo>();
-          	
-              //lstTipoMotorista = motVinculoService.crud().criteria().between("id", 92, 98).list();
-        	  lstTipoMotorista = motVinculoService.crud().criteria().isNull("exclusao").between("id", 92, 98).list() ;
-              
-        	return lstTipoMotorista;
-
-        } else {        	
-        	
-            lstTipoMotorista = new ArrayList<MotoristaVinculo>();
-            	            
-            lstTipoMotorista = motVinculoService.crud().criteria().isNull("exclusao").between("id", 92, 96).ne("id",94).ne("id",95).list(); 
-         
-            return lstTipoMotorista;
-            
-            
-        }
-    	
+        return lstTipoMotorista;
 
     }
 

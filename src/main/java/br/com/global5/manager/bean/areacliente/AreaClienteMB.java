@@ -20,6 +20,7 @@ import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 
 import br.com.global5.infra.Crud;
 import br.com.global5.infra.util.checkUsuario;
@@ -28,6 +29,7 @@ import br.com.global5.manager.model.areacliente.CadastroCliente;
 import br.com.global5.manager.model.areacliente.CheckListCliente;
 import br.com.global5.manager.model.areacliente.ViagemCliente;
 import br.com.global5.manager.model.areacliente.Virtual;
+import br.com.global5.manager.model.cadastro.PessoaQry;
 import br.com.global5.manager.model.geral.Usuario;
 //import br.com.global5.manager.service.areacliente.CadastroClienteService;
 import br.com.global5.manager.service.areacliente.VirtualService;
@@ -177,6 +179,14 @@ public class AreaClienteMB implements Serializable{
 	// Variaveis para Dlg
 	private Map<String, Object> options;
 	
+	
+	// Variaveis para Cliente
+	private String cnpjCliente = "";
+	private String nomeClientePesquisado = "";
+	private Integer numCodPessoaSac = null;
+	private Integer idClientePesquisado = null;
+	private Integer idAreaCliente = null;
+	
 	@Inject
 	VirtualService virtualService;
 	
@@ -246,7 +256,15 @@ public class AreaClienteMB implements Serializable{
 		StoredProcedureQuery queryPv = virtualCrud.getEntityManager()
 				.createNamedStoredProcedureQuery(nomeProcedureChamada);
 		
-		Integer numIDArea = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());		
+		Integer numIDArea = null;
+		
+		if (  idAreaCliente != null  ) {
+			numIDArea = idAreaCliente;
+		} else {
+			 numIDArea = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());
+		}
+		
+				
 		
 		queryPv.setParameter("dt_mes", dtMes);
 		queryPv.setParameter("id_area"  , numIDArea);
@@ -601,7 +619,15 @@ public class AreaClienteMB implements Serializable{
 		StoredProcedureQuery queryPvc = virtualCrud.getEntityManager()
 				.createNamedStoredProcedureQuery(nomeProcedureChamadaCadastro);
 		
-		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); //Integer.valueOf(this.getNumContratoPesq());
+		Integer numIDAreaC = null;
+		
+		if (  idAreaCliente != null  ) {
+			numIDAreaC = idAreaCliente;
+		} else {
+			 numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());
+		}
+		
+		//Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); //Integer.valueOf(this.getNumContratoPesq());
 		
 		queryPvc.setParameter("dt_mes", dtMes);
 		queryPvc.setParameter("id_area"  , numIDAreaC);
@@ -790,7 +816,15 @@ public class AreaClienteMB implements Serializable{
 		StoredProcedureQuery queryPvCad = virtualCrud.getEntityManager()
 				.createNamedStoredProcedureQuery(nomeProcedureChamadaCadastro);
 		
-		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); //Integer.valueOf(this.getNumContratoPesq());
+		Integer numIDAreaC = null;
+		
+		if (  idAreaCliente != null  ) {
+			numIDAreaC = idAreaCliente;
+		} else {
+			 numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());
+		}
+		
+		//Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); //Integer.valueOf(this.getNumContratoPesq());
 		
 		queryPvCad.setParameter("dt_mes", dtMes);
 		queryPvCad.setParameter("id_area"  , numIDAreaC);
@@ -942,7 +976,15 @@ public class AreaClienteMB implements Serializable{
 		StoredProcedureQuery queryPvViagem = virtualCrud.getEntityManager()
 				.createNamedStoredProcedureQuery(nomeProcedureChamadaViagem);
 		
-		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); 
+		Integer numIDAreaC = null;
+		
+		if (  idAreaCliente != null  ) {
+			numIDAreaC = idAreaCliente;
+		} else {
+			 numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());
+		}
+		
+		//Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); 
 		
 		queryPvViagem.setParameter("dt_mes", dtMes);
 		queryPvViagem.setParameter("id_area"  , numIDAreaC);
@@ -1065,7 +1107,15 @@ public class AreaClienteMB implements Serializable{
 		StoredProcedureQuery queryPvCheck = virtualCrud.getEntityManager()
 				.createNamedStoredProcedureQuery(nomeProcedureChamadaCheckList);
 		
-		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); 
+		Integer numIDAreaC = null;
+		
+		if (  idAreaCliente != null  ) {
+			numIDAreaC = idAreaCliente;
+		} else {
+			 numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());
+		}
+		
+		//Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); 
 		
 		queryPvCheck.setParameter("dt_mes", dtMes);
 		queryPvCheck.setParameter("id_area"  , numIDAreaC);
@@ -1167,7 +1217,15 @@ public class AreaClienteMB implements Serializable{
 		StoredProcedureQuery queryPvAuto = virtualCrud.getEntityManager()
 				.createNamedStoredProcedureQuery(nomeProcedureChamadaAutotrac);
 		
-		Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); 
+		Integer numIDAreaC = null;
+		
+		if (  idAreaCliente != null  ) {
+			numIDAreaC = idAreaCliente;
+		} else {
+			 numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());
+		}
+		
+		//Integer numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId(); 
 		
 		queryPvAuto.setParameter("dt_mes", dtMes);
 		queryPvAuto.setParameter("id_area"  , numIDAreaC);
@@ -1341,6 +1399,41 @@ public class AreaClienteMB implements Serializable{
 		msgNfseCadastro = "";
 		
 	}
+	
+	
+	// Cliente
+	
+	public void clienteSelPesq(PessoaQry cli) {
+		RequestContext.getCurrentInstance().closeDialog(cli);
+	}	
+	
+	public void clienteSelecionado(SelectEvent event) {
+		PessoaQry pessoaqry = (PessoaQry) event.getObject();
+		
+		nomeClientePesquisado =  "  - " + pessoaqry.getRazao();
+		
+		String cnpjCheio = pessoaqry.getCnpj();
+		String cnpjMask  = "";
+		
+		cnpjMask =  cnpjCheio.substring(0, 2) + "." + cnpjCheio.substring(2, 5) + "." + cnpjCheio.substring(5, 8) + "/"
+					+ cnpjCheio.substring(8, 12) + "-" + cnpjCheio.substring(12, 14);
+
+		cnpjCliente = " CNPJ : " + cnpjMask;
+		numCodPessoaSac = pessoaqry.getIdcliente();
+		
+		idClientePesquisado = pessoaqry.getIdcliente();
+		idAreaCliente = pessoaqry.getIdArea();
+		
+	}
+	
+	public void openDlgPesqCliente() {
+		options.put("width", "70%");
+		options.put("height", "60%");
+
+		RequestContext.getCurrentInstance().openDialog("dlg_pesqCliente", options, null);
+		RequestContext.getCurrentInstance().execute("onTop('dlg_pesqCliente')");
+	}
+	
 	
 	public Virtual getVirtual() {
 		return virtual;
@@ -2206,6 +2299,38 @@ public class AreaClienteMB implements Serializable{
 
 	public void setLiberadoBotoesCadastro(boolean liberadoBotoesCadastro) {
 		this.liberadoBotoesCadastro = liberadoBotoesCadastro;
+	}
+
+	public String getCnpjCliente() {
+		return cnpjCliente;
+	}
+
+	public void setCnpjCliente(String cnpjCliente) {
+		this.cnpjCliente = cnpjCliente;
+	}
+
+	public Integer getNumCodPessoaSac() {
+		return numCodPessoaSac;
+	}
+
+	public void setNumCodPessoaSac(Integer numCodPessoaSac) {
+		this.numCodPessoaSac = numCodPessoaSac;
+	}
+
+	public Integer getIdClientePesquisado() {
+		return idClientePesquisado;
+	}
+
+	public void setIdClientePesquisado(Integer idClientePesquisado) {
+		this.idClientePesquisado = idClientePesquisado;
+	}
+
+	public String getNomeClientePesquisado() {
+		return nomeClientePesquisado;
+	}
+
+	public void setNomeClientePesquisado(String nomeClientePesquisado) {
+		this.nomeClientePesquisado = nomeClientePesquisado;
 	}
 	
 
