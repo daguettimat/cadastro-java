@@ -22,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections4.ListUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 
@@ -62,6 +63,8 @@ public class LogonMB implements Serializable {
     private boolean loggedIn;
 
     private Usuario usuarioLogado;
+    
+    private boolean acessoSistemaCadastro = false;
 
     private Properties prop = new Properties();
     private InputStream input = null;
@@ -456,14 +459,21 @@ public class LogonMB implements Serializable {
     					 parametersNv2 = " con_areaoid = " + numAreaoid + " and ";
     					 
     					 // Seleciona contratos ativos (645) e com aviso previos (646) no produto cadastro
-    					 String query2 = "select row_number() over() as id, conoid from java.contrato where " + parametersNv2 + 
-    						 " con_enumoid_status in (645, 646) and con_enumoid_produto_tipo = 15" ;
+    					 String query2 = "select row_number() over() as id, conoid, con_enumoid_produto_tipo as  produtoid from java.contrato where " + parametersNv2 + 
+    						 " con_enumoid_status in (645, 646) and con_enumoid_produto_tipo in (15,16)" ;
     					 
     					 listUsuCtr = em2.createNativeQuery(query2, "UsuarioCtrMapping").getResultList();
     					 int sizeListUsuCtr = listUsuCtr.size();
     					 
     					 if(sizeListUsuCtr != 0){
     						 // Retorna string para confirmar o acesso
+    						 for( int i = 0; i < sizeListUsuCtr; i++) {
+    							 
+    							 if ( listUsuCtr.get(i).getProdutoid() == 15) {
+    								 this.setAcessoSistemaCadastro(true);
+    							 }
+    							 
+    						 }
     						 
     						 this.verificarProdutosDoContrato(listUsuCtr.get(0).getConoid());
     						 
@@ -491,8 +501,8 @@ public class LogonMB implements Serializable {
        					 parametersNv3 = " con_areaoid = " + numArea_areaoid_pai + " and ";
        					 
        					 // Seleciona contratos ativos (645) e com aviso previos (646) no produto cadastro
-       					 String query3 = "select row_number() over() as id, conoid from java.contrato where " + parametersNv3 + 
-       						 " con_enumoid_status in (645, 646) and con_enumoid_produto_tipo = 15" ;
+       					 String query3 = "select row_number() over() as id, conoid, con_enumoid_produto_tipo as  produtoid from java.contrato where " + parametersNv3 + 
+       						 " con_enumoid_status in (645, 646) and con_enumoid_produto_tipo in (15, 16)" ;
        					 
        					 listUsuCtr = em3.createNativeQuery(query3, "UsuarioCtrMapping").getResultList();
        					 
@@ -501,6 +511,14 @@ public class LogonMB implements Serializable {
        					 if(sizeListUsuCtr != 0){
        						 // Retorna string para confirmar o acesso
        					
+    						 for( int i = 0; i < sizeListUsuCtr; i++) {
+    							 
+    							 if ( listUsuCtr.get(i).getProdutoid() == 15) {
+    								 this.setAcessoSistemaCadastro(true);
+    							 }
+    							 
+    						 } 
+       						 
        						this.verificarProdutosDoContrato(listUsuCtr.get(0).getConoid());
        						 
        						 
@@ -519,6 +537,9 @@ public class LogonMB implements Serializable {
     				// Acesso ao Operacional Interno Global5
     				 {
     					//alfUsu_Tipo = "O";
+
+    					 this.setAcessoSistemaCadastro(true);
+    				
     					// Retorna string para confirmar o acesso
   						 return "concedida";
     				}
@@ -735,7 +756,16 @@ public class LogonMB implements Serializable {
 
 	public void setCodArea_anvloid(Integer codArea_anvloid) {
 		this.codArea_anvloid = codArea_anvloid;
+	}
+
+	public boolean isAcessoSistemaCadastro() {
+		return acessoSistemaCadastro;
+	}
+
+	public void setAcessoSistemaCadastro(boolean acessoSistemaCadastro) {
+		this.acessoSistemaCadastro = acessoSistemaCadastro;
 	}	
 	    
+	
 	
 }

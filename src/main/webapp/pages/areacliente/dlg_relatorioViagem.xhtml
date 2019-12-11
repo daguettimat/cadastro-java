@@ -30,7 +30,7 @@
 		<p:separator/>
 		<p:spacer width="2px"/>		
 
-		<p:dataTable  
+		<p:dataTable
 		 	value="#{areaClienteMB.lstRelViagem}" var="c"
 			emptyMessage="Nenhum registro foi encontrado." 
 			rows="1000" rowKey="#{c.id}" id="tbRelCad" 
@@ -111,6 +111,15 @@
 
 		</p:dataTable>
 
+		<br/>
+		   
+		   <h3>Exportar para Excel </h3>
+ 
+		    <h:commandLink>
+        		<p:graphicImage value="/resources/images/xlsx-icon.png" style="width:2%; height:2%" />
+        		<p:dataExporter type="xls" target="tbRelCad" fileName="lstRelViagem" pageOnly="true" />
+    		</h:commandLink>
+ 		
 		
 	</h:form>
 

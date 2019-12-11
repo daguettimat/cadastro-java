@@ -107,6 +107,9 @@
 
         <h:form>
             <h:inputHidden id="msgUsuario" value="#{indexMB.msgUsuario}" />
+            
+            <ui:fragment rendered= "#{logonMB.acessoSistemaCadastro}" >
+            
             <div class="row" data-step="1"
                  data-intro="Esse é o resumo informativo, aqui você verá o que aconteceu nas últimas 48 horas...">
                 <!-- Enviadas -->
@@ -238,6 +241,8 @@
                     </div>
                 </div>
             </div>
+		
+			
 
             <ui:fragment  rendered="#{indexMB.usuario.interno == false and indexMB.total > 0}">
                 <div class="row">
@@ -325,7 +330,6 @@
                     </div>
                 </div>
             </ui:fragment>
-
 
             <p:tabView dynamic="true">
                 <p:tab id="PC" title="Pendências Cadastrais" titleStyleClass="box-danger">
@@ -601,6 +605,15 @@
             </p:dialog>
 
             <p:remoteCommand name="encerrarAviso" actionListener="#{indexMB.encerrarAviso}"/>
+
+			
+			</ui:fragment>
+
+			<ui:fragment rendered= "#{!logonMB.acessoSistemaCadastro}" >
+			
+				<p:graphicImage value="/resources/images/logoG5.png" style="width:30%; height:40% ; padding-top: 10%; display: block;margin-left: auto; margin-right: auto "  />
+			
+			</ui:fragment>
 
         </h:form>
 

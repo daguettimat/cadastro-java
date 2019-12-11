@@ -327,7 +327,8 @@ public class PessoaMB implements Serializable {
 					" pes_nome_fantasia as fantasia, " +
 					" pes_documento1 as cnpj, " +
 					" pes_email as email, " +
-					" (select a.afun_areaoid from area_funcao a where a.afunoid = pes_afunoid) as idArea " +
+					" (select a.afun_areaoid from area_funcao a where a.afunoid = pes_afunoid) as idArea ," +
+					" (select (t.telddd || '-' || SUBSTRING(t.telfone,1 , 4 ) || '-' || SUBSTRING(t.telfone,5, 10 ) ) as numTel from telefone t where t.teloid = pes_teloid) as fone " +
 					" from pessoa  " +
 					"  where pesoid in ( select area_pesoid_sacado from area )  and   pes_pessoa_fisica = false "
 					+ parametrosSql ;

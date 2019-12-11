@@ -17,7 +17,8 @@ import javax.persistence.SqlResultSetMapping;
 							@FieldResult ( name = "fantasia", column = "fantasia"),
 							@FieldResult ( name = "cnpj", column = "cnpj"),
 							@FieldResult ( name = "email", column = "email"),
-							@FieldResult ( name = "idArea", column = "idArea")	
+							@FieldResult ( name = "idArea", column = "idArea"),
+							@FieldResult ( name = "fone", column = "fone")
 					}
 				) 
 		)
@@ -33,6 +34,7 @@ public class PessoaQry {
 	private String 	cnpj;
 	private String 	email;
 	private Integer idArea;
+	private String  fone;
 	
 	public PessoaQry(){}
 
@@ -83,6 +85,14 @@ public class PessoaQry {
 	public void setIdArea(Integer idArea) {
 		this.idArea = idArea;
 	}
-		
+
+	public String getFone() {
+		return fone;
+	}
+
+	public void setFone(String fone) {
+		this.fone = fone;
+	}
+			
 	
 }

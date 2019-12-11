@@ -250,8 +250,11 @@
 
                 <p:commandLink id="xls" ajax="false">
                     <p:graphicImage value="/resources/images/xlsx-icon.png"/>
-                    <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}"  />
-                    <p:dataExporter type="xlsx" target="historicoTable" fileName="historico_ficha" facetBackground="#b2aeae" datasetPadding="4" postProcessor="#{historicoFichasMB.postProcessXLS}" />
+                    <f:setPropertyActionListener value="false" 
+                    target="#{exporterController.customExporter}"  />
+                    <p:dataExporter type="xlsx" target="historicoTable" fileName="historico_ficha" 
+                    facetBackground="#b2aeae" datasetPadding="4" 
+                    postProcessor="#{historicoFichasMB.postProcessXLS}" />
 
                 </p:commandLink>
 

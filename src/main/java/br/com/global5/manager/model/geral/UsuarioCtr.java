@@ -14,7 +14,8 @@ import br.com.global5.infra.model.BaseEntity;
                 entityClass = UsuarioCtr.class,
                 fields = {
                 		@FieldResult(name = "id" , column = "id"),
-                		@FieldResult(name = "conoid" , column = "conoid")
+                		@FieldResult(name = "conoid" , column = "conoid"),
+                		@FieldResult(name = "produtoid" , column = "produtoid")
                 }
             )
         )
@@ -25,6 +26,7 @@ public class UsuarioCtr implements BaseEntity{
 	@Id
 	private Integer id;
 	private Integer conoid;
+	private Integer produtoid;
 	
 	public UsuarioCtr(){}
 
@@ -42,6 +44,16 @@ public class UsuarioCtr implements BaseEntity{
 
 	public void setConoid(Integer conoid) {
 		this.conoid = conoid;
+	}
+
+	public Integer getProdutoid() {
+		return produtoid;
+	}
+
+	public void setProdutoid(Integer produtoid) {
+		this.produtoid = produtoid;
 	}	
+	
+	
 	
 }
