@@ -10,7 +10,7 @@ import br.com.global5.rastreamento.model.enums.TipoAnexo;
 import br.com.global5.rastreamento.model.sinc.SincViagem;
 
 @Entity
-@Table(name = "evento_anexo")
+@Table(name = "rastreamento.evento_anexo")
 public class EventoAnexo implements BaseEntity {
 	
 	private static final long serialVersionUID = 1L;
@@ -28,9 +28,12 @@ public class EventoAnexo implements BaseEntity {
 	@Column(name="evea_eveoid_nr_evento")
 	private Integer numEvento;
 
-	@ManyToOne
-	@JoinColumn(name="evea_viagoid")
-	private SincViagem sincViagem;
+	@Column(name="evea_viagoid")
+	private Integer sincViagem;
+	
+	//@ManyToOne
+	//@JoinColumn(name="evea_viagoid")
+	//private SincViagem sincViagem;
 
 	@ManyToOne(fetch = FetchType.EAGER,
 			targetEntity = TipoAnexo.class,
@@ -102,7 +105,7 @@ public class EventoAnexo implements BaseEntity {
 	public void setNumEvento(Integer numEvento) {
 		this.numEvento = numEvento;
 	}
-
+/*
 	public SincViagem getSincViagem() {
 		return sincViagem;
 	}
@@ -110,7 +113,16 @@ public class EventoAnexo implements BaseEntity {
 	public void setSincViagem(SincViagem sincViagem) {
 		this.sincViagem = sincViagem;
 	}
+*/
 
+	public Integer getSincViagem() {
+		return sincViagem;
+	}
+
+	public void setSincViagem(Integer sincViagem) {
+		this.sincViagem = sincViagem;
+	}
+	
 	public TipoAnexo getTipoAnexo() {
 		return tipoAnexo;
 	}

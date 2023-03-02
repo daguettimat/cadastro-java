@@ -11,7 +11,7 @@ import java.io.Serializable;
 @SessionScoped
 public class SkinMB implements Serializable {
 
-    private String theme = "skin-red";
+    private String theme = "skin-blue";
 
 
     public void changeTheme(String theme){

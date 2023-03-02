@@ -14,7 +14,7 @@ import br.com.global5.rastreamento.model.bi.EventoInfoViagem;
  */
 public class EventoInfoViagemService extends CrudService<EventoInfoViagem> {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2019140306007L;
 
 	@Override
 	public Criteria configPagination(Filter<EventoInfoViagem> filter) {

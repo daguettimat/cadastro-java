@@ -20,11 +20,27 @@ import org.primefaces.model.UploadedFile;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -65,6 +81,10 @@ public class AppUtils {
     private static String ambiente;
     // load a properties file
 
+    private static final String senhaEmail = "iKzC%M%IY0q1";
+    
+    private static String OS = System.getProperty("os.name").toLowerCase();
+    
 	public static final String dirImagens = "/var/www/fotos/";
 	public static final String dirImagensChamados = "/var/www/chamados/";
 	public static final String dirAnexosBI = "/var/www/anexos_bi/";
@@ -1758,7 +1778,8 @@ public class AppUtils {
 			input = new FileInputStream(classLoader.getResource("config/admin-config.properties").getFile());
 			prop.load(input);
 			// get the property value and print it out
-			ambiente = prop.getProperty("geral.ambiente").toUpperCase();
+			//ambiente = prop.getProperty("geral.ambiente").toUpperCase();
+			ambiente = "PRODUCAO";
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -1869,6 +1890,226 @@ public class AppUtils {
 
 	}
 
+    /*
+     * Método para identificar sistema operacional do local onde se encontra-se o serviço do wildfly
+     */
+    public static String identificaOS(){
+    	
+    	String sysOpe = "";
+    	
+    	System.out.println(OS);
+    	
+    	if(isWindows()){    		
+    		//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Aviso","Sistema Operacional Windows"));
+    		return sysOpe = "win";
+    	} else if (isUnix()){    		 
+    		//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Aviso","Sistema Operacional UNIX/LINUX"));
+    		return sysOpe = "nix";
+    	}
+    	
+    	return null;
+    }
+    
+    public static boolean isWindows(){
+    	return (OS.indexOf("win") >= 0);
+    }
+    
+    public static boolean isUnix() {
 
+		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
+		
+	}
+    
+    public static boolean isMac() {
 
+		return (OS.indexOf("mac") >= 0);
+
+	}
+    
+    public static boolean isSolaris() {
+
+		return (OS.indexOf("sunos") >= 0);
+
+	}
+
+    public static final String SERVIDOR_SMTP = "mail.global5.com.br" ; //"smtp.gmail.com";
+    public static final String PORTA_SERVIDOR_SMTP = "587";
+    private static final String CONTA_EMAIL = "rastreamento@global5.com.br";
+    private static final String SENHA_EMAIL = "Truck@#2021"; 
+    
+	private static String de;
+	private static String para;
+	private static String assunto;
+	private static String mensagem;
+    
+    
+    public static void enviarEmail(String localArq, String nomeArq , String toEmail, String ccEmail) throws IOException{
+    	
+    	String paraEmail = toEmail; 
+    	String ccopiaEmail = ccEmail;
+    	
+    	FacesContext context = FacesContext.getCurrentInstance();
+    	AutenticaEmail autenticaEmail = new AutenticaEmail(CONTA_EMAIL, SENHA_EMAIL);
+    	
+    	Session session = Session.getInstance(configuracaoEmail(), 
+    			new javax.mail.Authenticator(){
+    				protected PasswordAuthentication getPasswordAuthentication(){
+    					return new PasswordAuthentication(CONTA_EMAIL, SENHA_EMAIL);
+    				}
+    	});
+    	
+    	session.getProperties().put("mail.smtp.ssl.trust", SERVIDOR_SMTP); //  "smtp.gmail.com"
+    	
+    	try {
+    		//efransys@gmail.com, fcbueno25@gmail.com , filipe.aira@global5.com.br
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(CONTA_EMAIL));
+			message.setRecipients(
+					Message.RecipientType.TO ,
+					//InternetAddress.parse("filipe.aira@global5.com.br,francis.bueno@global5.com.br")
+					InternetAddress.parse(toEmail)
+					);
+			message.setRecipients(
+					Message.RecipientType.CC , 
+					InternetAddress.parse(ccEmail)
+					);
+			
+			message.setSubject("Global 5 - Envio de Boletim Informativo " + nomeArq);
+			message.setText("Não responda a este email" 
+						+ "\n \n Atenciosamente" + "\nEquipe Rastreamento Global5");
+			
+			
+			// Anexo ao email
+			BodyPart messageBodyPart = new MimeBodyPart();
+			
+				String body = "" 
+						+ "\nEmail de Boletim Informativo"
+						+ "\nNão responda a este email."
+						+ "\n \nAtenciosamente," + "\nEquipe Rastreamento Global5";
+			
+				//Fill the message
+				messageBodyPart.setText(body);
+				
+				//Create a multipart message for attachment
+				Multipart multipart = new MimeMultipart();
+				
+				//Set text message part
+				multipart.addBodyPart(messageBodyPart);
+				
+				// Second part is attachment
+		        messageBodyPart = new MimeBodyPart();
+		        
+		        // meu codigo....
+		        Path dir = FileSystems.getDefault().getPath(localArq);
+		        DirectoryStream<Path> stream = Files.newDirectoryStream(dir, nomeArq);
+		        
+		        String filename = "";
+		        
+		        for(Path path : stream){
+		        	filename = path.getFileName().toString();
+		        }
+		        
+		        //dirAnexosBI
+		        DataSource source = new FileDataSource(localArq + nomeArq);
+		        messageBodyPart.setDataHandler(new DataHandler(source));
+		        messageBodyPart.setFileName(filename);
+		        multipart.addBodyPart(messageBodyPart);
+		        
+		        message.setContent(multipart);
+			
+			Transport.send(message);
+			
+			
+			System.out.println("Done");
+			
+		} catch (AddressException e) {
+			FacesMessage msg = new FacesMessage("Erro ao montar mensagem de e-mail! Erro: " + e.getMessage());
+			context.addMessage(null, msg);
+			return;
+		} catch (MessagingException e) {
+			FacesMessage msg = new FacesMessage("Erro ao enviar e-mail! Erro: " + e.getMessage());
+			context.addMessage(null, msg);
+			return;
+		}
+    	
+    	/*
+    	Session session = Session.getDefaultInstance(configuracaoEmail(), autenticaEmail);
+    	
+    	// Habilita o Log das acoes executadas durante o envio do email
+    	session.setDebug(true);
+    	
+    	try {
+			de = "francis.bueno@global5.com.br";
+    		assunto = "Envio de email sistema Cadastro";
+    		mensagem = "Boa tarde \n segue mensagem de teste \n Att \n Equipe rastreamento";
+    		para = "fcbueno25@gmail.com";
+    		
+    		Transport envio = null;
+    		MimeMessage email = new MimeMessage(session);
+    		email.setRecipient(Message.RecipientType.TO, new InternetAddress(para));
+    		email.setFrom(new InternetAddress(de));
+    		email.setSubject(assunto);
+    		email.setContent(mensagem, "text/plain");
+    		email.setSentDate(new Date());
+    		
+    		envio = session.getTransport("smtp");
+    		envio.connect(SERVIDOR_SMTP, CONTA_EMAIL, SENHA_EMAIL);
+    		
+    		email.saveChanges();
+    		
+    		envio.sendMessage(email, email.getAllRecipients());
+    		envio.close();
+    		
+    		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Atenção","E-mail enviado com sucesso"));
+    		
+    		
+    		
+		} catch (AddressException e) {
+			FacesMessage msg = new FacesMessage("Erro ao montar mensagem de e-mail! Erro: " + e.getMessage());
+			context.addMessage(null, msg);
+			return;
+		} catch (MessagingException e) {
+			FacesMessage msg = new FacesMessage("Erro ao enviar e-mail! Erro: " + e.getMessage());
+			context.addMessage(null, msg);
+			return;
+		}
+		*/
+    	
+    }
+    
+    public static Properties configuracaoEmail(){
+    	
+    	Properties config = new Properties();
+    	
+    	// Descomentar somente se utilizar servidor com proxy
+    	/*
+		config.setProperty("proxySet", "true");
+    	config.setProperty("socksProxyHost", "127.0.0.1");
+    	config.setProperty("socksProxyHost", "8080");    	 
+    	 */
+    	/* Envio via Tipo Seguranca StartTls */
+    	
+    	
+    	config.put("mail.smtp.host", SERVIDOR_SMTP);
+    	config.put("mail.smtp.port", PORTA_SERVIDOR_SMTP);
+    	config.put("mail.smtp.auth", "true");
+    	config.put("mail.smtp.starttls.enable", "true"); //TLS
+    	
+    	/* Envio via Tipo Seguranca SSL/TLS
+    	config.put("mail.transport.protocol", "smtp");
+    	config.put("mail.smtp.starttls.enable", "true");
+    	config.put("mail.smtp.host", SERVIDOR_SMTP);
+    	config.put("mail.smtp.auth", "true");
+    	config.put("mail.smtp.user", CONTA_EMAIL);
+    	config.put("mail.debug", "true");
+    	config.put("mail.smtp.port", PORTA_SERVIDOR_SMTP);
+    	config.put("mail.smtp.socketFactory.port", PORTA_SERVIDOR_SMTP);
+    	config.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");    	
+    	config.put("mail.smtp.socketFactory.fallback", "false");
+    	*/
+    	return config;
+    }
+    
+    
+ 
 }

@@ -44,7 +44,7 @@ public class jobBoletimInformativoEmail implements org.quartz.Job {
           String bodyEmail = "";
           String tituloEmail = "";
           
-          tituloEmail = "Boletim Informativo - Teste";
+          tituloEmail = "Boletim Informativo";
           
           try {
         	  
@@ -65,8 +65,8 @@ public class jobBoletimInformativoEmail implements org.quartz.Job {
 			
 			new EnviaEmail().enviaEmail(bodyEmail, tituloEmail, "cadastro@global5.com.br", destTo, 
 					 "mail.global5.com.br", "cadastro@global5.com.br",
-                     "cadastro@global5.com.br", "!@Cadastro@!");
-          
+                     "cadastro@global5.com.br", "iKzC%M%IY0q1");
+			// Antiga senha: !@Cadastro@!
             
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -23,13 +23,22 @@ import java.sql.Timestamp;
 @XmlRootElement
 @XmlAccessorType(value = XmlAccessType.FIELD)
 @NamedQueries(value = {
+		
         @NamedQuery( name = "Area.findByUser",
                 query = "SELECT a " +
                         "  FROM Usuario c, Pessoa p, Area a, AreaFuncao af" +
                         " WHERE c.exclusao is null" +
                         "   AND c.id = :usuario" +
                         "   AND p.id = a.id" +
-                        "   AND a.id = af.id") } )
+                        "   AND a.id = af.id"),
+        
+        @NamedQuery( name = "Area.findByDocumentoPessoa",
+        		query = "SELECT a " +
+        				" From Area a " +
+        					" WHERE a.nivel.id = 2 and a.pessoaResponsavel.id in (select p.id from Pessoa p where p.documento1 = :documentoCnpj)"
+        		)
+        
+	})
 @TypeDefs({
         @TypeDef(name = "json", typeClass = JsonStringType.class),
         @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
@@ -40,7 +49,11 @@ public class Area implements BaseEntity {
     @Transient
     public static final String FIND_AREA =
             "Area.findByUser";
-
+    
+    @Transient
+    public static final String FIND_AREA_BY_DOCUMENTO_CNPJ = 
+    		"Area.findByDocumentoPessoa";
+    
     @Id
     @SequenceGenerator(name = "area_areaoid_seq", sequenceName = "area_areaoid_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -146,7 +159,10 @@ public class Area implements BaseEntity {
     public Area(Integer id) {
         this.id = id;
     }
-
+    
+    public Area(String nome){
+    	this.nome = nome;
+    }
 
     public Area nome(String nome) {
         this.nome = nome;
@@ -160,8 +176,12 @@ public class Area implements BaseEntity {
     public static String getFindArea() {
         return FIND_AREA;
     }
+    
+    public static String getFindDocumentoCnpj() {
+		return FIND_AREA_BY_DOCUMENTO_CNPJ;
+	}
 
-    public Integer getId() {
+	public Integer getId() {
         return id;
     }
 
@@ -320,5 +340,5 @@ public class Area implements BaseEntity {
     public void setEmails(String emails) {
         this.emails = emails;
     }
-
+    
 }

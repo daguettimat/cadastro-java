@@ -15,6 +15,7 @@
     </ui:define>
 
     <ui:define name="body">
+    
         <adm:breadcrumb title="Lista Cadastral (Filtros)"/>
 
         <h:form id="frmListaCadastral" onkeypress="if (event.keyCode == 13) { return false; }">
@@ -23,7 +24,7 @@
                     <div class="col-lg-12 col-md-4 col-sm-12">
                         <div class="row" id="filtroMenu" >
                             <div class="col-lg-12">
-                                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                                <p:panel header="Filtros de Pesquisa" styleClass="box-primary"
                                          widgetVar="panel" toggleable="true" >
                                     <div class="row">
                                         <div class="col-lg-2">
@@ -86,8 +87,11 @@
 
                                         <div class="col-lg-4">
                                             <p:outputLabel for="nroCPFNome" value="CPF ou Nome do Motorista"/>
+                                            
                                             <p:inputText id="nroCPFNome" value="#{listaCadastralMB.motorista}"/>
+                                            
                                         </div>
+                                        
                                         <div class="col-lg-3">
                                             <p:outputLabel for="tipoStatus" value="Status Atual da Ficha"/>
                                             <p:selectOneMenu id="tipoStatus"
@@ -142,15 +146,15 @@
                                             <h:commandButton id="brFind"
                                                              value="Pesquisar"
                                                              icon="fa fa-search"
-                                                             actionListener="#{listaCadastralMB.btnPesquisarData}"
+                                                             action="#{listaCadastralMB.btnPesquisarData}"
                                                              update="@form"
                                                              style="width: 100%;"
-                                                             styleClass="btn btn-danger"
+                                                             styleClass="btn btn-primary"
                                                              partialSubmit="true"/>
                                         </div>
                                         <div class="col-lg-2" style="padding-right: 15px;">
                                             <p:commandButton value="Voltar" action="#{listaCadastralMB.btnBack}"
-                                                             icon="fa fa-window-close"  styleClass="btn-danger"/>
+                                                             icon="fa fa-window-close"  styleClass="btn-primary"/>
                                         </div>
                                     </div>
                                 </p:panel>
@@ -165,7 +169,7 @@
             <h:panelGroup layout="block">
 
                 <p:dataTable widgetVar="cadastroTable" id="cadastroTable" var="c" value="#{listaCadastralMB.listaFicha}"
-                             rows="15" styleClass="box-danger" rendered="true"
+                             rows="15" styleClass="box-primary" rendered="true"
                              rowKey="#{c.anacoid}"  paginator="true"
                              paginatorPosition="bottom"  selectionMode="single"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
@@ -178,7 +182,7 @@
 
                     <p:column headerText="ID" sortBy="#{c.anacoid}" style="width:8%">
                         <div align="right" style="padding-right: 10px;">
-                            <a target="_blank" style="color : #3C8DB8;" href="http://sisold.global5.com.br/ficha_cadastral.php?ficha=#{c.anacoid}&amp;sys=1">#{c.anacoid}</a>
+                            <a target="_blank" style="color : #3C8DB8;" href="http://sisold.global5.com.br/ficha_cadastral.php?ficha=#{c.anacoid}&amp;sys=1" >#{c.anacoid}</a>
                         </div>
                     </p:column>
 
@@ -254,24 +258,31 @@
                         </div>                        
                         </div>
                     </p:column>
+                    
+                   <p:column headerText="Status" sortBy="#{c.statusFicha}" style="width:10%" visible="true">
+                    	<h:outputText id="outStatusFicha" value="#{c.statusFicha}"/>
+                    </p:column>
 
                 </p:dataTable>
-                
-                
+                                
             </h:panelGroup>
             <br/>
             <h:panelGroup layout="block">
+                
                 <div class="align-right" style="padding: 5px;">
-                    <p:commandButton id="toggler" type="button" value="Configurações" styleClass="btn-danger"
+                    <p:commandButton id="toggler" type="button" value="Configurações" styleClass="btn-primary"
                                      style="float:left" icon="ui-icon-circle-arrow-s" />
                     <p:columnToggler datasource="cadastroTable" trigger="toggler" />
                     <p:spacer height="5"/>
 
                 </div>
+                
             </h:panelGroup>
+        
         </h:form>
 
         <adm:sidebar collapsed="true"/>
+
     </ui:define>
 
 

@@ -204,7 +204,7 @@
              <p id="demo"></p>       
             <h:panelGroup layout="block"  >
     	
-   			<p:dataTable widgetVar="dtEvento" var="c" value="#{eventoMB.listEventos}" rows="20" styleClass="box-danger"
+   			<p:dataTable widgetVar="dtEvento" var="c" value="#{eventoMB.listEventos}" rows="20" styleClass="box-primary"
                              id="tbListEvento"
                              rowKey="#{c.id}" lazy=""  paginator="true" emptyMessage="Nenhum Evento de Boletim de Informativo cadastrado!"
                              paginatorPosition="bottom"  
@@ -316,7 +316,7 @@
      	    <p:dialog id="dlgAddEvento" widgetVar="dlgAddEvento"
 				header="Deseja gerar um novo evento de Ocorrência?" modal="true" 
 				resizable="false" closable="false" width="500" position="center, center"
-				styleClass="box-danger">
+				styleClass="box-primary">
 				
 				<p:outputPanel id="eveDetalhe">
 
@@ -343,7 +343,7 @@
 					<div class="align-center">
 
 						<p:commandButton value="Não" onclick="PF('dlgAddEvento').hide()"
-							styleClass="btn btn-danger">
+							styleClass="btn btn-primary">
 						</p:commandButton>
 
 						<p:commandButton value="Sim" styleClass="btn btn-success" id="btnAddEvento"
@@ -363,7 +363,7 @@
 	    	<p:dialog id="dlgAddBoletim" widgetVar="dlgAddBoletim"
 				header="Boletim Informativo - Abertura" modal="true"
 				resizable="false" closable="false" width="800" position="center, center"
-				styleClass="box-danger">
+				styleClass="box-primary">
 				
 				<p:outputPanel >
 				
@@ -448,7 +448,7 @@
 					<div class="align-center">
 
 						<p:commandButton value="Não" onclick="PF('dlgAddBoletim').hide()"
-							styleClass="btn btn-danger" >
+							styleClass="btn btn-primary" >
 						</p:commandButton>
 
 						<p:commandButton id="btnAddBoletim" value="Sim" styleClass="btn btn-success" partialSubmit="true"						
@@ -469,7 +469,7 @@
 			<p:dialog id="dlgAddAnexosBoletim" widgetVar="dlgAddAnexosBoletim"
 				header="Boletim Informativo - Anexos" modal="true" resizable="false"
 				closable="true" width="800" position="center,center"
-				styleClass="box-danger">
+				styleClass="box-primary">
 
 				<h:form id="frmTbAnexoBoletim">
 
@@ -524,7 +524,7 @@
 					<p:separator />
 
 					<p:tabView id="tabAnexosDoEvento">
-						<p:tab title="Anexar Arquivos" titleStyleClass="box-danger">
+						<p:tab title="Anexar Arquivos" titleStyleClass="box-primary">
 							<p:panel>
 								<div class="box-header with-border" style="padding-top: 1px">
 									<h4 style="padding-top: 5px;">Arquivos...</h4>
@@ -572,7 +572,7 @@
 			<p:dialog id="dlgViewBoletim" widgetVar="dlgViewBoletim"
 				header="Boletim informativo emitidos por Evento" modal="true" resizable="false"
 				closable="true" width="800" position="center,center"
-				styleClass="box-danger">
+				styleClass="box-primary">
 
 				<h:form id="frmTbAnexoBoletimB">
 
@@ -627,7 +627,7 @@
 					<p:separator />
 
 					<p:dataTable var="bi" value="#{eventoMB.listBoletimPorEvento}" 
-						id="tbBoletim" rows="8" styleClass="box-danger" rowKey="#{bi.id}"
+						id="tbBoletim" rows="8" styleClass="box-primary" rowKey="#{bi.id}"
 						scrollable="true" scrollWidth="true" paginator="true"
 						paginatorPosition="bottom" emptyMessage="Nenhum Evento de Boletim de Informativo cadastrado!"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"

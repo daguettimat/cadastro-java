@@ -38,7 +38,6 @@ import java.util.Date;
 import java.util.List;
 
 @Scheduled(cronExpression = "0 0 0/12 * * ?")
-//@Scheduled(cronExpression = "5 * * * * ?")
 public class JobPlanilha implements org.quartz.Job {
 
     @Inject

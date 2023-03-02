@@ -23,7 +23,7 @@
         <h:form>
             <p:growl autoUpdate="true" escape="false" sticky="true"/>
             <div class="ui-fluid">
-                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                <p:panel header="Filtros de Pesquisa" styleClass="box-primary"
                          widgetVar="panel" toggleable="true">
                     <div class="row">
                         <div class="col-lg-1">
@@ -61,7 +61,7 @@
 
                         <div class="col-lg-2" style="padding-right: 15px;">
                             <p:commandButton value="Novo Registro" action="#{pontosApoioMB.insert}"
-                                             icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                                             icon="fa fa-pencil" update="@form" styleClass="btn-primary"/>
                         </div>
                         <div class="col-lg-2" style="padding-right: 15px;">
 
@@ -71,13 +71,13 @@
                                              actionListener="#{pontosApoioMB.btnPesquisar}"
                                              update="@form"
                                              style="width: 100%;"
-                                             styleClass="btn btn-danger"
+                                             styleClass="btn btn-primary"
                                              partialSubmit="true"/>
 
                         </div>
                         <div class="col-lg-2" style="padding-right: 15px;">
                             <p:commandButton value="Voltar" action="#{pontosApoioMB.btnBack}"
-                                             icon="fa fa-window-close" styleClass="btn-danger"/>
+                                             icon="fa fa-window-close" styleClass="btn-primary"/>
                         </div>
                     </div>
                 </p:panel>
@@ -85,7 +85,7 @@
 
             <br/>
             <h:panelGroup layout="block">
-                <p:dataTable widgetVar="pontosTable" var="c" value="#{pontosApoioMB.pontosList}" rows="10" styleClass="box-danger"
+                <p:dataTable widgetVar="pontosTable" var="c" value="#{pontosApoioMB.pontosList}" rows="10" styleClass="box-primary"
                              filteredValue="#{pontosApoioMB.filteredValue}"
                              rowKey="#{c.id}" lazy="true" paginator="true"
                              paginatorPosition="bottom" selection="#{pontosApoioMB.pontos}" selectionMode="single"

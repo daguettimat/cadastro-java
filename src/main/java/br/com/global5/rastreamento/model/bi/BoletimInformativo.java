@@ -15,7 +15,7 @@ import java.sql.Time;
 import java.util.Date;
 
 @Entity
-@Table(name="boletim_informativo")
+@Table(name="rastreamento.boletim_informativo")
 public class BoletimInformativo implements BaseEntity{
 	@Transient	
 	public static final char EVENTO_TIPO_SUSPEITA 	= 'S';
@@ -52,7 +52,7 @@ public class BoletimInformativo implements BaseEntity{
 	
 	@ManyToOne(	
 			fetch = FetchType.EAGER,
-			targetEntity = TipoSuspeita.class
+			targetEntity = TipoSuspeita.class			
 			)
 	@JoinColumn(name="bi_susp_tp_enumoid")
 	private TipoSuspeita tipoSuspeita;
@@ -60,9 +60,13 @@ public class BoletimInformativo implements BaseEntity{
 	@Column(name="bi_susp_detalhe_outros")
 	private String suspDetalheOutros;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name="bi_com_ini_datahora")
 	private Date comIniDataHora;
+	
+	@Temporal(TemporalType.TIME)
+	@Column(name="bi_com_ini_hora")
+	private Date comIniHora;
 
 	@Column(name="bi_com_ini_rodovia")
 	private String comIniRodovia;
@@ -88,9 +92,13 @@ public class BoletimInformativo implements BaseEntity{
 	@Column(name="bi_com_ini_longitude")
 	private BigDecimal comIniLongitude;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name="bi_com_ini_dt_comunicado")
 	private Date comDtComunicado;
+	
+	@Temporal(TemporalType.TIME)
+	@Column(name="bi_com_ini_hora_comunicado")
+	private Date comIniHoraComunicado;
 	
 	@Column(name="bi_com_ini_nome")
 	private String comIniNome;
@@ -104,9 +112,13 @@ public class BoletimInformativo implements BaseEntity{
 	@Column(name="bi_com_ini_ponto_referencia")
 	private String comIniPontoReferencia;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name="bi_susp_fim_datahora")
 	private Date suspFimDataHora;
+
+	@Temporal(TemporalType.TIME)
+	@Column(name="bi_susp_fim_hora")
+	private Date suspFimHora;
 	
 	@Column(name="bi_susp_fim_rodovia")
 	private String suspFimRodovia;
@@ -158,7 +170,7 @@ public class BoletimInformativo implements BaseEntity{
 
 	@ManyToOne(	
 			fetch = FetchType.EAGER,
-			targetEntity = TipoPerda.class			
+			targetEntity = TipoPerda.class
 			)
 	@JoinColumn(name="bi_perda_tp_enumoid")
 	private TipoPerda tipoPerda;	
@@ -267,7 +279,8 @@ public class BoletimInformativo implements BaseEntity{
 	
 	@ManyToOne(	
 			fetch = FetchType.EAGER,
-			targetEntity = TipoDano.class 		
+			targetEntity = TipoDano.class,
+			cascade = {CascadeType.DETACH, CascadeType.MERGE}	
 			)
 	@JoinColumn(name="bi_dano_tp_enumoid")
 	private TipoDano tipoDano;	
@@ -305,9 +318,13 @@ public class BoletimInformativo implements BaseEntity{
 	@Column(name="bi_pronta_empresa_nome")
 	private String prontaEmpresaNome;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name="bi_pronta_dthora")
 	private Date prontaDthora;
+	
+	@Temporal(TemporalType.TIME)
+	@Column(name="bi_pronta_hora")
+	private Date prontaHora;
 
 	@Column(name="bi_pronta_atendente_nome")
 	private String prontaAtendenteNome;
@@ -321,19 +338,27 @@ public class BoletimInformativo implements BaseEntity{
 	@Column(name="bi_pronta_agente_fone")
 	private String prontaAgenteFone; 
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name="bi_pronta_previsao_chegada")
 	private Date prontaPrevisaoChegada;
 
+	@Temporal(TemporalType.TIME)
+	@Column(name="bi_pronta_previsao_chegada_hora")
+	private Date prontaPrevisaoChegadaHora;
+		
 	@Column(name="bi_pronta_nr_processo")
 	private String prontaNrProcesso;
 	
 	@Column(name="bi_seg_nome")
 	private String segNome;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name="bi_seg_dthora")
 	private Date segDthora;
+	
+	@Temporal(TemporalType.TIME)
+	@Column(name="bi_seg_hora")
+	private Date segHora;
 	
 	@Column(name="bi_seg_nome_responsavel")
 	private String segNomeResponsavel;
@@ -347,10 +372,14 @@ public class BoletimInformativo implements BaseEntity{
 	@Column(name="bi_reg_empresa_nome")
 	private String regEmpresaNome;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name="bi_reg_dthora")
 	private Date regDthora;
 
+	@Temporal(TemporalType.TIME)
+	@Column(name="bi_reg_hora")
+	private Date regHora;
+	
 	@Column(name="bi_reg_atendente_nome")
 	private String regAtendenteNome;
 	
@@ -363,10 +392,14 @@ public class BoletimInformativo implements BaseEntity{
 	@Column(name="bi_reg_perito_fone")
 	private String regPeritoFone;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name="bi_reg_previsao_chegada")
 	private Date regPrevisaoChegada;
-		
+	
+	@Temporal(TemporalType.TIME)
+	@Column(name="bi_reg_previsao_chegada_hora")
+	private Date regPrevisaoChegadaHora;
+	
 	@Column(name="bi_reg_nr_processo")
 	private String regNrProcesso;	
 
@@ -1347,5 +1380,68 @@ public class BoletimInformativo implements BaseEntity{
 		this.emailsDtAlteracao = emailsDtAlteracao;
 	}
 
+	public Date getComIniHora() {
+		return comIniHora;
+	}
+
+	public void setComIniHora(Date comIniHora) {
+		this.comIniHora = comIniHora;
+	}
+
+	public Date getComIniHoraComunicado() {
+		return comIniHoraComunicado;
+	}
+
+	public void setComIniHoraComunicado(Date comIniHoraComunicado) {
+		this.comIniHoraComunicado = comIniHoraComunicado;
+	}
+
+	public Date getSuspFimHora() {
+		return suspFimHora;
+	}
+
+	public Date getProntaHora() {
+		return prontaHora;
+	}
+
+	public Date getProntaPrevisaoChegadaHora() {
+		return prontaPrevisaoChegadaHora;
+	}
+
+	public Date getSegHora() {
+		return segHora;
+	}
+
+	public Date getRegHora() {
+		return regHora;
+	}
+
+	public Date getRegPrevisaoChegadaHora() {
+		return regPrevisaoChegadaHora;
+	}
+
+	public void setSuspFimHora(Date suspFimHora) {
+		this.suspFimHora = suspFimHora;
+	}
+
+	public void setProntaHora(Date prontaHora) {
+		this.prontaHora = prontaHora;
+	}
+
+	public void setProntaPrevisaoChegadaHora(Date prontaPrevisaoChegadaHora) {
+		this.prontaPrevisaoChegadaHora = prontaPrevisaoChegadaHora;
+	}
+
+	public void setSegHora(Date segHora) {
+		this.segHora = segHora;
+	}
+
+	public void setRegHora(Date regHora) {
+		this.regHora = regHora;
+	}
+
+	public void setRegPrevisaoChegadaHora(Date regPrevisaoChegadaHora) {
+		this.regPrevisaoChegadaHora = regPrevisaoChegadaHora;
+	}
 	
 }

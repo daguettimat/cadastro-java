@@ -20,7 +20,7 @@
                 <div class="col-lg-12">
                     <p:growl autoUpdate="true" escape="false" sticky="true" id="msgs"/>
                     <p:dataTable widgetVar="marcaTable" var="c" value="#{veiAnaliseMB.lstVeiculos}" rows="5"
-                                 styleClass="box-danger" rowIndexVar="rowId"
+                                 styleClass="box-primary" rowIndexVar="rowId"
                                  rowKey="#{c.id}" lazy="true" paginator="true"
                                  paginatorPosition="bottom" selectionMode="single"
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
@@ -52,7 +52,7 @@
                         </p:column>
                         <p:column style="width:60px">
                             <p:commandButton value="Editar" process="@this" action="#{veiAnaliseMB.findByCadastro(c.id,c.cadastro.id)}"
-                                             styleClass="btn-danger">
+                                             styleClass="btn-primary">
                             </p:commandButton>
                         </p:column>
                     </p:dataTable>
@@ -61,7 +61,7 @@
             <div class="row">
                 <div class="col-lg-2 align-right" style="padding-right:15px;">
                     <p:commandButton value="Voltar" process="@this" action="#{veiAnaliseMB.btnBack}"
-                                     styleClass="btn-danger">
+                                     styleClass="btn-primary">
                     </p:commandButton>
                 </div>
             </div>

@@ -58,7 +58,7 @@ input[disabled] {
 
 			<h:panelGroup layout="block">
 
-				<p:panel styleClass="box-danger">
+				<p:panel styleClass="box-primary">
 
 					<div class="ui-g-12 ui-md-6 ui-lg-12">
 						<p:panelGrid columns="3" styleClass="ui-panelgrid-blank"
@@ -75,7 +75,7 @@ input[disabled] {
 						<h:outputText value="#{boletimInformativoViewMB.tipoBoletimEmitido}" style="color:brown;font-weight:bold;font-size:12px" />
 						<p:spacer width="50px" />
 						<h:outputText value=" SM Nº: " style="color:black;font-weight:bold;font-size:12px" />
-						<h:outputText value="#{boletimInformativoViewMB.biV.evento.sincViagem.id}"
+						<h:outputText value="#{boletimInformativoViewMB.biV.evento.sincViagem}"
 							style="color:brown;font-style:italic;font-weight:bold;font-size:12px" />
 						<p:spacer width="50px" />
 						<h:outputText value=" Nº: " style="color:black;font-weight:bold;font-size:12px" />
@@ -88,7 +88,7 @@ input[disabled] {
 
 						<h:form id="frmDadosBoletim">
 
-							<p:panel id="pnDadosCliente" styleClass="box-danger">
+							<p:panel id="pnDadosCliente" styleClass="box-primary">
 
 								<div class="col-lg-12" style="text-align: left">
 									<H4 style="color: brown; font-weight: bold;">Dados do Cliente</H4>
@@ -100,18 +100,6 @@ input[disabled] {
 										style="color:black;font-weight:bold;font-size:12px;size:60" />
 									<h:outputText
 										value="#{boletimInformativoViewMB.eiv.nomeCliente}"
-										style="color:red;font-style:italic;font-size:12px" />
-
-									<h:outputText value="Seguradora: " for="idSeguradora"
-										style="color:black;font-weight:bold;font-size:12px" />
-									<h:outputText
-										value="#{boletimInformativoViewMB.eiv.nomeSeguradora}"
-										style="color:red;font-style:italic;font-size:12px" />
-
-									<h:outputText value="Corretora: " for="idCorretora"
-										style="color:black;font-weight:bold;font-size:12px" />
-									<h:outputText
-										value="#{boletimInformativoViewMB.eiv.nomeCorretora}"
 										style="color:red;font-style:italic;font-size:12px" />
 
 									<h:outputText value="Transportadora: " for="idTransportadora"
@@ -131,7 +119,7 @@ input[disabled] {
 
 							</p:panel>
 
-							<p:panel id="pnDadosCavalo" styleClass="box-danger">
+							<p:panel id="pnDadosCavalo" styleClass="box-primary">
 
 								<div class="col-lg-12" style="text-align: left">
 									<H4 style="color: brown; font-weight: bold;">Dados do Cavalo</H4>
@@ -170,7 +158,7 @@ input[disabled] {
 							</p:panel>
 
 							<ui:fragment id="subPnCarreta"	rendered="#{boletimInformativoViewMB.subPnDadosCarreta}">
-							<p:panel id="pnDadosCarreta" styleClass="box-danger">
+							<p:panel id="pnDadosCarreta" styleClass="box-primary">
 
 								<div class="col-lg-12" style="text-align: left">
 									<H4 style="color: brown; font-weight: bold;">Dados da Carreta</H4>
@@ -251,7 +239,7 @@ input[disabled] {
 							</p:panel>
 							</ui:fragment>
 							
-							<p:panel id="pnDadosMotorista" styleClass="box-danger">
+							<p:panel id="pnDadosMotorista" styleClass="box-primary">
 
 								<div class="col-lg-12" style="text-align: left">
 									<H4 style="color: brown; font-weight: bold;">Dados do Motorista</H4>
@@ -305,7 +293,7 @@ input[disabled] {
 							
 							</p:panel>
 
-							<p:panel id="pnDadosViagem" styleClass="box-danger">
+							<p:panel id="pnDadosViagem" styleClass="box-primary">
 								
 								<div class="col-lg-12" style="text-align: left">
 									<H4 style="color: brown; font-weight: bold;">Dados da Viagem</H4>
@@ -319,7 +307,7 @@ input[disabled] {
 										<p:panelGrid columns="10" styleClass="ui-panelgrid-blank" >
 
 											<h:outputText value="Nº SM: "  style="color:black;font-weight:bold;font-size:12px" />								
-											<h:outputText value="#{boletimInformativoViewMB.eiv.viagem.id}" style="color:red;font-style:italic;font-size:12px" />
+											<h:outputText value="#{boletimInformativoViewMB.eiv.viagem}" style="color:red;font-style:italic;font-size:12px" />
 
 											<h:outputText value="Origem: "  style="color:black;font-weight:bold;font-size:12px" />								
 											<h:outputText value="#{boletimInformativoViewMB.eiv.origemCidade}" style="color:red;font-style:italic;font-size:12px" />
@@ -377,7 +365,7 @@ input[disabled] {
 						
 						<ui:fragment id="fragSinistro"	rendered="#{boletimInformativoViewMB.painelDadosSinistro}">
 						
-						<div id="pnComSinistro" class="box box-solid box-danger">
+						<div id="pnComSinistro" class="box box-solid box-primary">
 							
 							<div class="box-header with-board" style="padding-top: 1px">								
 								<h4>Dados do Comunicado do Sinistro</h4>
@@ -386,16 +374,27 @@ input[disabled] {
 							 <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" >
 							 
 								<p:row>
-									<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+									<p:panelGrid columns="8" styleClass="ui-panelgrid-blank">
 
-										<h:outputText value="Data/Hora do Comunicado: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="Data do Comunicado: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comDtComunicado}" style="color:red;font-style:italic;font-size:12px">
+											<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy"/>
+										</h:outputText>
+
+										<h:outputText value="Hora: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniHoraComunicado}" style="color:red;font-style:italic;font-size:12px">
+											<f:convertDateTime  locale="pt_BR" pattern="HH:mm"/>
+										</h:outputText>
+
+
+										<h:outputText value="Data do Sinistro: "  style="color:black;font-weight:bold;font-size:12px" />								
 										<h:outputText value="#{boletimInformativoViewMB.biV.comIniDataHora}" style="color:red;font-style:italic;font-size:12px">
 											<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy HH:mm"/>
 										</h:outputText>
 
-										<h:outputText value="Data/Hora do Sinistro: "  style="color:black;font-weight:bold;font-size:12px" />								
-										<h:outputText value="#{boletimInformativoViewMB.biV.comIniDataHora}" style="color:red;font-style:italic;font-size:12px">
-											<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy HH:mm"/>
+										<h:outputText value="Hora: "  style="color:black;font-weight:bold;font-size:12px" />								
+										<h:outputText value="#{boletimInformativoViewMB.biV.comIniHora}" style="color:red;font-style:italic;font-size:12px">
+											<f:convertDateTime  locale="pt_BR" pattern="HH:mm"/>
 										</h:outputText>
 
 									</p:panelGrid>
@@ -422,7 +421,7 @@ input[disabled] {
 
 						<p/>
 						
-						<div id="pnLocalSinistro" class="box box-solid box-danger">
+						<div id="pnLocalSinistro" class="box box-solid box-primary">
 							
 							<div class="box-header with-board" style="padding-top: 1px">								
 								<h4>Dados do Local do Sinistro</h4>
@@ -479,7 +478,7 @@ input[disabled] {
 						
 						</div>					
 						
-						<div id="pnClassificacao" class="box box-solid box-danger">
+						<div id="pnClassificacao" class="box box-solid box-primary">
 							<div class="box-header with-board" style="padding-top: 1px">
 								<h4>Classificação do Sinistro</h4>
 							</div>
@@ -542,7 +541,7 @@ input[disabled] {
 						</ui:fragment>
 						
 						<ui:fragment id="fragSuspeitaRoubo" rendered= "#{boletimInformativoViewMB.painelDadosSuspeita}">
-						<div id="pnSuspeitaRoubo" class="box box-solid box-danger">
+						<div id="pnSuspeitaRoubo" class="box box-solid box-primary">
 							<div class="box-header with-board" style="padding-top: 1px">
 								<h4>Dados da Suspeita de Roubo</h4>
 							</div>
@@ -554,10 +553,14 @@ input[disabled] {
 											<h:outputText value=""  style="color:bronw;font-weight:bold;font-size:14px" />
 											<h:outputText value="Tipo Evento de Suspeita de Roubo: "  style="color:black;font-weight:bold;font-size:12px" />
 											<h:outputText value="#{boletimInformativoViewMB.tipoEventoSuspeitaRoubo}" style="color:red;font-style:italic;font-size:12px" />
-											<h:outputText value="Data/Hora: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="Data: "  style="color:black;font-weight:bold;font-size:12px" />								
 											<h:outputText value="#{boletimInformativoViewMB.biV.comIniDataHora}" style="color:red;font-style:italic;font-size:12px">
-												<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy HH:mm"/>
+												<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy"/>
 											</h:outputText>
+										    <h:outputText value="Hora: "  style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText value="#{boletimInformativoViewMB.biV.comIniHora}" style="color:red;font-style:italic;font-size:12px">
+												<f:convertDateTime  locale="pt_BR" pattern="HH:mm"/>
+											</h:outputText>											
 										</p:panelGrid>
 									</p:row>
 									
@@ -592,9 +595,21 @@ input[disabled] {
 									</p:row>
 
 									<p:row>
+										<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+
+											<h:outputText value="Referência: "
+												style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText
+												value="#{boletimInformativoViewMB.biV.comIniPontoReferencia}"
+												style="color:red;font-style:italic;font-size:12px" />
+										</p:panelGrid>
+									</p:row>
+
+
+									<p:row>
 										<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
 
-											<h:outputText value="Local - Município: "
+											<h:outputText value="Município: "
 												style="color:black;font-weight:bold;font-size:12px" />
 											<h:outputText
 												value="#{boletimInformativoViewMB.biV.comIniCidade}"
@@ -634,10 +649,14 @@ input[disabled] {
 										<p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
 											<h:outputText value="Evento Final"  style="color:brown;font-weight:bold;font-size:14px" />																					
 											<h:outputText value=""  style="color:bronw;font-weight:bold;font-size:14px" />
-											<h:outputText value="Data/Hora: "  style="color:black;font-weight:bold;font-size:12px" />								
+											<h:outputText value="Data: "  style="color:black;font-weight:bold;font-size:12px" />								
 											<h:outputText value="#{boletimInformativoViewMB.biV.suspFimDataHora}" style="color:red;font-style:italic;font-size:12px">
-												<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy HH:mm"/>
+												<f:convertDateTime  locale="pt_BR" pattern="dd/MM/yyyy"/>
 											</h:outputText>
+										    <h:outputText value="Hora: "  style="color:black;font-weight:bold;font-size:12px" />
+											<h:outputText value="#{boletimInformativoViewMB.biV.suspFimHora}" style="color:red;font-style:italic;font-size:12px">
+												<f:convertDateTime  locale="pt_BR" pattern="HH:mm"/>
+											</h:outputText>												
 										</p:panelGrid>
 									</p:row>
 									
@@ -674,7 +693,7 @@ input[disabled] {
 									<p:row>
 										<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
 
-											<h:outputText value="Local - Município: "
+											<h:outputText value="Município: "
 												style="color:black;font-weight:bold;font-size:12px" />
 											<h:outputText
 												value="#{boletimInformativoViewMB.biV.suspFimCidade}"
@@ -748,7 +767,7 @@ input[disabled] {
 
 					<ui:fragment id="fragBoletimFinal"	rendered="#{boletimInformativoViewMB.painelBoletimFinal}">
 												
-							<div id="pnFinalizacao" class="box box-solid box-danger">
+							<div id="pnFinalizacao" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Registro de Finalização do Boletim</h4>
 								</div>

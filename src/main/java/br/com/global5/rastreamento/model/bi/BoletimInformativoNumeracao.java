@@ -5,7 +5,7 @@ import javax.persistence.*;
 import br.com.global5.infra.model.BaseEntity;
 
 @Entity
-@Table(name="boletim_informativo_numeracao")
+@Table(name="rastreamento.boletim_informativo_numeracao")
 @NamedStoredProcedureQueries({
 	@NamedStoredProcedureQuery(
 			name = "boletim_informativo_global",

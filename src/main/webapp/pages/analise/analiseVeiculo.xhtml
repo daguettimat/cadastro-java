@@ -89,9 +89,9 @@
                 </div>
                 <br/>
                 <div class="ui ui-fluid ">
-                    <p:panel  styleClass="box-danger">
+                    <p:panel  styleClass="box-primary">
                         <p:tabView id="tabPendencia">
-                            <p:tab title="Dados do Veículo" titleStyleClass="box-danger" >
+                            <p:tab title="Dados do Veículo" titleStyleClass="box-primary" >
                                 <p:panel header="Dados Informados">
 
                                     <div class="row">
@@ -256,7 +256,7 @@
                                     </ui:fragment>
                                 </p:panel>
                             </p:tab>
-                            <p:tab title="Observações" titleStyleClass="box-danger" >
+                            <p:tab title="Observações" titleStyleClass="box-primary" >
                                     <div class="row" style="padding-right: 25px;">
                                         <div class="col-lg-2">
                                             <br/>
@@ -396,7 +396,7 @@
                             <br/>
                             <div class="row">
                                 <div class="col-lg-3">
-                                    <p:panelGrid  columns="1" styleClass="box box-danger">
+                                    <p:panelGrid  columns="1" styleClass="box box-primary">
                                         <f:facet name="header">
                                             <h4>Status Geral da Ficha</h4>
                                             <p:graphicImage name="#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.acCadastro.status.id)}" width="96px;" height="96px;" style="padding:5px;"/>
@@ -409,7 +409,7 @@
                                     </p:panelGrid>
                                 </div>
                                 <div class="col-lg-3">
-                                    <p:panelGrid columns="1" styleClass="box box-danger">
+                                    <p:panelGrid columns="1" styleClass="box box-primary">
                                         <f:facet name="header">
                                             <h4>Este item</h4>
                                             <p:graphicImage name="#{veiAnaliseMB.flag(veiAnaliseMB.veiculo.statusGeral.id)}" width="96px;" height="96px;" style="padding:5px;"/>
@@ -422,7 +422,7 @@
                                     </p:panelGrid>
                                 </div>
                                 <div class="col-lg-3">
-                                    <p:panelGrid columns="1" styleClass="box box-danger">
+                                    <p:panelGrid columns="1" styleClass="box box-primary">
                                         <f:facet name="header">
                                             <h4>Usuário</h4>
                                             <ui:fragment rendered="#{!veiAnaliseMB.veiculo.acCadastro.usuarioCriacao.interno}">
@@ -440,7 +440,7 @@
                                     </p:panelGrid>
                                 </div>
                                 <div class="col-lg-3" style="padding-right: 15px; padding-left: 15px;">
-                                    <p:panelGrid columns="1" styleClass="box box-danger">
+                                    <p:panelGrid columns="1" styleClass="box box-primary">
                                         <f:facet name="header">
                                             <h4>Data Criação</h4>
                                             <p:graphicImage name="images/event_search.png" class="over" width="96px;" height="96px;" style="padding:5px;"/>
@@ -459,12 +459,12 @@
                                 <p:commandButton value="Salvar"
                                                  style="width: 100px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
                                                  type="submit" action="#{veiAnaliseMB.update}"
-                                                 styleClass="btn-danger">
+                                                 styleClass="btn-primary">
                                     <f:actionListener binding="#{cadastroMB.loadScreen(veiAnaliseMB.veiculo.acCadastro.id)}" />
                                     <f:ajax execute="@form" render="@form" />
                                 </p:commandButton>
                                 <p:commandButton style="width: 100px;" value="Voltar" action="#{cadastroMB.loadScreen(veiAnaliseMB.veiculo.acCadastro.id)}"
-                                                 styleClass="btn-danger"/>
+                                                 styleClass="btn-primary"/>
                             </div>
                         </f:facet>
                     </p:panel>

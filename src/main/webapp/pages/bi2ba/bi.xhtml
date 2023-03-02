@@ -60,7 +60,7 @@ input[disabled] {
 
 			<h:panelGroup layout="block">
 
-				<p:panel styleClass="box-danger" >
+				<p:panel styleClass="box-primary" >
 
 					<!-- Tipo Boletim -->
 					<div class="row" style="padding-top: 10px" >
@@ -702,7 +702,7 @@ input[disabled] {
 
 						<ui:fragment id="fragSinistro"	rendered="#{boletimInformativoMB.painelDadosSinistro}">
 
-							<div id="pnComSinistro" class="box box-solid box-danger">
+							<div id="pnComSinistro" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Dados do Comunicado do Sinistro</h4>
 								</div>
@@ -792,7 +792,7 @@ input[disabled] {
 
 							</div>
 
-							<div id="pnLocalSinistro" class="box box-solid box-danger">
+							<div id="pnLocalSinistro" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Dados do Local do Sinistro</h4>
 								</div>
@@ -905,7 +905,7 @@ input[disabled] {
 
 							</div>
 
-							<div id="pnClassificacao" class="box box-solid box-danger">
+							<div id="pnClassificacao" class="box box-solid box-primary">
 
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Classificação do Sinistro</h4>
@@ -1803,7 +1803,7 @@ input[disabled] {
 	
 	
 						<ui:fragment id="fragSuspeitaRoubo" rendered= "#{boletimInformativoMB.painelDadosSuspeita}">
-							<div id="pnSuspeitaRoubo" class="box box-solid box-danger">
+							<div id="pnSuspeitaRoubo" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Dados da Suspeita de Roubo</h4>
 								</div>
@@ -2112,7 +2112,7 @@ input[disabled] {
 						
 						</ui:fragment>
 						
-							<div id="pnAcionamento" class="box box-solid box-danger">
+							<div id="pnAcionamento" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Dados do Acionamento</h4>
 								</div>
@@ -2337,14 +2337,14 @@ input[disabled] {
 
 							</div>
 
-							<div id="pnRelatoOcorrencia" class="box box-solid box-danger">
+							<div id="pnRelatoOcorrencia" class="box box-solid box-primary">
 							<div class="box-header with-board" style="padding-top: 1px">
 								<h4>Relatos da Ocorrência</h4>
 							</div>
 							
 							<div class="box-body">
 								
-								<div id="pnPrimProcedimento" class="box box-solid box-danger" >
+								<div id="pnPrimProcedimento" class="box box-solid box-primary" >
 									<div class="box-header with-board" style="padding-top: 1px">
 										<h4 style="cor:whithe">1º Procedimento - Informe de Sinistro</h4>
 									</div>
@@ -2392,7 +2392,7 @@ input[disabled] {
 									<div class="col-lg-12">
 									
 																		
-									<p:dataTable widgetVar="dtBi" var="b" value="#{boletimInformativoMB.listBiRelato}" rows="10" styleClass="box-danger"
+									<p:dataTable widgetVar="dtBi" var="b" value="#{boletimInformativoMB.listBiRelato}" rows="10" styleClass="box-primary"
                              			id="tbListBiRelato"	style="background:#eeeeec"
                              			rowKey="#{b.id}" lazy=""  paginator="true" emptyMessage="Nenhum histórico anterior de boletim para este evento!"
                              			paginatorPosition="bottom"  
@@ -2454,7 +2454,7 @@ input[disabled] {
 
 						<ui:fragment id="fragBoletimFinal"	rendered="#{boletimInformativoMB.painelBoletimFinal}">
 												
-							<div id="pnFinalizacao" class="box box-solid box-danger">
+							<div id="pnFinalizacao" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Registro de Finalização do Boletim</h4>
 								</div>
@@ -2520,7 +2520,7 @@ input[disabled] {
 
 								<div class="box-body" style="background: #eeeeec">
 									
-									<div class="box box-solid box-danger" >
+									<div class="box box-solid box-primary" >
 									
                        					<p:textEditor value="#{boletimInformativoMB.ev.emails}" height="100" style="margin-bottom:10px" readonly="true" >
                        						 <f:facet name="toolbar">
@@ -2553,7 +2553,7 @@ input[disabled] {
 
 							<p:commandButton value="Salvar Boletim" disabled="#{boletimInformativoMB.boletimSalvo}"
 								action="#{boletimInformativoMB.salvarBoletim}" update="@form"
-								styleClass="btn-danger" />
+								styleClass="btn-primary" />
 							<p:spacer height="5" />
 
 						</div>

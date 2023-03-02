@@ -206,7 +206,7 @@ input[disabled] {
 
 									<div class="box-body" style="background: #eeeeec">
 
-										<div class="box box-solid box-danger">
+										<div class="box box-solid box-primary">
 
 											<p:outputLabel value="Dados do Email Recebido do Cliente"
 												for="inptObsCliente" />
@@ -232,15 +232,16 @@ input[disabled] {
 
 						</p:panel>
 
-									<f:facet name="footer">
+				<f:facet name="footer">
 					<div class="align-right" style="padding: 5px;">
 
 						<p:commandButton value="Gravar" update="@form"
-							action="#{autotracSinalMB.update}" styleClass="btn-danger" />
+							action="#{autotracSinalMB.update}" styleClass="btn-primary" />
 						<p:spacer height="5" />
 
-						<p:commandButton value="volta" actionListener="#{autotracSinalMB.voltarListaVeiculos}"							
-							styleClass="btn-danger" />
+						<p:commandButton value="volta" action="#{autotracSinalMB.voltarListaVeiculos}" 
+							process="@this"							
+							styleClass="btn-primary" />
 							
 					</div>
 				</f:facet>

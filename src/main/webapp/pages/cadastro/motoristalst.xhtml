@@ -44,7 +44,7 @@
         <h:form>
             <p:growl autoUpdate="true" escape="false" sticky="true"/>
             <div class="ui-fluid">
-                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                <p:panel header="Filtros de Pesquisa" styleClass="box-primary"
                          widgetVar="panel" toggleable="true">
                     <div class="row">
                         <div class="col-lg-1">
@@ -63,7 +63,7 @@
 
                         <div class="col-lg-4">
                             <p:outputLabel for="mae" value="Mãe"/>
-                            <p:inputText id="mae" value="#{motoristaMB.nome}"/>
+                            <p:inputText id="mae" value="#{motoristaMB.mae}"/>
                         </div>
 
 
@@ -105,20 +105,20 @@
                                              actionListener="#{motoristaMB.btnPesquisar}"
                                              update="@form"
                                              style="width: 100%;"
-                                             styleClass="btn btn-danger"
+                                             styleClass="btn btn-primary"
                                              partialSubmit="true"/>
 
                         </div>
                         <div class="col-lg-2" style="padding-right: 15px;">
                             <p:commandButton value="Voltar" action="#{motoristaMB.btnBack}"
-                                             icon="fa fa-window-close" styleClass="btn-danger"/>
+                                             icon="fa fa-window-close" styleClass="btn-primary"/>
                         </div>
                     </div>
                 </p:panel>
             </div>
             <br/>
             <h:panelGroup layout="block">
-                <p:dataTable widgetVar="motoristaTable" var="c" value="#{motoristaMB.motList}" rows="10" styleClass="box-danger"
+                <p:dataTable widgetVar="motoristaTable" var="c" value="#{motoristaMB.motList}" rows="10" styleClass="box-primary"
                              filteredValue="#{motoristaMB.filteredValue}" id="motoristas"
                              rowKey="#{c.id}" lazy="true" paginator="true"
                              filterDelay="2000" resizableColumns="true" sortBy="#{c.nome}" sortOrder="ASCENDING"
@@ -190,14 +190,14 @@
             </h:panelGroup>
             <h:panelGroup layout="block">
                 <div class="align-right" style="padding: 5px;">
-                    <p:commandButton id="toggler" type="button" value="Configurações" styleClass="btn-danger"
+                    <p:commandButton id="toggler" type="button" value="Configurações" styleClass="btn-primary"
                                      style="float:left" icon="ui-icon-circle-arrow-s" />
                     <p:columnToggler datasource="motoristas" trigger="toggler" />
                     <p:spacer height="5"/>
                     <p:commandButton value="Novo Registro" action="#{motoristaMB.insert}"
-                                     icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                                     icon="fa fa-pencil" update="@form" styleClass="btn-primary"/>
                     <p:spacer height="5"/>
-                    <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print" styleClass="btn-danger">
+                    <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print" styleClass="btn-primary">
                         <p:menuitem value="PDF" url="#" icon="fa fa-file-pdf-o"/>
                         <p:menuitem value="XLS" url="#" icon="fa fa-file-excel-o"/>
                         <p:menuitem value="CSV" url="#" icon="fa fa-file-text"/>

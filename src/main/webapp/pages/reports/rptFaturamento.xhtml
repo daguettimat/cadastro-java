@@ -166,7 +166,7 @@
             <div class="ui-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                        <p:panel header="Filtros de Pesquisa" styleClass="box-primary"
                                  widgetVar="panel" toggleable="true" >
                             <div class="row">
                                 <div class="col-md-2">
@@ -234,13 +234,13 @@
 
                                 <div class="col-lg-2" style="padding-right: 15px;">
                                     <p:commandButton value="Pesquisar" action="#{faturamentoMB.btnPesquisarData}"
-                                                     icon="fa fa-search" update="@form" styleClass="btn-danger">
+                                                     icon="fa fa-search" update="@form" styleClass="btn-primary">
 
                                     </p:commandButton>
                                 </div>
                                 <div class="col-lg-2" style="padding-right: 15px;">
                                     <p:commandButton value="Voltar" action="#{faturamentoMB.btnBack}"
-                                                     icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
+                                                     icon="fa fa-window-close" update="@form" styleClass="btn-primary"/>
                                 </div>
                             </div>
                         </p:panel>
@@ -261,7 +261,7 @@
                              rows="20"
                              expandableRowGroups="true"
                              sortBy="#{c.nomeTransportadora}"
-                             styleClass="box-danger"
+                             styleClass="box-primary"
                              lazy="false" paginator="true"
                              paginatorPosition="bottom"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
@@ -313,7 +313,7 @@
             </h:panelGroup>
             <br/>
 
-            <p:panel header="Exportar para Excel" styleClass="box-danger">
+            <p:panel header="Exportar para Excel" styleClass="box-primary">
                 <p:commandLink id="pdf" ajax="false">
                     <p:graphicImage value="/resources/images/pdf-icon.png"/>
                     <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}" />
@@ -325,8 +325,11 @@
 
                 <p:commandLink id="xls" ajax="false">
                     <p:graphicImage value="/resources/images/xlsx-icon.png"/>
-                    <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}"  />
-                    <p:dataExporter type="xlsx" target="fatTable" fileName="faturamento" facetBackground="#b2aeae" datasetPadding="4" postProcessor="#{faturamentoMB.postProcessXLS}" />
+                    <f:setPropertyActionListener value="false" 
+                    	target="#{exporterController.customExporter}"  />
+                    <p:dataExporter type="xlsx" target="fatTable" fileName="faturamento" 
+                    facetBackground="#b2aeae" datasetPadding="4" 
+                    postProcessor="#{faturamentoMB.postProcessXLS}" />
 
                 </p:commandLink>
 

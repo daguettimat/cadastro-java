@@ -40,7 +40,7 @@
         <adm:breadcrumb title="Edição de Motoristas"/>
         <h:form id="frmMotorista" enctype="multipart/form-data">
             <h:panelGroup layout="block">
-                <p:panel header="Cadastro" styleClass="box-danger">
+                <p:panel header="Cadastro" styleClass="box-primary">
                     <p:fragment autoUpdate="true" rendered="#{motoristaMB.edit}">
                         <div class="align-right">
                             <p:outputLabel value="Pesquisar por Id: "/>
@@ -77,7 +77,7 @@
                                     </div>
                                     <div class="col-md-2" >
                                         <p:outputLabel for="nacional" value="Nacional"/>
-                                        <p:selectBooleanButton id="nacional" class="btn-danger" disabled="#{! motoristaMB.edit}"
+                                        <p:selectBooleanButton id="nacional" class="btn-primary" disabled="#{! motoristaMB.edit}"
                                                                value = "#{motoristaMB.motorista.nacional}"
                                                                onLabel="Sim"
                                                                offLabel="Não"
@@ -267,7 +267,7 @@
                                 </div>
                             </div>
                             <div class="col-md-2" style="padding-top:25px;">
-                                <p:panel styleClass="box-danger" widgetVar="panelFoto">
+                                <p:panel styleClass="box-primary" widgetVar="panelFoto">
                                     <h:graphicImage value="/images/dynamic/?file=#{motoristaMB.foto()}" style="width:100%;padding-bottom: 15px;"/>
 
                                     <p:fragment autoUpdate="true" rendered="#{motoristaMB.edit}">
@@ -282,7 +282,7 @@
                                                       update="registryUploadMessage"  />
                                         <p:message id="registryUploadMessage" for="registryUpload" />
 
-                                        <p:commandButton action="#{motoristaMB.upload}" value="Enviar" ajax="false" styleClass="btn-danger"/>
+                                        <p:commandButton action="#{motoristaMB.upload}" value="Enviar" ajax="false" styleClass="btn-primary"/>
                                     </p:fragment>
                                 </p:panel>
 
@@ -374,14 +374,14 @@
 
                             <p:commandButton value="Salvar" action="#{motoristaMB.update}"
                                              partialSubmit="true" style="width: 100px;"
-                                             update="@form" styleClass="btn-danger"/>
+                                             update="@form" styleClass="btn-primary"/>
                             <p:spacer height="5"/>
                             <p:commandButton id="btRemove" value="Apagar" action="#{motoristaMB.remove}"
-                                             update="@form" style="width: 100px;" styleClass="btn-danger"/>
+                                             update="@form" style="width: 100px;" styleClass="btn-primary"/>
 
                             <p:spacer height="5"/>
                             <p:commandButton value="Voltar" action="#{motoristaMB.btnBack}"
-                                             style="width: 100px;" styleClass="btn-danger"/>
+                                             style="width: 100px;" styleClass="btn-primary"/>
 
 
                         </div>
@@ -390,9 +390,9 @@
             </h:panelGroup>
             <br/>
             <p:fragment autoUpdate="true" rendered="#{indexMB.usuario.interno == true}">
-                <p:panel header="Histórico do Motorista" styleClass="box-danger" toggleable="true">
+                <p:panel header="Histórico do Motorista" styleClass="box-primary" toggleable="true">
                     <p:dataTable var="historico" value="#{motoristaMB.motAList}" resizableColumns="true" sortBy="#{historico.acCadastro.dtCriacao}" sortOrder="DESCENDING"
-                                 paginatorPosition="bottom" rows="10" styleClass="box-danger" lazy="true" paginator="true"
+                                 paginatorPosition="bottom" rows="10" styleClass="box-primary" lazy="true" paginator="true"
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
                                  currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
                                  rowsPerPageTemplate="5,10,15,25,50">
@@ -411,11 +411,19 @@
                         <p:column headerText="Telefone"  width="105">
                             <h:outputText value="#{(historico.telefone.ddd)} #{historico.telefone.fone}"/>
                         </p:column>
+                        <p:column headerText="Liberação"  width="8%" style="width:8%">
+                          <div align="center">
+                          	<a target="_blank" href="http://sisold.global5.com.br/liberacao_email.php?origem=SYS&amp;ficha=#{historico.acCadastro.id}">#{historico.acCadastro.acLiberacao.id}</a>                            
+                             <span>&#160;</span>
+                            <p:tooltip for="imgStatus" value="&#160;#{historico.acCadastro.status.descricao}"/>
+                            <p:graphicImage id="imgStatus" library="resources" value="/resources/#{motoristaMB.flag(historico.acCadastro.status.id)}" style="width: 16%;" />
+                           </div>
+                        </p:column>                         
                         <p:column headerText="Status Geral">
                             <img src="/manager/resources/#{motoristaMB.flag(historico.statusGeral.id)}" style="width: 16px;"/>
                             <p:spacer height="5px;"/>
                             <h:outputText value="#{historico.statusGeral.descricao}"/>
-                        </p:column>
+                        </p:column>                       
                         <p:column headerText="CNH">
                             <img src="/manager/resources/#{motoristaMB.flag(historico.statusCNH.id)}" style="width: 16px;"/>
                             <p:spacer height="5px;"/>

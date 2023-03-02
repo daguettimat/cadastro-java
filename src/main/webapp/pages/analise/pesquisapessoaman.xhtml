@@ -17,11 +17,12 @@
     <ui:define name="body">
         <adm:breadcrumb title="Pesquisa de Pessoas"/>
         <h:form>
+        <p:messages showDetail="false" autoUpdate="true" closable="true" />
             <f:metadata>
                 <f:event type="preRenderView" listener="#{pesquisaPessoaMB.updateUsuario(logonMB.usuarioLogado)}"/>
             </f:metadata>
             <h:panelGroup layout="block">
-                <p:panel header="Dados básicos" styleClass="box-danger" toggleable="true">
+                <p:panel header="Dados básicos" styleClass="box-primary" toggleable="true">
                     <div class="align-right">
                         <p:outputLabel value="Pesquisar por Id: "/>
                         <p:spacer height="5"/>
@@ -43,16 +44,31 @@
                             </div>
                             <div class="col-lg-2">
                                 <p:outputLabel value="CPF" for="inptCPF"/>
-                                <p:inputText id="inptCPF" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.cpf}"/>
+                                <p:inputText id="inptCPF" 
+                                	disabled="#{pesquisaPessoaMB.pessoa.id != null}" 
+                                	value="#{pesquisaPessoaMB.pessoa.cpf}"
+                                	required="true"
+                                	requiredMessage="Por favor informe o CPF" 
+                                	/>
                             </div>
                             <div class="col-lg-5">
                                 <p:outputLabel value="Nome" for="inptNome"/>
-                                <p:inputText id="inptNome" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.nome}"/>
+                                <p:inputText id="inptNome" 
+                                	disabled="#{pesquisaPessoaMB.pessoa.id != null}" 
+                                	value="#{pesquisaPessoaMB.pessoa.nome}"
+                                	required="true"
+                                	requiredMessage="Por favor informe o Nome"
+                                	/>
                             </div>
 
                             <div class="col-lg-2">
                                 <p:outputLabel value="Data Nascimento" for="inptDtNasc"/>
-                                <p:inputText id="inptDtNasc" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.dtNascimento}">
+                                <p:inputText id="inptDtNasc" 
+                                	disabled="#{pesquisaPessoaMB.pessoa.id != null}" 
+                                	value="#{pesquisaPessoaMB.pessoa.dtNascimento}"
+                                	required="true"
+                                	requiredMessage="Por favor informe a Data Nascimento"                                	
+                                	>
                                     <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                                 </p:inputText>
                             </div>
@@ -60,30 +76,57 @@
                         <div class="row">
                             <div class="col-lg-2">
                                 <p:outputLabel value="RG" for="inptRG"/>
-                                <p:inputText id="inptRG" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.rg}"/>
+                                <p:inputText id="inptRG" 
+                                	disabled="#{pesquisaPessoaMB.pessoa.id != null}" 
+                                	value="#{pesquisaPessoaMB.pessoa.rg}"
+                                	required="true"
+                                	requiredMessage="Por favor informe o RG"
+                                	/>
                             </div>
                             <div class="col-lg-1">
                                 <p:outputLabel value="UF" for="inptUFRG"/>
-                                <p:inputText id="inptUFRG" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.ufRg}"/>
+                                <p:inputText id="inptUFRG" 
+                                	disabled="#{pesquisaPessoaMB.pessoa.id != null}" 
+                                	value="#{pesquisaPessoaMB.pessoa.ufRg}"
+                                	required="true"
+                                	requiredMessage="Por favor informe o UF"                                	
+                                	/>
                             </div>
 
+                            <div class="col-lg-4">
+                                <p:outputLabel value="Mãe" for="inptMae"/>
+                                <p:inputText id="inptMae"  
+                                	disabled="#{pesquisaPessoaMB.pessoa.id != null}" 
+                                	value="#{pesquisaPessoaMB.pessoa.nomeMae}"
+                                	required="true"
+                                	requiredMessage="Por favor informe o nome da Mãe"                                	
+                                	/>
+                            </div>
+                            
                             <div class="col-lg-4">
                                 <p:outputLabel value="Pai" for="inptPai"/>
                                 <p:inputText id="inptPai"  disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.nomePai}"/>
                             </div>
-                            <div class="col-lg-4">
-                                <p:outputLabel value="Mãe" for="inptMae"/>
-                                <p:inputText id="inptMae"  disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.nomeMae}"/>
-                            </div>
+
                         </div>
                         <div class="row">
                             <div class="col-lg-5">
-                                <p:outputLabel value="Cidade" for="inptCidade"/>
-                                <p:inputText id="inptCidade" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.cidade}"/>
+                                <p:outputLabel value="Cidade da Residência" for="inptCidade"/>
+                                <p:inputText id="inptCidade" 
+                                	disabled="#{pesquisaPessoaMB.pessoa.id != null}" 
+                                	value="#{pesquisaPessoaMB.pessoa.cidade}"
+                                	required="true"
+                                	requiredMessage="Por favor informe o nome da Cidade Nascimento"                                	                                	
+                                	/>
                             </div>
                             <div class="col-lg-1">
                                 <p:outputLabel value="UF" for="inptUF"/>
-                                <p:inputText id="inptUF" disabled="#{pesquisaPessoaMB.pessoa.id != null}" value="#{pesquisaPessoaMB.pessoa.uf}"/>
+                                <p:inputText id="inptUF" 
+                                	disabled="#{pesquisaPessoaMB.pessoa.id != null}" 
+                                	value="#{pesquisaPessoaMB.pessoa.uf}"
+                                	required="true"
+                                	requiredMessage="Por favor informe a UF da Cidade de Nascimento"                                	                                	
+                                	/>
                             </div>
                         </div>
                     </div>
@@ -98,7 +141,7 @@
                                     </div>
                                     <div class="col-lg-2">
                                         <p:outputLabel for="aprovado" value="Aprovado"/>
-                                        <p:selectBooleanButton id="aprovado" class="btn-danger"
+                                        <p:selectBooleanButton id="aprovado" class="btn-primary"
                                                                value = "#{pesquisaPessoaMB.pessoa.aprovado}"
                                                                onLabel="Sim"
                                                                offLabel="Não"
@@ -133,18 +176,19 @@
                     <f:facet name="footer">
                         <div class="align-right" style="padding: 5px;">
 
-                            <p:commandButton value="Consultar" disabled="#{pesquisaPessoaMB.pessoa.id != null}" action="#{pesquisaPessoaMB.update()}"
-                                             update="@form" styleClass="btn-danger"/>
+                            <p:commandButton value="Enviar Consulta" disabled="#{pesquisaPessoaMB.pessoa.id != null}" action="#{pesquisaPessoaMB.update()}"
+                                             update="@form" styleClass="btn-primary"/>
                             <p:spacer height="5"/>
                             <p:commandButton value="Voltar" action="#{pesquisaPessoaMB.btnBack}"
-                                             styleClass="btn-danger"/>
+                                             styleClass="btn-primary" icon="fa fa-window-close"  />
                         </div>
                     </f:facet>
                 </p:panel>
                 <br/>
 
                 <br/>
-                <p:panel header="Resultado Consulta" styleClass="box-danger" style="#{pesquisaPessoaMB.pessoa.id != null ? '': 'display : none;'}">
+                <p:panel header="Resultado Consulta" styleClass="box-primary" 
+                	style="#{pesquisaPessoaMB.pessoa.id != null ? '': 'display : none;'}">
                     <ui:fragment rendered="#{pesquisaPessoaMB.pessoa.dtResposta == null }">
                             <br/>
                             <h3 style="text-align: center">Ainda não temos resultado da consulta...</h3>
@@ -172,7 +216,7 @@
                                 </div>
                                 <div class="col-lg-2">
                                     <p:outputLabel for="nadaconsta" value="Resultado"/>
-                                    <p:selectBooleanButton id="nadaconsta" class="btn-danger"
+                                    <p:selectBooleanButton id="nadaconsta" class="btn-primary"
                                                            value = "#{pesquisaPessoaMB.pessoa.consulta.nadaConsta}"
                                                            onLabel="Nada Consta"
                                                            offLabel="Constam Anotações"

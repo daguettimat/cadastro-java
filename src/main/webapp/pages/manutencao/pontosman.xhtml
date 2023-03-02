@@ -18,7 +18,7 @@
         <adm:breadcrumb title="Edição do Ponto de Apoio"/>
         <h:form>
             <h:panelGroup layout="block">
-                <p:panel header="Manutenção" styleClass="box-danger">
+                <p:panel header="Manutenção" styleClass="box-primary">
                     <div class="align-right">
                         <p:outputLabel value="Pesquisar por Id: "/>
                         <p:spacer height="5"/>
@@ -98,7 +98,7 @@
                     </div>
                 </p:panel>
                 <br/>
-                <p:panel header="Telefones de Contato" styleClass="box box-danger">
+                <p:panel header="Telefones de Contato" styleClass="box box-primary">
                     <div class="ui-g ui-fluid">
                         <div class="col-lg-1">
                             <p:outputLabel for="DDDFixo" value="DDD"/>
@@ -154,7 +154,7 @@
                     </div>
                 </p:panel>
                 <br/>
-                <p:panel styleClass="box box-danger" header="Serviços">
+                <p:panel styleClass="box box-primary" header="Serviços">
 
                     <p:tabView id="tabPendencia">
                         <p:tab title="Manutenção e Abastecimento" titleStyleClass="box-warning" >
@@ -464,13 +464,13 @@
                     <f:facet name="footer">
                         <div class="align-right" style="padding: 5px;">
                             <p:commandButton value="Salvar" action="#{pontosApoioMB.update}"
-                                             update="@form" styleClass="btn-danger"/>
+                                             update="@form" styleClass="btn-primary"/>
                             <p:spacer height="5"/>
                             <p:commandButton id="btRemove" value="Apagar" action="#{pontosApoioMB.remove}"
-                                             update="@form" styleClass="btn-danger"/>
+                                             update="@form" styleClass="btn-primary"/>
                             <p:spacer height="5"/>
                             <p:commandButton value="Voltar" action="#{pontosApoioMB.btnBack}"
-                                             styleClass="btn-danger"/>
+                                             styleClass="btn-primary"/>
                         </div>
                     </f:facet>
                 </p:panel>

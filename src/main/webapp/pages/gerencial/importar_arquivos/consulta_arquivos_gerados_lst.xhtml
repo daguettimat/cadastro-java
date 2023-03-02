@@ -1,0 +1,233 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            .center  {
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+        </style>
+    </ui:define>
+	    	
+    <ui:define name="title"  >
+     	Consulta de Arquivos Gerados
+    </ui:define>
+	 
+    <ui:define name="description">
+        Rastreamento
+    </ui:define>
+ 
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Teste"/>
+   
+   		<h:form id="frmFiltroRem">
+
+			<div class="row" style="padding-bottom: 15px;">
+				<div class="col">
+					<div>
+
+						<p:panel
+							style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid green;">
+
+							<p:panel
+								style="margin-left: 13px;margin-right: 13px;padding-botton:5px;">
+
+							<div class="ui-g ui-fluid">
+                        		<div class="col-lg-2" style="padding-top:5px">
+                            		<p:outputLabel value="Filtros para Pesquisa" />                            		
+                        		</div>
+							</div>
+								
+								<p:spacer width="5px" />
+								
+								<div class="ui-g ui-fluid">
+
+									<div class="col-lg-2">
+										<p:calendar id="dataInicial" placeholder="Data Inicial"
+											value="#{transacaoGerencialMB.dataInicial}"
+											inputStyle="text-align:center" locale="pt_BR"
+											navigator="true" pattern="dd/MM/yyyy HH:mm "
+											showButtonPanel="true"
+											title="Data inicial da importação ou a partir do dia">
+										</p:calendar>
+									</div>
+
+									<div class="col-lg-2">
+										<p:calendar id="dataFinal" placeholder="Data Final"
+											value="#{transacaoGerencialMB.dataFinal}"
+											inputStyle="text-align:center" locale="pt_BR"
+											navigator="true" pattern="dd/MM/yyyy HH:mm "
+											showButtonPanel="true"
+											title="Data final da importação ou até o dia.">
+										</p:calendar>
+									</div>
+
+									<div class="col-lg-2">
+										<p:selectOneMenu value="#{transacaoGerencialMB.nomeModulo}">
+											<f:selectItem itemLabel="Todos Módulos" itemValue="todos" />
+											<f:selectItem itemLabel="Viagem" itemValue="Viagem" />
+											<f:selectItem itemLabel="Checklist"	itemValue="Checklist" />
+										</p:selectOneMenu>
+									</div>
+
+
+									<div class="col-lg-4">
+										<p:selectOneButton value="#{transacaoGerencialMB.statusChamadas}" required="true" requiredMessage="Informe o status">
+                        					<f:selectItem itemLabel="Finalizadas" itemValue="finalizada" />
+                        					<f:selectItem itemLabel="ERRO no Processo" itemValue="finalizadaErro" />                            
+                        					<f:selectItem itemLabel="Canceladas" itemValue="cancelada" />
+                        				</p:selectOneButton>										
+									</div>
+
+								</div>
+								
+								<p:spacer width="5px" />
+								
+							</p:panel>
+
+							
+
+							<div class="row" id="filterLn3">
+
+								<div class="align-right"
+									style="padding: 5px; padding-right: 25px">
+									<p:commandButton id="btnPesquisar" value="Filtrar"
+										icon="fa fa-filter"
+										action="#{transacaoGerencialMB.pesquisarTransacao}"  update="frmListaRegistros" process="@form" />
+									<p:spacer height="5" />
+									<p:commandButton id="btnClearFilter" value="Limpar Filtro"
+										icon="fa fa-eraser" action="#{transacaoGerencialMB.limparFiltro}"
+										style="text-shadow:1px 1px 3px red;" />
+									<p:spacer height="5" />
+																	
+								</div>
+							</div>
+						</p:panel>
+
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+        <h:form id="frmListaRegistros">            
+            <h:panelGroup layout="block"  >
+    	
+   			<p:dataTable widgetVar="dtAutotrac"    
+                         id="tbListAutotrac"
+                         var="c" lazy=""
+                         value="#{transacaoGerencialMB.listaTransacao}"
+                         rows="20"
+                         styleClass="box-danger" sortMode="multiple"
+                         rowKey="#{c.id}" paginator="true"
+                         paginatorPosition="bottom"
+                         
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                         currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+                         rowsPerPageTemplate="5,10,15,20,30,50,100">
+				
+					<f:facet name="header">
+						Lista de Registros Gerados			
+                    </f:facet>
+
+                    <p:column headerText="Id" style="width:2%" >
+                        <div align="left" style="padding-right: 10px;">
+                         	  <p:outputLabel value="#{c.id}"
+                                            style="text-align: center;display:block"/>
+                            
+                        </div>                        
+                    </p:column>
+                    
+                    <p:column headerText="Módulo" style="width:3%"  >
+                        <div align="left" style="padding-right: 10px;">
+                            <p:outputLabel value="#{c.modulo}" style="text-align: lefth;display:block">                                
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+                                        
+                    <p:column headerText="Detalhe" style="width:8%"  >
+                        <div align="left" style="padding-right: 30px;">
+                            <p:outputLabel value="#{c.detalhe}" style="text-align: center;display:block">                                
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+
+                    <p:column headerText="Início" style="width:2%"  >
+                        <div align="left" style="padding-right: 30px;">
+                            <p:outputLabel value="#{c.dtInicio}" style="text-align: center;display:block">   
+                            	<f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />                             
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+                    
+                    <p:column headerText="Fim" style="width:2%"  >
+                        <div align="left" style="padding-right: 30px;">
+                            <p:outputLabel value="#{c.dtFim}" style="text-align: center;display:block">   
+                            	<f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />                             
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+   
+                    <p:column headerText="Cancelado" style="width:2%"  >
+                        <div align="left" style="padding-right: 30px;">
+                            <p:outputLabel value="#{c.dtCancelamento}" style="text-align: center;display:block">   
+                            	<f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />                             
+                            </p:outputLabel>
+                        </div>                        
+                    </p:column>
+
+					<p:column headerText="Download XLS"
+						style="width:2%;text-align: center">
+						<div align="left" style="padding-right: 15px; text-align: center">
+							<h:commandLink id="downXls" 				
+								actionListener="#{transacaoGerencialMB.gerarBaseParaDownload(c.id)}"				
+								immediate="true">
+								<h:graphicImage library="images" name="xlsx-icon.png"
+									width="25%" />
+								<p:dataExporter type="xls" target="tbRelCad"
+									fileName="lstRelViagem" pageOnly="true"
+        							postProcessor="#{transacaoGerencialMB.customizacaoExcel}"
+								/>
+
+							</h:commandLink>
+
+						</div>
+					</p:column>
+                                                      
+                </p:dataTable>
+                
+            </h:panelGroup>
+            
+            <br/>
+        </h:form>
+  
+  
+  
+    </ui:define>
+</ui:composition>

@@ -120,7 +120,9 @@
  
 		    <h:commandLink>
         		<p:graphicImage value="/resources/images/xlsx-icon.png" style="width:2%; height:2%" />
-        		<p:dataExporter type="xls" target="tbRelCad" fileName="lstRelAutotrac" pageOnly="true" />
+        		<p:dataExporter type="xls" target="tbRelCad" 
+        		fileName="lstRelAutotrac" pageOnly="true" 
+        		postProcessor="#{areaClienteMB.customizacaoExcelAutotrac}"/>
     		</h:commandLink>
 
 		

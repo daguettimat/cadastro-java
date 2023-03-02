@@ -16,6 +16,7 @@
     </style>
 
 </h:head>
+
 <h:body styleClass="ui-widget"	style="padding-left: 25px; padding-top: 10px">
 
 	<p:growl autoUpdate="true" showDetail="true" sticky="true" severity="info,warn,error,fatal" />
@@ -47,16 +48,24 @@
 						</h4>							
            </f:facet>
 
-			<p:column headerText="Unidade" style="color:red;width:25%" >
+			<p:column headerText="Tipo" style="color:red;width:10%" >
+				<h:outputText value="#{c.tipo}" style="color:black;"/>
+			</p:column>
+
+			<p:column headerText="Unidade" style="color:red;width:15%" >
 				<h:outputText value="#{c.unidade}" style="color:black;"/>
 			</p:column>
 
-			<p:column headerText="Ficha" style="color:red;width:5%;" >
+			<p:column headerText="Ficha" style="color:red;width:7%;" >
 				<h:outputText value="#{c.ficha}" style="color:black;text-align: center;display:block"  />
 			</p:column>
 
-			<p:column headerText="Aprovação" style="color:red;width:5%;">
+			<p:column headerText="Aprovação" style="color:red;width:10%;">
 				<h:outputText value="#{c.dt_termino}" style="color:black;text-align: center;display:block" />
+			</p:column>
+
+			<p:column headerText="Vitimologia" style="color:red;width:10%;" >
+				<h:outputText value="#{c.vitimologia}" style="color:black;text-align:left;display:block" />
 			</p:column>
 
 			<p:column headerText="Motorista" style="color:red;width:17%;" >
@@ -128,7 +137,9 @@
  
 		    <h:commandLink>
         		<p:graphicImage value="/resources/images/xlsx-icon.png" style="width:2%; height:2%" />
-        		<p:dataExporter type="xls" target="tbRelCad" fileName="lstRelCadastro" pageOnly="true" />
+        		<p:dataExporter type="xls" target="tbRelCad" 
+        		fileName="lstRelCadastro" pageOnly="true" 
+        		postProcessor="#{areaClienteMB.customizacaoExcelCadastro}"/>
     		</h:commandLink>
 
 		

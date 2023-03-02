@@ -85,7 +85,9 @@ public class UsuarioService extends CrudService<Usuario> {
     // Verifica se usuário existe ou se pode logar
     public Usuario isUsuarioReadyToLogin(String login, String senha) {
         try {
+        	
             login = login.toLowerCase().trim();
+            
             List retorno = crud().criteria().findByNamedQuery(
                     Usuario.FIND_BY_LOGIN_SENHA,
                     AppUtils.NamedParams("login", login.toUpperCase().trim()
@@ -93,6 +95,11 @@ public class UsuarioService extends CrudService<Usuario> {
 
             if (retorno.size() == 1) {
                 Usuario userFound = (Usuario) retorno.get(0);
+                
+                userFound.setDtUltimoLogin(new Date());
+                
+                crud().update(userFound);
+                
                 return userFound;
             }
 

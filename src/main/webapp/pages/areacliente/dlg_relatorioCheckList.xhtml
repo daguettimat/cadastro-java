@@ -98,7 +98,9 @@
  
 		    <h:commandLink>
         		<p:graphicImage value="/resources/images/xlsx-icon.png" style="width:2%; height:2%" />
-        		<p:dataExporter type="xls" target="tbRelCad" fileName="lstRelCheckList" pageOnly="true" />
+        		<p:dataExporter type="xls" target="tbRelCad" 
+        		fileName="lstRelCheckList" pageOnly="true"
+        		postProcessor="#{areaClienteMB.customizacaoExcelCheckList}" />
     		</h:commandLink>
 
 		

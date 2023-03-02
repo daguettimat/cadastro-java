@@ -7,7 +7,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(name="sinc_viagem")
+@Table(name="rastreamento.sinc_viagem")
 public class SincViagem implements Serializable{
 	
 	/**

@@ -1,0 +1,378 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+
+
+
+
+    <ui:define name="title">
+        Análise Cadastral Motorista
+    </ui:define>
+
+    <ui:define name="description">
+        edição de dados
+    </ui:define>
+
+
+    <ui:define name="body">
+
+        <adm:breadcrumb title="Análise Cadastral Motorista"/>
+        <h:form id="formMotorista">
+
+            <h:panelGroup layout="block">
+                <div class="align-right">
+                    <p:outputLabel value="Pesquisar Ficha: " style="display:none"/>
+                    <p:spacer height="5"/>
+                    <p:inputText id="inptId" value="#{motAnaliseMB.id}" style="display:none"/>
+                    <p:commandButton id="brFind"
+                                     value="Atualizar Tela"
+                                     action="#{motAnaliseMB.findByCadastro(motAnaliseMB.id)}"
+
+                                     process="@form"
+                                     update="@form"
+                                     styleClass="btn-flat bg-black" style="margin-top: -3px"
+                                     partialSubmit="true"/>
+                </div>
+                <br/>
+                <div class="ui-fluid">
+                    <p:panel  styleClass="box-primary">
+                        <div class="row" style="padding-left:15px;">
+                            <div class="col-lg-10">
+                                <p:panel header="Dados Informados">
+
+                                    <div  class="row" style="padding-left: 15px;">
+                                        <div class="col-sm-1" style="min-width: 90px;padding-left: 15px; padding-bottom: 10px;">
+                                            <p:outputLabel value="Ficha" for="inptIdx"/>
+                                            <p:inputText id="inptIdx" disabled="true"  style="text-align:right;" value="#{motAnaliseMB.anacmot.acCadastro.id}"/>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p:outputLabel value="CPF" for="inptCPF"/>
+                                            <p:inputText id="inptCPF" disabled="true" value="#{motAnaliseMB.anacmot.motorista.doc1}" />
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <p:outputLabel value="Nome" for="inptNome"/>
+                                            <p:inputText id="inptNome" disabled="true" value="#{motAnaliseMB.anacmot.motorista.nome}"/>
+                                        </div>
+                                        <div class="col-sm-1" style="min-width: 90px;">
+                                            <p:outputLabel value="DDD" for="inptDDD"/>
+                                            <p:inputText id="inptDDD" disabled="true" value="#{motAnaliseMB.anacmot.telefone.ddd}"/>
+                                        </div>
+                                        <div class="col-sm-1" style="min-width: 120px;">
+                                            <p:outputLabel value="Telefone" for="inptTEL"/>
+                                            <p:inputText id="inptTEL" disabled="true" value="#{motAnaliseMB.anacmot.telefone.fone}"/>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row" style="padding-left: 15px;">
+                                        <div class="col-sm-3">
+                                            <p:outputLabel value="Vinculo" for="inptVIN"/>
+                                            <p:inputText id="inptVIN" disabled="true" value="#{motAnaliseMB.anacmot.motoristaVinculo.descricao}"/>
+
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <p:outputLabel value="Cliente" for="inptCLI"/>
+                                            <p:inputText id="inptCLI" disabled="true" value="#{motAnaliseMB.anacmot.acCadastro.clienteArea.nome}"/>
+
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <p:outputLabel value="Filial" for="inptFilial"/>
+                                            <p:inputText id="inptFilial" disabled="true" value="#{motAnaliseMB.anacmot.acCadastro.filialArea.nome}"/>
+
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row" style="padding-left: 15px;">
+                                        <div class="col-lg-3">
+                                            <p:panelGrid columns="1" styleClass="box box-primary">
+                                                <f:facet name="header">
+                                                    <p:graphicImage name="#{motAnaliseMB.pathFlag(motAnaliseMB.anacmot.acCadastro.status.id)}" width="96px;" height="96px;" style="padding:15px;"/>
+                                                </f:facet>
+                                                <f:facet name="footer">
+                                                    <div align="center">
+                                                        <h:outputText value="#{motAnaliseMB.anacmot.acCadastro.status.descricao}" class="ui-panel-title" style="padding-top:15px; font-weight: bold;"/>
+                                                    </div>
+                                                </f:facet>
+                                            </p:panelGrid>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <p:panelGrid columns="1" styleClass="box box-primary">
+                                                <f:facet name="header">
+                                                    <p:graphicImage name="#{motAnaliseMB.pathFlag(motAnaliseMB.anacmot.statusGeral.id)}" width="96px;" height="96px;" style="padding:15px;"/>
+                                                </f:facet>
+                                                <f:facet name="footer">
+                                                    <div align="center">
+                                                        <h:outputText value="#{motAnaliseMB.anacmot.statusGeral.descricao}" class="ui-panel-title" style="padding-top:15px; font-weight: bold;"/>
+                                                    </div>
+                                                </f:facet>
+                                            </p:panelGrid>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <p:panelGrid columns="1" styleClass="box box-primary">
+                                                <f:facet name="header">
+                                                    <ui:fragment rendered="#{!motAnaliseMB.anacmot.acCadastro.usuarioCriacao.interno}">
+                                                        <p:graphicImage name="images/ref_user_group.png" class="over" width="96px;" height="96px;" style="padding:15px;"/>
+                                                    </ui:fragment>
+                                                    <ui:fragment rendered="#{motAnaliseMB.anacmot.acCadastro.usuarioCriacao.interno}">
+                                                        <p:graphicImage name="images/logo.png" class="over" width="240px;" height="96px;" style="padding:15px;"/>
+                                                    </ui:fragment>
+                                                </f:facet>
+                                                <f:facet name="footer">
+                                                    <div align="center">
+                                                        <h:outputText value="#{motAnaliseMB.anacmot.acCadastro.usuarioCriacao.nome}" class="ui-panel-title" style="padding-top:15px; font-weight: bold;"/>
+                                                    </div>
+                                                </f:facet>
+                                            </p:panelGrid>
+                                        </div>
+                                        <div class="col-lg-3" style="padding-right: 15px; padding-left: 15px;">
+                                            <p:panelGrid columns="1" styleClass="box box-primary">
+                                                <f:facet name="header">
+                                                    <p:graphicImage name="images/event_search.png" class="over" width="96px;" height="96px;" style="padding:15px;"/>
+                                                </f:facet>
+                                                <f:facet name="footer">
+                                                    <div align="center">
+                                                        <h:outputText value="#{motAnaliseMB.anacmot.dtRegistro}" class="ui-panel-title" style="padding-top:15px; font-weight: bold;">
+                                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm:SS"/>
+                                                        </h:outputText>
+                                                    </div>
+                                                </f:facet>
+                                            </p:panelGrid>
+                                        </div>
+                                    </div>
+                                </p:panel>
+                            </div>
+                            <div class="col-lg-2" style="padding-right:15px;">
+                                <p:panel header="Foto" style="height: 308px;">
+                                    <div align="center">
+                                        <h:graphicImage value="/images/dynamic/?file=#{motAnaliseMB.foto()}" style="width:100%;padding-bottom: 15px;"/>
+                                    </div>
+                                </p:panel>
+                            </div>
+                        </div>
+                        <br/>
+
+                        <p:panel style="padding-left: 20px;padding-right: 20px;" styleClass="box box-primary" header="Endereço do Motorista">
+                            <div class="ui-fluid">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        <p:outputLabel value="Cep" for="infCep"/>
+                                        <p:inputText id="infCep" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.cep}" />
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <p:outputLabel value="UF" for="infUF"/>
+                                        <p:inputText id="infUF" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.uf}" />
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <p:outputLabel value="Cidade" for="infCidade"/>
+                                        <p:inputText id="infCidade" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.cidade}" />
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <p:outputLabel value="Bairro" for="infBairro"/>
+                                        <p:inputText id="infBairro" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.bairro}" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <p:outputLabel value="Endereço" for="infEnd"/>
+                                        <p:inputText id="infEnd" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.logradouro}" />
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <p:outputLabel value="Número" for="infNumero"/>
+                                        <p:inputText id="infNumero" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.numero}" />
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <p:outputLabel value="Complemento" for="infComplemento"/>
+                                        <p:inputText id="infComplemento" disabled="true" value="#{motAnaliseMB.anacmot.motorista.localizador.complemento}" />
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </p:panel>
+                        <br/>
+						
+                        <p:panel header="Dados da Análise">
+                            <div class="row">
+                                <div class="#{motAnaliseMB.classCollumn()}" style="padding-left:15px;">
+                                    <p:panelGrid columns="2" styleClass="box box-primary" id="panelCriminal">
+                                        <f:facet name="header">
+                                            <p:graphicImage name="images/mugshot.png" class="over" width="128px;" height="128px;" style="padding:15px;"/>
+                                            <img src="/manager/resources/#{motAnaliseMB.pathFlag(motAnaliseMB.criminal)}"
+                                                 style="width:25%;padding: 5px;" class="under"/>
+                                        </f:facet>
+                                        <h:outputText value="Criminal" style="font-weight: bold;"/>
+                                        <h:outputText value="#{motAnaliseMB.anacmot.statusCriminal.descricao}" />
+                                        <f:facet name="footer">
+                                            <p:commandButton id="btnCriminal" styleClass="btn-primary"
+                                                             onclick="PF('dlgCriminal').show();onTop('dlgCriminal')"
+                                                             value="Mais informações..."/>
+                                        </f:facet>
+
+                                    </p:panelGrid>
+                                </div>
+                                <div class="#{motAnaliseMB.classCollumn()}" style="padding-left:15px;">
+                                    <p:panelGrid columns="2" styleClass="box box-primary">
+                                        <f:facet name="header">
+                                            <p:graphicImage name="images/people.png" class="over" width="128px;" height="128px;" style="padding:15px;"/>
+                                            <img src="/manager/resources/#{motAnaliseMB.pathFlag(motAnaliseMB.pessoal)}"
+                                                 style="width:25%;padding: 5px;" class="under"/>
+                                        </f:facet>
+                                        <h:outputText value="Referências" style="font-weight: bold;"/>
+                                        <h:outputText value="#{motAnaliseMB.anacmot.statusPessoal.descricao}" />
+                                        <f:facet name="footer">
+                                            <p:commandButton id="rootbtn"
+                                                             styleClass="btn-primary"
+                                                             value="Maiores Informações"
+                                                             actionListener="#{motAnaliseMB.openDlgReferencias}">
+
+                                            </p:commandButton>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                </div>
+                                <div class="#{motAnaliseMB.classCollumn()}" style="padding-left:15px;">
+                                    <p:panelGrid columns="2" styleClass="box box-primary">
+                                        <f:facet name="header">
+                                            <p:graphicImage name="images/documentos.png" class="over" width="128px;" height="128px;" style="padding:15px;"/>
+                                            <img src="/manager/resources/#{motAnaliseMB.pathFlag(motAnaliseMB.anacmot.statusComercial.id)}"
+                                                 style="width:25%;padding: 5px;" class="under"/>
+                                        </f:facet>
+                                        <h:outputText value="Ref. Profissional" style="font-weight: bold;"/>
+                                        <h:outputText value="#{motAnaliseMB.anacmot.statusComercial.descricao}" />
+                                        <f:facet name="footer">
+                                            <p:commandButton id="rootbtn1"
+                                                             styleClass="btn-primary"
+                                                             onclick="onTop('dlgAnaliseReferencias');"
+                                                             value="Maiores Informações"
+                                                             actionListener="#{motAnaliseMB.openDlgComercial}">
+
+                                            </p:commandButton>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                </div>
+                                <div class="#{motAnaliseMB.classCollumn()}" style="padding-left:15px;">
+                                    <p:panelGrid columns="2" styleClass="box box-primary">
+                                        <f:facet name="header">
+                                            <p:graphicImage name="images/identity.png" class="over" width="128px;" height="128px;" style="padding:15px;"/>
+                                            <img src="/manager/resources/#{motAnaliseMB.pathFlag(motAnaliseMB.anacmot.statusCNH.id)}"
+                                                 style="width:25%;padding: 5px;" class="under"/>
+                                        </f:facet>
+                                        <h:outputText value="CNH" style="font-weight: bold;"/>
+                                        <h:outputText value="#{motAnaliseMB.anacmot.statusCNH.descricao}" />
+                                        <f:facet name="footer">
+                                            <p:commandButton id="btnCNH" styleClass="btn-primary"
+                                                             onclick="PF('dlgCNH').show();onTop('dlgCNH')"
+                                                             value="Mais informações..."/>
+                                        </f:facet>
+                                    </p:panelGrid>
+                                </div>
+                                <ui:fragment rendered="#{motAnaliseMB.analiseVitimologia}">
+	                                <div class="#{motAnaliseMB.classCollumn()}" style="padding-left:15px;">
+	                                    <p:panelGrid columns="2" styleClass="box box-primary">
+	                                        <f:facet name="header">
+	                                            <p:graphicImage name="images/datarecord.png" class="over" width="128px;" height="128px;" style="padding:15px;"/>
+	                                            <img src="/manager/resources/#{motAnaliseMB.pathFlag(motAnaliseMB.anacmot.statusCNH.id)}"
+	                                                 style="width:25%;padding: 5px;" class="under"/>
+	                                        </f:facet>
+	                                        <h:outputText value="Vitimologia" style="font-weight: bold;"/>
+	                                        <h:outputText value="#{motAnaliseMB.anacmot.statusCNH.descricao}" />
+	                                        <f:facet name="footer">
+	                                            <p:commandButton id="btnVit" styleClass="btn-primary"
+	                                                             onclick="PF('dlgVitimologia').show();onTop('dlgVitimologia')"
+	                                                             value="Mais informações..."/>
+	                                        </f:facet>
+	                                    </p:panelGrid>
+	                                </div>
+                                </ui:fragment>                                
+                            </div>
+                        </p:panel>
+	
+						
+
+                        <f:facet name="footer" class="ui-fluid">
+                            <div class="ui align-right" style="padding: 5px;">
+                                <p:commandButton style="width: 100px;" value="Voltar" action="#{motAnaliseMB.btnBack}"
+                                                 styleClass="btn-primary"/>
+                            </div>
+                        </f:facet>
+                    </p:panel>
+                </div>
+            </h:panelGroup>
+            <br/>
+
+            <p:dialog id="dlgVazio" widgetVar="dlgVazio" header="Este item não precisa ser realizado..." modal="true"
+                      resizable="false" closable="false" width="600" >
+                <p:panel>
+                    <div class="row">
+                        <div class="col-lg-12" align="center">
+                            <h3>Não é preciso realizar esse levantamento ... <br/>Solicitação cancelada.</h3>
+                        </div>
+                    </div>
+                    <f:facet name="footer">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <span>&#160;</span>
+
+                            </div>
+                            <div class="col-lg-2" style="padding-left:40px;">
+                                <p:commandButton value="Fechar"
+                                                 onclick="PF('dlgFechado').hide();"
+                                                 styleClass="btn-primary" />
+                            </div>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </p:dialog>
+        </h:form>
+
+        <p:dialog id="dlgCNH" widgetVar="dlgCNH" header="Carteira Nacional de Habilitação" modal="true" resizable="false" closable="false"
+                  width="800" position="center,top"  styleClass="box-primary">
+
+            <ui:include src="dlgAnaliseCNH.xhtml"/>
+
+        </p:dialog>
+
+        <p:dialog id="dlgCriminal" widgetVar="dlgCriminal" header="Consulta Criminal" modal="true" resizable="false" closable="false"
+                  width="900" position="center,top" styleClass="box-primary">
+            <ui:include src="dlgAnaliseCriminal.xhtml"/>
+
+        </p:dialog>
+
+        <p:dialog id="dlgVitimologia" widgetVar="dlgVitimologia" header="Consulta Vitimologia" modal="true" resizable="false" closable="false"
+                  width="900" position="center,top" styleClass="box-primary">
+            <ui:include src="dlgVitimologia.xhtml"/>
+        </p:dialog>
+
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+
+                PF('geoMap').geocode('#{motAnaliseMB.anacmot.motorista.localizador.cidade} #{motAnaliseMB.anacmot.motorista.localizador.logradouro} #{motAnaliseMB.anacmot.motorista.localizador.numero}'  );
+                console.log('===>>>>  #{motAnaliseMB.anacmot.motorista.localizador.cidade}' );
+
+            });
+
+            function geocode() {
+                PF('geoMap').geocode(document.getElementById('infEnd').value);
+            }
+
+            function handleResponse(xhr, status, args) {
+                if (args.validationFailed) {
+                    window.scrollTo(0, 0);
+                }
+            }
+
+            function onTop(args) {
+                window.location='#'+ args;
+            }
+
+            function focusField(id){
+                $(id).focus();
+            }
+        </script>
+        <adm:sidebar collapsed="true"/>
+    </ui:define>
+</ui:composition>

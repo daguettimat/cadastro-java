@@ -413,7 +413,8 @@ public class BoletimInformativoMB2_Clone implements Serializable {
 				//EntityManager eBI = biService.crud().getEntityManager();
 				
 				// Persiste Boletim
-				String codRotulo = "BI-" + tipoSelecaoBi + " " + ev.getSincViagem().getId() +
+				//.getId()
+				String codRotulo = "BI-" + tipoSelecaoBi + " " + ev.getSincViagem() +
 									"-" + ev.getNrEvento() + "." + countNrBoletim + "/" + numGlobalPorTipo +
 									"-" + ev.getAno();
 				

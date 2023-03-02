@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "enum_classificacao_perda")
+@Table(name = "rastreamento.enum_classificacao_perda")
 @XmlRootElement
 @XmlAccessorType(value = XmlAccessType.FIELD)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

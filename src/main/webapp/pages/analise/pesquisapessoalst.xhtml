@@ -24,7 +24,7 @@
             <div class="ui-fluid">
                 <div class="row" id="filtroMenu" >
                     <div class="col-md-12">
-                        <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                        <p:panel header="Filtros de Pesquisa" styleClass="box-primary"
                              widgetVar="panel" toggleable="true" >
                             <div class="row">
                                 <div class="col-md-1">
@@ -53,7 +53,7 @@
                                 </div>
 
 
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <p:outputLabel for="Nome" value="Nome"/>
                                     <p:inputText id="Nome" value="#{pesquisaPessoaMB.filter.entity.nome}"/>
                                 </div>
@@ -63,13 +63,15 @@
                                 <ui:fragment autoUpdate="true" rendered="#{pesquisaPessoaMB.habilitaArea == true}">
                                     <div class="col-md-5" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
                                         <p:outputLabel for="transportadora" value="Transportadora"/>
-                                        <p:autoComplete id="transportadora" completeMethod="#{areaMB.listArea}"
+                                        <p:autoComplete id="transportadora" 
+                                        				completeMethod="#{areaMB.listArea}"
                                                         value="#{pesquisaPessoaMB.areaCliente}"  maxResults="15"
                                                         var="area" itemLabel="#{area.nome}" itemValue="#{area}"
                                                         forceSelection="true" minQueryLength="3" queryDelay="700"
                                                         converter="simpleEntityConverter">
 
                                             <p:ajax event="itemSelect" listener="#{pesquisaPessoaMB.selectTransp}" update="transportadora"/>
+
                                         </p:autoComplete>
                                     </div>
                                 </ui:fragment>
@@ -80,11 +82,11 @@
                                     </div>
                                 </ui:fragment>
                                 <ui:fragment autoUpdate="true" rendered="#{pesquisaPessoaMB.habilitaFilial == true}">
-                                    <div class="col-md-6" data-step="3" data-intro="Aqui você escolhe qual é a Filial responsável pela ficha que será enviada.">
+                                    <div class="col-md-7" data-step="3" data-intro="Aqui você escolhe qual é a Filial responsável pela ficha que será enviada.">
                                         <p:outputLabel for="filial" value="Filial"/>
                                         <p:autoComplete id="filial" completeMethod="#{enviarFichaMB.listFilial}"
                                                         value="#{pesquisaPessoaMB.areaFilial}"  maxResults="15"
-                                                        var="areaFilial" itemLabel="#{areaFilial.nome}"
+                                                        var="areaFilial" itemLabel="#{areaFilial.nome}"                                                        
                                                         itemValue="#{areaFilial}" forceSelection="true"
                                                         minQueryLength="3" queryDelay="700"
                                                         converter="simpleEntityConverter">
@@ -102,29 +104,38 @@
                             <br/><br/>
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-3" style="padding-right: 15px;">
+                                    <p:commandButton value="Limpar Pesquisa"   styleClass="btn-warning"
+                                                     action="#{pesquisaPessoaMB.clearResearch}"
+                                                     update="@form"
+                                                     icon="fa fa-eraser" >
+
+                                    </p:commandButton>
+                                </div>
+                                <div class="col-md-2">
                                     <span>&#160;</span>
                                 </div>
 
                                 <div class="col-md-2" style="padding-right: 15px;">
                                     <p:commandButton id="btnInsert" value="Nova Consulta" action="#{pesquisaPessoaMB.insert}"
-                                                     icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                                                     icon="fa fa-pencil" update="@form" styleClass="btn-success"/>
                                 </div>
 
-                                <div class="col-md-2" style="padding-right: 15px;">
+                                <div class="col-md-2">
+                                    <span>&#160;</span>
+                                </div>
+                                
+                                <div class="col-md-3" style="padding-right: 15px;">
                                     <p:commandButton value="Pesquisar"
                                                      action="#{cadastroMB.dummy}"
                                                      process="@form"
                                                      update="@none"
                                                      oncomplete="PF('pesTable').filter()"
-                                                     icon="fa fa-search" styleClass="btn-danger">
+                                                     icon="fa fa-search" styleClass="btn-primary">
 
                                     </p:commandButton>
                                 </div>
-                                <div class="col-md-2" style="padding-right: 15px;">
-                                    <p:commandButton value="Voltar" action="#{pesquisaPessoaMB.btnBack}"
-                                                     icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
-                                </div>
+                                
                             </div>
                         </p:panel>
                     </div>
@@ -132,7 +143,7 @@
             </div>
             <br/><br/>
             <h:panelGroup layout="block">
-                <p:dataTable widgetVar="pesTable" var="c" value="#{pesquisaPessoaMB.pesList}" rows="15" styleClass="box-danger"
+                <p:dataTable widgetVar="pesTable" var="c" value="#{pesquisaPessoaMB.pesList}" rows="15" styleClass="box-primary"
                              filteredValue="#{pesquisaPessoaMB.filteredValue}"
                              rowKey="#{c.id}" lazy="true" paginator="true"
                              paginatorPosition="bottom" selection="#{pesquisaPessoaMB.pessoa}" selectionMode="single"
@@ -145,9 +156,17 @@
                     <f:facet name="header">
                         &#160;
                     </f:facet>
+                    
+                    
+                    <p:column headerText="Matriz" sortBy="#{c.clienteArea.nome}" filterMatchMode="contains" >
+                        #{c.clienteArea.nome}
+                    </p:column>
+                    
+                   
                     <p:column headerText="Nome" sortBy="#{c.nome}" filterMatchMode="contains">
                         #{c.nome}
                     </p:column>
+                    
                     <p:column headerText="CPF"  sortBy="#{c.cpf}" style="width: 15%;">
                         <div style="text-align: center">
                             <h:outputText value="#{pesquisaPessoaMB.formatCPF(c.cpf)}"/>
@@ -159,7 +178,7 @@
                     <p:column headerText="Pai" sortBy="#{c.nomePai}"  >
                         #{c.nomePai}
                     </p:column>
-                    <p:column headerText="Data Criação" sortBy="#{c.dtCriacao}"  style="width:15%" >
+                    <p:column headerText="Data Criação" sortBy="#{c.dtCriacao}"  style="width:10%" >
                         <div style="text-align: center">
                             <h:outputText value="#{c.dtCriacao}">
                                 <f:convertDateTime pattern="dd-MM-yyyy" />

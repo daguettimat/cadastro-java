@@ -23,7 +23,7 @@
                     <div class="col-lg-12 col-md-4 col-sm-12">
                         <div class="row" id="filtroMenu" >
                             <div class="col-lg-12">
-                                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                                <p:panel header="Filtros de Pesquisa" styleClass="box-primary"
                                          widgetVar="panel" toggleable="true" >
 
                                     <div class="row">
@@ -116,13 +116,13 @@
                                                              process="@form"
                                                              update="@none"
                                                              oncomplete="PF('cadastroTable').filter()"
-                                                             icon="fa fa-search" styleClass="btn-danger">
+                                                             icon="fa fa-search" styleClass="btn-primary">
 
                                             </p:commandButton>
                                         </div>
                                         <div class="col-lg-2" style="padding-right: 15px;">
                                             <p:commandButton value="Voltar" action="#{listaCadastralMB.btnBack}"
-                                                             icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
+                                                             icon="fa fa-window-close" update="@form" styleClass="btn-primary"/>
                                         </div>
                                     </div>
                                 </p:panel>
@@ -139,7 +139,7 @@
                              var="c"
                              value="#{cadastroMB.cadList}"
                              rows="20"
-                             styleClass="box-danger"
+                             styleClass="box-primary"
                              filteredValue="#{cadastroMB.filteredValue}"
                              filterDelay="1000"
                              rowKey="#{c.id}" lazy="true" paginator="true"

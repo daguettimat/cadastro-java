@@ -117,7 +117,10 @@
  
 		    <h:commandLink>
         		<p:graphicImage value="/resources/images/xlsx-icon.png" style="width:2%; height:2%" />
-        		<p:dataExporter type="xls" target="tbRelCad" fileName="lstRelViagem" pageOnly="true" />
+        		<p:dataExporter type="xls" target="tbRelCad" 
+        			fileName="lstRelViagem" pageOnly="true"
+        			postProcessor="#{areaClienteMB.customizacaoExcel}"
+        			 />
     		</h:commandLink>
  		
 		

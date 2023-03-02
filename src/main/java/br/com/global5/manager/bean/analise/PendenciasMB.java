@@ -242,9 +242,7 @@ public class PendenciasMB implements Serializable {
     		/*pdfFiles.add(AppUtils.pdfName(  "/" + AppUtils.formataCompetencia(pendencias.getDtCriacao()) +
                     "/"  + path.getFileName().toString(), true));*/
     		System.out.println(path.getFileName());
-    		String t = String.valueOf(path.getFileName());
-    		String c = t;
-    		
+    		String t = String.valueOf(path.getFileName());       		
  
     	}
     	
@@ -436,6 +434,7 @@ public class PendenciasMB implements Serializable {
             pendencias.setUsuarioCriacao(new Usuario(usuario.getId()));
             pendencias.setDtCriacao(new Date());
             pendencias.setDtRegistro(new Date());
+            pendencias.setPendenciasStatus(new PendenciasStatus(205));
             try {
                 pendenciasService.insert(pendencias);
             } catch (Exception e) {

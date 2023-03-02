@@ -22,6 +22,8 @@ public class CadastroCliente{
 	
 	private String cavalo;
 	
+	private String vitimologia;
+	
 	private String motorista;
 	
 	private String unidade;
@@ -50,8 +52,6 @@ public class CadastroCliente{
 		this.ficha = ficha;
 	}
 	
-	
-
 	public BigDecimal getValor() {
 		return valor;
 	}
@@ -155,6 +155,16 @@ public class CadastroCliente{
 	public void setReboque3(String reboque3) {
 		this.reboque3 = reboque3;
 	}
+
+	public String getVitimologia() {
+		return vitimologia;
+	}
+
+	public void setVitimologia(String vitimologia) {
+		this.vitimologia = vitimologia;
+	}
+	
+	
 
 
 }

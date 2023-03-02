@@ -52,9 +52,9 @@
 
 			<div class="align-left" style="padding-right: 10px">
 
-				<p:commandButton id="btnInsert" value="Novo Registro"
+				<p:commandButton id="btnInsert" value="Novo Registro" update="@form"
 					action="#{autotracSinalMB.insert}" icon="fa fa-pencil"
-					styleClass="btn-danger" />
+					styleClass="btn-primary" />
 			</div>
 
 			<BR/>
@@ -162,7 +162,7 @@
 
 				<p:dataTable widgetVar="dtChamado" id="tbListRec" var="c" lazy="true"
 					value="#{autotracSinalMB.listAutotracSinal}" rows="20"
-					styleClass="box-danger" sortMode="multiple" rowKey="#{c.id}"
+					styleClass="box-primary" sortMode="multiple" rowKey="#{c.id}"
 					selection="#{autotracSinalMB.autotracSinal}" 
 					paginator="true" paginatorPosition="bottom"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
@@ -361,7 +361,7 @@
 			  <p:dialog id="dlgView" widgetVar="dlgView"
 				header="Requisição do Cliente" modal="true"
 				resizable="false" closable="false" width="600" position="center, center"
-				styleClass="box-danger">
+				styleClass="box-primary">
 				<p:outputPanel id="fatDetalhe">
 
 					<div class="ui-g ui-fluid" >
@@ -458,7 +458,7 @@
 					<div class="align-center">
 
 						<p:commandButton value="OK" onclick="PF('dlgView').hide()"
-							styleClass="btn btn-danger" process="@this">
+							styleClass="btn btn-primary" process="@this">
 						</p:commandButton>
 
 					</div>
@@ -470,7 +470,7 @@
    			<p:dialog id="dlgCancel" widgetVar="dlgCancel"
 				header="Deseja Cancelar a Requisição do Cliente?" modal="true"
 				resizable="false" closable="false" width="600" position="center, center"
-				styleClass="box-danger">
+				styleClass="box-primary">
 				<p:outputPanel id="fatDetalheCancel">
 
 					<div class="ui-g ui-fluid" >
@@ -557,7 +557,7 @@
 
 						<p:commandButton value="Voltar" onclick="PF('dlgCancel').hide()"
 							
-							styleClass="btn btn-danger">
+							styleClass="btn btn-primary">
 						</p:commandButton>
 
 						<p:commandButton value="Cancelar" styleClass="btn btn-success"
@@ -573,6 +573,8 @@
 
 			</p:dialog>
 							
+	
+	
 			</h:panelGroup>
 			<br />
 			

@@ -46,7 +46,7 @@
                     <p:growl id="msgs" showDetail="true"/>
                     <div class="row" style="padding-top:20px;">
                         <div class="col-lg-12">
-                            <p:panel styleClass="box-danger"
+                            <p:panel styleClass="box-primary"
                                      widgetVar="panel">
                                 <h:form id="form0" onkeypress="if (event.keyCode == 13) { return false; }">
                                     <p:panel header="Origem da Ficha" >
@@ -111,13 +111,13 @@
                                                 <span>&#160;</span>
                                             </div>
                                             <div class="col-lg-2" style="padding-top:25px;" data-step="5" data-intro="Nesta opção você poderá enviar os dados completos do Motorista e dos veículos envolvidos no transporte.">
-                                                <p:panel styleClass="box-danger" widgetVar="panelCompleta">
+                                                <p:panel styleClass="box-primary" widgetVar="panelCompleta">
                                                     <img src="/manager/resources/images/container.png"
                                                          style="width:100%;padding-bottom: 15px;"/>
                                                     <br/>
                                                     <b:commandButton id="btnCompleta" disabled="#{enviarFichaMB.disable}"
                                                                      value="Motorista/Veículo" action="#{enviarFichaMB.fichaCompleta}"
-                                                                     style="width:100%;" styleClass="btn-danger"/>
+                                                                     style="width:100%;" styleClass="btn-primary"/>
 
                                                 </p:panel>
                                             </div>
@@ -125,13 +125,13 @@
                                                 <span>&#160;</span>
                                             </div>
                                             <div class="col-lg-2" style="padding-top:25px;" data-step="6" data-intro="Nesta opção você poderá enviar apenas os dados do acMotorista. Esta opção não permite anexar veículos a ficha.">
-                                                <p:panel styleClass="box-danger" widgetVar="panelMotorista">
+                                                <p:panel styleClass="box-primary" widgetVar="panelMotorista">
                                                     <img src="/manager/resources/images/foto_3x4.png"
                                                          style="width:100%;padding-bottom: 23px;"/>
                                                     <br/>
                                                     <b:commandButton id="btnMotorista" disabled="#{enviarFichaMB.disable}"
                                                                      value="Motoristas"  action="#{enviarFichaMB.fichaMotorista}"
-                                                                     style="width:100%;" styleClass="btn-danger"/>
+                                                                     style="width:100%;" styleClass="btn-primary"/>
 
                                                 </p:panel>
                                             </div>
@@ -139,14 +139,14 @@
                                                 <span>&#160;</span>
                                             </div>
                                             <div class="col-lg-2" style="padding-top:25px;" data-step="7" data-intro="Nesta opção você poderá enviar apenas os dados dos veículos. Esta opção permite o envio de até 4 acVeiculos (1 Cavalo + 3 Reboques)">
-                                                <p:panel styleClass="box-danger" widgetVar="panelVeiculos">
+                                                <p:panel styleClass="box-primary" widgetVar="panelVeiculos">
                                                     <img src="/manager/resources/images/red-truck.png"
                                                          style="width:100%;padding-bottom: 23px;"/>
                                                     <br/>
                                                     
                                                     <b:commandButton id="btnVeiculos" disabled="#{enviarFichaMB.disable}"
                                                                      value="Veículos" action="#{enviarFichaMB.fichaVeiculo}"
-                                                                     style="width:100%;" styleClass="btn-danger"/>
+                                                                     style="width:100%;" styleClass="btn-primary"/>
 
 
                                                 </p:panel>

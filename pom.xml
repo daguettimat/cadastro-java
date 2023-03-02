@@ -57,6 +57,11 @@
             <!--<artifactId>c3p0</artifactId>-->
             <!--<version>0.9.5.2</version>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>org.olap4j</groupId>
+            <artifactId>olap4j</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 
         <dependency>
             <groupId>net.sf.supercsv</groupId>
@@ -88,6 +93,13 @@
             <!--<artifactId>hibernate-hikaricp</artifactId>-->
             <!--<version>5.2.8.Final</version>-->
         <!--</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
+		<dependency>
+		    <groupId>xerces</groupId>
+		    <artifactId>xercesImpl</artifactId>
+		    <version>2.8.0</version>
+		</dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
         <dependency>
@@ -137,6 +149,32 @@
             <version>1.6.1</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- email -->
+		<dependency>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>javax.mail</artifactId>
+		    <version>1.6.2</version>
+		</dependency>
+
+		<!-- LUCENE - (Teste) https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+		<dependency>
+		    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-core</artifactId>
+		    <version>8.2.0</version>
+		</dependency>
+                
+		<!-- RELATORIOS -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.0</version>
+		</dependency>
 
         <!-- https://mvnrepository.com/artifact/com.lowagie/itext -->
         <dependency>
@@ -310,11 +348,13 @@
             <artifactId>primefaces-extensions</artifactId>
             <version>6.1.1</version>
         </dependency>
+        
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
             <version>4.7.0</version>
         </dependency>
+        
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
@@ -334,6 +374,13 @@
             <artifactId>jersey-multipart</artifactId>
             <version>1.19.4</version>
         </dependency>
+
+	<!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-client -->
+       <dependency>
+           <groupId>com.sun.jersey</groupId>
+           <artifactId>jersey-client</artifactId>
+           <version>1.19.4</version>
+       </dependency>
 
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
@@ -397,12 +444,6 @@
             <type>pom</type>
         </dependency>
 
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>2.6.0</version>
-            <scope>test</scope>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/javax.persistence -->
         <dependency>
@@ -417,15 +458,12 @@
             <artifactId>json</artifactId>
             <version>20160810</version>
         </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>RELEASE</version>
-        </dependency>
+
 
 
     </dependencies>
     
+
     <dependencyManagement>
         <dependencies>
             <dependency>

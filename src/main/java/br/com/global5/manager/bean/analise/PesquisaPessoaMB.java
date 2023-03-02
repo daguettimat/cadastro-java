@@ -8,11 +8,13 @@ import br.com.global5.manager.model.areas.Area;
 import br.com.global5.manager.model.cadastro.Produto;
 import br.com.global5.manager.model.externos.ConsultaPessoa;
 import br.com.global5.manager.model.geral.Usuario;
+import br.com.global5.manager.model.pessoas.acPesquisaPessoaSql;
 import br.com.global5.manager.service.analise.ConsultaPessoaService;
 import br.com.global5.manager.service.analise.PesquisaPessoaService;
 import br.com.global5.template.exception.BusinessException;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -21,6 +23,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.io.*;
@@ -43,6 +46,8 @@ public class PesquisaPessoaMB implements Serializable {
 	private Area areaCliente;
 	private Area areaFilial;
 
+	private List<acPesquisaPessoaSql> lstPesqPessoaSql;
+	
 	private String nomePessoa;
 
     private Date dtInicial;
@@ -72,11 +77,39 @@ public class PesquisaPessoaMB implements Serializable {
     public void selectTransp(SelectEvent event) {
         areaCliente = (Area) event.getObject();
         if( ! usuario.isInterno() ) {
-            filter.getEntity().setClienteArea(new Area(areaCliente.getId()));
+            filter.getEntity().setClienteArea(new Area(areaCliente.getId()));        
+        }else{
+        	if (areaCliente == null){
+        		filter.getEntity().setClienteArea(new Area());
+        	}else{        		
+        		filter.getEntity().setClienteArea(new Area(areaCliente.getId()));
+        	}
         }
     }
+    
+    public void selectTranspTest(SelectEvent event ) {
+        String b = (String) event.getObject();
+        
+        if(b.length()== 0){
+        	filter.getEntity().setClienteArea(new Area());
+        	String a = "c";
+        	String e = a;
+        } else {
+        	String d = "a";
+        	String c = d;
+        }
+       
+    }
 
-
+    public void clearResearch(){
+    	if( ! usuario.isInterno() ) {
+    		
+    	}else {
+    		areaCliente = null;
+    	}
+        clear();
+    }
+    
 	public void updateUsuario(Usuario usuario) {
 
 	    this.usuario = usuario;
@@ -89,6 +122,7 @@ public class PesquisaPessoaMB implements Serializable {
                 areaCliente = usuario.getPessoa().getFuncao().getArea();
                 habilitaArea = false;
                 habilitaFilial = true;
+                filter.getEntity().setClienteArea(new Area(areaCliente.getId()));
             } else {
                 if( usuario.getPessoa().getFuncao().getArea().getNivel().getId() == 3 ) {
                     areaCliente =  usuario.getPessoa().getFuncao().getArea().getRoot();
@@ -163,7 +197,9 @@ public class PesquisaPessoaMB implements Serializable {
 
 	public void update() {
 		String msg;
-
+		
+		Integer idAreaAplicada = null;
+		
 		if (pessoa.getId() == null) {
 		    pessoa.setIdProduto(new Produto(4));
 		    pessoa.setConsulta(null);
@@ -172,30 +208,58 @@ public class PesquisaPessoaMB implements Serializable {
 		    pessoa.setUsuConsulta(new Usuario(usuario.getId()));
 		    if( usuario.getPessoa().getFuncao().getArea().getRoot() == null  ) {
                 pessoa.setClienteArea(new Area(usuario.getPessoa().getFuncao().getArea().getId()));
-                pessoa.setFilialArea(null);
+                //pessoa.setFilialArea(new Area());
+                pessoa.setFilialArea(new Area(usuario.getPessoa().getFuncao().getArea().getId()));
+                idAreaAplicada = usuario.getPessoa().getFuncao().getArea().getId();
             } else {
                 pessoa.setClienteArea(new Area(usuario.getPessoa().getFuncao().getArea().getRoot().getId()));
                 pessoa.setFilialArea(new Area(usuario.getPessoa().getFuncao().getArea().getId()));
+                idAreaAplicada = usuario.getPessoa().getFuncao().getArea().getRoot().getId();
             }
 
+		    EntityManager em = pesService.crud().getEntityManager();
+		    
             String SQL = "select cp.conp_valor1_unitario " +
                          "  from contrato c " +
                          "       join contrato_produto cp " +
                          "            on cp.conp_conoid = c.conoid " +
                          "       join produto p " +
                          "            on p.prodoid = cp.conp_prodoid " +
-                         " where c.con_areaoid = :idArea " +
+                         " where c.con_areaoid =  "  + idAreaAplicada +
                          "   and cp.conp_prodoid = 4";
 
-            Query query = pesService.crud().getEntityManager().createNativeQuery(SQL);
-            query.setParameter("idArea", pessoa.getClienteArea().getId());
-
-            try {
-                Object valor = query.getSingleResult();
-                pessoa.setValor((Double) valor);
-            } catch (NoResultException nre) {
-                pessoa.setValor(0d);
+            String query = "select cp.conpoid as id, cp.conp_valor1_unitario as valor " +
+                    "  from java.contrato c " +
+                    "       join java.contrato_produto cp " +
+                    "            on cp.conp_conoid = c.conoid " +
+                    "       join java.produto p " +
+                    "            on p.prodoid = cp.conp_prodoid " +
+                    " where c.con_areaoid =  "  + idAreaAplicada +
+                    "   and cp.conp_prodoid = 4 and cp.conp_produto_ativo=true";
+            
+            //Query query = pesService.crud().getEntityManager().createNativeQuery(SQL);
+            // query.setParameter("idArea", idAreaAplicada);
+//            pessoa.getClienteArea().getId()
+            
+            
+            
+            lstPesqPessoaSql = em.createNativeQuery(query, "ListaPesquisaPessoa").getResultList();
+            
+            int res = lstPesqPessoaSql.size();
+            
+            if (res == 1){
+            	pessoa.setValor(this.lstPesqPessoaSql.get(0).getValor());
+            } else {
+            	pessoa.setValor(0d);
             }
+            
+            
+//            try {
+//                //Object valor = query.getSingleResult();
+//                //pessoa.setValor((Double) valor);
+//            } catch (NoResultException nre) {
+//                pessoa.setValor(0d);
+//            }
 
 			pesService.insert(pessoa);
 			msg = "Consulta de " + pessoa.getNome() + " gerada com sucesso!";
@@ -222,7 +286,9 @@ public class PesquisaPessoaMB implements Serializable {
     }
 
 	public void clear() {
+		
 		pessoa = new acPesquisaPessoa();
+		
 		filter = new Filter<>(new acPesquisaPessoa());
 		filter.getEntity().setClienteArea(new Area());
 		filter.getEntity().setFilialArea(new Area());
@@ -458,4 +524,13 @@ public class PesquisaPessoaMB implements Serializable {
     public void setNomePessoa(String nomePessoa) {
         this.nomePessoa = nomePessoa;
     }
+
+	public List<acPesquisaPessoaSql> getLstPesqPessoaSql() {
+		return lstPesqPessoaSql;
+	}
+
+	public void setLstPesqPessoaSql(List<acPesquisaPessoaSql> lstPesqPessoaSql) {
+		this.lstPesqPessoaSql = lstPesqPessoaSql;
+	}
+    
 }

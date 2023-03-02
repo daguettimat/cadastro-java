@@ -49,7 +49,7 @@
         <h:form>
             <p:growl autoUpdate="true" escape="false" sticky="true"/>
             <h:panelGroup layout="block">
-                <p:dataTable widgetVar="veiculoTable" var="c" value="#{veiculoMB.veiculoList}" rows="15" styleClass="box-danger"
+                <p:dataTable widgetVar="veiculoTable" var="c" value="#{veiculoMB.veiculoList}" rows="15" styleClass="box-primary"
                              filteredValue="#{veiculoMB.filteredValue}"
                              rowKey="#{c.id}" lazy="true" paginator="true"
                              paginatorPosition="bottom" selection="#{veiculoMB.veiculo}" selectionMode="single"
@@ -126,7 +126,7 @@
                 <div class="align-right" style="padding: 5px;">
 
                     <p:spacer height="5"/>
-                    <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print" styleClass="btn-danger">
+                    <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print" styleClass="btn-primary">
                         <p:menuitem value="PDF" url="#" icon="fa fa-file-pdf-o"/>
                         <p:menuitem value="XLS" url="#" icon="fa fa-file-excel-o"/>
                         <p:menuitem value="CSV" url="#" icon="fa fa-file-text"/>

@@ -38,7 +38,7 @@
         <h:form>
 
             <h:panelGroup layout="block">
-            <p:panel header="Manutenção" styleClass="box-danger">
+            <p:panel header="Manutenção" styleClass="box-primary">
                 <div class="align-right">
                     <p:outputLabel value="Pesquisar por Id: "/>
                     <p:spacer height="5"/>
@@ -95,14 +95,14 @@
                     <div class="align-right" style="padding: 5px;">
 
                         <p:commandButton value="Salvar" action="#{bairroMB.update}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
                         <p:spacer height="5"/>
                         <p:commandButton id="btRemove" value="Apagar" action="#{bairroMB.remove}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
 
                         <p:spacer height="5"/>
                         <p:commandButton value="Voltar" action="#{bairroMB.btnBack}"
-                                         styleClass="btn-danger"/>
+                                         styleClass="btn-primary"/>
                     </div>
                 </f:facet>
             </p:panel>

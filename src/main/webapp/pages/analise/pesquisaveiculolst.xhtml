@@ -24,7 +24,7 @@
             <div class="ui-fluid">
                 <div class="row" id="filtroMenu" >
                     <div class="col-md-12">
-                        <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                        <p:panel header="Filtros de Pesquisa" styleClass="box-primary"
                              widgetVar="panel" toggleable="true" >
                             <div class="row">
                                 <div class="col-md-1">
@@ -108,7 +108,7 @@
 
                                 <div class="col-md-2" style="padding-right: 15px;">
                                     <p:commandButton id="btnInsert" value="Nova Consulta" action="#{pesquisaVeiculoMB.insert}"
-                                                     icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                                                     icon="fa fa-pencil" update="@form" styleClass="btn-primary"/>
                                 </div>
 
                                 <div class="col-md-2" style="padding-right: 15px;">
@@ -117,13 +117,13 @@
                                                      process="@form"
                                                      update="@none"
                                                      oncomplete="PF('pesTable').filter()"
-                                                     icon="fa fa-search" styleClass="btn-danger">
+                                                     icon="fa fa-search" styleClass="btn-primary">
 
                                     </p:commandButton>
                                 </div>
                                 <div class="col-md-2" style="padding-right: 15px;">
                                     <p:commandButton value="Voltar" action="#{pesquisaVeiculoMB.btnBack}"
-                                                     icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
+                                                     icon="fa fa-window-close" update="@form" styleClass="btn-primary"/>
                                 </div>
                             </div>
                         </p:panel>
@@ -132,7 +132,7 @@
             </div>
             <br/><br/>
             <h:panelGroup layout="block">
-                <p:dataTable widgetVar="pesTable" var="c" value="#{pesquisaVeiculoMB.pesList}" rows="15" styleClass="box-danger"
+                <p:dataTable widgetVar="pesTable" var="c" value="#{pesquisaVeiculoMB.pesList}" rows="15" styleClass="box-primary"
                              filteredValue="#{pesquisaVeiculoMB.filteredValue}"
                              rowKey="#{c.id}" lazy="true" paginator="true"
                              paginatorPosition="bottom" selection="#{pesquisaVeiculoMB.pesqVeiculo}" selectionMode="single"

@@ -18,7 +18,8 @@
             <property name="hibernate.connection.pool_size" value="1"/>
             <property name="hibernate.connection.release_mode" value="after_transaction"/>
             <property name="hibernate.search.default.directory_provider" value="filesystem"/>
-            <property name="hibernate.search.default.indexBase" value="/tmp/"/>
+            <property name="hibernate.search.default.indexBase" value="/tmp/"/>                    
+          
         </properties>
 
     </persistence-unit>

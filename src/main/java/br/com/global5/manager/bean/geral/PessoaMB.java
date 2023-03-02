@@ -321,17 +321,46 @@ public class PessoaMB implements Serializable {
 			
 			/*"  where pesoid in (select area_pesoid_sacado from area where area_anvloid = 2 )  and   pes_pessoa_fisica = false "*/			
 			
-			
-			String query = 	" select  pesoid as idcliente, " +
+			/**
+			 * 	 String query = 	" select  pesoid as idcliente, " +
 					" pes_nome as razao, " +
 					" pes_nome_fantasia as fantasia, " +
 					" pes_documento1 as cnpj, " +
 					" pes_email as email, " +
 					" (select a.afun_areaoid from area_funcao a where a.afunoid = pes_afunoid) as idArea ," +
 					" (select (t.telddd || '-' || SUBSTRING(t.telfone,1 , 4 ) || '-' || SUBSTRING(t.telfone,5, 10 ) ) as numTel from telefone t where t.teloid = pes_teloid) as fone " +
-					" from pessoa  " +
-					"  where pesoid in ( select area_pesoid_sacado from area )  and   pes_pessoa_fisica = false "
+					" from pessoa  " +											   			
+					"  where pesoid in ( select area_pesoid_sacado from java.area where area_dt_exclusao is null )  and   pes_pessoa_fisica = false  "
 					+ parametrosSql ;
+			 */
+			
+			/* Tirado em 12/06/2020
+			String query = " select  pesoid as idcliente, " +
+					" pes_nome as razao, " +
+					" pes_nome_fantasia as fantasia, " +
+					" pes_documento1 as cnpj, " +
+					" pes_email as email, " +
+					" (select a.afun_areaoid from area_funcao a where a.afunoid = pes_afunoid) as idArea ," +
+					" (select (t.telddd || '-' || SUBSTRING(t.telfone,1 , 4 ) || '-' || SUBSTRING(t.telfone,5, 10 ) ) as numTel from telefone t where t.teloid = pes_teloid) as fone " +
+					" from pessoa  " +											   			
+					"  where pesoid in ( select area_pesoid_sacado from java.area where area_dt_exclusao is null )  and   pes_pessoa_fisica = false  "
+					+ parametrosSql ; 					
+			*/
+			
+			String query = " select  p.pesoid as idcliente, " +
+					" p.pes_nome as razao, " +
+					" p.pes_nome_fantasia as fantasia, " +
+					" p.pes_documento1 as cnpj, " +
+					" p.pes_email as email, " +
+					" (select a.afun_areaoid from area_funcao a where a.afunoid = pes_afunoid) as idArea ," +
+					" (select (t.telddd || '-' || SUBSTRING(t.telfone,1 , 4 ) || '-' || SUBSTRING(t.telfone,5, 10 ) ) as numTel from telefone t where t.teloid = pes_teloid) as fone " +					
+					" from java.area a, java.pessoa p  " +
+					"  where a.area_pesoid_responsavel = p.pesoid and " +
+					" 		 a.area_dt_exclusao is null and " 
+					+ " a.area_anvloid = 2 and"
+					+ " 	 p.pes_pessoa_fisica = false "
+					+ parametrosSql ;
+			
 		
 		lstPessoaQry =  emPes.createNativeQuery(query,"ListPessoaClienteMapping").getResultList();
 		

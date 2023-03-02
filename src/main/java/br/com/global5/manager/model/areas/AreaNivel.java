@@ -36,11 +36,13 @@ public class AreaNivel implements BaseEntity {
 
 
     @Column(name = "anvl_interna")
-    private String interna;
+    private boolean interna;
+    //private String interna;
 
     public AreaNivel() {}
 
-    public AreaNivel(String nome, String interna) {
+    //public AreaNivel(String nome, String interna) {
+    public AreaNivel(String nome, boolean interna) {
         this.nome = nome;
         this.interna = interna;
     }
@@ -70,6 +72,15 @@ public class AreaNivel implements BaseEntity {
         this.nome = nome;
     }
 
+	public boolean isInterna() {
+		return interna;
+	}
+
+	public void setInterna(boolean interna) {
+		this.interna = interna;
+	}
+
+    /*
     public String getInterna() {
         return interna;
     }
@@ -77,4 +88,8 @@ public class AreaNivel implements BaseEntity {
     public void setInterna(String interna) {
         this.interna = interna;
     }
+    */
+    
+    
+    
 }

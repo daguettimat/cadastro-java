@@ -175,6 +175,22 @@ public class Veiculo implements BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtPlacaConversao;
     
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            targetEntity = Usuario.class,
+            cascade = {CascadeType.MERGE}
+    )
+    @JoinColumn(name = "vei_usuoid_placa_mercosul")
+    private Usuario usuAlterouMercosul;
+    
+    @Column(name="vei_dt_verificacao_ws")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dtVerificacaoWs;
+    
+    @Column(name="vei_dt_atualiza_ws")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dtAtualizacaoWs;
+    
     
     public Veiculo() {
     }
@@ -457,6 +473,28 @@ public class Veiculo implements BaseEntity {
 		this.dtPlacaConversao = dtPlacaConversao;
 	}
 
-    
+	public Usuario getUsuAlterouMercosul() {
+		return usuAlterouMercosul;
+	}
+
+	public Date getDtVerificacaoWs() {
+		return dtVerificacaoWs;
+	}
+
+	public Date getDtAtualizacaoWs() {
+		return dtAtualizacaoWs;
+	}
+
+	public void setUsuAlterouMercosul(Usuario usuAlterouMercosul) {
+		this.usuAlterouMercosul = usuAlterouMercosul;
+	}
+
+	public void setDtVerificacaoWs(Date dtVerificacaoWs) {
+		this.dtVerificacaoWs = dtVerificacaoWs;
+	}
+
+	public void setDtAtualizacaoWs(Date dtAtualizacaoWs) {
+		this.dtAtualizacaoWs = dtAtualizacaoWs;
+	}
     
 }

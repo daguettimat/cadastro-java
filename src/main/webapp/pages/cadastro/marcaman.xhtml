@@ -42,7 +42,9 @@
         <h:form>
 
             <h:panelGroup layout="block">
-                <p:panel header="Manutenção" styleClass="box-danger">
+            
+                <p:panel header="Manutenção" styleClass="box-primary">
+            
                     <div class="align-right">
                         <p:outputLabel value="Pesquisar por Id: "/>
                         <p:spacer height="5"/>
@@ -55,11 +57,13 @@
                                          styleClass="btn-flat bg-black" style="margin-top: -3px"
                                          partialSubmit="true"/>
                     </div>
+            
                     <div class="ui-g ui-fluid">
                         <div class="col-lg-2">
                             <p:outputLabel value="Identificador" for="inptIdx"/>
                             <p:inputText id="inptIdx" disabled="true" value="#{marcaMB.marca.id}"/>
                         </div>
+                        
                         <div class="col-lg-4">
                             <p:outputLabel value="Nome" for="inptNome"/>
                             <p:inputText id="inptNome" value="#{marcaMB.marca.nome}"/>
@@ -67,7 +71,7 @@
                         
                         <div class="col-lg-2">
                             <p:outputLabel for="nacional" value="Nacional"/>
-                            <p:selectBooleanButton id="nacional" class="btn-danger"
+                            <p:selectBooleanButton id="nacional" class="btn-primary"
                                                    value = "#{marcaMB.marca.nacional}"
                                                    onLabel="Sim"
                                                    offLabel="Não"
@@ -76,7 +80,7 @@
                         </div>
                         <div class="col-lg-2">
                             <p:outputLabel for="estrangeira" value="Estrangeira"/>
-                            <p:selectBooleanButton id="estrangeira" class="btn-danger"
+                            <p:selectBooleanButton id="estrangeira" class="btn-primary"
                                                    value = "#{marcaMB.marca.estrangeira}"
                                                    onLabel="Sim"
                                                    offLabel="Não"
@@ -87,7 +91,7 @@
 
                     <div class="ui-g ui-fluid" style="padding-top: 15px;">
                         <div class="col-lg-6">
-                            <p:panel header="Criação" styleClass="box-danger"  widgetVar="panelControle">
+                            <p:panel header="Criação" styleClass="box-primary"  widgetVar="panelControle">
                                 <div class="ui-g ui-fluid">
                                     <div class="col-lg-3">
                                         <p:outputLabel value="Data" for="inptCriacao"/>
@@ -103,7 +107,7 @@
                             </p:panel>
                         </div>
                         <div class="col-lg-6">
-                            <p:panel header="Alteração" styleClass="box-danger"  widgetVar="panelAlteracao">
+                            <p:panel header="Alteração" styleClass="box-primary"  widgetVar="panelAlteracao">
                                 <div class="ui-g ui-fluid">
                                     <div class="col-lg-3">
                                         <p:outputLabel value="Data" for="inptAlteracao"/>
@@ -124,20 +128,20 @@
                     <div class="align-right" style="padding: 5px;">
 
                         <p:commandButton value="Salvar" action="#{marcaMB.update}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
                         <p:spacer height="5"/>
                         <p:commandButton id="btRemove" value="Apagar" action="#{marcaMB.remove}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
 
                         <p:spacer height="5"/>
                         <p:commandButton value="Voltar" action="#{marcaMB.btnBack}"
-                                         styleClass="btn-danger"/>
+                                         styleClass="btn-primary"/>
                     </div>
                 </f:facet>
+           
             </p:panel>            
             </h:panelGroup>
             <br/>        
-            
             
             
         </h:form>

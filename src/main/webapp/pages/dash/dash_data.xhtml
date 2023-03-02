@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            .center  {
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Extração de Dados para Dashboard
+    </ui:define>
+
+    <ui:define name="description">
+        
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title=""/>
+       
+       	<p:ajax event="load" update="formRelatorioCliente" process="@all" />
+       
+       
+        <h:form id="formRelatorioCliente" >
+            
+
+            <h:panelGroup layout="block">
+            	<div class="row">
+            		<div class="col-lg-12">
+            			<h4 style="color:black;text-align:center;display:block">Informe o período para a busca das informações</h4>
+            		</div>
+            	</div>
+            
+                <div class="align-center" style="padding: 5px;">
+
+                	 	<p:calendar id="dataInicial"
+                	 				placeholder="Data Inicio" 
+                	 				value="#{dashMB.dtInicioPesquisa}"                	 				
+									inputStyle="text-align:center"
+											 locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+											 showButtonPanel="true" >
+								<p:ajax listener="#{dashMB.calDataFrente}"  />
+						</p:calendar>
+
+						
+                	 	<p:calendar id="dataFinal"
+                	 				placeholder="Data Final" 
+                	 				value="#{dashMB.dtFinalPesquisa}" 
+									inputStyle="text-align:center"
+											 locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+											 showButtonPanel="true" >
+						</p:calendar>
+                		                	
+                	<p:spacer height="5"/>
+
+                </div>
+            </h:panelGroup>
+
+			<BR/>
+ 
+
+			<p:tabView id="tbView" >
+				<!-- APURAÇÃO CADASTRO DAQUI PARA BAIXO -->
+
+				<p:tab id="tbView02" title="Sistema de Cadastro">
+
+					<h:panelGroup layout="block" id="pnGroupListaCad">
+					
+							<p:panel >	
+								<div class="row">
+									<div style="padding-left: 50px;">
+									<p:outputLabel value="Escolha uma das opções para download" />
+									
+										<p:selectOneRadio id="filtroCadastro" 
+												value="#{dashMB.filtroCadastro}"
+												layout="responsive" columns="2"
+											>
+											<f:selectItem itemLabel="Base 1 - recomendadas e não recomendadas" itemValue="base1" />
+											<f:selectItem itemLabel="Base 2 - motorista e veículo abandono de ficha" itemValue="base2"/>
+											<f:selectItem itemLabel="Base 3 - recomendadas e não recomendadas II" itemValue="base3"/>
+											<f:selectItem itemLabel="Base 4 - motorista e veículo abandono de ficha II" itemValue="base4"/>
+									
+										</p:selectOneRadio>
+									
+									
+									</div>
+								
+								</div>
+						
+								<div class="row" >
+									<div style="padding-left: 50px;">
+										<p:commandButton id="btnPesquisar" value="Buscar Registros" styleClass="btn-primary"
+											icon="fa fa-search" action="#{dashMB.verTipoFiltro}"/>
+										<p:spacer height="5" />
+									</div>
+								</div>
+
+							</p:panel>												
+						
+						<p:separator />
+
+					</h:panelGroup>
+
+				</p:tab>
+			</p:tabView>
+				<div class="row">				
+					<div align="center" style="padding-top:20px">
+						<p:commandButton	action="#{dashMB.retornaHome}" 
+									styleClass="btn-info" value="Home"  icon="fa fa-home" ajax="false">
+						</p:commandButton>			
+					</div>
+				</div>
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>

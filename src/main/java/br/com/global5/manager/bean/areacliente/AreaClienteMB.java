@@ -17,8 +17,21 @@ import javax.inject.Named;
 import javax.persistence.StoredProcedureQuery;
 
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
+import org.apache.poi.hssf.usermodel.HSSFAutoFilter;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xwpf.usermodel.VerticalAlign;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.primefaces.component.export.ExcelOptions;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
@@ -27,6 +40,7 @@ import br.com.global5.infra.util.checkUsuario;
 import br.com.global5.manager.model.areacliente.AutotracCliente;
 import br.com.global5.manager.model.areacliente.CadastroCliente;
 import br.com.global5.manager.model.areacliente.CheckListCliente;
+import br.com.global5.manager.model.areacliente.DetalheFixos;
 import br.com.global5.manager.model.areacliente.ViagemCliente;
 import br.com.global5.manager.model.areacliente.Virtual;
 import br.com.global5.manager.model.cadastro.PessoaQry;
@@ -155,6 +169,7 @@ public class AreaClienteMB implements Serializable{
 	private BigDecimal relCadValor = BigDecimal.ZERO;
 	private BigDecimal vlrRelatorioCadastro = BigDecimal.ZERO;
 	ArrayList<CadastroCliente> lstRelCadastro = new ArrayList<CadastroCliente>();
+	private String filtroCadastro = "";
 	
 	// relatório Consumo Viagem
 	private BigDecimal relViagemValor = BigDecimal.ZERO;
@@ -174,6 +189,13 @@ public class AreaClienteMB implements Serializable{
 	private BigDecimal vlrRelatorioAutotrac = BigDecimal.ZERO;
 	private BigDecimal vlrRelatorioAutotracComunicacao = BigDecimal.ZERO;
 	ArrayList<AutotracCliente> lstRelAutotrac = new ArrayList<AutotracCliente>();
+	
+	// relatório Detalhe Fixos
+	ArrayList<DetalheFixos> lstDetalheFixos = new ArrayList<DetalheFixos>();
+	private DetalheFixos detFixos;
+	
+	// Variaveis teste Excel
+	private ExcelOptions excelOpt;
 	
 	
 	// Variaveis para Dlg
@@ -222,9 +244,16 @@ public class AreaClienteMB implements Serializable{
 		colspanServicosCadResumo = 2;
 		vlrRelatorioCadastro = BigDecimal.ZERO;
 		lstRelCadastro = new ArrayList<CadastroCliente>();
+		filtroCadastro = "todos";
+		
+		
 		
 	}
 	
+	public void aplicarFiltro(){
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("formRelatorioCliente:fragBotoesCadastro");
+	}
 
 	public void acesso(){
 	
@@ -263,8 +292,6 @@ public class AreaClienteMB implements Serializable{
 		} else {
 			 numIDArea = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();//Integer.valueOf(this.getNumContratoPesq());
 		}
-		
-				
 		
 		queryPv.setParameter("dt_mes", dtMes);
 		queryPv.setParameter("id_area"  , numIDArea);
@@ -850,82 +877,48 @@ public class AreaClienteMB implements Serializable{
 					JSONObject objCad = arrayJson.getJSONObject(i);
 					
 					CadastroCliente cad = new CadastroCliente();
-
-					// Tipo Motorista
-					// !obj.isNull("conoid")
-					if(!objCad.isNull("mottipo")){
-						cad.setMottipo(objCad.optString("mottipo"));
-					} else {
-						cad.setMottipo("");
+					
+					if ( filtroCadastro == null){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+								"Atenção", "Para continuar selecione uma das opções do filtro! Todas, Cadastro, Consulta ou Renovação. "));
+						return;
 					}
 					
-					// Vencimento
-					if(!objCad.opt("vencimento").toString().equals(null)){
-						cad.setVencimento(objCad.optString("vencimento"));
-					}
-					
-					// Tipo
-					if(!objCad.opt("tipo").toString().equals(null)){
-						cad.setTipo(objCad.optString("tipo"));
-					}
-					
-					// Cpf
-					if(!objCad.optString("motcpf").toString().equals(null)){
-						cad.setMotcpf(objCad.optString("motcpf"));
+					// Teste TIpo pela tela
+					if(filtroCadastro.equals("todas")){						
+						cad = addLinhaObjJsonCadastro(objCad);
+						cad.setId(i + 1);
+						lstRelCadastro.add(cad);
 					}
 
-					// Data_termino
-					if(!objCad.optString("dt_termino").toString().equals(null)){
-						cad.setDt_termino(objCad.optString("dt_termino"));
+					if(filtroCadastro.equals("cadastro")){
+						if (arrayJson.getJSONObject(i).opt("tipo").toString().equals("Cadastro")){
+							cad = addLinhaObjJsonCadastro(objCad);
+							cad.setId(i + 1);
+							lstRelCadastro.add(cad);
+						}	
 					}
 
-					// cavalo
-					if(!objCad.optString("cavalo").toString().equals(null)){
-						cad.setCavalo(objCad.optString("cavalo"));
+					if(filtroCadastro.equals("consulta")){
+						if (arrayJson.getJSONObject(i).opt("tipo").toString().equals("Consulta")){
+							cad = addLinhaObjJsonCadastro(objCad);
+							cad.setId(i + 1);
+							lstRelCadastro.add(cad);
+						}
+					}
+
+					if(filtroCadastro.equals("renovacao")){
+						if (arrayJson.getJSONObject(i).opt("tipo").toString().equals("Renovação")){
+							cad = addLinhaObjJsonCadastro(objCad);
+							cad.setId(i + 1);
+							lstRelCadastro.add(cad);
+						}
 					}
 					
-					// motorista
-					if(!objCad.optString("motorista").toString().equals(null)){
-						cad.setMotorista(objCad.optString("motorista"));
-					}					
-					
-					// cliente
-					if(!objCad.optString("unidade").toString().equals(null)){
-						cad.setUnidade(objCad.optString("unidade"));
-					}
-					
-					// ficha
-					if(!objCad.optString("ficha").toString().equals(null)){
-						cad.setFicha(objCad.optString("ficha"));
-					}
-					
-					// reboque1
-					if(!objCad.optString("reboque1").toString().equals(null)){
-						cad.setReboque1(objCad.optString("reboque1"));
-					}
-					
-					// reboque2
-					if(!objCad.optString("reboque2").toString().equals(null)){
-						cad.setReboque2(objCad.optString("reboque2"));
-					}
-					// reboque3
-					if(!objCad.optString("reboque3").toString().equals(null)){
-						cad.setReboque3(objCad.optString("reboque3"));
-					}
-					
-					// valor
-					if(!objCad.optString("valor").toString().equals(null)){
-						relCadValor = new BigDecimal(objCad.opt("valor").toString());
-						
-						cad.setValor(relCadValor.setScale(2, BigDecimal.ROUND_CEILING));
-						vlrRelatorioCadastro = vlrRelatorioCadastro.add(relCadValor.setScale(2, BigDecimal.ROUND_CEILING));
-					}					
-					
-					cad.setId(i + 1);
-					
-					lstRelCadastro.add(cad);
 					
 					
+					
+										
 				}				
 				
 			} else {
@@ -937,16 +930,91 @@ public class AreaClienteMB implements Serializable{
 			
 			openDlgRelatorioCadastro();
 			
-			//JSONObject obj = new  JSONObject(textbCad);
-			
-			// Nao foi encontrado relação com esses campos
-		//	if (!obj.isNull("valor")) {
-		//		codContrato 	=	obj.opt("valor").toString();				
-		//	}
-			
-			
 		}
 		
+	}
+	
+	public CadastroCliente addLinhaObjJsonCadastro(JSONObject objCad){
+		
+		CadastroCliente cad = new CadastroCliente();
+		
+		// Tipo Motorista
+		// !obj.isNull("conoid")
+		if(!objCad.isNull("mottipo")){
+			cad.setMottipo(objCad.optString("mottipo"));
+		} else {
+			cad.setMottipo("");
+		}
+		
+		// Vencimento
+		if(!objCad.opt("vencimento").toString().equals(null)){
+			cad.setVencimento(objCad.optString("vencimento"));
+		}
+
+		// Tipo
+		if(!objCad.opt("tipo").toString().equals(null)){
+			cad.setTipo(objCad.optString("tipo"));
+		}
+		
+		// Cpf
+		if(!objCad.optString("motcpf").toString().equals(null)){
+			cad.setMotcpf(objCad.optString("motcpf"));
+		}
+
+		// Data_termino
+		if(!objCad.optString("dt_termino").toString().equals(null)){
+			cad.setDt_termino(objCad.optString("dt_termino"));
+		}
+
+		// cavalo
+		if(!objCad.optString("cavalo").toString().equals(null)){
+			cad.setCavalo(objCad.optString("cavalo"));
+		}
+		
+		// vitimologia
+		if(!objCad.optString("vitimologia").toString().equals(null)){
+			cad.setVitimologia(objCad.optString("vitimologia"));
+		}					
+		
+		// motorista
+		if(!objCad.optString("motorista").toString().equals(null)){
+			cad.setMotorista(objCad.optString("motorista"));
+		}					
+		
+		// cliente
+		if(!objCad.optString("unidade").toString().equals(null)){
+			cad.setUnidade(objCad.optString("unidade"));
+		}
+		
+		// ficha
+		if(!objCad.optString("ficha").toString().equals(null)){
+			cad.setFicha(objCad.optString("ficha"));
+		}
+		
+		// reboque1
+		if(!objCad.optString("reboque1").toString().equals(null)){
+			cad.setReboque1(objCad.optString("reboque1"));
+		}
+		
+		// reboque2
+		if(!objCad.optString("reboque2").toString().equals(null)){
+			cad.setReboque2(objCad.optString("reboque2"));
+		}
+		// reboque3
+		if(!objCad.optString("reboque3").toString().equals(null)){
+			cad.setReboque3(objCad.optString("reboque3"));
+		}
+		
+		// valor
+		if(!objCad.optString("valor").toString().equals(null)){
+			relCadValor = new BigDecimal(objCad.opt("valor").toString());
+			
+			cad.setValor(relCadValor.setScale(2, BigDecimal.ROUND_CEILING));
+			vlrRelatorioCadastro = vlrRelatorioCadastro.add(relCadValor.setScale(2, BigDecimal.ROUND_CEILING));
+		}	
+		
+		
+		return cad;
 	}
 		
 	public void openDlgRelatorioCadastro() {
@@ -957,9 +1025,12 @@ public class AreaClienteMB implements Serializable{
 		RequestContext.getCurrentInstance().execute("onTop('dlg_relatorioCadastro')");
 	}
 
+	
 	public void verConsumoViagem(){
 		// Processo do Faturamento Cadastro
 		String nomeProcedureChamadaViagem = "usuario_detalhe_viagens";
+		//String nomeProcedureChamadaViagem = "usuario_detalhe_viagens_filipe";
+		//String nomeProcedureChamadaViagem = "pesquisa_viagens_monitoramento";
 		
 		Date dtMes = null;	
 
@@ -1085,6 +1156,134 @@ public class AreaClienteMB implements Serializable{
 
 		RequestContext.getCurrentInstance().openDialog("dlg_relatorioViagem", options, null);
 		RequestContext.getCurrentInstance().execute("onTop('dlg_relatorioViagem')");
+	}
+	
+	public void verDetalheFixos(){
+		// Procedure chamada
+		String nomeProcedureChamadaFixos = "java.usuario_detalhe_fixos";
+		
+		Date dtMes = null;
+		
+		Calendar now = Calendar.getInstance();
+		now.setTime(this.getDtPesquisa());
+		now.set(Calendar.HOUR, 23);
+		now.set(Calendar.MINUTE, 00);
+		now.set(Calendar.SECOND, 00);
+		
+		dtMes = now.getTime();
+		//nomeProcedureChamadaFixos
+		StoredProcedureQuery queryPvFixos = virtualCrud.getEntityManager()
+				.createNamedStoredProcedureQuery("usuario_detalhe_fixos");
+		
+		Integer numIDAreaC = null;
+		
+		if (idAreaCliente != null){
+			numIDAreaC = idAreaCliente;
+		} else {
+			numIDAreaC = checkUsuario.valid().getPessoa().getFuncao().getArea().getId();
+		}
+		
+		queryPvFixos.setParameter("dt_mes", dtMes);
+		queryPvFixos.setParameter("id_area", numIDAreaC);
+		queryPvFixos.execute();
+		
+		String textFixos = "[" + queryPvFixos.getResultList().get(0).toString() + "]";
+		
+		lstDetalheFixos = new ArrayList<DetalheFixos>();
+		
+		if(!textFixos.equals("[{")){
+			
+			JSONArray arrayJson = new JSONArray(textFixos);
+			
+			if( arrayJson != null ){
+				
+				int listCountArray = arrayJson.length();
+				
+				for ( int i = 0 ; i < listCountArray ; i++ ){
+					
+					JSONObject objFixos = arrayJson.getJSONObject(i);
+					
+					detFixos = new DetalheFixos();
+
+					if(!objFixos.isNull("total")){
+						detFixos.setTotal(Integer.valueOf(objFixos.getInt("total")));
+					} else {
+						detFixos.setTotal(null);
+					}
+					
+					if(!objFixos.isNull("inclusoes")){
+						detFixos.setInclusoes(Integer.valueOf(objFixos.getInt("inclusoes")));
+					} else {
+						detFixos.setInclusoes(null);
+					}
+					
+					if(!objFixos.isNull("exclusoes")){
+						detFixos.setExclusoes(Integer.valueOf(objFixos.getInt("exclusoes")));
+					} else {
+						detFixos.setExclusoes(null);
+					}
+
+					arrayJson.getJSONObject(i).opt("placas").toString();
+					//JSONArray arrayJsonPlaca =
+					JSONArray jsonPlacaArray = objFixos.getJSONArray("placas");
+					
+					JSONArray jsonPlaca = arrayJson.getJSONObject(i).getJSONArray("placas");
+					
+					int countPlacaB = jsonPlacaArray.length();
+					int countPlaca = arrayJson.getJSONObject(i).getJSONArray("placas").length();
+					int countPlacas = jsonPlaca.length();
+					
+					String placaN = "";
+					
+					if( countPlacas > 0){
+						
+						for ( int p = 0; p < countPlacas ; p++ ) {
+							int qtdCaracteres = jsonPlacaArray.optString(p).length();
+							
+								if(qtdCaracteres == 8){
+									placaN += jsonPlacaArray.optString(p) +  "\n";
+								} else {
+									char Espaco = ' ';
+									placaN += jsonPlacaArray.optString(p) + Espaco + "\n";
+								}
+							
+							
+							//placaN += jsonPlaca.getJSONObject(p).toString() + ",";
+						}
+					
+						detFixos.setPlacas(placaN);						
+						
+					}
+					
+					
+					/*
+					if(!objFixos.optString("placas").toString().equals(null)){
+						detFixos.setPlacas(objFixos.getString("placas"));
+					} else {
+						detFixos.setPlacas("");
+					}
+					*/
+					
+					detFixos.setId(i + 1);
+					
+					lstDetalheFixos.add(detFixos);
+					
+				}
+				
+				
+			}
+			
+			openDlgRelatorioDetalheFixos();
+		}
+				
+	}
+	
+	public void openDlgRelatorioDetalheFixos(){
+		options.put("widht", "96%");
+		options.put("height", "80");
+		
+		RequestContext.getCurrentInstance().openDialog("dlg_relatorioVeiculoFixos");
+		RequestContext.getCurrentInstance().execute("onTop('dlg_relatorioVeiculoFixos')");
 	}
 	
 	public void verConsumoCheckList(){
@@ -1434,6 +1633,232 @@ public class AreaClienteMB implements Serializable{
 		RequestContext.getCurrentInstance().execute("onTop('dlg_pesqCliente')");
 	}
 	
+	
+	public void customizacaoExcel(Object document){
+		excelOpt = new ExcelOptions();
+		
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+		HSSFSheet sheet = wb.getSheetAt(0);
+		HSSFRow header = sheet.getRow(0);		
+		HSSFAutoFilter filter = sheet.setAutoFilter(CellRangeAddress.valueOf("A1:I1"));
+		
+		
+		HSSFCellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.AUTOMATIC.getIndex());
+		//cellStyle.setFillPattern(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND.BIG_SPOTS);
+		
+		for(int i=0; i < header.getPhysicalNumberOfCells(); i++){
+			HSSFCell cell = header.getCell(i);
+			cell.setCellStyle(cellStyle);
+		}
+		
+		//HSSFAutoFilter filter = sheet.setAutoFilter(null);
+		
+	}
+	
+	public void customizacaoExcelCheckList(Object document){
+		excelOpt = new ExcelOptions();
+		
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+		HSSFSheet sheet = wb.getSheetAt(0);
+		HSSFRow header = sheet.getRow(0);		
+		HSSFAutoFilter filter = sheet.setAutoFilter(CellRangeAddress.valueOf("A1:E1"));
+		
+		
+		HSSFCellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.AUTOMATIC.getIndex());
+		//cellStyle.setFillPattern(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND.BIG_SPOTS);
+		
+		for(int i=0; i < header.getPhysicalNumberOfCells(); i++){
+			HSSFCell cell = header.getCell(i);
+			cell.setCellStyle(cellStyle);
+		}
+		
+		//HSSFAutoFilter filter = sheet.setAutoFilter(null);
+		
+	}
+	
+	public void customizacaoExcelAutotrac(Object document){
+		excelOpt = new ExcelOptions();
+		
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+		HSSFSheet sheet = wb.getSheetAt(0);
+		HSSFRow header = sheet.getRow(0);		
+		HSSFAutoFilter filter = sheet.setAutoFilter(CellRangeAddress.valueOf("A1:E1"));
+		
+		
+		HSSFCellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.AUTOMATIC.getIndex());
+		//cellStyle.setFillPattern(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND.BIG_SPOTS);
+		
+		for(int i=0; i < header.getPhysicalNumberOfCells(); i++){
+			HSSFCell cell = header.getCell(i);
+			cell.setCellStyle(cellStyle);
+		}
+		
+		//HSSFAutoFilter filter = sheet.setAutoFilter(null);
+		
+	}
+	
+	public void customizacaoExcelCadastro(Object document){
+		excelOpt = new ExcelOptions();
+		
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+		HSSFSheet sheet = wb.getSheetAt(0);
+		HSSFRow header = sheet.getRow(0);		
+		HSSFAutoFilter filter = sheet.setAutoFilter(CellRangeAddress.valueOf("A1:M1"));
+		
+		
+		HSSFCellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.AUTOMATIC.getIndex());
+		//cellStyle.setFillPattern(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND.BIG_SPOTS);
+		
+		for(int i=0; i < header.getPhysicalNumberOfCells(); i++){
+			HSSFCell cell = header.getCell(i);
+			cell.setCellStyle(cellStyle);
+		}
+		
+		//HSSFAutoFilter filter = sheet.setAutoFilter(null);
+		
+	}
+	
+	public void customizacaoExcelVeiculoFixos(Object document){
+		
+		excelOpt = new ExcelOptions();
+
+		HSSFWorkbook wb0 = (HSSFWorkbook) document;
+		HSSFSheet sheet0 = wb0.getSheetAt(0);
+		HSSFRow header0 = sheet0.getRow(0);		
+
+		 HSSFRow row = sheet0.getRow(0);
+		 
+		 row.createCell((short) 0).setCellValue("Qtd Inserído");
+		 row.createCell((short) 1).setCellValue(detFixos.getInclusoes());
+
+		 row.createCell((short) 2).setCellValue("Qtd Excluídos");
+		 row.createCell((short) 3).setCellValue(detFixos.getExclusoes());
+
+		 row.createCell((short) 4).setCellValue("Qtd Faturados");
+		 row.createCell((short) 5).setCellValue(detFixos.getTotal());
+
+		 
+		 
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+		HSSFSheet sheet = wb.getSheetAt(0);
+		HSSFRow header = sheet.getRow(1);		
+		HSSFAutoFilter filter = sheet.setAutoFilter(CellRangeAddress.valueOf("A3:A3"));
+	
+		//ADICIONADO P TESTE
+		 
+		 /*
+		 HSSFCell cel0 = row.getCell(0);
+		 HSSFCell cel1 = row.getCell(1);
+		 HSSFCell cel2 = row.getCell(2);
+		 HSSFCellStyle cellStyleA = wb.createCellStyle();
+		 cellStyleA.setFillForegroundColor(HSSFColor.HSSFColorPredefined.BLUE_GREY.getIndex());
+
+		 	//setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		 	cellStyleA.setVerticalAlignment(VerticalAlignment.CENTER);
+			cellStyleA.setAlignment(HorizontalAlignment.CENTER);
+			cel0.setCellStyle(cellStyleA);
+			cel1.setCellStyle(cellStyleA);
+			cel2.setCellStyle(cellStyleA);
+*/
+		
+		HSSFCellStyle cellStyle = wb.createCellStyle();		
+		cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.AUTOMATIC.getIndex());
+		//cellStyle.setFillPattern(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND.BIG_SPOTS);
+		
+		for(int i=0; i < header.getPhysicalNumberOfCells(); i++){
+			HSSFCell cell = header.getCell(i);
+			cell.setCellStyle(cellStyle);
+		}
+		
+		//HSSFAutoFilter filter = sheet.setAutoFilter(null);
+		
+	}
+	
+	
+public void customizacaoExcelVeiculoFixosBkp(Object document){
+		
+		excelOpt = new ExcelOptions();
+		
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+		HSSFSheet sheet = wb.getSheetAt(0);
+		HSSFRow header = sheet.getRow(0);		
+		//HSSFAutoFilter filter = sheet.setAutoFilter(CellRangeAddress.valueOf("A1:D1"));
+		
+		
+		header.createCell(1).getRow().getSheet().getWorkbook();
+		header.createCell(1).getRow().getSheet().getWorkbook().getInternalWorkbook().getSSTString(0);
+		header.createCell(1).getRow().getSheet().getWorkbook().getInternalWorkbook().getSSTString(1);
+		header.createCell(1).getRow().getSheet().getWorkbook().getInternalWorkbook().getSSTString(1).getString().length();
+		
+		int numLinhas = header.createCell(1).getRow().getSheet().getWorkbook().getInternalWorkbook().getSSTString(1).getString().length() / 9;
+		
+		int cont=1;
+		
+		header.createCell(1).getRow().getSheet().getWorkbook().getInternalWorkbook().getSSTString(1).getDebugInfo().length();
+		
+		// Daqui para baixo tudo ok
+		 HSSFRow row = sheet.getRow(1);
+		 HSSFCell cel0 = row.getCell(0);
+		 
+		 HSSFRow row1 = sheet.getRow(0);
+		 HSSFCell cel1 = row1.createCell(1);
+		 HSSFCell cel2 = row1.createCell(2);
+		 HSSFCell cel3 = row1.createCell(3);
+		 HSSFCell cel4 = row1.createCell(4);
+		 HSSFCell cel5 = row1.createCell(5);
+		 HSSFCell cel6 = row1.createCell(6);
+		
+		 cel1.setCellValue("Qtd Incluídos");
+		 cel2.setCellValue(detFixos.getInclusoes());
+		 cel3.setCellValue("Qtd Excluídos");
+		 cel4.setCellValue(detFixos.getExclusoes());
+
+		 cel5.setCellValue("Qtd Faturados");
+		 cel6.setCellValue(detFixos.getTotal());
+		 
+		 //HSSFCell cel2 = row.getCell(2);
+		 HSSFCellStyle cellStyleA = wb.createCellStyle();
+		 //cellStyleA.setFillBackgroundColor(HSSFColor.RED.index);
+		 cellStyleA.setFillForegroundColor(HSSFColor.HSSFColorPredefined.AUTOMATIC.getIndex());
+		 
+		 	//setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			//cellStyleA.setAlignment(HorizontalAlignment.CENTER);
+		 	cellStyleA.setWrapText(true);
+		 	cellStyleA.setVerticalAlignment(VerticalAlignment.TOP);
+		 	row.setHeight((short) -5);
+
+			cel0.setCellStyle(cellStyleA);
+			cel1.setCellStyle(cellStyleA);
+		
+		HSSFCellStyle cellStyle = wb.createCellStyle();		
+		cellStyle.setFillBackgroundColor(HSSFColor.HSSFColorPredefined.AUTOMATIC.getIndex());
+		//cellStyle.setFillForegroundColor(HSSFColor.HSSFColorPredefined.AUTOMATIC.getIndex());
+		//cellStyle.setFillPattern(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND.BIG_SPOTS);
+		
+		for(int i=0; i < header.getPhysicalNumberOfCells(); i++){
+			HSSFCell cell = header.getCell(i);
+			cell.setCellStyle(cellStyle);
+		}		
+		
+	}
+
+	public void verFiltroSelecionado(SelectEvent event) {
+		
+		String qual = (String) event.getObject();
+		
+		filtroCadastro = qual.toString();
+		
+	}
 	
 	public Virtual getVirtual() {
 		return virtual;
@@ -2260,6 +2685,14 @@ public class AreaClienteMB implements Serializable{
 	public void setLstRelAutotrac(ArrayList<AutotracCliente> lstRelAutotrac) {
 		this.lstRelAutotrac = lstRelAutotrac;
 	}
+	
+	public ArrayList<DetalheFixos> getLstDetalheFixos() {
+		return lstDetalheFixos;
+	}
+
+	public void setLstDetalheFixos(ArrayList<DetalheFixos> lstDetalheFixos) {
+		this.lstDetalheFixos = lstDetalheFixos;
+	}
 
 	public BigDecimal getRelAutotracComunicacaoValor() {
 		return relAutotracComunicacaoValor;
@@ -2332,6 +2765,28 @@ public class AreaClienteMB implements Serializable{
 	public void setNomeClientePesquisado(String nomeClientePesquisado) {
 		this.nomeClientePesquisado = nomeClientePesquisado;
 	}
+
+	public DetalheFixos getDetFixos() {
+		return detFixos;
+	}
+
+	public void setDetFixos(DetalheFixos detFixos) {
+		this.detFixos = detFixos;
+	}
+
+	public String getFiltroCadastro() {
+		String a="b";
+		String b = a;
+		return filtroCadastro;
+	}
+
+	public void setFiltroCadastro(String filtroCadastro) {
+		String a="b";
+		String b = a;
+		this.filtroCadastro = filtroCadastro;
+	}
+	
+	
 	
 
 }

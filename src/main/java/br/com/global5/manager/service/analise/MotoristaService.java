@@ -3,9 +3,12 @@ package br.com.global5.manager.service.analise;
 import br.com.global5.infra.CrudService;
 import br.com.global5.infra.model.Filter;
 import br.com.global5.infra.security.Admin;
+import br.com.global5.manager.model.analise.acCadastro;
 import br.com.global5.manager.model.analise.acMotorista;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -58,7 +61,7 @@ public class MotoristaService extends CrudService<acMotorista> {
         return (Integer) em.createNativeQuery( queryStr ).getSingleResult();
 
     }
-	
+
     @Override
     public void beforeUpdate(acMotorista acMotorista) {
         this.beforeInsert(acMotorista);

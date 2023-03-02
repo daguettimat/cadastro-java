@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui">
+
+    <h:form id="formVitimologia" >
+
+        <b:panel >
+
+            <div class="ui-fluid" style="padding-left: 30px;">
+
+				<div class="row">
+					<div class="col-md-11">
+						<h:outputLabel style="width:100%;font-weight:bold; padding: 5px; text-align: left; background-color:#3498DB;color:#FFF">
+							Dados
+						</h:outputLabel>
+					</div>
+				</div> 
+
+				<div class="row">
+					<div class="col-md-3">
+						<h:outputLabel>UF: </h:outputLabel>
+						<h:outputLabel value="#{motAnaliseMB.ufVit}"  />
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-8">
+						<h:outputLabel>Chave de Acesso: </h:outputLabel>
+						<h:outputLabel value="#{motAnaliseMB.chaveVit}"  />
+					</div>
+				</div>				
+				
+				<div class="row">
+					<div class="col-md-3">
+						<h:outputLabel>Data Consulta: </h:outputLabel>
+						<h:outputLabel value="#{motAnaliseMB.dateWsVit}"  />
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-3">
+						<h:outputLabel>Status do Serviço: </h:outputLabel>
+						<h:outputLabel value="#{motAnaliseMB.statusVit}"  />
+					</div>
+				</div>
+				
+				<div class="col-md-11">
+					<p:dataTable widgetVar="c" var="v" value="#{motAnaliseMB.listVitPorAnalise}"  
+						 paginator="true" emptyMessage="Nenhum registro encontrado!"
+						 paginatorPosition="bottom"
+						>
+												
+						<p:column headerText="Estados">
+							<div align="left">
+								<p:outputLabel value="#{v.ufBo}" />
+							</div>
+						</p:column>
+						
+						<p:column headerText="Requisição">
+							<div align="left">
+								<p:outputLabel value="#{v.numRequisicao}" />
+							</div>
+						</p:column>
+						
+						<p:column headerText="Status">
+							<div align="left">
+								<p:outputLabel value="#{v.stWsStatus}" />
+							</div>						
+						</p:column>
+						
+						<p:column headerText="Consultar">
+							<div>
+								<p:commandButton value="Buscar" />
+							</div>
+						</p:column>
+						
+						
+					</p:dataTable>
+				
+				</div>
+
+				<BR/><BR/><BR/>
+		
+				<div class="row">
+					<div class="col-md-11">
+						<h:outputLabel style="width:100%;font-weight:bold; padding: 5px; text-align: left; background-color:#3498DB;color:#FFF">
+							Informações - Consulta RDO
+						</h:outputLabel>
+					</div>
+				</div>
+				
+                <div class="row">				                            								
+                    <div class="col-md-11">
+                        <p:scrollPanel style="width:100%;height:300px;border-collapse: collapse; background-color: #F8F8F8">                                                
+                            <h:outputText id="outputY" escape="false" 
+                            	value="#{motAnaliseMB.htmlRetornoVitimologia()}"/>
+                        </p:scrollPanel>                        
+                    </div>
+                </div>
+                
+                		<p:dataTable widgetVar="t" var="c" value="#{motAnaliseMB.listVitPorAnalise}"  
+						 paginator="true" emptyMessage="Nenhum registro encontrado!"
+						 paginatorPosition="bottom"
+						>
+				
+							<p:column headerText="Teste">
+								<div class="row">
+				                	<table style="width: 100%; margin-bottom: 10px; border-collapse: collapse; background-color: #F8F8F8;">
+				                		<tr>
+				            				<td style="font-weight: bold; padding: 5px; text-align: left; background-color: #3498DB; color: #FFF;">
+				                					Informa&#231;&#245;es - Consulta RDO Local - SP          
+				            				</td>
+				        				</tr>
+				        				<tr>
+								            <td style="padding: 5px;">
+								            	<p:scrollPanel style="width:100%;height:300px;border-collapse: collapse; background-color: #F8F8F8">									            	
+									            									            	
+									                    Depend&#234;ncia:<br/><br/>2a&#160;Via&#160;JNLQPVCBEEEEJN`a<br/>INICIADO:<br/>
+									     
+
+								            	</p:scrollPanel>								                
+								            </td>
+				        				</tr>
+				        	
+				                	</table>
+				                </div>		
+							</p:column>
+							
+						</p:dataTable>
+
+                <f:facet name="footer" class="ui-fluid">
+					<div class="align-right" style="padding: 5px;">
+                    	<b:button value="Cancelar" look="danger"
+                              onclick="PF('dlgVitimologia').hide()"/>
+                    </div>
+                </f:facet>
+        
+            </div>
+        
+        </b:panel>
+        
+    </h:form>
+    
+</ui:composition>

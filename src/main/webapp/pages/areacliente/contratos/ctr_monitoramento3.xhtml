@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:adm="http://global5.com.br/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+	padding: 0.5em 0;
+	margin-left: 10px;
+}
+
+.ui-orderlist .ui-orderlist-list {
+	height: auto;
+}
+
+.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+	{
+	padding: 0;
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="title">
+		Veículos Fixos
+	</ui:define>
+
+	<ui:define name="description">
+		- registro e manutenção
+	</ui:define>
+
+	<ui:define name="body">
+
+		<adm:breadcrumb title="Veículos Fixos" />
+
+		<h:form id="frmCadastroCnpj">
+
+			<h:panelGroup layout="block">
+
+				<p:panel header="Manutenção" styleClass="box-primary">
+
+					<div class="ui-g ui-fluid">
+						<div class="col-lg-2">
+							<p:outputLabel value="Identificador" for="inptIdx" />
+							<p:inputText id="inptIdx" disabled="true"
+								value="#{clienteVeiculoMB.cliVei.id}" />
+						</div>
+
+						<div class="col-lg-4">
+							<p:outputLabel value="Nome" for="inptNome" />
+							<p:inputText id="inptNome"
+								value="#{clienteVeiculoMB.cliVei.placaVeiculo}" />
+						</div>
+
+					</div>
+
+					<f:facet name="footer">
+						<div class="align-right" style="padding: 5px;">
+
+							<p:commandButton value="Salvar" action="#{clienteVeiculoMB.adicionaPlacaOuIsca(1)}"
+								update="@form" styleClass="btn-primary" />
+							<p:spacer height="5" />
+							<p:commandButton id="btRemove" value="Apagar"
+								update="@form"
+								styleClass="btn-primary" />
+
+							<p:spacer height="5" />
+							<p:commandButton value="Voltar" 
+								styleClass="btn-primary" />
+						</div>
+					</f:facet>
+
+				</p:panel>
+			</h:panelGroup>
+			<br />
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

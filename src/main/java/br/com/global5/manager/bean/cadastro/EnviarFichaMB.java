@@ -1,25 +1,36 @@
 package br.com.global5.manager.bean.cadastro;
 
 import br.com.global5.infra.Crud;
+import br.com.global5.infra.fourinf.MotoristaFourInf;
+import br.com.global5.infra.fourinf.MotoristaInfFinanceiraFourInf;
 import br.com.global5.infra.util.*;
 import br.com.global5.manager.chamado.Chamado;
 import br.com.global5.manager.chamado.ChamadoResposta;
 import br.com.global5.manager.chamado.ChamadoTipo;
 import br.com.global5.manager.chamado.service.ChamadoRespostaService;
 import br.com.global5.manager.chamado.service.ChamadoService;
+import br.com.global5.manager.model.analise.FichaFinanceiraMotorista;
+import br.com.global5.manager.model.analise.Vitimologia;
+import br.com.global5.manager.model.analise.acCadastro;
 import br.com.global5.manager.model.areas.Area;
 import br.com.global5.manager.model.auxiliar.Cor;
 import br.com.global5.manager.model.auxiliar.Endereco;
 import br.com.global5.manager.model.auxiliar.TipoEndereco;
 import br.com.global5.manager.model.cadastro.*;
+import br.com.global5.manager.model.contrato.Contrato;
+import br.com.global5.manager.model.contrato.ProdutoVitimologia;
+import br.com.global5.manager.model.contrato.UfVitimologia;
 import br.com.global5.manager.model.ect.Cidade;
 import br.com.global5.manager.model.ect.Logradouro;
 import br.com.global5.manager.model.ect.Pais;
 import br.com.global5.manager.model.ect.UF;
 import br.com.global5.manager.model.enums.*;
+import br.com.global5.manager.model.geral.ContratoProduto;
 import br.com.global5.manager.model.geral.Mercadoria;
 import br.com.global5.manager.model.geral.Motorista;
 import br.com.global5.manager.model.geral.Usuario;
+import br.com.global5.manager.service.analise.CadastroService;
+import br.com.global5.manager.service.analise.VitimologiaService;
 import br.com.global5.manager.service.areas.AreaService;
 import br.com.global5.manager.service.auxiliar.CorService;
 import br.com.global5.manager.service.cadastro.*;
@@ -31,20 +42,29 @@ import br.com.global5.manager.service.enums.*;
 import br.com.global5.manager.service.geral.MercadoriaService;
 import br.com.global5.manager.service.geral.MotoristaService;
 import br.com.global5.template.exception.BusinessException;
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
+import groovy.servlet.GroovyServlet;
+
 import com.google.gson.Gson;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.codehaus.groovy.tools.shell.Interpreter;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.json.CDL;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
+import org.supercsv.cellprocessor.ParseInt;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -53,6 +73,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
+import javax.faces.model.SelectItemGroup;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -62,16 +84,27 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
 
+import java.awt.ItemSelectable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
 import java.sql.ResultSet;
+import java.text.DateFormat;
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Named
 @SessionScoped
@@ -88,6 +121,7 @@ public class EnviarFichaMB implements Serializable {
     private List<ReferenciasPessoais> referenciasPessoais;
     private List<ReferenciasComerciais> referenciasComerciais;
     private List<ReferenciaVeiculos> referenciasVeiculos;
+    private List<ReferenciaVeiculos> referenciasPropVeiculos;
     private List<MotoristaVinculo> lstTipoMotorista;
     private List<VeiculoTipo> lstTipoVeiculo;
     private List<VeiculoCategoria> lstVeiculoCategoria;
@@ -137,6 +171,9 @@ public class EnviarFichaMB implements Serializable {
     private boolean painelVeiculo;
     private boolean disable;
     private boolean veiculoNacional = true;
+    private boolean propPfVeiculoNacional = false;
+    private boolean painelPropVeicPF = false;
+    
     private Usuario usuario;
     private Area area = new Area();
     private Area areaFilial = new Area();
@@ -193,6 +230,35 @@ public class EnviarFichaMB implements Serializable {
     
     private Motorista motorista;
 
+    // Vitimologia e Ficha Financeira Motorista
+    private int idCtrCliente = 0;
+    private List<String> cities;
+    private String[] selectedCities2;
+    private String UfVitimologiaEscolhido = "";
+    
+    private List<ProdutoVitimologia> lstVitUfTrue;
+    private boolean habBtnFichasVit = false;
+  
+    // Teste
+    private List<SelectItem> cars;
+    private String[] selectedCars;
+    private List<SelectItem> optL;
+    private List<SelectItem> optR;
+    
+    //Variaveis p ser preenchida na tela veiculo qdo for pessoa fisica for proprietário
+    private List<String> lstVeiPf = new ArrayList<>();
+    private String veiPfNatural = "";
+    private String veiPfDtNascimento = "";
+    private Date veiPfDtNascimentoDt;
+    private String veiPfRgNumero = "";
+    private String veiPfRgEmissor = "";
+    private String veiPfRgUf = "";
+    private String veiPfNomePai = "";
+    private String veiPfNomeMae = "";
+    private Date dataVeiculoAplicado = new Date();
+    private String veiNomeCategoriaPesquisado = "";
+    private boolean ctrProprietarioVeiculoPF = false;
+    
     @Inject
     private MotoristaService motService;
 
@@ -205,6 +271,9 @@ public class EnviarFichaMB implements Serializable {
 //    @Inject
 //    private FichaClienteService fichaClienteService;
 
+    @Inject
+    private CadastroService cadService;
+    
     @Inject
     private Crud<FichaCliente> fichaClienteCrud;
 
@@ -274,6 +343,25 @@ public class EnviarFichaMB implements Serializable {
     @Inject
     private ChamadoRespostaService chamadoRespostaService;
     
+    
+    @Inject
+    private ContratoService ctrService;
+    
+    @Inject
+    private ContratoProdutoService ctrPrdService;
+    
+    @Inject
+	private ProdutoVitimologiaService prdVitService;
+    
+    @Inject
+    private FichaFinanceiraMotoristaService fichafinanMotService;
+    
+    @Inject
+    private UfVitimologiaService ufVitService;
+
+    @Inject
+    private VitimologiaService vitimologiaService;
+    
     private boolean habilitaCidadeDestino;
     private boolean habilitaUFDestino;
     private boolean showMercadoria;
@@ -291,6 +379,9 @@ public class EnviarFichaMB implements Serializable {
         referenciasPessoais = new ArrayList<>();
         referenciasComerciais = new ArrayList<>();
         referenciasVeiculos = new ArrayList<>();
+        
+        referenciasPropVeiculos = new ArrayList<>();
+        
         endereco = new ViaCEPEndereco();
         refPessoal = new ReferenciasPessoais();
         refComercial = new ReferenciasComerciais();
@@ -301,7 +392,8 @@ public class EnviarFichaMB implements Serializable {
         fichaCliente.setCategoria(0);
 
         uploadedFiles = new ArrayList<UploadedFile>();
-
+        lstVitUfTrue = new ArrayList<>();
+        
         pais = 31;
 
         paisOrigem = 0;
@@ -423,16 +515,31 @@ public class EnviarFichaMB implements Serializable {
                 habilitaArea = false;
                 habilitaFilial = true;
                 disable = false;
+                areaFilial = new Area();
+                // Vitimologia ativar
+//                checarCtrPrdVitimologia();
+                
             } else {
+            	
                 if (usuario.getPessoa().getFuncao().getArea().getNivel().getId() == 3) {
                     area = usuario.getPessoa().getFuncao().getArea().getRoot();
                     areaFilial = usuario.getPessoa().getFuncao().getArea();
                     habilitaFilial = false;
                     habilitaArea = false;
                     disable = false;
+                    
+                    // Vitimologia ativar
+//                    checarCtrPrdVitimologia();
+                    
                 }
             }
+            // Vitimologia ativar
+            checarCtrPrdVitimologia();
         }
+ 
+        selectedCities2 = null;
+        propPfVeiculoNacional = false;
+        painelPropVeicPF = false;
 
     }
 
@@ -456,12 +563,19 @@ public class EnviarFichaMB implements Serializable {
 
 
     }
+    
+    public void clearMotorista(){
+    	
+        fichaCliente = new FichaCliente();
+        fichaCliente.setNacional(true);
+        fichaCliente.setTipoTelefone(new TelefoneTipo(79));
+        fichaCliente.setCategoria(0);
+        
+    }
 
     public void showDialog(String dialog) {
         RequestContext.getCurrentInstance().execute("Top();PF('" + dialog + "').show();");
     }
-
-
 
     public void removeTerceiro() {
         try {
@@ -520,20 +634,37 @@ public class EnviarFichaMB implements Serializable {
         		
         		if (resultFormatoPlaca.equals("erro")){
         			
-        			this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato inválido para a inclusão do veículo  tipo nacional.");
+        			//this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato inválido para a inclusão do veículo  tipo nacional.");
         			//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Atenção","Formato da placa inválida para tipo Nacional!"));
         			
-        		} else {
+    				this.refVeiculo.setPlaca("");
+    				this.setMsgResultPesquisaPlaca("Digite uma Placa para ser pesquisada, veículo  tipo nacional!");
+    				
+        				btnSalvarVeiculo = false;
+        				veiculoNacional = true;
+        				refVeiculo.setNacional(true); 
+        			
+        		} else
+        			if (resultFormatoPlaca.equals("semPlaca")){
+        				this.refVeiculo.setPlaca("");
+        				btnSalvarVeiculo = false;
+        				this.setMsgResultPesquisaPlaca("Digite uma Placa para ser pesquisada, veículo  tipo nacional!");
+        			}
+        			else
+        			{
         			
         			if (this.getPlacaEncontrada()== true){
         				
-        				this.setMsgResultPesquisaPlaca("Encontrado registro para a Placa : " + refVeiculo.getPlaca() + " , edição de dados aberta para uso. " ) ;
+        				this.setMsgResultPesquisaPlaca("Encontrado registro para a Placa : " + refVeiculo.getPlaca() + " , edição de dados aberta para uso tipo nacional. " ) ;
         				
-        			} else {
-        				
+        			} 
+        			
+        				else {
+        				this.refVeiculo.setPlaca("");
         				this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato válido para a inclusão do veículo  tipo nacional.");
         				
         			}
+        			
         			
                     veiculoNacional = true;
                     refVeiculo.setNacional(true);        			
@@ -541,17 +672,40 @@ public class EnviarFichaMB implements Serializable {
 
         } else {
         	
+        	// Processo de verificação da placa...
+        	
             //context.execute("veiNacionalHide();");
+/*        	
+        	String resultFormatoPlaca = validaFormatoPlacaNacional();
+        	
+        	
+    		if (resultFormatoPlaca.equals("erro")){
+    			
+    			//this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato inválido para a inclusão do veículo  tipo nacional.");
+    			//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Atenção","Formato da placa inválida para tipo Nacional!"));
+    			
+				this.refVeiculo.setPlaca("");
+				this.setMsgResultPesquisaPlaca("Digite uma Placa para ser pesquisada, veículo  tipo estrangeiro!");
+				
+    				//btnSalvarVeiculo = false;
+    				veiculoNacional = false;
+    				refVeiculo.setNacional(false); 
+    			
+    		} else
+        	*/
 			if (this.getPlacaEncontrada()== true){
 				
-				this.setMsgResultPesquisaPlaca("Encontrado registro para a Placa : " + refVeiculo.getPlaca() + " , edição de dados aberta para uso. " ) ;
+				this.setMsgResultPesquisaPlaca("Encontrado registro para a Placa : " + refVeiculo.getPlaca() + " , edição de dados aberta para uso veiculo estrangeiro. " ) ;
 				
 			} else {
-				
-				this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato válido para a inclusão do veículo  tipo estrangeiro.");
+				this.refVeiculo.setPlaca("");
+				this.setPlacaEncontrada(placaEncontrada);
+				btnSalvarVeiculo = false;
+				this.setMsgResultPesquisaPlaca("Digite uma Placa para ser pesquisada, veículo  tipo estrangeiro!");
+				//this.setMsgResultPesquisaPlaca("Placa : " + refVeiculo.getPlaca() + " não encontrada!  Formato válido para a inclusão do veículo  tipo estrangeiro.");
 				
 			}
-			
+			//btnSalvarVeiculo = true;
             veiculoNacional = false;
             refVeiculo.setNacional(false);
             
@@ -562,6 +716,9 @@ public class EnviarFichaMB implements Serializable {
 
     }
 
+    /* Removido em 15/02/2021 devido a um log identificado no wildfly
+     * no html estava esse codigo (enviarFicha.xhtml o codigo estava comentado e estava em duas linhas 532 e 548)
+     * <!-- <h:graphicImage value="/images/dynamic/?file=#{enviarFichaMB.fotoCNH(enviarFichaMB.fichaCliente.motorista.id,false)}" style="width:100%;height: 30%"/>  -->
     public String fotoCNH(String id, boolean tipo) {
         String result = null;
         CNH cnh = null;
@@ -577,6 +734,7 @@ public class EnviarFichaMB implements Serializable {
         } catch (Exception e) {
             return null;
         }
+        
 
         if (cnh == null) {
             return AppUtils.imageName(tipo ? "cnh-frente.jpg" : "cnh-verso.png", true);
@@ -600,7 +758,7 @@ public class EnviarFichaMB implements Serializable {
 
         return result;
     }
-
+    */
     public void escolherAcaoMotorista(AjaxBehaviorEvent event) {
 
         Integer selecao = (int) ((UIOutput) event.getSource()).getValue();
@@ -613,7 +771,7 @@ public class EnviarFichaMB implements Serializable {
                 break;
             case 94: // Funcionario (Outras Funcoes)
             case 95: // Funcionario acMotorista
-            case 98: // Ajudante (Funcionario)
+            case 98: // Ajudante (Funcionario)              	
             case 97: // Consulta
                 showRefPessoal = false;
                 showRefComercial = false;
@@ -624,6 +782,11 @@ public class EnviarFichaMB implements Serializable {
                 showRefComercial = true;
                 showMercadoria = true;
                 break;
+            case 778: // Ajudante (Funcionario)        
+                showRefPessoal = false;
+                showRefComercial = false;
+                showMercadoria = false;
+                break;            	
             default: // Outros
                 showRefComercial = true;
                 showRefPessoal = true;
@@ -642,6 +805,7 @@ public class EnviarFichaMB implements Serializable {
             case 96:
             case 98:
             case 99:
+            case 778:
             case 100:
                 context.execute("cnhHIDE();");
                 showCNH = false;
@@ -794,9 +958,24 @@ public class EnviarFichaMB implements Serializable {
         refVeiculo.setNacional(true);
         docProprietario = "";
         nomProprietario = "";
+        
         msgResultPesquisaPlaca = "";
         placaEncontrada = false;
 
+        // @author Francis - inicio proprietario veiculo tipo PF - 2023-02-15
+        propPfVeiculoNacional = false;
+        
+        veiPfNatural = "";
+        veiPfDtNascimento = "";
+        veiPfDtNascimentoDt = new Date();        
+        veiPfRgNumero = "";
+        veiPfRgEmissor = "";
+        veiPfRgUf = "";
+        veiPfNomePai = "";
+        veiPfNomeMae = "";
+        
+        // final proprietario veiculo tipo PF
+        
         showDialog("dlgVeiculo");
 
         RequestContext context = RequestContext.getCurrentInstance();
@@ -808,21 +987,78 @@ public class EnviarFichaMB implements Serializable {
     public void delReferenciaVeiculos(Integer id) {
         if (refVeiculo != null) {
             try {
+            	
+            	// 2023-02-14 Inicio proprietario PF 
+            	// Colocar um verificador que consulte a placa 
+             	// se é nacional e prop tipo pf Remove a informações do proprietário do veiculo
+            	this.painelPropVeicPF = false; 
+            	// guardo o numero do ido do veiculo que será deletado
+            	int numIdVeiculo = referenciasVeiculos.get(id -1).getIdVeiculo();
+            	// final proprietario veiculo PF
+            	
+            	// exclui o veiculo da grid 
                 referenciasVeiculos.remove(id - 1);
                 int idx = 1;
                 for (ReferenciaVeiculos refVeiculos : referenciasVeiculos) {
                     refVeiculos.setId(idx++);
-
                 }
+                
+                // 2023-02-14 - implemento da proprietario PF
+                // remove os proprietarios dos veiculos qdo for pf e veiculo nacional
+                // e se a lista nao estiver vazio então passa para if
+                if(!referenciasPropVeiculos.isEmpty() == true){                	
+                	// entro no for e procuro a registro onde comparo os ids 
+                	for(int i=0; i < referenciasPropVeiculos.size(); i++){
+                		// Se encontrou então faz o delete do veiculo
+                		if(referenciasPropVeiculos.get(i).getIdVeiculo() == numIdVeiculo){
+                    		referenciasPropVeiculos.remove(i);
+                            int idy = 1;							  
+                            for (ReferenciaVeiculos refVeiculosProp : referenciasPropVeiculos) {
+                            	refVeiculosProp.setId(idy++);
+                            }	
+                		}
+                	}
+
+                	// AddHoje (2023-02-15)
+                	if(referenciasPropVeiculos.size() == id){
+                		
+                	if(numIdVeiculo == referenciasPropVeiculos.get(id-1).getId()){
+                		
+//                		referenciasPropVeiculos.get(id-1).getProprietario().getDocumento().length() < 13
+                		referenciasPropVeiculos.remove(id -1);
+                        
+                		int idy = 1;
+                        for (ReferenciaVeiculos refVeiculosProp : referenciasPropVeiculos) {
+                        	refVeiculosProp.setId(idy++);
+                        }	
+                	}                		
+            	}
+                	
+                }
+                
             } catch (Exception e) {
                 e.printStackTrace();
                 referenciasVeiculos.clear();
+                referenciasPropVeiculos.clear();
             }
             refVeiculo = new ReferenciaVeiculos();
 
             RequestContext context = RequestContext.getCurrentInstance();
-            context.update("form0:panelVeiculos");
+
+            // AddHoje (está linha)
+            //context.execute(fichaCliente.isNacional() ? "propVeicPFShow();" : "propVeicPFHide();");
+            
+            context.update("form0:panelVeiculos");            
+            
+            // 2023-02-14 - @author Francis - proprietario veiculo PF
+            context.update("form0:panelPropVeiculos");
+                        
+            // context.update("form0:btnRefVeiculo");
+            //context.execute(fichaCliente.isNacional() ? "cnhSHOW();" : "cnhHIDE();");
+            //context.update("form0:dPropVeicPF");
+            
         }
+        
         if (referenciasVeiculos.size() <= 3) {
             limitadorVeiculo = false;
             RequestContext context = RequestContext.getCurrentInstance();
@@ -894,7 +1130,7 @@ public class EnviarFichaMB implements Serializable {
 
         }
                 
-        if (validoDocProprietarioNacional == false) {
+        if (validoDocProprietarioNacional == false && veiculoNacional == true) {
         	
         	String checaDoc = verificaDocNacional();
         	
@@ -909,7 +1145,48 @@ public class EnviarFichaMB implements Serializable {
         	
         }
         
-        if ( renavamDuplicado == true && placaEncontrada == false ) {
+        // 2023-02-14 - @author Francis - proprietario veiculo PF 
+        
+        if (veiculoNacional == true && ctrProprietarioVeiculoPF == true ) {
+
+        	// Dados do proprietario do Veiculo quando for Nacional e PF
+        	if(this.veiPfRgNumero.length() > 0){
+        		
+        		// Verifica o tipo do veiculo - tipo cavalo
+        		if(refVeiculo.getTipo() == 59){
+        			// Então habilita o formulario tipo cavalo
+        			
+        		} else {
+        			
+        		}
+        		
+        		// Salva os registros 
+        		 DateFormat dtFormat = new SimpleDateFormat("dd-MM-yyyy");
+        		 String pattern = "dd/yyyy/MM";
+        		 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+        		refVeiculo.getProprietario().setNatural(veiPfNatural);
+				refVeiculo.getProprietario().setDtNascimento(veiPfDtNascimento);
+        		refVeiculo.getProprietario().setRgNumero(veiPfRgNumero);
+        		refVeiculo.getProprietario().setRgEmissor(veiPfRgEmissor);
+        		refVeiculo.getProprietario().setRgUF(veiPfRgUf);
+        		refVeiculo.getProprietario().setNomePai(veiPfNomePai);
+        		refVeiculo.getProprietario().setNomeMae(veiPfNomeMae);
+
+        	} else if(ctrProprietarioVeiculoPF == true && docProprietario.length() == 11 ){
+        	
+    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção",
+                        "Cliente com analise de proprietário ativo por gentileza preencher os dados."));
+    			this.propPfVeiculoNacional = true;        	    		        		
+        		this.painelPropVeicPF = true;
+        		success = false;
+        	}
+        	
+        }
+        
+        // Final proprietario veiculo PF
+        
+        if ( renavamDuplicado == true && placaEncontrada == false && veiculoNacional == true ) {
         	        	         	
     		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Salvar",
                     "O Renavam informado já encontra-se registrado para outro veículo, redigite!"));
@@ -938,9 +1215,17 @@ public class EnviarFichaMB implements Serializable {
             refVeiculo.setId(referenciasVeiculos.size() + 1);
             refVeiculo.setNomeproprietario(nomProprietario);
             refVeiculo.getProprietario().setNome(nomProprietario);
-            refVeiculo.getProprietario().setDocumento(docProprietario);
+            refVeiculo.getProprietario().setDocumento(docProprietario);// cpf ou dni
+ 
+            refVeiculo.setPlacaView(refVeiculo.getPlaca());
             
             referenciasVeiculos.add(refVeiculo);
+            
+            // 2023-02-14 @author Francis - add proprietario veiculo PF 
+            if(this.propPfVeiculoNacional == true){        	   
+         	   referenciasPropVeiculos.add(refVeiculo);	
+            }
+            // final proprietario veiculo PF.
             
             refVeiculo = new ReferenciaVeiculos();
             
@@ -951,7 +1236,10 @@ public class EnviarFichaMB implements Serializable {
             RequestContext context = RequestContext.getCurrentInstance();
             context.update("form0:panelVeiculos");
             
-            if (referenciasVeiculos.size() == 4) {
+            // 2023-02-14 - @author Francis - add proprietario veiculo PF
+            context.update("form0:panelPropVeiculos");
+            
+             if (referenciasVeiculos.size() == 4) {
                 limitadorVeiculo = true;
                 context.update("form0:btnRefVeiculo");
             }
@@ -1022,6 +1310,33 @@ public class EnviarFichaMB implements Serializable {
 
     }
     
+    public void textoCategoria(AjaxBehaviorEvent event){
+    	int result = (int) ((UIOutput) event.getSource()).getValue();    	
+    	
+    	List<VeiculoCategoria> vc = veiCatService.crud().
+    				eq("id", result).list();
+    	
+    	if (vc.size() > 0){
+    		for(int x=0; x < vc.size(); x++){
+    			this.veiNomeCategoriaPesquisado = vc.get(x).getDescricao();
+    			String a = "b";
+    	    	String v = a;
+    	    	    	    	
+    		}
+    	}
+    
+    }
+    
+    public void dataDocumentoTest(AjaxBehaviorEvent event){
+        
+    	Date doc =  (Date) ((UIOutput) event.getSource()).getValue();
+    	
+    	if(!doc.equals(null)){
+    		
+    		dataVeiculoAplicado = doc;	
+    	}
+    	    	    	
+    }
     
     /**
      * Method: Your function it is validate the number of document the  truck  owner from  type vehicle National at moment at change value
@@ -1033,7 +1348,7 @@ public class EnviarFichaMB implements Serializable {
      * 
      */
     public void verificaDoc(AjaxBehaviorEvent event) {
-
+    	RequestContext context = RequestContext.getCurrentInstance();
         String doc = (String) ((UIOutput) event.getSource()).getValue();
         
         doc = (Normalizer
@@ -1042,12 +1357,97 @@ public class EnviarFichaMB implements Serializable {
 
         if(refVeiculo.isNacional()){
         	
+        	this.propPfVeiculoNacional = false;
+        	this.painelPropVeicPF = false;
+        	
         	if(doc.length() < 13 && ! ValidaBrasil.validateCPF(doc)){
         		validoDocProprietarioNacional = false;
         		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atenção","CPF inválido verifique e digite novamente."));
         		//throw new BusinessException("CPF Inválido!!! Por favor confira e digite novamente!");
         	} else if(doc.length() < 13 && ValidaBrasil.validateCPF(doc)){
+        		
+        		// Verifica se o cliente tem contrato para este serviço.
+        		// Produto = Proprietario Pessoa Fisica 
+                // Verifica a existência do produto no contrato do cliente
+        		if(area.getId()!=null){
+        			        			
+        			if(ctrProprietarioVeiculoPF == false){
+        				checarCtrPrdProprietarioVeiculoPF(area.getId());
+        			} else  if (ctrProprietarioVeiculoPF == true){
+        				// Habilita campos para ser incluso os dados do proprietario tipo PF
+        				/**
+                		 * Inicio Dminer analise do proprietário
+                		 * @author francis 2023-02-14 
+                		 */
+                		this.propPfVeiculoNacional = true;        	    		        		
+                		this.painelPropVeicPF = true;
+                		        		
+                		if(!dataVeiculoAplicado.equals(new Date())){
+                     		refVeiculo.setDataDocumento(dataVeiculoAplicado);     			
+                		}
+                		
+                		refVeiculo.setCategoria(veiNomeCategoriaPesquisado);
+                		
+                		List<ReferenciaVeiculos> lstRefVec = referenciasVeiculos;
+                		 	       		 
+                		 if(lstRefVec.size() > 0){
+                     		         			 
+                			 int stop = 0;
+                			 
+                			 // achou um list com proprietarios pf
+        	    			 for(int i = 0; i < lstRefVec.size(); i++){	    				 	    				 
+        	    				 
+        	    				 // verifica se algum documento é = cpf se for então aproveita os dados
+        	    				 if(lstRefVec.get(i).getProprietario().getDocumento().trim().compareTo(doc) == 0 && stop == 0){
+        	    					 DateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy");
+        	    					 this.veiPfNatural = lstRefVec.get(i).getProprietario().getNatural();
+        	    					 this.veiPfDtNascimento = lstRefVec.get(i).getProprietario().getDtNascimento();
+        	    					 this.veiPfRgNumero = lstRefVec.get(i).getProprietario().getRgNumero();
+        	    					 this.veiPfRgEmissor = lstRefVec.get(i).getProprietario().getRgEmissor();
+        	    					 this.veiPfRgUf = lstRefVec.get(i).getProprietario().getRgUF();
+        	    					 this.veiPfNomePai = lstRefVec.get(i).getProprietario().getNomePai();
+        	    					 this.veiPfNomeMae = lstRefVec.get(i).getProprietario().getNomeMae();
+        	    					 stop = 1;
+        	    				 } 
+        	    				 
+        	    				 // não encontrou ninguem na tabela limpa os campos para preenchimento
+        	    				 if(stop == 0){
+        	    	    			 this.veiPfNatural = "";
+        	    	    			 this.veiPfDtNascimento = "";
+        	    	    			 this.veiPfRgNumero = "";
+        	    	    			 this.veiPfRgEmissor = "";
+        	    	    			 this.veiPfRgUf = "";
+        	    	    			 this.veiPfNomePai = "";
+        	    	    			 this.veiPfNomeMae = "";
+        	    				 }
+        	    				 
+        	    			 }
+        	    			 
+        	    		 } else {
+        	    			 // Não encontrou a lista então quer dizer que é o primeiro registro limpa os campos
+        	    			 this.veiPfNatural = "";
+        	    			 this.veiPfDtNascimento = "";
+        	    			 this.veiPfRgNumero = "";
+        	    			 this.veiPfRgEmissor = "";
+        	    			 this.veiPfRgUf = "";
+        	    			 this.veiPfNomePai = "";
+        	    			 this.veiPfNomeMae = "";
+        	    		 }
+                		// final Dminer analise do proprietario
+        			}
+        				
+        		}
+                 // 2023-02-16 parei aqui as 17:31 BR
+        		
+        		
+        		
         		validoDocProprietarioNacional = true;
+//        		context.update("formVeiculo:dPropVeicPF");
+        		//context.update("formVeiculo:formPropVei");
+        		context.update("formVeiculo:formPropVei");
+        		
+//        		context.update("formPropVei:dPropVeicPF");
+        		        		
         	}
         	
     		if(doc.length() > 12 && ! ValidaBrasil.validateCNPJ(doc) ){
@@ -1062,9 +1462,20 @@ public class EnviarFichaMB implements Serializable {
         	 validoDocProprietarioNacional = false;
         }
         
-        RequestContext context = RequestContext.getCurrentInstance();
+        
         context.update("formVeiculo:veiPropDoc");
         
+    }
+    
+    public void testeBtnCancel(){
+    	if( this.propPfVeiculoNacional == true) {
+        	this.propPfVeiculoNacional = false;
+        	this.painelPropVeicPF = false;    		
+        	RequestContext context = RequestContext.getCurrentInstance();
+        	context.update("form0");
+    	}
+//    	onclick="PF('dlgVeiculo').hide();onTop('dVeiculos');"
+    	//RequestContext.getCurrentInstance().execute("PF(" + optReturn + ").hide();onTop('dVeiculos')");
     }
     
     
@@ -1129,6 +1540,38 @@ public class EnviarFichaMB implements Serializable {
             mot.setUsuarioCriacao(usuario);
             mot.setUsuarioAlteracao(usuario);
             this.setFoundCadMot(false);
+            
+            // Inclusao de dados para limpar o formulario;
+            	// Dados para CNH
+		            fichaCliente.setCnh("");
+		            fichaCliente.setNumSegCnh("");
+		            fichaCliente.setDtEmissaoCNH(null);
+		            fichaCliente.setDtValidadeCNH(null);
+		            fichaCliente.setCategoria(0);
+		            fichaCliente.setDtPrimeiraEmissaoCNH(null);
+		            fichaCliente.setUfCNH("");
+		            fichaCliente.setRegistroCNH("");
+		          
+		       // Dados Motorista
+		            fichaCliente.setNome("");
+		            fichaCliente.setDtNascimento(null);
+		            fichaCliente.setFic_rg("");
+
+		            fichaCliente.setDtEmissaoRG(null);
+		            fichaCliente.setUfRg("");
+		            fichaCliente.setCidadeNascimento("");
+		            fichaCliente.setPai("");
+		            fichaCliente.setMae("");
+		            fichaCliente.setNome("");
+		            fichaCliente.setEndereco(null);
+		            fichaCliente.setBairro("");
+		            fichaCliente.setCidade("");
+		            fichaCliente.setUf("");
+		            fichaCliente.setCep("");
+		            fichaCliente.setNumero(null);
+		            //fichaCliente.setMotorista(null);
+		            //fichaCliente.getMotorista().setUrlFoto(null);
+            
         } else {
         	 this.setFoundCadMot(true);
             //
@@ -1203,6 +1646,33 @@ public class EnviarFichaMB implements Serializable {
         context.update("form0:btnVeiculos");
         context.update("form0:btnCompleta");
     }
+    
+    public void selectTranspVitimologia(SelectEvent event) {
+        area = (Area) event.getObject();
+        // areaFilial = null;
+        RequestContext context = RequestContext.getCurrentInstance();
+    	if(checkUsuario.valid().getEmail().contains("@global5")){    		
+    		lstVitUfTrue = null;
+            context.update("form0:multiple");            
+    	}
+    }
+
+    public void selectFilialVitimologia(SelectEvent event) {
+    	RequestContext context = RequestContext.getCurrentInstance();
+    	
+    	if(checkUsuario.valid().getEmail().contains("@global5")){    		
+    		checarCtrPrdVitimologia();
+            context.update("form0:multiple");            
+    	}
+    	
+        areaFilial = (Area) event.getObject();
+        disable = true;
+        context.update("form0:btnMotorista");
+        context.update("form0:btnVeiculos");
+        context.update("form0:btnCompleta");
+    }
+
+    
 
     public List<Area> listFilial(String query) {
 
@@ -1325,12 +1795,15 @@ public class EnviarFichaMB implements Serializable {
     				
     			}
     			
+    		} else {
+    			return "semPlaca";
     		}
     		
+    	} else {
+    		return "semPlaca";
     	}
     	return "erro";
     }
-    
     
     public String conversaoPlacaAntesTipoMercosul(){
     	
@@ -1396,8 +1869,11 @@ public class EnviarFichaMB implements Serializable {
     	//String numRenavam = (String) ((UIOutput) event.getSource()).getValue();
     	
     	if(refVeiculo != null) {
-    		if( numRenavamAtualizaPlaca.equals(numRenavamInformaCliente)) {
-    			
+    	
+    		String checaRenavanDigitado = removeZero(numRenavamInformaCliente);
+    		    
+    		if( numRenavamAtualizaPlaca.trim().equals(checaRenavanDigitado.trim())) {
+    			//numRenavamAtualizaPlaca.equals(numRenavamInformaCliente)
     			String msg1a = "Placa verificada: " + refVeiculo.getPlaca() + " . Está válida para o veículo cadastrado em nosso sistema com a placa: " + numPlacaAnterior +
     					".  Deseja realizar a conversão para o formato padrão Mercosul?" ;
 
@@ -1548,7 +2024,10 @@ public class EnviarFichaMB implements Serializable {
         Integer qtdCaracteresPlaca = null;
         String caracterPosicao = "";
 
+        //qtdCaracteresPlaca = refVeiculo.getPlaca().length();
         qtdCaracteresPlaca = refVeiculo.getPlaca().length();
+        
+        //if( refVeiculo.getPlaca() != null){
         
         if( refVeiculo.getPlaca() != null){
 
@@ -1745,10 +2224,13 @@ public class EnviarFichaMB implements Serializable {
      * 
      */
     public void findVeiculo(AjaxBehaviorEvent event) {
-        String placa = (String) ((UIOutput) event.getSource()).getValue();
-        findVeiculoPlaca(placa);
+        
+    	String placa = (String) ((UIOutput) event.getSource()).getValue();
+        
+        findVeiculoPlaca(placa.trim());
     }
-    public void findVeiculoPlaca(String placa) {
+  
+  public void findVeiculoPlaca(String placa) {
     	
     	String formatoPlaca = "";
     	
@@ -1756,12 +2238,10 @@ public class EnviarFichaMB implements Serializable {
     	aplicarAtualizaPlaca = false;
     	abrirChamadoPlaca = false;
 
-
-
         if (placa.length() > 0) {
 
         	Veiculo veiculo = null;
-        	
+
         	String resultadoFormatoPlaca = validaFormatoPlacaNacional();
         	        	
            if ( resultadoFormatoPlaca.equals("valido") && veiculoService.crud().eq("placaAnterior", placa.toUpperCase()).count() == 1 ){
@@ -1814,7 +2294,7 @@ public class EnviarFichaMB implements Serializable {
                     			
                     			vei = veiculoService.crud().eq("placa", placaMercosulConvertida.toUpperCase()).find();
                     			
-                    			numRenavamAtualizaPlaca = vei.getRenavam();
+                    			numRenavamAtualizaPlaca = removeZero(vei.getRenavam());
                     			numPlacaAnterior = placaMercosulConvertida;
                     			
                     			this.setAtualizaPlaca(true);
@@ -1871,7 +2351,18 @@ public class EnviarFichaMB implements Serializable {
             		
             		//Veiculo Estrangeiro
             		veiculo = veiculoService.crud().eq("placa", placa.toUpperCase()).find();
-            		formatoPlaca = "valido";
+            		if(veiculo == null){
+            			formatoPlaca = "valido";
+            		} else 
+            		
+            		if(veiculo.isNacional() != true){
+            			formatoPlaca = "valido";
+            		} else {
+            			formatoPlaca = "invalido";
+            			return;
+            		}
+            		
+            		
             	}
                 
             } else {
@@ -1892,7 +2383,8 @@ public class EnviarFichaMB implements Serializable {
             		
             		this.setBtnSalvarVeiculo(true);            		
             		veiculoNacional = veiculo.isNacional();
-            	    refVeiculo.setRenavam("00000000000".substring(veiculo.getRenavam().length()) + veiculo.getRenavam());
+            		//"00000000000".substring(veiculo.getRenavam().length()) + 
+            	    refVeiculo.setRenavam(adicionarZeroEsquerda(veiculo.getRenavam()));
                     refVeiculo.setNacional(veiculoNacional);
                     
             	} else {
@@ -1966,6 +2458,7 @@ public class EnviarFichaMB implements Serializable {
             	        
                         refVeiculo = new ReferenciaVeiculos();
                         refVeiculo.setPlaca("");
+                        refVeiculo.setPlacaView("");
                         refVeiculo.setNacional(true);
                         refVeiculo.setProprietario(new br.com.global5.manager.model.auxiliar.Proprietario());
                         refVeiculo.getProprietario().setEndereco(new Endereco());
@@ -1985,7 +2478,48 @@ public class EnviarFichaMB implements Serializable {
 
     }
 
- 
+	private String removeZero(String str){
+  		if(str.length()>0){
+  			int i = 0;
+  			while(i < str.length() && str.charAt(i) == '0')
+  				i++;
+  			
+  			StringBuffer sb = new StringBuffer(str);
+  			sb.replace(0, i, "");
+  			
+  			return sb.toString();
+  		}
+  		
+  		return "";
+  	}
+  	
+  	private String adicionarZeroEsquerda(String str){
+  		if(!str.equals(null)){
+  			
+  			int numeroRenavam = str.toString().length();
+  			
+  			String seqRegistro = "";  			
+  			
+			if (numeroRenavam < 11 ) {
+				
+				int digFalta = 11 - numeroRenavam;
+
+				String zeroEsq = "";
+
+				for (int f = 1; f <= digFalta; f++) {
+					zeroEsq = zeroEsq + "0";
+				}
+				seqRegistro = zeroEsq + str.toString();
+				return seqRegistro;
+			} else {
+				// retorna o numero recebido
+				return str.toString();	
+			}
+			
+  		}
+  		return "";
+  	}
+  
     public Endereco getEndereco(Localizador end) {
 
         Endereco endereco = new Endereco();
@@ -2331,7 +2865,7 @@ public class EnviarFichaMB implements Serializable {
     public void salvarFichaNew() {
 
         try {
-
+        	
             if( painelMotorista ) {
                 if (!validaCampos()) {
                     return;
@@ -2395,6 +2929,226 @@ public class EnviarFichaMB implements Serializable {
                 List retorno  = fichaService.crud().criteria().rawQuery("update ficha_cliente set fic_status=99 where ficoid=" + fichaCliente.getId() +  " returning (fic_anac_retorno ->> 'ficha') as anacoid; " );
                                 
                 idCadastral = Integer.valueOf(retorno.get(0).toString());
+                                
+            	// Teste - geração de ficha financeira motorista
+                if(idCadastral > 0){
+                	// se idCadastral nao for > 0 não grava os dados na tabela
+                	// faz a pesquisa do cpf do motorista chamando a ficha financeira
+                	pesquisarAnaliseFinanceiraMotorista();	
+                }
+            	
+            	
+            	// Final - Teste - geração de ficha financeira motorista
+                
+                RequestContext.getCurrentInstance().execute("PF('dlgFechado').show();");
+            } catch(Exception erro) {
+                if( erro.getMessage().contains("could not extract ResultSet")) {
+                    RequestContext.getCurrentInstance().execute("PF('dlgFechado').show();");
+                    return;
+                } else {
+                    erro.printStackTrace();
+                    RequestContext.getCurrentInstance().showMessageInDialog(
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Aviso!",
+                                    "O sistema não conseguiu gravar os dados da ficha. " +
+                                            "Informe o suporte técnico"));
+                    return;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ficha : " + fichaCliente.getId() + ", informe o suporte técnico.",
+                            "Para enviar essa ficha novamente, aguarde instruções do suporte!"));
+        }
+        
+        
+        // adicionado para inclusão de foto do motorista
+        if(painelMotorista == true){
+        	try{
+        		
+        		//mot_url_foto
+        		                                		
+        		FichaCliente fichaFindMotorista = fichaService.findById(fichaCliente.getId());
+        		int idMotorista = fichaFindMotorista.getMotorista().getId(); 
+        		
+        		if(imgFile != null){
+
+        			saveImageMotorista(imgFile, idMotorista, "F");
+
+        			String urlFotoN = "'"+this.getUrlFotoMot()+"'";
+        			
+        			this.setStsImgFile("Foto: " + urlFotoN);
+        			
+        			String sql = "update java.motorista set mot_url_foto =" + urlFotoN +  " where motoid =  " + idMotorista;
+        			
+        			EntityManagerFactory emf = Persistence.createEntityManagerFactory("localhost");
+        			EntityManager entityManager = emf.createEntityManager();
+        			
+        			 if (null != entityManager) {
+        				 
+        				 EntityTransaction updateTransaction = entityManager.getTransaction();
+        				 updateTransaction.begin();
+        				 Query qryM = entityManager.createNativeQuery(sql);
+        				 int updateMotorista = qryM.executeUpdate();
+        				 updateTransaction.commit();
+        				 
+        			 }
+        			 
+        			 entityManager.close();
+        			 emf.close();
+        			     			
+        		}
+        		
+        		
+        	} catch (Exception e) {}
+        }
+        
+        if ((showCNH != false) && (changeImgFileCnhFrente || changeImgFileCnhVerso != false )) {
+            
+        	try{
+        		
+        		FichaCliente fichaFindMotorista = fichaService.findById(fichaCliente.getId());
+        		int idMotorista = fichaFindMotorista.getMotorista().getId(); 
+        		int idMotoristaCNH = fichaFindMotorista.getIdMotoristaCnh();
+        		
+        		if(idMotorista > 0){        			
+        			
+        			saveImageCNH(imgCnhFrenteFile, idMotoristaCNH, "CF");
+        			saveImageCNH(imgCnhVersoFile,  idMotoristaCNH, "CV");
+        			
+//        			String extesionCnhFrente = FilenameUtils.getExtension(imgCnhFrenteFile.getFileName());
+//        			String extesionCnhVerso  = FilenameUtils.getExtension(imgCnhVersoFile.getFileName());
+//        			
+//        			boolean cnhFrentePdf, cnhVersoPdf  = false;
+//        			
+//        			if(extesionCnhFrente.equals("PDF") || extesionCnhFrente.equals("pdf")){
+//        				cnhFrentePdf = true;
+//        			}
+//        			if(extesionCnhVerso.equals("PDF") || extesionCnhVerso.equals("pdf")){
+//        				cnhVersoPdf = true;
+//        			}
+        			
+        			String urlCnhF = "'"+this.getUrlFotoCnhF()+"'";
+        			String urlCnhV = "'"+this.getUrlFotoCnhV()+"'";
+        		
+        			String sql = "update java.motorista_cnh set mcnh_urlcnhfrente =" + urlCnhF + 
+        						 " ,mcnh_urlcnhverso = " + urlCnhV + " where mcnhoid = " + idMotoristaCNH + 
+        						 " and mcnh_motoid = " + idMotorista ;
+        			
+        			EntityManagerFactory emfC = Persistence.createEntityManagerFactory("localhost");
+        			EntityManager entityManagerC = emfC.createEntityManager();
+        			
+        			 if (null != entityManagerC) {
+        				 
+        				 EntityTransaction updateTransaction = entityManagerC.getTransaction();
+        				 updateTransaction.begin();
+        				 Query qryM = entityManagerC.createNativeQuery(sql);
+        				 int updateMotorista = qryM.executeUpdate();
+        				 updateTransaction.commit();
+        				 
+        			 }
+        			 
+        			 entityManagerC.close();
+        			 emfC.close();
+        			     			
+        		}
+        		
+        		
+        	} catch (Exception e) {}
+            
+        }
+        
+
+    }
+    
+    public void salvarFichaVitimologiaNew() {
+
+        try {
+        	
+            if( painelMotorista ) {
+                if (!validaCampos()) {
+                    return;
+                }
+
+                if( ! validaReferenciaPessoal() ) {
+                    return;
+                }
+
+                if( ! validaReferenciaComercial() ) {
+                    return;
+                }
+
+                fichaCliente.setTipoMotorista(motVinculoService.crud().get(tipoMotorista));
+            }
+
+            if( painelVeiculo ) {
+                if( !validaReferenciaVeiculos() ) {
+                    return;
+                }
+            }
+
+            if (paisOrigem > 0) {
+
+                fichaCliente.setMercadoria(new Mercadoria(idMercadoria));
+
+                fichaCliente.setMercPaisOrigem(paisOrigem);
+                fichaCliente.setMercUFOrigem(ufOrigem);
+                fichaCliente.setMercCidadeOrigem(cidOrigem);
+
+                fichaCliente.setMercPaisDestino(paisDestino);
+                fichaCliente.setMercUFDestino(ufDestino);
+                fichaCliente.setMercCidadeDestino(cidDestino);
+            }
+
+            if (areaFilial != null) {
+                fichaCliente.setTransportadora(new Area(areaFilial.getId()));
+            }
+
+            if (centroCusto.length() > 0) {
+                fichaCliente.setCentroCusto(centroCusto);
+            }
+
+            fichaCliente.setPais(new Pais(pais));
+            fichaCliente.setStatus(1);
+            fichaCliente.setUsuarioInclusao(new Usuario(usuario.getId()));
+            fichaClienteCrud.save(fichaCliente);
+            fichaClienteCrud.commit();
+
+            StoredProcedureQuery query = fichaClienteCrud.getEntityManager().createNamedStoredProcedureQuery("ficha_cliente_prepare");
+            query.setParameter("ficoid", fichaCliente.getId());
+            query.execute();
+            
+            List<Object[]> rows = (List<Object[]>) query.getResultList();
+                        
+            int idRetorno = fichaCliente.getId();  //(int) query.getOutputParameterValue("ficoid");            
+
+            try {
+                List retorno  = fichaService.crud().criteria().rawQuery("update ficha_cliente set fic_status=99 where ficoid=" + fichaCliente.getId() +  " returning (fic_anac_retorno ->> 'ficha') as anacoid; " );
+                                
+                idCadastral = Integer.valueOf(retorno.get(0).toString());
+                
+                //TODO search at ws the driver 
+                // Saber se o cliente tem o produto ativo em contrato id, produto 15, status (650,767) , produto id 32 is true
+                /*
+                Contrato ctr = ctrService.crud().eq("area.id", fichaCliente.getTransportadora().getId())
+                								.eq("produtoTipo.id", 15)
+                								.addCriterion(Restrictions.between("statusContrato.id", 645, 649)).find();
+                */
+                // Final test
+                // pesquisarVitimologia realiza o registro da vitimologia
+                pesquisarVitimologia();
+                
+            	// Teste - geração de ficha financeira motorista
+                if(idCadastral > 0){
+                	// se idCadastral nao for > 0 não grava os dados na tabela
+                	// faz a pesquisa do cpf do motorista chamando a ficha financeira
+                	pesquisarAnaliseFinanceiraMotorista();	
+                }
+            	            	
+            	// Final - Teste - geração de ficha financeira motorista
+                
                 RequestContext.getCurrentInstance().execute("PF('dlgFechado').show();");
             } catch(Exception erro) {
                 if( erro.getMessage().contains("could not extract ResultSet")) {
@@ -2623,7 +3377,40 @@ public class EnviarFichaMB implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_WARN, "Dados Incompletos", "Para inserir fichas, a Filial é obrigatória!"));
             return;
         }
+        clearMotorista();
+        painelMotorista = true;
+        painelVeiculo = false;
+        try {
 
+            FacesContext.getCurrentInstance().getExternalContext().redirect("enviarFicha.xhtml");
+        } catch (IOException e) {
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Inserir nova ficha de motorista "
+                            + " não pode ser carregada. Informe ao suporte técnico.", null));
+        }
+
+    }
+    
+
+    public void fichaMotoristaVitimologia() {
+        if (areaFilial == null) {
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Dados Incompletos", "Para inserir fichas, a Filial é obrigatória!"));
+            return;
+        }
+        
+        if( selectedCities2.length == 0 ){
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Dados Incompletos", "Para inserir fichas, é obrigatório informar os estados e regiões para Vitimologia."));
+            return;
+        } else {
+        	alterDescriptionUfVitimologia();
+        }
+        
+        clearMotorista();
         painelMotorista = true;
         painelVeiculo = false;
         try {
@@ -2638,29 +3425,8 @@ public class EnviarFichaMB implements Serializable {
 
     }
 
-    public void fichaVeiculo() {
-        if (areaFilial == null) {
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Dados Incompletos", "Para inserir fichas, a Filial é obrigatória!"));
-            return;
-        }
 
-        painelMotorista = false;
-        painelVeiculo = true;
-        try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("enviarFicha.xhtml");
-        } catch (IOException e) {
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Inserir nova ficha de veículo "
-                            + " não pode ser carregada. Informe ao suporte técnico.", null));
-        }
-        RequestContext context = RequestContext.getCurrentInstance();
-//        context.update("form0:panelVeiculos");
-    }
-
-    public void fichaCompleta() {
+    public void fichaCompletaVitimologia() {
 
         if (areaFilial == null) {
             FacesContext.getCurrentInstance().addMessage(
@@ -2668,7 +3434,17 @@ public class EnviarFichaMB implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_WARN, "Dados Incompletos", "Para inserir fichas, a Filial é obrigatória!"));
             return;
         }
-
+        
+        if( selectedCities2.length == 0 ){
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Dados Incompletos", "Para inserir fichas, é obrigatório informar os estados e regiões para Vitimologia."));
+            return;
+        } else {
+        	alterDescriptionUfVitimologia();
+        }
+        
+        clearMotorista();
         painelMotorista = true;
         painelVeiculo = true;
         
@@ -2684,7 +3460,55 @@ public class EnviarFichaMB implements Serializable {
         context.update("form0");
     }
 
+    
+    
+    public void fichaVeiculo() {
+        if (areaFilial == null) {
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Dados Incompletos", "Para inserir fichas, a Filial é obrigatória!"));
+            return;
+        }
+        clearMotorista();
+        painelMotorista = false;
+        painelVeiculo = true;
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("enviarFicha.xhtml");
+        } catch (IOException e) {
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Inserir nova ficha de veículo "
+                            + " não pode ser carregada. Informe ao suporte técnico.", null));
+        }
+        RequestContext context = RequestContext.getCurrentInstance();
+//        context.update("form0:panelVeiculos");
+    }
+    
+    
+    public void fichaCompleta() {
 
+        if (areaFilial == null) {
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Dados Incompletos", "Para inserir fichas, a Filial é obrigatória!"));
+            return;
+        }
+        
+        clearMotorista();
+        painelMotorista = true;
+        painelVeiculo = true;
+        
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("enviarFicha.xhtml");
+        } catch (IOException e) {
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Inserir nova ficha completa "
+                            + " não pode ser carregada. Informe ao suporte técnico.", null));
+        }
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.update("form0");
+    }
 
     public void checkRenavam(AjaxBehaviorEvent event) {
         
@@ -2766,6 +3590,8 @@ public class EnviarFichaMB implements Serializable {
                     localizador.setBairro(endereco.getBairro().toUpperCase());
                     localizador.setLogradouro(endereco.getLogradouro().toUpperCase());
                     localizador.setTipoEndereco(new TipoEndereco(185));
+                    localizador.setDtCriacao(new Date());
+                    
 
                     locService.crud().saveOrUpdate(localizador);
 
@@ -2868,13 +3694,27 @@ public class EnviarFichaMB implements Serializable {
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Erro!", "O Cep informado não pode ser  "
                                 + "validado, confira e tente novamente."));
             }
-
         } else {
-
-            fichaCliente.setCidade(loc.getCidade().getNome().toUpperCase());
-            fichaCliente.setBairro(loc.getIniBairro().getNome().toUpperCase());
-            fichaCliente.setEndereco(loc.getNome().toUpperCase());
-            fichaCliente.setUf(loc.getCidade().getUf().getSigla().toUpperCase());
+        	if(loc.getCidade() != null ){
+        		fichaCliente.setCidade(loc.getCidade().getNome().toUpperCase());	
+        	}else{
+        		fichaCliente.setCidade("");
+        	}
+        	if(loc.getIniBairro() != null){
+                fichaCliente.setBairro(loc.getIniBairro().getNome().toUpperCase());     		
+        	}else{
+        		fichaCliente.setBairro("");
+        	}
+            if(loc.getNome() != null){
+            	fichaCliente.setEndereco(loc.getNome().toUpperCase());	
+            } else {
+            	fichaCliente.setEndereco("");
+            }
+        	if(loc.getCidade().getUf() != null){
+        		fichaCliente.setUf(loc.getCidade().getUf().getSigla().toUpperCase());	
+        	}else{
+        		fichaCliente.setUf("");
+        	}                          
         }
         try {
             foundEndereco = (fichaCliente.getEndereco().length() != 0);
@@ -2991,6 +3831,604 @@ public class EnviarFichaMB implements Serializable {
 
     }
 
+    private void pesquisarAnaliseFinanceiraMotorista(){
+    	
+    	// 1 Saber se o cliente tem o produto ativo em contrato id, produto 15(cadastro), STATUS 645, 649
+    	Contrato ctr = ctrService.crud().eq("area.id", area.getId())
+    									.eq("produtoTipo.id", 15)
+    									.addCriterion(Restrictions.between("statusContrato.id", 645, 649)).find();
+    	
+    	// 2 Caso encontrou o produto ativo no contrato do cliente
+    	if(ctr != null) {
+    		idCtrCliente = ctr.getId();
+    		
+    		// 2.1 Pesquisa o contrato produto e verifica se o produto Cadastro 1 está ativo e se existe a geração da ficha financeira 
+    		ContratoProduto ctrPrd = ctrPrdService.crud().eq("contrato", ctr.getId())
+    													 .eq("produto", 1)
+    													 .eq("produtoAtivo", true)
+    													 .eq("vlr4Unitario", BigDecimal.ONE).find();
+
+    		// 2.2 - se caso encontrou o produto e o valor4unitario é 1
+    		if(ctrPrd != null){
+    			String a = "Encontrou produto com geração da ficha financeira";
+    			String b = a;
+    			
+    			// estado = UF do endereço do motorista
+    			// documento = cpf do motorista
+    			// ddd = ddd telefone motorista
+    			// telefone = telefone do motorista
+    		
+    			MotoristaInfFinanceiraFourInf wsM = new MotoristaInfFinanceiraFourInf();
+    			
+    			String foneMot = fichaCliente.getTelefone().trim().replace("-", "");
+    			
+    			// Retorno e Envio 
+    			JSONObject objJsonMot = wsM.getMotoristaFichaFinanceira(fichaCliente.getCpf(), fichaCliente.getUf(), fichaCliente.getDdd(), foneMot);
+    			
+    			// Recebeu dados validos do ws FourInf
+    			if(objJsonMot != null){
+       			    	
+    					// Coletar os numeroRequisicao
+						JSONArray ja_data = objJsonMot.getJSONArray("requisicao");
+						
+						int length = objJsonMot.getJSONArray("requisicao").length();
+   							
+       					    	// Dados para ser persistido
+       						   objJsonMot.get("chaveAcesso");
+       						   objJsonMot.get("statusConsulta");
+       						   objJsonMot.get("numeroConsulta");        			
+       						   						
+       						
+       						 String numAlfRequisicao = "";
+       						   
+       						   
+       						// Se trouxe dados do ws 
+							if (length > 0) {							
+								for (int i = 0; i < length; i++) {
+									
+									if (!ja_data.getJSONObject(i).opt("numeroRequisicao").toString().equals("null")) {
+										// Add ao array numRequisicoes o numero de requisicao										
+										numAlfRequisicao += ja_data.getJSONObject(i).opt("numeroRequisicao").toString();										
+									}
+								}
+								// Persiste no banco de dados
+								FichaFinanceiraMotorista ffMot = new FichaFinanceiraMotorista();
+								
+								ffMot.setAnaliseCadastral(idCadastral);
+								ffMot.setNumConsulta(Integer.parseInt(objJsonMot.get("numeroConsulta").toString()));
+								ffMot.setChaveAcesso(objJsonMot.get("chaveAcesso").toString());
+								ffMot.setTipoServico("CADASTRAL");
+								ffMot.setNumRequisicao(numAlfRequisicao);
+								ffMot.setStWsStatus(objJsonMot.get("statusConsulta").toString());
+								ffMot.setDtCriacao(new Date());
+								ffMot.setUsuCriacao(checkUsuario.valid());
+								ffMot.setAvaliacao(new ReferenciasAvaliacao(38));
+								
+								fichafinanMotService.crud().saveOrUpdate(ffMot);
+																
+							} else {
+								String a1 = "NÃO - Trouxe dados do ws FourInfo";
+								String b1 = a1;								
+							}
+								
+    			}
+    			
+    		} else {
+    			String a = "NÃO Encontrou produto com geração da ficha financeira";
+    			String b = a;    			
+    		}
+
+    	}
+    	
+    }
+    
+
+    public void pesquisarVitimologia(){
+        
+    	//1º - Saber se o cliente tem o produto ativo em contrato id, produto 15(cadastro), status (650,767)
+        Contrato ctr = ctrService.crud().eq("area.id", area.getId())
+        								.eq("produtoTipo.id", 15)
+        								.addCriterion(Restrictions.between("statusContrato.id", 645, 649)).find();
+        
+        // 2º - Se caso encontrou o contrato do cliente
+        if(ctr != null){
+        	
+        	idCtrCliente = ctr.getId();
+        	
+        	// 2.1º - Pesquisa o contrato produto, e verifica se Vitimologia está ativo
+        	ContratoProduto ctrPrd = ctrPrdService.crud().eq("contrato", ctr.getId())
+        												 .eq("produto", 32)
+        												 .eq("produtoAtivo", true).find();
+        	
+        	// 2.2º - Se caso encontrou o produto
+        	if(ctrPrd != null){
+        		
+        		List<Integer> lst3 = new ArrayList<Integer>();
+        		// Pego os estados selecionado pelo usuario.
+        		if(selectedCities2.length > 0){
+        			
+        			String[] lst = null;
+        			String a ="";
+        			
+        			// montar um for para ler o array dos estados selecionados
+        			for(int x=0; x < selectedCities2.length; ++x){
+        				// Conversao de String to int
+        				a = selectedCities2[x] ;        				
+        				Integer n = Integer.valueOf(a);
+        				
+        				lst3.add(n);
+        			}
+
+        		}
+        		
+        		List<ProdutoVitimologia> lstVit = (List<ProdutoVitimologia>) prdVitService.crud()
+        												.eq("contrato.id", ctr.getId())
+        												.in("id", lst3)
+        												.eq("ativo", true).list();
+        			
+        			// Var com os estados selecionados
+        			String ufVit = "";
+        			List<String> arrUfReg = new ArrayList<String>();
+        			
+        			// Se a lista do produto_vitimologia com produtos ativos
+        			if(lstVit.size() > 0){
+        				
+        				// Inicia o processo de coleta do estados que está no contrato
+        				for(int i=0; i < lstVit.size() ; i++){
+        				  
+        					// id da Uf da Vitimologia que está ativa
+        					lstVit.get(i).getId();
+        				  
+        				  	// ids do 1 AO 10 (SP,MG,RJ,ES,GO,PR,SC,RS,MS,BH,PE) da tabela java.uf_vitimologia
+        					// Se caso o id consultado seja menor que 10 vai selecionar os estados
+        				  	if(lstVit.get(i).getUfVitimologia().getId() < 15){
+        				  		
+        				  		// Instancia UfVitimologia com a pesquisa do Id 
+        				  		UfVitimologia ufv = ufVitService.crud().eq("id", lstVit.get(i).getUfVitimologia().getId()).find();
+        				  		
+        				  		// Aplica as duplas aspas para o uf da regiao
+        				  			ufVit += "\""+ ufv.getRegiao() + "\",";
+        				  			arrUfReg.add(ufv.getRegiao().toString());
+        				  	}
+        				  	
+        				  	
+        				  	// ids 28 ao 31 ( SUDESTE, NORDESTE, CENTRO-OESTE, NORTE)
+        				  	if(lstVit.get(i).getUfVitimologia().getId() > 27 && lstVit.get(i).getUfVitimologia().getId() < 32 ){
+        				  		
+        				  		// Instancia UfVitimologia com a pesquisa do Id
+        				  		UfVitimologia ufv2 = ufVitService.crud().eq("id", lstVit.get(i).getUfVitimologia().getId()).find();        				  		
+        				  		ufVit += "\""+ ufv2.getRegiao()  + "\",";
+        				  		arrUfReg.add(ufv2.getRegiao().toString());
+        				  	}
+        				  	
+        				  	// id 32 (INTEGRADO - Sudoeste(28), Nordeste(29), Centro_Oeste(30) e Norte(31)) 
+        				  	if(lstVit.get(i).getUfVitimologia().getId() == 32){
+        				  		
+        				  		ufVit += "\""+ "INTEGRADO"  + "\",";
+        				  		arrUfReg.add("INTEGRADO");        				  			
+        				  	}
+        				  	        				  	
+        			  }  // Final do For de processo de coleta do estados que está no contrato     
+        				
+        		
+        				String numAlfRequisicao = "";
+               		   
+               		   // Formatando Data de Nascimento padrao yyyy-MM-dd
+               		   fichaCliente.getDtNascimento();
+               		   
+               		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+               		   String dtNascimento = sdf.format(fichaCliente.getDtNascimento());
+               		   
+               		   // Acesso ao ws da FourInf
+               		   MotoristaFourInf wsM = new MotoristaFourInf();
+               		   
+               		   // Retorno em JSON da pesquisa feita no ws da FourInf
+               		   JSONObject objJsonMot = wsM.getMotorista(fichaCliente.getCpf(), fichaCliente.getNome(), fichaCliente.getFic_rg(), 
+               				   fichaCliente.getUfRg(), fichaCliente.getMae(), dtNascimento, ufVit.substring(0, ufVit.length() -1 ));
+
+               		   // Recebeu dados validos do ws FourInf
+               		   if (objJsonMot != null){
+
+               			    // Coletar os numeroRequisicao
+       						JSONArray ja_data = objJsonMot.getJSONArray("requisicao");
+       							
+       							// Para coletar os numeros de requisicoes recebidos
+       							ArrayList<String> numRequisicoes = new ArrayList<>();
+       													
+       							int length = objJsonMot.getJSONArray("requisicao").length();
+       							
+       							// Se trouxe dados do ws 
+       							if (length > 0) {
+       								
+	       					    	// Dados para ser persistido
+	       						   objJsonMot.get("chaveAcesso");
+	       						   objJsonMot.get("statusConsulta");
+	       						   objJsonMot.get("numeroConsulta");        			
+	       						   
+	       						   // Persiste Dados Gerais da Vitimologia
+	       						   Vitimologia vitimologia = new Vitimologia();
+	       						   
+	       						   vitimologia.setAnaliseCadastral(idCadastral);
+	       						   vitimologia.setUfBo(ufVit.substring(0, ufVit.length() -1 ).toString());
+	       						   vitimologia.setNumConsulta(Integer.parseInt(objJsonMot.get("numeroConsulta").toString()));
+	       						   //vitimologia.setNumRequisicao(numAlfRequisicao.substring(0, numAlfRequisicao.length() -1 ));
+	       						   vitimologia.setChaveAcesso(objJsonMot.get("chaveAcesso").toString());
+	       						   vitimologia.setTipoServico("BO");
+	       						   vitimologia.setTipoMov("G");
+	       						   vitimologia.setStWsStatus(objJsonMot.get("statusConsulta").toString());
+	       						   vitimologia.setDtWsConsulta(new Date());
+	       						   vitimologia.setUsuCriacao(checkUsuario.valid());
+	       						   vitimologia.setDtCriacao(new Date());
+	       						   vitimologia.setIdPrdVitimologia(Arrays.toString(selectedCities2));
+	       						   vitimologia.setAvaliacao(new ReferenciasAvaliacao(38));
+	       						   vitimologiaService.crud().saveOrUpdate(vitimologia);	       						   	       						   	       						 	       						   
+	       						   
+	       						   selectedCities2 = null;
+	       						   disable = true;	       						    
+	       						   
+	       						   BigDecimal vlrVitTT = BigDecimal.ZERO;
+	       						   
+	       						   // Grava os itens requisitados na Vitimologia
+       								for (int i = 0; i < length; i++) {
+       									String numAlfRequisicaoItem = "";
+       									String alfUfBo = "";
+       									try {
+       										
+       										// Persistindo items.
+
+	       									   Vitimologia vitimologiaItem = new Vitimologia();
+
+       										
+	       										if (!ja_data.getJSONObject(i).opt("numeroRequisicao").toString().equals("null")) {
+	       											// Add ao array numRequisicoes o numero de requisicao
+	       											numRequisicoes.add(ja_data.getJSONObject(i).opt("numeroRequisicao").toString());
+	       											numAlfRequisicao += ja_data.getJSONObject(i).opt("numeroRequisicao").toString()+",";
+	       											numAlfRequisicaoItem = ja_data.getJSONObject(i).opt("numeroRequisicao").toString().trim();
+	       										}
+	       										
+	       										if (ja_data.getJSONObject(i).opt("ufBo") != null){	       											
+	       											if (ja_data.getJSONObject(i).opt("ufBo").toString().length() > 0){
+	       												alfUfBo = ja_data.getJSONObject(i).opt("ufBo").toString().trim();	       											
+
+	       												
+	       											   // Estados
+	       	       		       						   UfVitimologia uf =  ufVitService.crud().ilike("regiao", alfUfBo).find();
+
+	     		   	       										ProdutoVitimologia prdVit =  prdVitService.crud().eq("ufVitimologia.id", uf.getId()).eq("contrato.id", idCtrCliente).find();
+	     		   	       												   	       										
+	     		   	       										if(prdVit != null){		   	       											
+	     		   	       											if(prdVit.getValor()!= null){
+	     		   	       												vitimologiaItem.setVlrVitimologia(prdVit.getValor());
+	     		   	       												vitimologiaItem.setIdPrdVitimologia(String.valueOf(prdVit.getId()));
+	     		   	       												vlrVitTT = vlrVitTT.add(prdVit.getValor());
+	     		   	       												
+	     		   	       											}
+	     		   	       										}
+
+	       												
+	       											}
+	       										} else {
+	       											// Aqui na requisição a fourinf não teremos a resposta da região que foi pesquisada
+	       											// Temos apenas o numero da Requisição, então por exemplo se caso duas regiões forem
+	       											// pesquisadas não teremos como saber qual é o numero da requisição que foi adicionada
+	       											// para aquela região
+	       											// # Teremos como saber apenas no retorno da consulta pelo numero da requisição.
+	       											//alfUfBo = "";
+	       											int rUfREg = arrUfReg.size();
+	       											int v1= rUfREg;
+	       											BigDecimal vlr = BigDecimal.ZERO;	
+	       											List<String> lstStr = new ArrayList<String>();
+	       											
+	       												for (int n = i; n < arrUfReg.size(); ++n) {
+
+	       													alfUfBo += arrUfReg.get(n).toString() + " ";
+	       													
+	       	  	       		       						   UfVitimologia uf =  ufVitService.crud().ilike("regiao",arrUfReg.get(n).toString().trim()).find();
+
+			   	       										ProdutoVitimologia prdVit =  prdVitService.crud().eq("ufVitimologia.id", uf.getId()).eq("contrato.id", idCtrCliente).find();
+			   	       												   	       				
+			   	       										
+			   	       										
+			   	       										if(prdVit != null){		 
+			   	       											
+			   	       											if(prdVit.getValor()!= null){
+			   	       											
+			   	       												vlr = vlr.add(prdVit.getValor());
+			   	       												lstStr.add(String.valueOf(prdVit.getId()));
+			   	       												
+//			   	       												vitimologiaItem.setVlrVitimologia(prdVit.getValor());	
+			   	       												//vitimologiaItem.setIdPrdVitimologia(String.valueOf(prdVit.getId()));
+			   	       												vlrVitTT = vlrVitTT.add(prdVit.getValor());
+			   	       												
+			   	       											}
+			   	       										}
+
+	       													
+	       												}
+	       											
+	       												vitimologiaItem.setVlrVitimologia(vlr);
+	       												vitimologiaItem.setIdPrdVitimologia(lstStr.toString());
+	       												
+	       										}	       										
+		   	       							   
+		   	       							   vitimologiaItem.setTipoMov("I");
+	       		       						   vitimologiaItem.setAnaliseCadastral(idCadastral);
+	       		       						   vitimologiaItem.setUfBo(alfUfBo);
+	       		       						   vitimologiaItem.setNumConsulta(Integer.parseInt(objJsonMot.get("numeroConsulta").toString()));
+	       		       						   vitimologiaItem.setNumRequisicao(numAlfRequisicaoItem);
+	       		       						   vitimologiaItem.setChaveAcesso(objJsonMot.get("chaveAcesso").toString());
+	       		       						   vitimologiaItem.setTipoServico("BO");        			   
+	       		       						   vitimologiaItem.setStWsStatus(objJsonMot.get("statusConsulta").toString());
+	       		       						   vitimologiaItem.setDtWsConsulta(new Date());
+	       		       						   vitimologiaItem.setUsuCriacao(checkUsuario.valid());
+	       		       						   vitimologiaItem.setDtCriacao(new Date());
+	       		       						   vitimologiaItem.setAvaliacao(new ReferenciasAvaliacao(38));
+	       		       						   
+	       		       						   vitimologiaService.crud().save(vitimologiaItem); 
+//	       		       						   saveOrUpdate(vitimologiaItem);
+	       		       						   
+	       		       						  
+       										} catch (Exception e) {
+       												System.out.println(e);
+       											}
+       		
+       								} // final for length 
+       								
+       								Vitimologia upVit = vitimologiaService.crud().eq("id", vitimologia.getId()).find();
+       								
+       								upVit.setVlrVitimologia(vlrVitTT);
+       								
+       								vitimologiaService.update(vitimologia);
+       								
+       							   // Atualiza cadastro
+       							   acCadastro acCad = cadService.crud().eq("id", idCadastral).find();	       						   
+ 	       						   BigDecimal vlrFichaAnaliseCadastral = new BigDecimal(acCad.getValor());
+ 	       						   BigDecimal vlrAtualizar = vitimologia.getVlrVitimologia().add(vlrFichaAnaliseCadastral); 
+ 	       						   
+ 	       						   acCad.setValor(vlrAtualizar.doubleValue());
+ 	       						   cadService.update(acCad);
+
+       								
+       							}               			          					   
+
+               		   } else {
+               			FacesContext.getCurrentInstance().addMessage(
+                                null,
+                                new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção!", 
+                                		"O serviço foi chamado no fornecedor ForInfo mas não tivemos respostas para o(s) estado(s) enviado(s)! Favor informar a TI e desconsiderar essa ficha!"));
+               		   	
+               		   }
+        			
+        				
+        		  } // Final da lista do produto_vitimologia com produtos ativos 
+        		  
+        	} // Final se encontrou o produto vitimologia no ctr do cliente
+        	else {
+        		// SE NAO ENCONTROU O PRODUTO VITIMOLOGIA ATIVO
+        		// Não será preciso retornar msg para o cliente pois se caso não existir a vitimologia ativa 
+        		// Não será aberto.
+        		
+        	}
+        } // Final se encontrou o cliente que tem contrato
+        	
+        
+        // Final test
+    }
+   
+    public void onItemUnselect(UnselectEvent event) {
+        FacesContext context = FacesContext.getCurrentInstance();
+         
+        FacesMessage msg = new FacesMessage();
+        msg.setSummary("Item unselected: " + event.getObject().toString());
+        msg.setSeverity(FacesMessage.SEVERITY_INFO);
+         
+        context.addMessage(null, msg);
+    }
+
+    public void checarCtrPrdVitimologia(){
+    
+    	//1º - Saber se o cliente tem o produto ativo em contrato id, produto 15(cadastro), status (650,767)
+        Contrato ctr = ctrService.crud().eq("area.id", area.getId())
+        								.eq("produtoTipo.id", 15)
+        								.addCriterion(Restrictions.between("statusContrato.id", 645, 649)).find();
+        
+        
+        // 2º - Se caso encontrou o contrato do cliente
+        if(ctr != null){
+        	
+        	// 2.1º - Pesquisa o contrato produto, e verifica se Vitimologia está ativo
+        	ContratoProduto ctrPrd = ctrPrdService.crud().eq("contrato", ctr.getId())
+        												 .eq("produto", 32)
+        												 .eq("produtoAtivo", true).find();
+        	
+        	// 2.2º - Se caso encontrou o produto
+        	if(ctrPrd != null){
+     		        		        		
+        		lstVitUfTrue = (List<ProdutoVitimologia>) prdVitService.crud()
+						.eq("contrato.id", ctr.getId()).eq("ativo", true).list();
+        		        		
+        	} 
+        	
+        } else {
+			FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção!", "Cliente não tem contrato de cadastro ativo, por gentileza entre em contato com o setor comercial!"));
+			return; 
+        }
+    	
+    }
+
+    /**
+     * @author francis
+     * Verifica se o contrato existe o produto ativo proprietario de veiculo tipo pessoa fisica
+     * codproid = 33 - Consulta cadastro de proprietário veículo pessoa física 
+     */
+    public void checarCtrPrdProprietarioVeiculoPF(Integer idArea){
+    	
+        if (idArea != null){
+          	//1º - Saber se o cliente tem o produto ativo em contrato id, produto 15(cadastro), status (650,767)
+            Contrato ctr = ctrService.crud().eq("area.id", area.getId())
+            								.eq("produtoTipo.id", 15)
+            								.addCriterion(Restrictions.between("statusContrato.id", 645, 649)).find();
+            
+            
+            // 2º - Se caso encontrou o contrato do cliente
+            if(ctr != null){
+            	
+            	// 2.1º - Pesquisa o contrato produto, 33 cadastro de proprietário veículo pessoa física 
+            	ContratoProduto ctrPrd = ctrPrdService.crud().eq("contrato", ctr.getId())
+            												 .eq("produto", 33)
+            												 .eq("produtoAtivo", true).find();
+            	
+            	// 2.2º - Se caso encontrou o produto
+            	if(ctrPrd != null){
+         		        		        		
+            		// ativar boolean para ser possível preencher os dados do proprietario tipo pessoa fisica
+            		ctrProprietarioVeiculoPF = true;        		
+            	} else {
+            		ctrProprietarioVeiculoPF = false;
+            	}
+            	
+            } 
+        }
+  
+    	
+    }
+    
+    public void testVitUfApos(){
+    	int r = selectedCities2.length;
+    	
+    	String oqSalvar = "";
+    	
+    	if(r > 0){
+//    		oqSalvar = selectedCities2.toString();
+    		String [] idVitUf = selectedCities2;
+    		oqSalvar = Arrays.toString(selectedCities2);
+    		
+//    		for(int i=0; i < r; i++){
+//    			if(i == (r-1)){
+//    				String bota = selectedCities2[i].valueOf(i).toString();
+//    				oqSalvar += Arrays.toString(selectedCities2);
+//    			} else {    				
+//    				oqSalvar += selectedCities2[i].toString() + ",";
+//    			}
+//    		}
+    		
+    		String z = "a";
+    		String b = z;
+    		this.setHabBtnFichasVit(true);
+    		disable = false;
+    		    		    		
+    	} else {
+    		String u = "u";
+    		String w = u;
+    		this.setHabBtnFichasVit(false);
+    		disable = true;
+    	}
+    	
+//    	RequestContext context = RequestContext.getCurrentInstance();
+//
+//        context.update("frmBtnVit");
+//    	
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.update("form0:btnMotorista");
+        context.update("form0:btnVeiculos");
+        context.update("form0:btnCompleta");
+
+    }
+    
+	public void retornaHome(){
+		try {
+			selectedCities2 = null;
+			areaFilial = new Area();
+			FacesContext.getCurrentInstance().getExternalContext().redirect("../../index.xhtml");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+    
+	public void checkUfSelects(){
+		if(selectedCities2 == null){
+			 
+			FacesContext.getCurrentInstance().addMessage(
+		                        null,
+		                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Erro!", "Faltou selecionar estados."));
+			return;
+		}
+		
+	}
+	
+	public void alterDescriptionUfVitimologia(){
+    	//1º - Saber se o cliente tem o produto ativo em contrato id, produto 15(cadastro), status (650,767)
+        Contrato ctr = ctrService.crud().eq("area.id", area.getId())
+        								.eq("produtoTipo.id", 15)
+        								.addCriterion(Restrictions.between("statusContrato.id", 645, 649)).find();
+        
+        
+        // 2º - Se caso encontrou o contrato do cliente
+        if(ctr != null){
+        	
+        	// 2.1º - Pesquisa o contrato produto, e verifica se Vitimologia está ativo
+        	ContratoProduto ctrPrd = ctrPrdService.crud().eq("contrato", ctr.getId())
+        												 .eq("produto", 32)
+        												 .eq("produtoAtivo", true).find();
+        	
+        	// 2.2º - Se caso encontrou o produto
+        	if(ctrPrd != null){
+        		UfVitimologiaEscolhido = "";
+        		if (selectedCities2.length > 0) {
+        			
+        			int r = selectedCities2.length;
+        			
+        			for (int i= 0; i < selectedCities2.length ; i++){
+        				
+        				String ufReg = selectedCities2[i];
+        				
+        				ProdutoVitimologia prdT = prdVitService.crud()
+						.eq("id", Integer.parseInt(ufReg))
+						.eq("contrato.id", ctr.getId())
+						.eq("produto.id", 32)
+						.eq("ativo", true).find();
+        				
+        				/*
+        				List<ProdutoVitimologia> prdVit =   prdVitService.crud()
+        						.eq("id", Integer.parseInt(ufReg))
+        						.eq("contrato.id", ctr.getId())
+        						.eq("produto.id", 32)
+        						.eq("ativo", true).list();
+        				*/
+
+        				String uf = prdT.getUfVitimologia().getRegiao(); 
+        						//prdVit.get(i).getUfVitimologia().getRegiao();
+        				
+        				/*
+        				String nvUF = prdVitService.crud()
+        						.eq("id", Integer.parseInt(ufReg))
+        						.eq("contrato.id", ctr.getId())
+        						.eq("ativo", true).list().get(i).getUfVitimologia().getRegiao().toString();
+        				*/	
+//        				prdVit.get(i).getUfVitimologia().getRegiao().toString();
+        				
+        				
+        				if(i == (r - 1)){
+        					UfVitimologiaEscolhido += uf;        					
+        				} else {        					
+        					UfVitimologiaEscolhido += uf + " - ";        					
+        				}
+        			
+        			}
+        			
+//        			context
+//        	        RequestContext context = RequestContext.getCurrentInstance();
+//        	        context.update("form0:btnMotorista");
+        		}
+        		
+        	} 
+        }
+    	
+	}
+	
     public ViaCEPEndereco getEndereco() {
         return endereco;
     }
@@ -3158,7 +4596,7 @@ public class EnviarFichaMB implements Serializable {
         this.area = area;
     }
 
-    public Area getAreaFilial() {
+    public Area getAreaFilial() {    	
         return areaFilial;
     }
 
@@ -3769,5 +5207,203 @@ public class EnviarFichaMB implements Serializable {
 	public void setMsgChamadoCliente(String msgChamadoCliente) {
 		this.msgChamadoCliente = msgChamadoCliente;
 	}
-		
+
+	public List<String> getCities() {
+		return cities;
+	}
+
+	public void setCities(List<String> cities) {
+		this.cities = cities;
+	}
+
+	public String[] getSelectedCities2() {
+		this.setSelectedCities2(null);
+		return selectedCities2;
+	}
+
+	public void setSelectedCities2(String[] selectedCities2) {
+		this.selectedCities2 = selectedCities2;
+	}
+
+	public List<ProdutoVitimologia> getLstVitUfTrue() {
+		return lstVitUfTrue;
+	}
+
+	public void setLstVitUfTrue(List<ProdutoVitimologia> lstVitUfTrue) {
+		this.lstVitUfTrue = lstVitUfTrue;
+	}
+
+	public boolean isHabBtnFichasVit() {
+		return habBtnFichasVit;
+	}
+
+	public void setHabBtnFichasVit(boolean habBtnFichasVit) {
+		this.habBtnFichasVit = habBtnFichasVit;
+	}
+
+	public List<SelectItem> getCars() {
+		return cars;
+	}
+
+	public void setCars(List<SelectItem> cars) {
+		this.cars = cars;
+	}
+
+	public String[] getSelectedCars() {
+		return selectedCars;
+	}
+
+	public void setSelectedCars(String[] selectedCars) {
+		this.selectedCars = selectedCars;
+	}
+
+	public List<SelectItem> getOptL() {
+		return optL;
+	}
+
+	public void setOptL(List<SelectItem> optL) {
+		this.optL = optL;
+	}
+
+	public List<SelectItem> getOptR() {
+		return optR;
+	}
+	
+	
+
+	public String getUfVitimologiaEscolhido() {
+		return UfVitimologiaEscolhido;
+	}
+
+	public void setUfVitimologiaEscolhido(String ufVitimologiaEscolhido) {
+		UfVitimologiaEscolhido = ufVitimologiaEscolhido;
+	}
+
+	public void setOptR(List<SelectItem> optR) {
+		this.optR = optR;
+	}
+
+	public boolean isPropPfVeiculoNacional() {
+		return propPfVeiculoNacional;
+	}
+
+	public void setPropPfVeiculoNacional(boolean propPfVeiculoNacional) {
+		this.propPfVeiculoNacional = propPfVeiculoNacional;
+	}
+
+	public boolean isPainelPropVeicPF() {
+		return painelPropVeicPF;
+	}
+
+	public void setPainelPropVeicPF(boolean painelPropVeicPF) {
+		this.painelPropVeicPF = painelPropVeicPF;
+	}
+
+	public List<String> getLstVeiPf() {
+		return lstVeiPf;
+	}
+
+	public void setLstVeiPf(List<String> lstVeiPf) {
+		this.lstVeiPf = lstVeiPf;
+	}
+
+	public String getVeiPfNatural() {
+		return veiPfNatural;
+	}
+
+	public void setVeiPfNatural(String veiPfNatural) {
+		this.veiPfNatural = veiPfNatural;
+	}
+
+	public String getVeiPfDtNascimento() {
+		return veiPfDtNascimento;
+	}
+
+	public void setVeiPfDtNascimento(String veiPfDtNascimento) {
+		this.veiPfDtNascimento = veiPfDtNascimento;
+	}
+
+	public Date getVeiPfDtNascimentoDt() {
+		return veiPfDtNascimentoDt;
+	}
+
+	public void setVeiPfDtNascimentoDt(Date veiPfDtNascimentoDt) {
+		this.veiPfDtNascimentoDt = veiPfDtNascimentoDt;
+	}
+
+	public String getVeiPfRgNumero() {
+		return veiPfRgNumero;
+	}
+
+	public void setVeiPfRgNumero(String veiPfRgNumero) {
+		this.veiPfRgNumero = veiPfRgNumero;
+	}
+
+	public String getVeiPfRgEmissor() {
+		return veiPfRgEmissor;
+	}
+
+	public void setVeiPfRgEmissor(String veiPfRgEmissor) {
+		this.veiPfRgEmissor = veiPfRgEmissor;
+	}
+
+	public String getVeiPfRgUf() {
+		return veiPfRgUf;
+	}
+
+	public void setVeiPfRgUf(String veiPfRgUf) {
+		this.veiPfRgUf = veiPfRgUf;
+	}
+
+	public String getVeiPfNomePai() {
+		return veiPfNomePai;
+	}
+
+	public void setVeiPfNomePai(String veiPfNomePai) {
+		this.veiPfNomePai = veiPfNomePai;
+	}
+
+	public String getVeiPfNomeMae() {
+		return veiPfNomeMae;
+	}
+
+	public void setVeiPfNomeMae(String veiPfNomeMae) {
+		this.veiPfNomeMae = veiPfNomeMae;
+	}
+
+	public Date getDataVeiculoAplicado() {
+		return dataVeiculoAplicado;
+	}
+
+	public void setDataVeiculoAplicado(Date dataVeiculoAplicado) {
+		this.dataVeiculoAplicado = dataVeiculoAplicado;
+	}
+
+	public String getVeiNomeCategoriaPesquisado() {
+		return veiNomeCategoriaPesquisado;
+	}
+
+	public void setVeiNomeCategoriaPesquisado(String veiNomeCategoriaPesquisado) {
+		this.veiNomeCategoriaPesquisado = veiNomeCategoriaPesquisado;
+	}
+
+	public List<ReferenciaVeiculos> getReferenciasPropVeiculos() {
+		return referenciasPropVeiculos;
+	}
+
+	public void setReferenciasPropVeiculos(List<ReferenciaVeiculos> referenciasPropVeiculos) {
+		this.referenciasPropVeiculos = referenciasPropVeiculos;
+	}
+
+	public boolean isCtrProprietarioVeiculoPF() {
+		return ctrProprietarioVeiculoPF;
+	}
+
+	public void setCtrProprietarioVeiculoPF(boolean ctrProprietarioVeiculoPF) {
+		this.ctrProprietarioVeiculoPF = ctrProprietarioVeiculoPF;
+	}
+
+	
+	
+	
 }

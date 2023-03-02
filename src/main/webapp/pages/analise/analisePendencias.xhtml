@@ -14,7 +14,7 @@
 
     <h:form id="formPendencias">
         <p:tabView id="tabPendencia">
-            <p:tab title="Resumo da Pendência" titleStyleClass="box-danger" >
+            <p:tab title="Resumo da Pendência" titleStyleClass="box-primary" >
                 <p:panel >
                     <div class="ui-g ui-fluid">
 
@@ -91,25 +91,25 @@
                     <f:facet name="footer">
                         <div class="align-right" style="padding: 5px;">
                             <p:commandButton value="Criar" action="#{pendenciasMB.update}"
-                                             update="@form" styleClass="btn-danger" disabled="#{!pendenciasMB.usuario.isInterno()}">
+                                             update="@form" styleClass="btn-primary" disabled="#{!pendenciasMB.usuario.isInterno()}">
                                 <f:ajax execute="@none" render="@form"/>
                             </p:commandButton>
 
                             <p:spacer height="5"/>
                             <p:commandButton value="Finalizar" action="#{pendenciasMB.finalizar}"
-                                             update="@form" styleClass="btn-danger" disabled="#{!pendenciasMB.usuario.isInterno()}">
+                                             update="@form" styleClass="btn-primary" disabled="#{!pendenciasMB.usuario.isInterno()}">
                                 <f:ajax execute="@none" render="@form"/>
                             </p:commandButton>
 
                             <p:spacer height="5"/>
                             <p:commandButton value="Voltar" action="#{pendenciasMB.btnBack}"
                                              onclick="PF('dlgPendencia').hide();"
-                                             styleClass="btn-danger" />
+                                             styleClass="btn-primary" />
                         </div>
                     </f:facet>
                 </p:panel>
             </p:tab>
-            <p:tab title="Resposta do Cliente" titleStyleClass="box-danger">
+            <p:tab title="Resposta do Cliente" titleStyleClass="box-primary">
                 <p:panel>
                     <div class="box-header with-border" style="padding-top: 1px">
                         <h4 style="padding-top: 5px;">Resposta do Cliente</h4>
@@ -195,13 +195,13 @@
                         <div class="align-right" style="padding: 5px;">
 
                             <p:commandButton value="Enviar Resposta" action="#{pendenciasMB.enviarPendencia}"
-                                             update="@form" styleClass="btn-danger" disabled="#{pendenciasMB.usuario.isInterno()}">
+                                             update="@form" styleClass="btn-primary" disabled="#{pendenciasMB.usuario.isInterno()}">
                                 <f:ajax execute="@none" render="@form"/>
                             </p:commandButton>
 
                             <p:spacer height="5"/>
                             <p:commandButton value="Voltar" action="#{pendenciasMB.btnBack}"
-                                             styleClass="btn-danger"/>
+                                             styleClass="btn-primary"/>
                         </div>
                     </f:facet>
                 </p:panel>

@@ -8,6 +8,7 @@
                 xmlns:b="http://bootsfaces.net/ui">
 
     <ui:define name="head-end">
+    
         <style type="text/css">
             .ui-datatable table tbody tr td {
                 padding: 3px; !important;
@@ -105,9 +106,8 @@
                 	<p:spacer height="5"/>
               		
                 
-                    <p:commandButton id="btnPesquisar" value="Pesquisar" action="#{areaClienteMB.acesso}"
-                                     icon="fa fa-search" update="@form" styleClass="btn-danger"/>
-                    <p:spacer height="5"/>
+                    <p:commandButton id="btnPesquisar" value="Pesquisar_T" action="#{areaClienteMB.acesso}"
+                                     icon="fa fa-search" update="@form" styleClass="btn-primary"/>
 
                 </div>
             </h:panelGroup>
@@ -135,19 +135,19 @@
 				 </div>
 						
 				 <div class="row">								
-				<p:panelGrid id="pnResumo" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;">
+				<p:panelGrid id="pnResumo" style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid #4682B4;" >
   		  		
   		  			<f:facet name="header">
     			
-    			    	<p:row>
+    			    	<p:row style="border: 2px solid #4682B4;">
             				<p:column colspan="#{areaClienteMB.colspanServicosResumo}" style="color:#4682B4;font-weight: bold;text-align: left;">Resumo da Fatura</p:column>
             			</p:row>
-            			<p:row>
+            			<p:row style="border: 1px solid #4682B4;" >
     	    				<ui:fragment id="fragResumoVlrConsumo" rendered="#{areaClienteMB.liberadoResumoVlrConsumo}" >            				
             					<p:column colspan="1">Consumo Viagens</p:column>
             				</ui:fragment>
             				<ui:fragment id="fragResumoVlrFaturaMinima" rendered="#{areaClienteMB.liberadoResumoVlrFaturaMinima}" >
-	            				<p:column colspan="1">Fatura Mínima (viagens)</p:column>
+	            				<p:column colspan="1" >Fatura Mínima (viagens)</p:column>
 	            			</ui:fragment>
             				<p:column colspan="1">Outros</p:column>
             				<ui:fragment id="fragResumoVlrAjustes" rendered="#{areaClienteMB.liberadoResumoVlrAjustes}" >
@@ -158,7 +158,7 @@
         				</p:row>
         			</f:facet>
         			
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
 
      	    			<ui:fragment id="fragResumoVlrConsumoVlr" rendered="#{areaClienteMB.liberadoResumoVlrConsumo}" >
         					<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
@@ -175,7 +175,7 @@
         			
     				</p:row>
 
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
 
  						<ui:fragment id="fragResumoVlrConsumoVlrConteudo" rendered="#{areaClienteMB.liberadoResumoVlrConsumo}" >
         					<p:column style="color:red;font-weight: bold; text-align: center;">
@@ -224,6 +224,10 @@
 				<ui:fragment id="fragBotoesRastreamento" rendered="#{areaClienteMB.liberadoBotoesRastreamento}" >
 					<div class="row" >
 						<div class="align-right" style="padding: 5px;">
+							<p:commandButton id="btnPesquisarVeiculoFixos" value="Lista dos Veículos Fixos" styleClass="btn-primary"
+								icon="fa fa-search" action="#{areaClienteMB.verDetalheFixos}"/>
+							<p:spacer height="5" />
+
 							<p:commandButton id="btnPesquisarViagem" value="Consumo do Período Viagem" styleClass="btn-success"
 								icon="fa fa-search" action="#{areaClienteMB.verConsumoViagem}"/>
 							<p:spacer height="5" />
@@ -246,26 +250,26 @@
   		  		
   		  			<f:facet name="header">
     			
-    			    	<p:row>
+    			    	<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="4" style="color:#4682B4;font-weight: bold;text-align: left;">Viagens</p:column>
             			</p:row>
-            			<p:row>
+            			<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="2" style="width:250px">Viagem Veículo Fixo</p:column>
             				<p:column colspan="2" style="width:250px">Viagem Avulsa</p:column>
         				</p:row>
         			</f:facet>
         			
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
  
         				<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
     	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Qtd Veículos</p:column>
  	
     	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
-	        			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Qtd Veículos</p:column>
+	        			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Qtd Viagens</p:column>
         			
     				</p:row>
 
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
         				<p:column style="color:red;font-weight: bold; text-align: center;">
         					<p:outputLabel value="#{areaClienteMB.vlrViagFixo}" >
         					</p:outputLabel>
@@ -290,22 +294,22 @@
   		  		
   		  			<f:facet name="header">
     			
-    			    	<p:row>
+    			    	<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="2" style="color:#4682B4;font-weight: bold;text-align: left;">CheckList</p:column>
             			</p:row>
-            			<p:row>
+            			<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="2">CheckList</p:column>
         				</p:row>
         			</f:facet>
         			
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
  
         				<p:column rowspan="1" style="width:150px;font-weight: bold; text-align: center;">Valor</p:column>
     	    			<p:column rowspan="1" style="width:150px;font-weight: bold; text-align: center;">Qtd CheckList</p:column>
     	    			        			
     				</p:row>
 
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
  
         				<p:column style="color:red;font-weight: bold; text-align: center;">
         					<p:outputLabel value="#{areaClienteMB.vlrCheckList}" ></p:outputLabel>
@@ -324,17 +328,17 @@
   		  		
   		  			<f:facet name="header">
     			
-    			    	<p:row>
+    			    	<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="6" style="color:#4682B4;font-weight: bold;text-align: left;">Monitoramento Adicional</p:column>
             			</p:row>
-            			<p:row>
+            			<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="2">Iscas Fixo</p:column>
             				<p:column colspan="2">Isca Viagem Avulsa</p:column>
             				<p:column colspan="2">Escolta</p:column>
         				</p:row>
         			</f:facet>
         			
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
  
         				<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
     	    			<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Qtd Iscas</p:column>
@@ -347,7 +351,7 @@
         			
     				</p:row>
 
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
  
         				<p:column style="color:red;font-weight: bold; text-align: center;">
         					<p:outputLabel value="#{areaClienteMB.vlrIscaFixo}" ></p:outputLabel>
@@ -378,22 +382,22 @@
   		  		
   		  			<f:facet name="header">
     			
-    			    	<p:row>
+    			    	<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="2" style="color:#4682B4;font-weight: bold;text-align: left;">Consumo Satelital</p:column>
             			</p:row>
-            			<p:row>
+            			<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="2">Satelital - Autotrac</p:column>
         				</p:row>
         			</f:facet>
         			
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
  
         				<p:column rowspan="1" style="width:150px;font-weight: bold; text-align: center;">Taxa ADE</p:column>
     	    			<p:column rowspan="1" style="width:150px;font-weight: bold; text-align: center;">Consumo</p:column>
     	    			        			
     				</p:row>
 
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
  
         				<p:column style="color:red;font-weight: bold; text-align: center;">
         					<p:outputLabel value="#{areaClienteMB.taxaADE}" ></p:outputLabel>
@@ -412,17 +416,17 @@
   		  		
   		  			<f:facet name="header">
     			
-    			    	<p:row>
+    			    	<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="3" style="color:#4682B4;font-weight: bold;text-align: left;">Logística</p:column>
             			</p:row>
-            			<p:row>
+            			<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="1">Controle de Jornada</p:column>
             				<p:column colspan="1">Módulo Logístico</p:column>
             				<p:column colspan="1">BI</p:column>
         				</p:row>
         			</f:facet>
         			
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
  
         				<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
  	
@@ -433,7 +437,7 @@
         			
     				</p:row>
 
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
  
         				<p:column style="color:red;font-weight: bold; text-align: center;">
         					<p:outputLabel value="#{areaClienteMB.vlrControleJornada}" ></p:outputLabel>
@@ -457,10 +461,10 @@
   		  		
   		  			<f:facet name="header">
     			
-    			    	<p:row>
+    			    	<p:row style="border: 1px solid #4682B4;" >
             				<p:column colspan="#{areaClienteMB.colspanServicosAdicionais}" style="color:#4682B4;font-weight: bold;text-align: left;">Serviços Adicionais</p:column>
             			</p:row>
-            			<p:row>
+            			<p:row style="border: 1px solid #4682B4;" >
             				<ui:fragment id="fragServicosAdicionaisGerente" rendered="#{areaClienteMB.liberadoServicosAdicionaisGerente}" >	
             					<p:column colspan="1">Gerente de Conta</p:column>
 							</ui:fragment>
@@ -473,7 +477,7 @@
         				</p:row>
         			</f:facet>
         			
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
         				
  						<ui:fragment id="fragServicosAdicionaisGerenteVlr" rendered="#{areaClienteMB.liberadoServicosAdicionaisGerente}" >
         					<p:column rowspan="1" style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
@@ -487,7 +491,7 @@
         			
     				</p:row>
 
-        		   <p:row>
+        		   <p:row style="border: 1px solid #4682B4;" >
   						
   						<ui:fragment id="fragServicosAdicionaisGerenteVlrConteudo" rendered="#{areaClienteMB.liberadoServicosAdicionaisGerente}" >
         					<p:column style="color:red;font-weight: bold; text-align: center;">
@@ -547,11 +551,11 @@
 
 							<f:facet name="header">
 
-								<p:row>
+								<p:row style="border: 1px solid #4682B4;" >
 									<p:column colspan="#{areaClienteMB.colspanServicosCadResumo}"
 										style="color:#4682B4;font-weight: bold;text-align: left;">Resumo da Fatura</p:column>
 								</p:row>
-								<p:row>
+								<p:row style="border: 1px solid #4682B4;" >
 									<ui:fragment id="fragResumoVlrConsumoCad"
 										rendered="#{areaClienteMB.liberadoResumoCadVlrConsumoFichas}">
 										<p:column colspan="1">Fichas</p:column>
@@ -577,7 +581,7 @@
 								</p:row>
 							</f:facet>
 
-							<p:row>
+							<p:row style="border: 1px solid #4682B4;" >
 
 								<ui:fragment id="fragResumoVlrConsumoVlrCad"
 									rendered="#{areaClienteMB.liberadoResumoCadVlrConsumoFichas}">
@@ -609,7 +613,7 @@
 
 							</p:row>
 
-							<p:row>
+							<p:row style="border: 1px solid #4682B4;" >
 
 								<ui:fragment id="fragResumoVlrConsumoVlrConteudoCad"
 									rendered="#{areaClienteMB.liberadoResumoCadVlrConsumoFichas}">
@@ -667,15 +671,38 @@
 						</p:panelGrid>
 						</div>
 						<BR />
+
 						
 						<ui:fragment id="fragBotoesCadastro" rendered="#{areaClienteMB.liberadoBotoesCadastro}" >
+							
+						<p:panel >	
+							<div class="row">
+								<div style="padding-left: 50px;">
+								<p:outputLabel value="Filtro" />
+								<h:panelGrid columns="4" style="margin-bottom:10px" cellpadding="5">
+									<p:selectOneRadio id="filtroCadastro" value="#{areaClienteMB.filtroCadastro}">
+										<f:selectItem itemLabel="Todas" itemValue="todas"/>
+										<f:selectItem itemLabel="Cadastro" itemValue="cadastro"/>
+										<f:selectItem itemLabel="Consulta" itemValue="consulta"/>
+										<f:selectItem itemLabel="Renovação" itemValue="renovacao"/>
+								
+									</p:selectOneRadio>
+								
+								</h:panelGrid>
+								</div>
+							
+							</div>
+
 							<div class="row" >
-								<div class="align-right" style="padding: 5px;">
+								<div  style="padding-left: 50px;">
 									<p:commandButton id="btnPesquisar" value="Consumo do Período Cadastro" styleClass="btn-primary"
 										icon="fa fa-search" action="#{areaClienteMB.verConsumoCadastro}"/>
-									<p:spacer height="5" />
+									
 								</div>
 							</div>
+							
+						</p:panel>
+						
 						</ui:fragment>
 						
 						<p:separator />
@@ -688,18 +715,18 @@
 
 							<f:facet name="header">
 
-								<p:row>
+								<p:row style="border: 1px solid #4682B4;" >
 									<p:column colspan="6"
 										style="color:#4682B4;font-weight: bold;text-align: left;">Fichas</p:column>
 								</p:row>
-								<p:row>
+								<p:row style="border: 1px solid #4682B4;" >
 									<p:column colspan="2" style="width:250px">Cadastro</p:column>
 									<p:column colspan="2" style="width:250px">Consulta</p:column>
 									<p:column colspan="2" style="width:250px">Renovação</p:column>
 								</p:row>
 							</f:facet>
 
-							<p:row>
+							<p:row style="border: 1px solid #4682B4;" >
 
 								<p:column rowspan="1"
 									style="width:150px;font-weight: bold;text-align: center;">Valor</p:column>
@@ -718,7 +745,7 @@
 
 							</p:row>
 
-							<p:row>
+							<p:row style="border: 1px solid #4682B4;" >
 								<p:column
 									style="color:red;font-weight: bold; text-align: center;">
 									<p:outputLabel value="#{areaClienteMB.cdCadastro}"></p:outputLabel>

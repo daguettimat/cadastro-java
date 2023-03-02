@@ -271,6 +271,7 @@ public class ListaCadastralMB implements Serializable {
     public void btnPesquisarData() {
 
 	    boolean haveParameters;
+	    
         try {
 
             em = listaService.crud().getEntityManager();
@@ -430,12 +431,16 @@ public class ListaCadastralMB implements Serializable {
             }
 
             if( ! usuario.getTipo().equals("H") && ! usuario.getTipo().equals("A") ) {
+            	
+                
                 if( usuario.getPessoa().getFuncao().getArea().getNivel().getId() == 2 ) {
-                    parameters += " t.areaoid = " + usuario.getPessoa().getFuncao().getArea().getId() + " AND ";
+                	parameters += " t.areaoid = " + usuario.getPessoa().getFuncao().getArea().getId() + " AND ";
                 }
                 if( usuario.getPessoa().getFuncao().getArea().getNivel().getId() == 3 ) {
-                    parameters += " u.areaoid = " + usuario.getPessoa().getFuncao().getArea().getId() + " AND ";
+                	//--Condição anterior : parameters += " u.areaoid = " + usuario.getPessoa().getFuncao().getArea().getId() + " AND ";                	
+                	parameters += " t.areaoid = " + usuario.getPessoa().getFuncao().getArea().getRoot().getId() + " AND ";
                 }
+              
 
             }
 
@@ -566,9 +571,7 @@ public class ListaCadastralMB implements Serializable {
     		}
     	
     }
-    
-    
-    
+       
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

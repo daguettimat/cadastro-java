@@ -8,13 +8,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by zielinski on 09/05/17.
+ * Created by zielinski on 09/05/17. **
  */
 public class ReferenciaVeiculos {
 
     private Integer id;
     private Integer idVeiculo;
     private String  placa;
+    private String  placaView;
     private String  uf;
     private String  municipio;
     private String  renavam;
@@ -337,4 +338,13 @@ public class ReferenciaVeiculos {
     public void setDataDocumento(Date dataDocumento) {
         this.dataDocumento = dataDocumento;
     }
+
+	public String getPlacaView() {
+		return placaView;
+	}
+
+	public void setPlacaView(String placaView) {
+		this.placaView = placaView;
+	}
+	
 }

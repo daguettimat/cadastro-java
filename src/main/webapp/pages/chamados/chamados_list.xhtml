@@ -178,7 +178,7 @@
 				</div>
 				
 				<div class="ui-g-12 ui-md-4" style="text-align: center">
-					<p:panel styleClass="btn-danger">
+					<p:panel styleClass="btn-primary">
 						<div class="row">
 							<div class="col-lg-8">
 								<h:outputText value="não Atendidos  "
@@ -202,7 +202,7 @@
                          var="c" lazy=""
                          value="#{chamadoBean.listChamados}"
                          rows="20"
-                         styleClass="box-danger" sortMode="multiple"
+                         styleClass="box-primary" sortMode="multiple"
                          rowKey="#{c.id}" paginator="true"
                          paginatorPosition="bottom"
                          
@@ -244,7 +244,8 @@
                     </p:column>
                         <p:column headerText="Aberto por" style="width:10%" sortBy="#{c.usuAbertura.nome}" >
                         <div align="left" style="padding-right: 10px;">
-                            <p:outputLabel value="#{c.usuAbertura.nome}" style="text-align: center;display:block">                                
+                            <p:outputLabel value="#{c.usuAbertura.nome}"
+                             style="text-align: center;display:block">                                
                             </p:outputLabel>
                         </div>                        
                     </p:column>

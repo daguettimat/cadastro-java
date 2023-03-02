@@ -44,6 +44,8 @@ public class checkUsuario {
         try {
 
             Usuario usuario = valid();
+            
+            /* Desativado em 2022-10-05 por Francis devido os menus agora ser dinamico e ser disposto por tipo de usuarios;
             if( usuario.isInterno() != internal ) {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("../../index.xhtml");
                 RequestContext.getCurrentInstance().showMessageInDialog(
@@ -51,6 +53,7 @@ public class checkUsuario {
                                 "Seu perfil de usuário não possui acesso a esta opção"));
                 return false;
             }
+            */
 
         } catch (Exception e) {
             try {

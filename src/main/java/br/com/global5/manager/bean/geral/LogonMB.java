@@ -1,12 +1,15 @@
 package br.com.global5.manager.bean.geral;
 
 
+import br.com.global5.infra.util.AppUtils;
 import br.com.global5.infra.util.checkUsuario;
+import br.com.global5.manager.model.areas.AreaNivel;
 import br.com.global5.manager.model.geral.Usuario;
 import br.com.global5.manager.model.geral.UsuarioArea;
 import br.com.global5.manager.model.geral.UsuarioCtr;
 import br.com.global5.manager.model.permissao.Formulario;
-
+import br.com.global5.manager.service.areas.AreaNivelService;
+import br.com.global5.manager.service.areas.AreaService;
 import br.com.global5.manager.service.geral.UsuarioService;
 import br.com.global5.manager.service.permissao.FormularioService;
 
@@ -19,13 +22,14 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections4.ListUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -79,11 +83,21 @@ public class LogonMB implements Serializable {
     private String conteudoHtml = "";
     private String idProdutosDoContrato = "";
     private Integer codArea_anvloid = null;
+    private Integer numArea_anvloid = null;
     
+    // Disponibiliza acesso a tela index
+    private boolean openCadastro = true;
+    private boolean openVitimologia = true;
+    
+    @Inject
+    AreaNivelService areaNivelService;
     
     @Inject
     UsuarioService uService;
 
+    @Inject
+    private AreaService areaService;
+    
     @PostConstruct
     public void init() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().clear();
@@ -145,11 +159,40 @@ public class LogonMB implements Serializable {
         	
             loggedIn = true;
             usuarioLogado = usuarioFound;
+            
+            if(numArea_anvloid == 2 || numArea_anvloid == 3 ){
+            	checarCtrClienteCad();
+            	checarCtrClienteVit();
+            } else {
+            	openCadastro = true;
+            	openVitimologia = true;
+            }
+            
+			// Ajuste usuario_interno: Quando a area_nivel_interna estiver igual true o usuario é interno
+			
+			// pesquisa da area_nivel_interna em AreaNivel
+			Criteria criteria = areaNivelService.crud().getSession().createCriteria(AreaNivel.class);
+			criteria.add(Restrictions.eq("id", numArea_anvloid));
+			criteria.add(Restrictions.eq("interna", true));
+		
+			int result = criteria.list().size();
+			
+			if (result > 0) {
+				// fazemos o update no cadastro do usuario se caso não estiver com true seu cadastro
+				AreaNivel areaNivel = (AreaNivel) criteria.list().get(0);
+				
+					if(areaNivel.isInterna() != usuarioLogado.isInterno()){
+						usuarioLogado.setInterno(true);
+						uService.crud().update(usuarioLogado);
+					}
+				
+			}
+		            
             this.gerarMenuHtml();
             //this.montarMenuHtml(usuarioFound);
             
             FacesContext facesContext = FacesContext.getCurrentInstance();
-
+           
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
             session.setAttribute("logonMB", this);
             session.setAttribute("ambiente", ambiente);
@@ -170,6 +213,58 @@ public class LogonMB implements Serializable {
 		
     }
     
+    public String checarCtrClienteVit(){
+    	
+		Integer idClient = null;
+		
+		if(numArea_anvloid == 3){
+			//  Filial
+			idClient = usuarioLogado.getPessoa().getFuncao().getArea().getRoot().getId();
+		} else {
+			// Demais cliente Matriz e Global5
+			idClient = usuarioLogado.getPessoa().getFuncao().getArea().getId();
+		}
+		
+        String SQL = "select row_number() over() as id, cp.conp_conoid as contrato" +
+                "  from java.contrato c " +
+                "       join java.contrato_produto cp " +
+                "            on cp.conp_conoid = c.conoid " +
+                "       join java.produto p " +
+                "            on p.prodoid = cp.conp_prodoid " +
+                " where c.con_areaoid = " + idClient +
+                "   and c.con_dt_exclusao is null " +
+                " 	and cp.conp_produto_ativo = true " + 
+                "   and cp.conp_prodoid = 32 ";
+        
+        Query query = 
+        		areaService.crud().getEntityManager().createNativeQuery(SQL);
+    	
+        try {
+
+            Object valor = query.getResultList();
+            
+            int res = query.getResultList().size();  
+                       
+            if(numArea_anvloid == 2 || numArea_anvloid == 3 ){
+	            
+            	if(res > 0){
+            		openVitimologia = true;
+            		return "col-lg-3 col-xs-3";
+            	} else {
+	            	openVitimologia = false;
+	            	return "col-lg-4 col-xs-4";            		
+            	}
+	            
+            } 
+            
+        } catch (NoResultException nre) {
+            
+        }
+	
+	openVitimologia = true;
+	return "col-lg-3 col-xs-3";
+}
+    
     // implementação
     /**
      *Method: call method listMenu and set at variable string conteudoHtml to menu application.   
@@ -179,7 +274,7 @@ public class LogonMB implements Serializable {
      *@author Francis.Bueno
      *
      */
-    public void gerarMenuHtml(){
+    private void gerarMenuHtml(){
     	
     	this.setConteudoHtml(this.listMenu());
     	
@@ -201,8 +296,9 @@ public class LogonMB implements Serializable {
     	EntityManager em = uService.crud().getEntityManager();
     	
     	String parameters = usuarioLogado.getPessoa().getFuncao().getId().toString(); 
+    	String parametersFormulario = " and form_empoid is null ";
     	
-	      String query = " select formoid as id, form_titulo as titulo, form_tag as tag, " +
+	    String query = " select formoid as id, form_titulo as titulo, form_tag as tag, " +
                   " form_descricao as descricao, form_ordem_menu as ordemMenu, form_interna as areaInterna, " +
                   " form_area_matriz as areaMatriz,  form_area_filial as areaFilial, " +
                   " form_prodoid as idProduto, form_dt_criacao as dtCriacao, form_dt_exclusao as dtExclusao, " +
@@ -210,7 +306,9 @@ public class LogonMB implements Serializable {
                   " form_nivel_pai as nivelPai , form_nivel as nivel  ,form_indice as indice, form_icone as icone, form_nivel_tipo as nivelTipo" +
                   " from formulario " +
                   " where formoid in (select aff_formoid from area_funcao_formulario where aff_afunoid = "  + parameters + " ) and " + 
-                  " form_nivel_pai is null and form_dt_exclusao is null order by form_ordem_menu, form_indice" ;
+                  " form_nivel_pai is null and form_dt_exclusao is null " +
+                  	parametersFormulario +
+                  " order by form_ordem_menu, form_indice" ;
 
 	      List<Formulario> lMenu = em.createNativeQuery(query, "LstFormularioMapping").getResultList();
 	      
@@ -356,6 +454,7 @@ public class LogonMB implements Serializable {
     	EntityManager emF = uService.crud().getEntityManager();
     	
     	String parameters = usuarioLogado.getPessoa().getFuncao().getId().toString();
+    	String parametersFormulario = " and form_empoid is null ";
     	
     	if ( !this.getIdProdutosDoContrato().equals("") ) {
     		
@@ -389,6 +488,7 @@ public class LogonMB implements Serializable {
                   " where formoid in (select aff_formoid from area_funcao_formulario where aff_afunoid = "  + parameters + " ) " +
                   " and form_nivel_pai = " + idNivelPai + 
                   " and form_dt_exclusao is null " +
+                  	parametersFormulario +
                   " order by form_ordem_menu, form_indice" ;
 	      
 	      int result = emF.createNativeQuery(query, "LstFormularioMapping").getResultList().size();
@@ -414,11 +514,12 @@ public class LogonMB implements Serializable {
      * @param usuarioFound receive usuario object for extract the key of pessoa
      * @return string (concedida) for access and (negada) for denied 
      */
-    public String permissaoAcessoUsuario(Usuario usuarioFound){
+    private String permissaoAcessoUsuario(Usuario usuarioFound){
+    		
     	if(!usuarioFound.equals(null)){
     		
     		String parameters = "";
-    		Integer numAreaoid, numArea_areaoid_pai, numArea_anvloid = null;
+    		Integer numAreaoid, numArea_areaoid_pai = null;
     		String  alfUsu_Tipo = "";
     		
     		EntityManager em = uService.crud().getEntityManager();    		
@@ -445,6 +546,8 @@ public class LogonMB implements Serializable {
     			numArea_areaoid_pai = listUsuArea.get(0).getArea_areaoid_pai();
     			numArea_anvloid = listUsuArea.get(0).getArea_anvloid();
     			
+    			// Continua com o processo
+    			
     			this.setCodArea_anvloid(numArea_anvloid);
     			
     			//Caso nivel da area seja (2) = Transportadora
@@ -460,7 +563,7 @@ public class LogonMB implements Serializable {
     					 
     					 // Seleciona contratos ativos (645) e com aviso previos (646) no produto cadastro
     					 String query2 = "select row_number() over() as id, conoid, con_enumoid_produto_tipo as  produtoid from java.contrato where " + parametersNv2 + 
-    						 " con_enumoid_status in (645, 646) and con_enumoid_produto_tipo in (15,16)" ;
+    						 " con_enumoid_status in (645, 646, 774) and con_enumoid_produto_tipo in (15,16)" ;
     					 
     					 listUsuCtr = em2.createNativeQuery(query2, "UsuarioCtrMapping").getResultList();
     					 int sizeListUsuCtr = listUsuCtr.size();
@@ -471,11 +574,12 @@ public class LogonMB implements Serializable {
     							 
     							 if ( listUsuCtr.get(i).getProdutoid() == 15) {
     								 this.setAcessoSistemaCadastro(true);
+    								 this.verificarProdutosDoContrato(listUsuCtr.get(i).getConoid());
     							 }
     							 
     						 }
     						 
-    						 this.verificarProdutosDoContrato(listUsuCtr.get(0).getConoid());
+    						 //this.verificarProdutosDoContrato(listUsuCtr.get(0).getConoid());
     						 
     						 return "concedida";
     					 } else if(sizeListUsuCtr == 0){
@@ -502,7 +606,7 @@ public class LogonMB implements Serializable {
        					 
        					 // Seleciona contratos ativos (645) e com aviso previos (646) no produto cadastro
        					 String query3 = "select row_number() over() as id, conoid, con_enumoid_produto_tipo as  produtoid from java.contrato where " + parametersNv3 + 
-       						 " con_enumoid_status in (645, 646) and con_enumoid_produto_tipo in (15, 16)" ;
+       						 " con_enumoid_status in (645, 646, 774 ) and con_enumoid_produto_tipo in (15, 16)" ;
        					 
        					 listUsuCtr = em3.createNativeQuery(query3, "UsuarioCtrMapping").getResultList();
        					 
@@ -513,14 +617,14 @@ public class LogonMB implements Serializable {
        					
     						 for( int i = 0; i < sizeListUsuCtr; i++) {
     							 
-    							 if ( listUsuCtr.get(i).getProdutoid() == 15) {
+    							 if ( listUsuCtr.get(i).getProdutoid() == 15) {    								 
     								 this.setAcessoSistemaCadastro(true);
+    								 this.verificarProdutosDoContrato(listUsuCtr.get(i).getConoid());
     							 }
     							 
     						 } 
        						 
-       						this.verificarProdutosDoContrato(listUsuCtr.get(0).getConoid());
-       						 
+       						//this.verificarProdutosDoContrato(listUsuCtr.get(0).getConoid());
        						 
        						 return "concedida";
        					 } else if(sizeListUsuCtr == 0){
@@ -551,6 +655,69 @@ public class LogonMB implements Serializable {
     	return "negada";
     }
     
+    
+public String checarCtrClienteCad(){
+    	  	
+    		Integer idClient = null;
+
+    		if(numArea_anvloid == 3){
+    			//  Filial
+    			idClient = usuarioLogado.getPessoa().getFuncao().getArea().getRoot().getId();
+    		} else {
+    			// Demais cliente Matriz e Global5
+    			idClient = usuarioLogado.getPessoa().getFuncao().getArea().getId();
+    		}
+
+            String SQL = "select row_number() over() as id, cp.conp_conoid as contrato" +
+                    "  from java.contrato c " +
+                    "       join java.contrato_produto cp " +
+                    "            on cp.conp_conoid = c.conoid " +
+                    "       join java.produto p " +
+                    "            on p.prodoid = cp.conp_prodoid " +
+                    " where c.con_areaoid = " + idClient +
+                    "   and c.con_dt_exclusao is null " +
+                    " 	and cp.conp_produto_ativo = true " + 
+                    "   and cp.conp_prodoid in (1,2,3) ";
+            
+            Query query = 
+            		areaService.crud().getEntityManager().createNativeQuery(SQL);                   	
+            try {
+            	
+                Object valor = query.getResultList();
+                
+                int res = query.getResultList().size(); 
+                
+                if(numArea_anvloid == 2 || numArea_anvloid == 3 ){
+	                if (res > 0){
+	                	openCadastro = true;
+	                	//return "col-lg-3 col-xs-3";
+	                	
+	                	if(openVitimologia == true) {
+	                		return "col-lg-3 col-xs-3";
+	                	} else {
+	                		return "col-lg-4 col-xs-4";
+	                	}
+	  
+	                	
+	                } else {
+	                	openCadastro = false;
+	                	return "col-lg-4 col-xs-4";
+	                }
+                } else {
+                	openCadastro = true;
+                	return "col-lg-3 col-xs-3";
+                }
+	                
+	                
+            } catch (NoResultException nre) {
+                
+            }
+    	
+    	openCadastro = true;
+    	return "col-lg-3 col-xs-3";
+    }
+    
+
     //Nova Implementação - verifica os produtos do contrato
     public void verificarProdutosDoContrato(Integer idContrato){
     	
@@ -764,6 +931,30 @@ public class LogonMB implements Serializable {
 
 	public void setAcessoSistemaCadastro(boolean acessoSistemaCadastro) {
 		this.acessoSistemaCadastro = acessoSistemaCadastro;
+	}
+
+	public Integer getNumArea_anvloid() {
+		return numArea_anvloid;
+	}
+
+	public void setNumArea_anvloid(Integer numArea_anvloid) {
+		this.numArea_anvloid = numArea_anvloid;
+	}
+
+	public boolean isOpenCadastro() {
+		return openCadastro;
+	}
+
+	public void setOpenCadastro(boolean openCadastro) {
+		this.openCadastro = openCadastro;
+	}
+
+	public boolean isOpenVitimologia() {
+		return openVitimologia;
+	}
+
+	public void setOpenVitimologia(boolean openVitimologia) {
+		this.openVitimologia = openVitimologia;
 	}	
 	    
 	

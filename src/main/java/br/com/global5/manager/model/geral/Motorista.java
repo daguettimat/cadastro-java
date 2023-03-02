@@ -169,6 +169,18 @@ public class Motorista implements BaseEntity {
     @Transient
     private boolean mostrarExcluidos;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="mot_dt_atualiza_ws")
+    private Date dtAtualizaWs;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="mot_dt_verificacao_ws")
+    private Date dtVerificacaoWs;
+    
+    /*
+    @Column(name="mot_existe_registro_ws")
+    private boolean existeRegistroWs;
+    */
     public Motorista() {}
 
     public Motorista(Integer id) {
@@ -214,6 +226,7 @@ public class Motorista implements BaseEntity {
 
     public void setDoc1(String doc1) {
         this.doc1 = doc1;
+        
     }
 
     public DocumentoTipo getDoc1_tipo() {
@@ -447,4 +460,23 @@ public class Motorista implements BaseEntity {
     public void setMostrarExcluidos(boolean mostrarExcluidos) {
         this.mostrarExcluidos = mostrarExcluidos;
     }
+
+	public Date getDtAtualizaWs() {
+		return dtAtualizaWs;
+	}
+
+	public void setDtAtualizaWs(Date dtAtualizaWs) {
+		this.dtAtualizaWs = dtAtualizaWs;
+	}
+
+	public Date getDtVerificacaoWs() {
+		return dtVerificacaoWs;
+	}
+
+	public void setDtVerificacaoWs(Date dtVerificacaoWs) {
+		this.dtVerificacaoWs = dtVerificacaoWs;
+	}
+    
+	
+    
 }

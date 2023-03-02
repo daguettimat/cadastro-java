@@ -43,7 +43,7 @@
         <h:form id="frmProprietario" enctype="multipart/form-data">
 
             <h:panelGroup layout="block">
-            <p:panel header="Manutenção" styleClass="box-danger">
+            <p:panel header="Manutenção" styleClass="box-primary">
                 <div class="align-right">
                     <p:outputLabel value="Pesquisar por Id: "/>
                     <p:spacer height="5"/>
@@ -76,7 +76,7 @@
 
                     <div class="col-lg-2">
                         <p:outputLabel for="nacional" value="Nacional"/>
-                        <p:selectBooleanButton id="nacional" class="btn-danger"
+                        <p:selectBooleanButton id="nacional" class="btn-primary"
                                                value = "#{proprietarioMB.proprietario.nacional}"
                                                onLabel="Sim"
                                                offLabel="Não"
@@ -180,22 +180,22 @@
                     <div class="align-right" style="padding: 5px;">
 
                         <p:commandButton value="Salvar" action="#{proprietarioMB.update}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
                         <p:spacer height="5"/>
                         <p:commandButton id="btRemove" value="Apagar" action="#{proprietarioMB.remove}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
 
                         <p:spacer height="5"/>
                         <p:commandButton value="Voltar" action="#{proprietarioMB.btnBack}"
-                                         styleClass="btn-danger"/>
+                                         styleClass="btn-primary"/>
                     </div>
                 </f:facet>
             </p:panel>
             </h:panelGroup>
             <br/>
-            <p:panel header="Veículos Associados" styleClass="box-danger" toggleable="true">
+            <p:panel header="Veículos Associados" styleClass="box-primary" toggleable="true">
                 <p:dataTable var="veiculo" value="#{proprietarioMB.lstVeiculo}" resizableColumns="true" sortBy="#{veiculo.placa}" sortOrder="ASCENDING"
-                             paginatorPosition="bottom" rows="10" styleClass="box-danger" lazy="true" paginator="true"
+                             paginatorPosition="bottom" rows="10" styleClass="box-primary" lazy="true" paginator="true"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
                              currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
                              rowsPerPageTemplate="5,10,15,25,50">
@@ -230,9 +230,9 @@
                 </p:dataTable>
             </p:panel>
             <br/>
-            <p:panel header="Histórico de Fichas" styleClass="box-danger" toggleable="true">
+            <p:panel header="Histórico de Fichas" styleClass="box-primary" toggleable="true">
                 <p:dataTable var="historico" value="#{proprietarioMB.lstFichas}" resizableColumns="true"
-                             paginatorPosition="bottom" rows="10" styleClass="box-danger" lazy="true" paginator="true"
+                             paginatorPosition="bottom" rows="10" styleClass="box-primary" lazy="true" paginator="true"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
                              currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
                              rowsPerPageTemplate="5,10,15,25,50">

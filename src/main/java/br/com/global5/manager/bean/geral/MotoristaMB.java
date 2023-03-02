@@ -1,8 +1,10 @@
 package br.com.global5.manager.bean.geral;
 
+import br.com.global5.infra.atualiza_motvei_chp.MotoristaClient;
+import br.com.global5.infra.atualiza_motvei_chp.acMotoristaCad;
+import br.com.global5.infra.atualiza_motvei_chp.acMotoristaCadT;
 import br.com.global5.infra.model.Filter;
 import br.com.global5.infra.util.*;
-import br.com.global5.infra.util.ValidaBrasil;
 import br.com.global5.manager.model.analise.acMotorista;
 import br.com.global5.manager.model.auxiliar.TipoEndereco;
 import br.com.global5.manager.model.cadastro.CNH;
@@ -25,6 +27,7 @@ import br.com.global5.manager.service.enums.CNHCategoriaService;
 import br.com.global5.manager.service.enums.DocumentoTipoService;
 import br.com.global5.manager.service.enums.TelefoneTipoService;
 import br.com.global5.manager.service.geral.MotoristaService;
+import br.com.global5.manager.service.geral.UsuarioService;
 import br.com.global5.template.exception.BusinessException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -32,6 +35,8 @@ import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.omnifaces.util.Faces;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -52,6 +57,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Named
@@ -101,9 +108,16 @@ public class MotoristaMB implements Serializable {
     private String mae;
     private boolean mostrarExcluidos = false;
 
+    // Variaveis - Lista para ws consulta na CHP/Trafegus
+    private List<acMotoristaCad> listaAcMotoristaCad;
+    private List<acMotoristaCadT> listaAcMotoristaParaTrafegus;
+    
+    
     private Date dtInicial;
     private Date dtFinal;
 
+    // Teste para WS Trafegus_CHP
+    private String cpfMotorista = "";
 
     @Inject
     MotoristaService motService;
@@ -125,6 +139,9 @@ public class MotoristaMB implements Serializable {
 
     @Inject
     TelefoneService telefoneService;
+    
+    @Inject
+    TelefoneTipoService foneTipoService;
 
     @Inject
     br.com.global5.manager.service.analise.MotoristaService motAService;
@@ -138,6 +155,8 @@ public class MotoristaMB implements Serializable {
     @Inject
     private br.com.global5.manager.service.analise.MotoristaService acMotService;
 
+    @Inject 
+    private UsuarioService usuService;
 
     @PostConstruct
     public void init()  {
@@ -278,8 +297,7 @@ public class MotoristaMB implements Serializable {
     public void update() {
 
         String msg;
-
-
+        TelefoneTipo telTipo = motorista.getTelefone().getTipo();
 
         //TIPO 10 = CPF / 11 = CNPF
         if(this.motorista.getDoc1_tipo().getId()==10){
@@ -347,7 +365,7 @@ public class MotoristaMB implements Serializable {
             Telefone telC = new Telefone();
 
             telC.setDdd(this.motorista.getTelefone().getDdd());
-            telC.setTipo(new TelefoneTipo(numTipoFone));
+            telC.setTipo(new TelefoneTipo(telTipo.getId()));
             telC.setFone(this.motorista.getTelefone().getFone());
             telC.setOrigem(new TelefoneOrigem(70));
             telC.setDtCriacao(new Date());
@@ -681,11 +699,259 @@ public class MotoristaMB implements Serializable {
 
         return AppUtils.pathFlag(id);
     }
+    
 
     public void onRowUnselect(UnselectEvent event) {
         motorista = new Motorista();
     }
 
+    // Teste chp - Francis 21/01/21
+    private void buscarMotoristaCpf(String cpf, Integer idMotoristaCad){
+    	
+    	MotoristaClient wsM = new MotoristaClient();
+
+    	//cpf = "46566374833";
+    	// Pesquisa se o cpf existe na base da chp/trafegus
+    	JSONObject objJsonMot = wsM.getMotorista(cpf.trim());
+
+    	if( objJsonMot != null){
+    		
+    		String idMotoristaChp = "";
+    		
+    		idMotoristaChp = objJsonMot.get("codigo").toString();
+    		
+    		// Dados coletado do ws 192.168.64.101/ws_rest/public/api/motorista/{cpf}
+    		objJsonMot.get("codigo").toString();			// id do motorista na chp
+    		objJsonMot.get("cpf_motorista").toString();		// cpf do motorista na chp
+    		objJsonMot.get("nome").toString();				// 1 nome
+    		objJsonMot.get("rg").toString();				// 2 rg
+    		objJsonMot.get("nro_cnh").toString();			// 4 cnh
+    		objJsonMot.get("categoria_cnh").toString();		// 5 categoria cnh
+    		objJsonMot.get("validade_cnh").toString();		// 6 validade cnh
+    		objJsonMot.get("cnh_uf").toString();			// 7 uf cnh
+    		objJsonMot.get("cnh_seg").toString();			// 8 codigo seguranca cnh    		
+    		    		
+    		// Atualiza dados do motorista no sistema Trafegus
+    		atualizarMotoristaCHP(cpf, idMotoristaChp);
+    		
+    		//int
+    				
+    	} else {
+    		// Atualiza o registro no cadastro, informando que consultou ws mais não teve nada a ser atualizado na dtAtualizaWS
+			 Motorista mot = motService.findById(idMotoristaCad);
+			 mot.setDtAtualizaWs(null);
+			 mot.setDtVerificacaoWs(new Date());
+			 motService.crud().update(mot);
+			 motService.commit();
+    	}
+    	
+    }
+    
+    /**
+     * @author Francis Bueno
+     * @param cpf
+     * @param idMotoristaChp
+     * @return True or False
+     * Prepara os dados para atualizar os dados no sistema Trafegus e após atualiza o cadastro de motorista.
+     */
+    private void atualizarMotoristaCHP(String cpf, String idMotoristaChp){
+    	
+   	EntityManager em = usuService.crud().getEntityManager();
+    	
+    	String query = "select m.motoid as id,  m.mot_documento1 as cpf, m.mot_nome as nome, m.mot_documento2 as rg,"
+    			+ " c.mcnh_registro as cnh, e.enum_nome as categoriaCnh, c.mcnh_uf as ufCnh, c.mcnh_validacao as validacaoCnh, c.mcnh_dt_vencimento as dtVenctoCnh, "
+    			+ " m.mot_documento2_uf as ufRgEmissor , m.mot_dt_nascimento as dtNascimento, c.mcnh_primeira_emissao as dtPriEmissao,  "
+    			+ " m.mot_nomepai as nomePai, m.mot_nomemae as nomeMae, l.loc_logradouro as logradouro, l.loc_cep as cep, l.loc_numero as numEndereco, "
+    			+ " l.loc_uf as ufEndereco, l.loc_pais as paisEndereco, l.loc_bairro as bairroEndereco, l.loc_complemento as complEndereco, l.loc_cidade as cidadeEndereco "
+    			+ " from motorista m, motorista_cnh c ,  enum_cnh_categoria e , localizador l"     			
+    			+ " where m.mot_mcnhoid = c.mcnhoid and  m.mot_locoid = l.locoid and "
+    			+ "       c.mcnh_categoria = e.enumoid and m.mot_dt_exclusao is null and m.mot_documento1 is not null and m.mot_dt_criacao > '2021/06/01' and "
+    			+ " 	  m.mot_dt_verificacao_ws is null and m.mot_dt_atualiza_ws is null and "
+    			+ "       m.mot_documento1_tipo = 10 and m.mot_documento1 = '" + cpf + "\'";
+    	
+    	/**
+    	     			"select m.motoid as id,  m.mot_documento1 as cpf, m.mot_nome as nome, m.mot_documento2 as rg,"
+    			+ " c.mcnh_documento as cnh, e.enum_nome as categoriaCnh, c.mcnh_uf as ufCnh, c.mcnh_validacao as validacaoCnh, c.mcnh_dt_vencimento as dtVenctoCnh "
+    			+ " from motorista m, motorista_cnh c ,  enum_cnh_categoria e"
+    	 */
+    	
+    	
+    	listaAcMotoristaParaTrafegus = em.createNativeQuery(query, "ListaMotoristaCadTMapping").getResultList();
+    
+    	MotoristaClient wsM = new MotoristaClient();
+    	
+    	Integer idMotCad = null;
+    	String cpfMot = "", nomeMot = "" , rgMot = "", cnhMot = "", cnhCategoriaMot = "";
+    	String cnhDtValidadeMot = null;
+    	String cnhUfMot = "", cnhSegurancaMot = "";
+    	
+    	String ufRgMot = "", dtNascMot = "" , cnhDtPrimEmissao = "", nomePaiMot= "", nomeMaeMOT = "", logradouroMot = "";
+    	String cepMot = "", numEnderecoMot = "", ufEnderecoMot = "",  paisEnderecoMot = "", bairroEndereco = "", complEndereco = "", cidadeEndereco = "";
+    	
+    	if( listaAcMotoristaParaTrafegus.size() == 1 ){
+    		
+    		// Carga de Variaveis para serem atualizadas no sistema Trafegus
+    		idMotCad= listaAcMotoristaParaTrafegus.get(0).getId();    		
+    		cpfMot  = listaAcMotoristaParaTrafegus.get(0).getCpf().toString();
+    		
+    		if( listaAcMotoristaParaTrafegus.get(0).getNome() != null){
+    			nomeMot = listaAcMotoristaParaTrafegus.get(0).getNome().toString();
+    		}    			
+    		
+    		if (listaAcMotoristaParaTrafegus.get(0).getRg() != null ){
+    			rgMot   = listaAcMotoristaParaTrafegus.get(0).getRg().toString();
+    		}    		
+    		
+    		if ( listaAcMotoristaParaTrafegus.get(0).getCnh() != null){
+    			cnhMot	= listaAcMotoristaParaTrafegus.get(0).getCnh().toString();
+    		}    		
+    		
+    		if( listaAcMotoristaParaTrafegus.get(0).getCategoriaCnh() != null){
+    			cnhCategoriaMot  = listaAcMotoristaParaTrafegus.get(0).getCategoriaCnh().toString();    		
+    		}
+    		
+    		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy 00:00:00");    		    	    		
+    		
+    		if(listaAcMotoristaParaTrafegus.get(0).getDtVenctoCnh() != null){
+    			cnhDtValidadeMot = dateFormat.format(listaAcMotoristaParaTrafegus.get(0).getDtVenctoCnh());    		
+    		}
+    		
+    		if (listaAcMotoristaParaTrafegus.get(0).getUfCnh() != null ){
+    			cnhUfMot	= listaAcMotoristaParaTrafegus.get(0).getUfCnh().toString();
+    		}
+    		
+    		if (listaAcMotoristaParaTrafegus.get(0).getValidacaoCnh() != null ){
+    			cnhSegurancaMot	= listaAcMotoristaParaTrafegus.get(0).getValidacaoCnh().toString();
+    		}
+    		
+    		// renovar daqui
+    		if (listaAcMotoristaParaTrafegus.get(0).getUfRgEmissor() != null ){
+    			ufRgMot = listaAcMotoristaParaTrafegus.get(0).getUfRgEmissor().toString();
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getDtNascimento() != null){
+    			dtNascMot = dateFormat.format(listaAcMotoristaParaTrafegus.get(0).getDtNascimento());    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getDtPriEmissao() != null){
+    			cnhDtPrimEmissao = dateFormat.format(listaAcMotoristaParaTrafegus.get(0).getDtPriEmissao());    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getNomePai() != null){
+    			nomePaiMot = listaAcMotoristaParaTrafegus.get(0).getNomePai();    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getNomeMae() != null){
+    			nomeMaeMOT = listaAcMotoristaParaTrafegus.get(0).getNomeMae();    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getLogradouro() != null){
+    			logradouroMot =listaAcMotoristaParaTrafegus.get(0).getLogradouro();    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getCep() != null){
+    			cepMot = listaAcMotoristaParaTrafegus.get(0).getCep();    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getNumEndereco() != null){
+    			numEnderecoMot =  listaAcMotoristaParaTrafegus.get(0).getNumEndereco().toString();    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getUfEndereco() != null){
+    			ufEnderecoMot = listaAcMotoristaParaTrafegus.get(0).getUfEndereco();    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getPaisEndereco() != null){
+    			paisEnderecoMot = listaAcMotoristaParaTrafegus.get(0).getPaisEndereco();    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getBairroEndereco() != null){
+    			bairroEndereco = listaAcMotoristaParaTrafegus.get(0).getBairroEndereco();    		
+    		}
+
+    		if(listaAcMotoristaParaTrafegus.get(0).getComplEndereco() != null){
+    			complEndereco = listaAcMotoristaParaTrafegus.get(0).getComplEndereco();    		
+    		}
+    		if(listaAcMotoristaParaTrafegus.get(0).getCidadeEndereco() != null){
+    			cidadeEndereco = listaAcMotoristaParaTrafegus.get(0).getCidadeEndereco();    		
+    		}    		
+    		
+    		// Envia dados para atualizar sistema Trafegus via ws | put
+    		boolean result = wsM.putMotorista(idMotoristaChp, cpfMot, nomeMot, rgMot, cnhMot, cnhCategoriaMot, cnhDtValidadeMot, 
+    					cnhUfMot, cnhSegurancaMot, 
+    					ufRgMot, dtNascMot, cnhDtPrimEmissao, nomePaiMot, nomeMaeMOT, logradouroMot, cepMot,  numEnderecoMot, 
+    					ufEnderecoMot, paisEnderecoMot, bairroEndereco, complEndereco, cidadeEndereco);
+    		 //result = false;
+    		 if (result == true){    			 
+    			 // Atualiza o banco de dados motorista
+    			 Motorista mot = motService.findById(idMotCad);    			 
+    			 mot.setDtAtualizaWs(new Date());
+    			 mot.setDtVerificacaoWs(new Date());
+    			 //mot.setExisteRegistroWs(true);
+    			 motService.crud().update(mot);
+    			 motService.commit();
+    			 //motService.commit();
+
+    		 } else {
+    			 Motorista mot = motService.findById(idMotCad);
+    			 mot.setDtAtualizaWs(null);
+    			 mot.setDtVerificacaoWs(new Date());
+    			 motService.crud().update(mot);
+    			 motService.commit();
+    			 //motService.commit();
+    		 }
+    		 
+    	}
+    	
+    }
+    
+    
+    /**
+     * @author Francis Bueno
+     * @return
+     * Método de chamada do front, carrega todos os motorista na tabela listaAcMotoristaCad e só para que após possa ser atualizado
+     * Utilizado pela tela /webapp/pages/ws/trafegus/chamada_ws_chp.xhtml -- Atualiza Motorista, Atualiza Veiculo (esse será outra chamada)
+     */
+    public String buscaMotoristaPorCpf(){
+    	
+    	EntityManager em = usuService.crud().getEntityManager();
+    	
+    	String query = "select m.motoid as id,  m.mot_documento1 as cpf, m.mot_nome as nome, m.mot_documento2 as rg,"
+    			+ " c.mcnh_registro as cnh, e.enum_nome as categoriaCnh, c.mcnh_uf as ufCnh, c.mcnh_validacao as validacaoCnh, c.mcnh_dt_vencimento as dtVenctoCnh, "
+    			+ " m.mot_documento2_uf as ufRgEmissor , m.mot_dt_nascimento as dtNascimento, c.mcnh_primeira_emissao as dtPriEmissao,  "
+    			+ " m.mot_nomepai as nomePai, m.mot_nomemae as nomeMae, l.loc_logradouro as logradouro, l.loc_cep as cep, l.loc_numero as numEndereco, "
+    			+ " l.loc_uf as ufEndereco, l.loc_pais as paisEndereco, l.loc_bairro as bairroEndereco, l.loc_complemento as complEndereco, l.loc_cidade as cidadeEndereco  "
+    			+ " from motorista m, motorista_cnh c ,  enum_cnh_categoria e , localizador l"
+    			+ " where m.mot_mcnhoid = c.mcnhoid and m.mot_locoid = l.locoid and"
+    			+ "       c.mcnh_categoria = e.enumoid and m.mot_dt_exclusao is null and m.mot_documento1 is not null and m.mot_dt_atualiza_ws is null and m.mot_dt_criacao > '2021-06-30' "
+    			+ " and m.mot_dt_verificacao_ws is null and m.mot_dt_atualiza_ws is null "       			
+    			;
+    	
+    	// + " and m.mot_documento1 in ('46566374833')"
+    	//+ " and m.mot_documento1 in ( '30128821892','07525500983','80033814872','97151220863','97244929820','02177506808','01782639829','32628371804','25940487807','00191063517','54302862149','25064501811','40169707504','28271208870','25660160891','08050151832','27852711812','18625244831','26723635876','01810697840','14212803453','04096586854','03846773808','08943539851','02185438832','05344601867','5305522803','05305522803','05618227860','05379897819','42593824468','20195923553','05767694877','28552199653','06544198846','05310735801','08047256831','07571300894','11202322875','09346130873','06998936826','13381327844','12121422846','43815030587','10837535840','12130541844','10849193893','25643337886','09798103882','12124594826','12622082894','13354839856','13389865896','14937408810','13365087877','24879785890','13396500881','19756199865','48872709415','17125326854','52848973404','16955489810','25368260822','25147533842','27759746865','27470173897','27167202827','26073717830','01310610894','27887881854','28964269810','19851728870','21871357802','29556623809','13400449865','61459461304','96633328591','01806032805','35126796844','29848562877','30913882801','35955754822','31432316885','39143690866','38845133893','36538215840','37091398807','80646654853','43116937885','42957530848','00308616081','03861654750','34645794841','00507812603','34502076015','78312159800','78182700868','79952461887','91312949872','88577066800')"
+    	
+    	listaAcMotoristaCad = em.createNativeQuery(query, "ListaMotoristaCadMapping").getResultList();
+
+    	if ( listaAcMotoristaCad.size() > 0){
+    		
+    		int result = listaAcMotoristaCad.size();
+    		
+    		for(int i=0; i < result;i++){
+    			
+    			boolean resultado = false;
+    			
+    				buscarMotoristaCpf(listaAcMotoristaCad.get(i).getCpf().toString().trim(), listaAcMotoristaCad.get(i).getId());
+    				
+    			
+    		}
+    		
+    	}    	
+    	
+    	return null;
+    }
+    
+    
+    
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -1038,4 +1304,30 @@ public class MotoristaMB implements Serializable {
     public void setUfService(UFService ufService) {
         this.ufService = ufService;
     }
+
+	public String getCpfMotorista() {
+		return cpfMotorista;
+	}
+
+	public void setCpfMotorista(String cpfMotorista) {
+		this.cpfMotorista = cpfMotorista;
+	}
+
+	public List<acMotoristaCad> getListaAcMotoristaCad() {
+		return listaAcMotoristaCad;
+	}
+
+	public void setListaAcMotoristaCad(List<acMotoristaCad> listaAcMotoristaCad) {
+		this.listaAcMotoristaCad = listaAcMotoristaCad;
+	}
+
+	public List<acMotoristaCadT> getListaAcMotoristaParaTrafegus() {
+		return listaAcMotoristaParaTrafegus;
+	}
+
+	public void setListaAcMotoristaParaTrafegus(List<acMotoristaCadT> listaAcMotoristaParaTrafegus) {
+		this.listaAcMotoristaParaTrafegus = listaAcMotoristaParaTrafegus;
+	}    
+	
+	
 }

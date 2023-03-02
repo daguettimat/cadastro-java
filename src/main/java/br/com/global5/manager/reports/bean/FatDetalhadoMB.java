@@ -210,8 +210,8 @@ public class FatDetalhadoMB implements Serializable {
 
                 }
 
-
-                if( AppUtils.getDateDiff(dtInicial, dtFinal, TimeUnit.DAYS) > 91 )  {
+                // 91
+                if( AppUtils.getDateDiff(dtInicial, dtFinal, TimeUnit.DAYS) > 400 )  {
                     FacesContext.getCurrentInstance().addMessage(
                             null,
                             new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso!","O período é limitado a 30 dias, devido ao cálculo da fatura mínima."));

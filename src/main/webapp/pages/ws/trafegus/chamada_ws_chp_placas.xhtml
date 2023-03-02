@@ -1,0 +1,185 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-datatable table tbody tr td {
+                padding: 3px; !important;
+                padding-left: 5px;
+            }
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: 30px;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+            .center  {
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+        </style>
+    </ui:define>
+	    	
+    <ui:define name="title"  >
+     	Consumo WS Trafegus|CHP
+    </ui:define>
+	 
+    <ui:define name="description">
+        Sistema Trafegus | CHP
+    </ui:define>
+ 
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Teste WS CHP"/>
+   
+   		<h:form id="frmFiltroRem">
+
+			<div class="row" style="padding-bottom: 15px;">
+				<div class="col">
+					<div>
+
+						<p:panel
+							style="margin-left: 13px;margin-right: 13px;padding-botton:5px; border: 2px solid green;">
+							
+							<div class="ui-g ui-fluid">
+                        		<div class="col-lg-2" style="padding-top:5px">
+                            		<p:outputLabel value="Serviço" />                            		
+                        		</div>
+							</div>
+							<p:spacer width="5" />
+
+							<p:accordionPanel multiple="true">
+
+								<p:tab title="Teste Ws - Tecnologia CHP - Busca de Motoristas...">
+										
+									<p:panelGrid style="width:100%" styleClass="ui-panelgrid-blank">
+
+											<h3>Atualização de Veículo por placas </h3>
+											<br/>
+
+										<div class="col-lg-12">
+											<p:inputText  placeholder="CPF" />
+										</div>
+
+										
+									</p:panelGrid>
+									
+									<p:panelGrid >
+										<div class="col-md-2">
+										<p:outputLabel for="dataInicial" value="Data Inicial" />
+												<p:calendar id="dataInicial" showOn="button"  navigator="true" 
+													value="#{monitoramentoViagensCtrFixoMB.dtInicial}" pattern="dd/MM/yyyy"
+														locale="pt_BR" showButtonPanel="true">
+												</p:calendar>										
+										</div>
+																			
+										<div class="col-md-2">
+											<p:outputLabel for="dataFinal" value="Data Final" />
+											<p:calendar id="dataFinal" showOn="button" navigator="true" 
+												value="#{monitoramentoViagensCtrFixoMB.dtFinal}" pattern="dd/MM/yyyy"
+												locale="pt_BR" showButtonPanel="true">
+				
+											</p:calendar>
+										</div>	
+																											
+									
+									</p:panelGrid>					
+									
+									
+																		
+								</p:tab>
+							</p:accordionPanel>
+
+
+							<p:spacer width="5" />
+							<div class="row" id="filterLn3">
+
+								<div class="align-right"
+									style="padding: 5px; padding-right: 25px">
+									<p:commandButton id="btnPesquisar" value="Chamar Serviço"
+										icon="fa fa-filter"
+										action="#{veiculoMB.buscarVeiculosPorPlacasCHP}"  process="@form" />
+									<p:spacer height="5" />
+									<p:commandButton id="btnClearFilter" value="Teste Buscar Viagem"
+										icon="fa fa-eraser" action="#{monitoramentoViagensCtrFixoMB.fazerVareduraViagensVsPlacasFixasEAtualizar}"
+										style="text-shadow:1px 1px 3px red;" />
+									<p:spacer height="5" />
+									<!-- buscarPlacasFixas -->
+									<!-- fazerVareduraViagensVsPlacasFixasEAtualizar -->
+								</div>
+							</div>
+						</p:panel>
+
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+        		
+		<h:form id="formPosSelecao">		
+			<div class="ui-g" id="dvSubTotais">
+			
+				<div class="ui-g-12 ui-md-4">
+					<p:panel styleClass="btn-warning">
+						<div class="row">
+							<div class="col-lg-8" >
+								<h:outputText value=" "
+								style="font-size: 12pt;color: white;font-weight: bold;text-align: center;display:block" />
+							</div>
+							<div class="col-lg-4">
+								<span class="badge"></span>
+							</div>
+						</div>
+					</p:panel>
+				</div>
+				
+				<div class="ui-g-12 ui-md-4">
+				
+					<p:panel styleClass="btn-success">
+						<div class="row">
+							<div class="col-lg-8">
+								<h:outputText value=" "
+								style="font-size: 12pt;color: white;font-weight: bold;text-align: center;display:block" />
+							</div>
+							<div class="col-lg-4">
+								<span class="badge"></span>
+							</div>
+						</div>
+					</p:panel>
+				</div>
+				
+				<div class="ui-g-12 ui-md-4" style="text-align: center">
+					<p:panel styleClass="btn-danger">
+						<div class="row">
+							<div class="col-lg-8">
+								<h:outputText value="  "
+								style="font-size: 12pt;color: white;font-weight: bold;text-align: center;display:block" />
+							</div>
+							<div class="col-lg-4">
+								<span class="badge"></span>
+							</div>
+						</div>
+					</p:panel>
+				</div>
+			</div>
+			<!-- final dvSubTotais / to panel -->
+		</h:form>
+  
+  
+  
+    </ui:define>
+</ui:composition>

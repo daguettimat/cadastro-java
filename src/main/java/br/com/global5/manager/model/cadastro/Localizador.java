@@ -4,6 +4,8 @@ import br.com.global5.infra.model.BaseEntity;
 import br.com.global5.manager.model.auxiliar.TipoEndereco;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Date;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -65,7 +67,20 @@ public class Localizador implements BaseEntity {
 
     @Column(name = "loc_cep")
     private String cep;
-
+    
+//    @Column(name = "loc_point")
+//    private Integer point;
+    
+    @Column(name = "loc_automatico")
+    private boolean automatico;
+    
+    @Column(name = "loc_dt_criacao")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dtCriacao;
+    
+    @Column(name = "loc_rais")
+    private String rais; 
+    
     public Localizador() {}
 
     public Localizador( Integer id ) {
@@ -177,4 +192,30 @@ public class Localizador implements BaseEntity {
     public void setCep(String cep) {
         this.cep = cep;
     }
+
+	public boolean isAutomatico() {
+		return automatico;
+	}
+
+	public void setAutomatico(boolean automatico) {
+		this.automatico = automatico;
+	}
+
+	public Date getDtCriacao() {
+		return dtCriacao;
+	}
+
+	public void setDtCriacao(Date dtCriacao) {
+		this.dtCriacao = dtCriacao;
+	}
+
+	public String getRais() {
+		return rais;
+	}
+
+	public void setRais(String rais) {
+		this.rais = rais;
+	}
+    
+    
 }

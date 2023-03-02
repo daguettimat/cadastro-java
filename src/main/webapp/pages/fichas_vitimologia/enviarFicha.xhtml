@@ -1,0 +1,1028 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+
+                xmlns:adm="http://global5.com.br/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+
+
+            .ui-datatable-empty-message {
+                display: none;
+            }
+
+            /* ui-widget-content, */
+            .ui-dialog-titlebar  {
+                background: none !important;
+                margin: 0;
+                border: none !important;
+                -webkit-border-radius: 0;
+                -moz-border-radius: 0;
+                border-radius: 0;
+            }
+
+            .image-dialog .ui-dialog {
+                width: 500px; !important;
+            }
+
+            input {
+                text-transform: uppercase;
+            }
+
+            input[disabled] {
+                background-color: #000;
+                color: #fff !important;
+            }
+
+            /*div.ui-dialog {*/
+                /*-webkit-box-shadow : none !important;*/
+            /*}*/
+
+
+
+            .disable-scroll .ui-dialog-content {
+                overflow: hidden !important;
+            }
+
+            .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error, div.ui-selectonemenu.ui-state-error, div.ui-fluid div.ui-selectonemenu.ui-state-error, div.ui-fluid div.ui-selectonemenu.ui-state-error.ui-state-focus, .form-control .ui-state-error {
+
+/*                 color: #dd4b39 !important; */
+					color: #1762a8 !important;
+            }
+
+
+        </style>
+
+        <script>
+
+            $(document).ready(function() {
+
+                onTopScreen = function() {
+                    $('html,body').scrollTop(0);
+                }
+
+                cnhSHOW = function() {
+                    $("#dCNH")
+                        .show();
+
+                }
+
+                cnhHIDE = function() {
+                    $("#dCNH")
+                        .hide();
+                }
+
+
+                $("#dMotorista").focusout(function () {
+                    $("#dMotorista")
+                        .removeClass("box-primary")
+                        .addClass("box-default");
+                });
+
+                $("#dMotorista").focusin(function () {
+                    $("#dMotorista")
+                        .addClass("box-primary")
+                        .removeClass("box-default");
+                });
+
+                $("#dCNH").focusout(function () {
+                    $("#dCNH")
+                        .removeClass("box-primary")
+                        .addClass("box-default");
+                });
+
+                $("#dCNH").focusin(function () {
+                    $("#dCNH")
+                        .addClass("box-primary")
+                        .removeClass("box-default");
+                });
+
+
+                $("#dRefPessoais").focusin(function () {
+                    $("#dRefPessoais")
+                        .addClass("box-primary")
+                        .removeClass("box-default");
+                });
+
+
+                $("#dRefPessoais").focusout(function () {
+                    $("#dRefPessoais")
+                        .removeClass("box-primary")
+                        .addClass("box-default");
+                });
+
+                $("#dRefComerciais").focusin(function () {
+                    $("#dRefComerciais")
+                        .addClass("box-primary")
+                        .removeClass("box-default");
+                });
+
+                $("#dRefComerciais").focusout(function () {
+                    $("#dRefComerciais")
+                        .removeClass("box-primary")
+                        .addClass("box-default");
+                });
+
+
+            });
+
+        </script>
+
+    </ui:define>
+
+    <ui:define name="title">
+        Fichas Vitimologia
+    </ui:define>
+
+    <ui:define name="description">
+        Envio de fichas para a Global<sup>5</sup>
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Fichas"/>
+        
+        <h:form id="form0"
+                onkeypress="if (event.keyCode == 13) { return false; }"
+                enctype="multipart/form-data">
+        <!-- <p:messages showDetail="false" autoUpdate="true" closable="true" /> -->
+        <div class="ui-fluid">
+            <div class="row" id="formulario">
+                <div class="col-lg-12 col-md-4 col-sm-12">
+                    <div class="row" style="padding-top:20px;">
+                        <div class="col-lg-12">
+                        
+                            <p:panel id="panelFicha" styleClass="box-primary" widgetVar="panel">
+                            
+                                    <f:event type="preRenderView" listener="#{enviarFichaMB.removeTerceiro}"/>
+                                    
+                                    <ui:fragment id="fragMotorista" rendered="#{enviarFichaMB.painelMotorista == true}">
+                                        <div id="dMotorista" class="box box-solid box-primary">
+                                            <div class="box-header with-border" style="padding-top: 1px">
+                                                <h4 style="padding-top: 5px;">Informações do Motorista </h4>
+                                            </div>
+                                            <div class="box-body">
+                                            	<div class="row">
+                                            		<div class="col-lg-12">
+                                            			<p:outputLabel value="Estados e regiões para essa ficha: " style="padding-right:20px"/>
+                                            			
+                                            			<p:outputLabel value="#{enviarFichaMB.ufVitimologiaEscolhido}" />                                            				
+                                            		</div>
+                                            	</div>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <p:outputLabel for="nomeMatriz" value="Transportadora"/>
+                                                        <p:inputText id="nomeMatriz"
+                                                                     disabled="true"
+                                                                     value="#{enviarFichaMB.area.nome}"/>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p:outputLabel for="nomeFilial" value="Filial"/>
+                                                        <p:inputText id="nomeFilial"
+                                                                     disabled="true"
+                                                                     value="#{enviarFichaMB.areaFilial.nome}"/>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-10">
+                                                        <div class="row">
+                                                            <div class="col-lg-2">
+                                                                <p:outputLabel for="nacional" value="Nacional"/>
+                                                                <p:selectBooleanButton id="nacional" class="btn-primary"
+                                                                                       value = "#{enviarFichaMB.fichaCliente.nacional}"
+                                                                                       onLabel="Sim"
+                                                                                       offLabel="Não"
+                                                                                       partialsubmit="true"
+                                                                                       onIcon="ui-icon-check"
+                                                                                       offIcon="ui-icon-close">
+                                                                    <p:ajax listener="#{enviarFichaMB.nacional}"/>
+                                                                </p:selectBooleanButton>
+                                                            </div>
+                                                            <div class="col-lg-2">
+                                                                <p:outputLabel for="cpfMotorista" value="Documento (CPF/DNI)"/>
+                                                                <p:inputText id="cpfMotorista" required="true"
+                                                                             value="#{enviarFichaMB.fichaCliente.cpf}">
+                                                                    <p:ajax event="blur"
+                                                                            listener="#{enviarFichaMB.findMotorista}"
+                                                                            update="form0"/>
+                                                                </p:inputText>
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                <p:outputLabel for="tipoMotorista" value="Tipo Motorista/Ajudante"/>
+                                                                <p:selectOneMenu id="tipoMotorista" required="true"
+                                                                                 value="#{enviarFichaMB.tipoMotorista}"
+                                                                                 style="width: 100%;height:34px;" >
+                                                                    
+                                                                    <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                                    
+                                                                    <f:selectItems value="#{enviarFichaMB.lstTipoMotorista}"
+                                                                                   var="listTipos"
+                                                                                   itemValue="#{listTipos.id}"
+                                                                                   itemLabel="#{listTipos.descricao}"/>
+                                                                
+                                                                    <p:ajax update="tipoMotorista" partialSubmit="true"
+                                                                            listener="#{enviarFichaMB.escolherAcaoMotorista}" />
+                                                                
+                                                                </p:selectOneMenu>
+                                                            </div>
+                                                            <div class="col-lg-5">
+                                                                <p:outputLabel for="nomeMotorista" value="Nome Motorista/Ajudante"/>
+                                                                <p:inputText id="nomeMotorista"
+                                                                             required="true"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             value="#{enviarFichaMB.fichaCliente.nome}"/>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row">
+
+                                                            <div class="col-lg-1">
+                                                                <p:outputLabel for="tempoEmpresaMotorista" value="Tempo"/>
+                                                                <p:inputText id="tempoEmpresaMotorista" required="true"
+                                                                             value="#{enviarFichaMB.fichaCliente.tempo}"/>
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                <p:outputLabel for="tipoTempoMotorista" value="&#160;"/>
+                                                                <p:selectOneMenu id="tipoTempoMotorista" required="true"
+                                                                                 value="#{enviarFichaMB.fichaCliente.tempoTipo}">
+                                                                    <f:selectItem itemLabel="Selecione" itemValue="0"/>
+                                                                    <f:selectItem itemLabel="Dias" itemValue="1"/>
+                                                                    <f:selectItem itemLabel="Meses" itemValue="2"/>
+                                                                    <f:selectItem itemLabel="Anos" itemValue="3"/>
+                                                                    <f:selectItem itemLabel="Embarque" itemValue="3"/>
+                                                                </p:selectOneMenu>
+                                                            </div>
+
+                                                            <div class="col-lg-5">
+                                                                <p:outputLabel for="cidadeMotorista" value="Natural de..."/>
+                                                                <p:inputText id="cidadeMotorista" required="true"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             value="#{enviarFichaMB.fichaCliente.cidadeNascimento}">
+                                                                </p:inputText>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+
+                                                            <div class="col-lg-2">
+                                                                <p:outputLabel for="rgMotorista" value="RG"/>
+                                                                <p:inputText id="rgMotorista" disabled="#{!enviarFichaMB.fichaCliente.nacional}"
+                                                                             onchange="this.value = this.value.toUpperCase();" required="#{!enviarFichaMB.fichaCliente.nacional}"
+                                                                             value="#{enviarFichaMB.fichaCliente.fic_rg}"/>
+                                                            </div>
+                                                            <div class="col-lg-1">
+                                                                <p:outputLabel for="ufRgMotorista" value="UF"/>
+                                                                <p:selectOneMenu id="ufRgMotorista"
+                                                                                 disabled="#{!enviarFichaMB.fichaCliente.nacional}"
+                                                                                 required="#{enviarFichaMB.fichaCliente.nacional}" style="min-width: 65px !important;"
+                                                                                 value="#{enviarFichaMB.fichaCliente.ufRg}">
+                                                                    <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                                    <f:selectItems value="#{enviarFichaMB.lstUF}"
+                                                                                   var="listUF"
+                                                                                   itemValue="#{listUF.sigla}"
+                                                                                   itemLabel="#{listUF.sigla}"/>
+                                                                </p:selectOneMenu>
+                                                            </div>
+
+                                                            <div class="col-lg-2">
+                                                                <p:outputLabel for="dtEmissaoRGMotorista" value="Emissão"/>
+                                                                <p:inputMask id="dtEmissaoRGMotorista" disabled="#{!enviarFichaMB.fichaCliente.nacional}"
+                                                                             required="#{enviarFichaMB.fichaCliente.nacional}"
+                                                                             value="#{enviarFichaMB.fichaCliente.dtEmissaoRG}"
+                                                                             mask="99/99/9999">
+                                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                                </p:inputMask>
+                                                            </div>
+
+                                                            <div class="col-lg-2">
+                                                                <p:outputLabel for="nascMotorista" value="Nascimento"/>
+                                                                <p:inputMask id="nascMotorista" required="true"
+                                                                             value="#{enviarFichaMB.fichaCliente.dtNascimento}"
+                                                                             mask="99/99/9999">
+                                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                                </p:inputMask>
+                                                            </div>
+
+                                                        </div>
+                                                        <br/>
+
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <p:outputLabel for="paiMotorista" value="Pai"/>
+                                                                <p:inputText id="paiMotorista"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             value="#{enviarFichaMB.fichaCliente.pai}"/>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <p:outputLabel for="maeMotorista" value="Mãe"/>
+                                                                <p:inputText id="maeMotorista" required="true"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             value="#{enviarFichaMB.fichaCliente.mae}"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" id="endereco_1">
+                                                            <div class="col-lg-2">
+                                                                <p:outputLabel for="cepMotorista" value="CEP"/>
+                                                                <p:inputText id="cepMotorista" mask="99999-999"
+                                                                             maxlength="9" disabled="#{!enviarFichaMB.fichaCliente.nacional}"
+                                                                             value="#{enviarFichaMB.fichaCliente.cep}">
+                                                                    <p:ajax event="blur"
+                                                                            listener="#{enviarFichaMB.BuscaCep}"
+                                                                            partialSubmit="true" process="@this"/>
+
+                                                                </p:inputText>
+                                                            </div>
+                                                            <div class="col-lg-1">
+                                                                <p:outputLabel for="cepUFMotorista" value="UF"/>
+                                                                <p:inputText id="cepUFMotorista"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             disabled="#{enviarFichaMB.foundUF}"
+                                                                             required="#{!enviarFichaMB.fichaCliente.nacional}"
+                                                                             value="#{enviarFichaMB.fichaCliente.uf}"/>
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                <p:outputLabel for="cepCidadeMotorista" value="Cidade"/>
+                                                                <p:inputText id="cepCidadeMotorista" required="true"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             disabled="#{enviarFichaMB.foundCidade}"
+                                                                             value="#{enviarFichaMB.fichaCliente.cidade}"/>
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                <p:outputLabel for="cepBairroMotorista" value="Bairro"/>
+                                                                <p:inputText id="cepBairroMotorista"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             disabled="#{enviarFichaMB.foundBairro}"
+                                                                             required="#{!enviarFichaMB.fichaCliente.nacional}"
+                                                                             value="#{enviarFichaMB.fichaCliente.bairro}"/>
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                <p:outputLabel for="cepComplementoMotorista" value="Complemento"/>
+                                                                <p:inputText id="cepComplementoMotorista"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             value="#{enviarFichaMB.fichaCliente.complemento}"/>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row" id="endereco_2">
+                                                            <div class="col-lg-6">
+                                                                <p:outputLabel for="cepEndMotorista" value="Endereço"/>
+                                                                <p:inputText id="cepEndMotorista" required="true"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             disabled="#{enviarFichaMB.foundEndereco}"
+                                                                             value="#{enviarFichaMB.fichaCliente.endereco}"/>
+                                                            </div>
+                                                            <div class="col-lg-1">
+                                                                <p:outputLabel for="cepNumMotorista" value="Número"/>
+                                                                <p:inputText id="cepNumMotorista" required="true"
+                                                                             onchange="this.value = this.value.toUpperCase();"
+                                                                             value="#{enviarFichaMB.fichaCliente.numero}"/>
+                                                            </div>
+
+                                                            <div class="col-lg-2">
+                                                                <p:outputLabel for="tipoTelMotorista" value="Tipo Telefone"/>
+                                                                <p:selectOneMenu id="tipoTelMotorista" required="true"
+                                                                                 value="#{enviarFichaMB.fichaCliente.tipoTelefone.id}">
+                                                                    <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                                    <f:selectItems value="#{enviarFichaMB.lstTipoTelefone}"
+                                                                                   var="listTipoTelefone"
+                                                                                   itemValue="#{listTipoTelefone.id}"
+                                                                                   itemLabel="#{listTipoTelefone.descricao}"/>
+                                                                </p:selectOneMenu>
+                                                            </div>
+
+                                                            <div class="col-lg-1">
+                                                                <p:outputLabel for="cepDDDMotorista" value="DDD"/>
+                                                                <p:inputMask id="cepDDDMotorista"
+                                                                             required="true"
+                                                                             value="#{enviarFichaMB.fichaCliente.ddd}"
+                                                                             mask="99"/>
+                                                            </div>
+
+                                                            <div class="col-lg-2">
+                                                                <p:outputLabel for="telMotorista" value="Telefone"/>
+                                                                <p:inputMask id="telMotorista" required="true"
+                                                                             value="#{enviarFichaMB.fichaCliente.telefone}"
+                                                                             mask="9999-9999?9"/>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-2" style="padding-top:25px;">
+                                                        <p:panel styleClass="box-primary" widgetVar="panelFoto" header="Foto Motorista" style="text-aling:center">
+                                                      
+                                                            <h:graphicImage value="/images/dynamic/?file=#{enviarFichaMB.foto(enviarFichaMB.fichaCliente.motorista.id)}" 
+                                                            	style="width:100%;padding-bottom: 15px;border-color:black;border-style:double"/>
+                                                            <br/>
+														   	 
+                                                            <p:fileUpload id="registryUpload"
+                                                                          label ="Atualizar Foto" previewWidth="120"                                                                      
+                                                                          fileUploadListener="#{enviarFichaMB.uploadFoto}" fileLimit="1" fileLimitMessage="Permitido apenas um anexo."
+                                                                          uploadLabel="Confirmar" cancelLabel=".:Cancela:." 
+                                                                          allowTypes="/(\.|\/)(gif|jpe?g|png|GIF|JPE?G|PNG)$/" sizeLimit="6299999" mode="advanced"  invalidSizeMessage="Tamanho máximo aceito por arquivo 6MB (megaBytes)."
+                                                                          skinSimple="true" invalidFileMessage="Tipo de Arquivo não permitido"
+                                                                          messageTemplate="Não foi possível enviar para o servidor o arquivo {name}. O servidor aceita apenas imagens."
+                                                                          update="msgTrocaFoto"  >
+                                                                          
+                                                                          
+                                                             </p:fileUpload>
+                                                                                                                        
+                                                            <p:growl id="msgTrocaFoto" showDetail="true" />
+															
+															
+															<!-- <p:graphicImage id="" value="#{enviarFichaMB.scImgFile}" rendered="#{enviarFichaMB.scImgFile != null} "/> -->
+															
+                                                        </p:panel>
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                            </div>
+                                        </div>
+                                        
+                                        <ui:fragment id="fragMotoristaCNH" rendered="#{enviarFichaMB.showCNH == true}">
+                                            <div id="dCNH" class="box box-solid box-default" >
+                                                <div class="box-header with-border" style="padding-top: 1px">
+                                                    <h4 style="padding-top: 5px;">Carteira Nacional de Habilitação</h4>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="row">
+                                                                <div class="col-lg-2">
+                                                                    <p:outputLabel for="cnhMotorista" value="C.N.H."/>
+                                                                    <p:inputText id="cnhMotorista"
+                                                                                 required="#{enviarFichaMB.fichaCliente.nacional}"
+                                                                                 onchange="this.value = this.value.toUpperCase();"
+                                                                                 value="#{enviarFichaMB.fichaCliente.cnh}"/>
+                                                                </div>
+                                                                <div class="col-lg-1">
+                                                                    <p:outputLabel for="ufCNHMotorista" value="UF"/>
+                                                                    <p:selectOneMenu id="ufCNHMotorista"  style="min-width: 65px !important;"
+                                                                                     required="#{enviarFichaMB.fichaCliente.nacional}"
+                                                                                     value="#{enviarFichaMB.fichaCliente.ufCNH}">
+                                                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                                        <f:selectItems value="#{enviarFichaMB.lstUF}"
+                                                                                       var="listUF"
+                                                                                       itemValue="#{listUF.sigla}"
+                                                                                       itemLabel="#{listUF.sigla}"/>
+                                                                    </p:selectOneMenu>
+                                                                </div>
+                                                                <div class="col-lg-1" >
+                                                                    <p:outputLabel for="categMotorista" value="Categoria"/>
+                                                                    <p:selectOneMenu id="categMotorista"  style="min-width: 65px !important;"
+                                                                                     required="#{enviarFichaMB.fichaCliente.nacional}"
+                                                                                     value="#{enviarFichaMB.fichaCliente.categoria}">
+                                                                        <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                                        <f:selectItems value="#{enviarFichaMB.lstCategoriaCNH}"
+                                                                                       var="listCategoriaCNH"
+                                                                                       itemValue="#{listCategoriaCNH.id}"
+                                                                                       itemLabel="#{listCategoriaCNH.descricao}"/>
+                                                                    </p:selectOneMenu>
+                                                                </div>
+                                                                <div class="col-lg-2">
+                                                                    <p:outputLabel for="primemissaoCnhMotorista"
+                                                                                   value="1a. Emissão"/>
+                                                                    <p:inputMask id="primemissaoCnhMotorista"
+                                                                                 required="#{enviarFichaMB.fichaCliente.nacional}"
+                                                                                 value="#{enviarFichaMB.fichaCliente.dtPrimeiraEmissaoCNH}"
+                                                                                 mask="99/99/9999">
+                                                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                                    </p:inputMask>
+                                                                </div>
+
+                                                                <div class="col-lg-1" style="width:120px;">
+                                                                    <p:outputLabel for="emissaoCnhMotorista"
+                                                                                   value="Emissão"/>
+                                                                    <p:inputMask id="emissaoCnhMotorista"
+                                                                                 required="#{enviarFichaMB.fichaCliente.nacional}"
+                                                                                 value="#{enviarFichaMB.fichaCliente.dtEmissaoCNH}"
+                                                                                 mask="99/99/9999">
+                                                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                                    </p:inputMask>
+                                                                </div>
+
+                                                                <div class="col-lg-1" style="width:120px;">
+                                                                    <p:outputLabel for="vctoCnhMotorista"
+                                                                                   value="Validade"/>
+                                                                    <p:inputMask id="vctoCnhMotorista"
+                                                                                 required="#{enviarFichaMB.fichaCliente.nacional}"
+                                                                                 value="#{enviarFichaMB.fichaCliente.dtValidadeCNH}"
+                                                                                 mask="99/99/9999">
+                                                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                                    </p:inputMask>
+                                                                </div>
+                                                                <div class="col-lg-1" style="width:150px;">
+                                                                    <p:outputLabel for="segCnhMotorista" value="No. Segurança"/>
+                                                                    <p:inputText id="segCnhMotorista"
+                                                                                 required="#{enviarFichaMB.fichaCliente.nacional}"
+                                                                                 onchange="this.value = this.value.toUpperCase();"
+                                                                                 value="#{enviarFichaMB.fichaCliente.numSegCnh}"/>
+                                                                </div>
+                                                                <div class="col-lg-1" style="width:150px;">
+                                                                    <p:outputLabel for="regCnhMotorista" value="No. Registro"/>
+                                                                    <p:inputText id="regCnhMotorista"
+                                                                                 required="#{enviarFichaMB.fichaCliente.nacional}"
+                                                                                 onchange="this.value = this.value.toUpperCase();"
+                                                                                 value="#{enviarFichaMB.fichaCliente.registroCNH}"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" >
+
+                                                        <div class="col-lg-6" style="padding-top:25px;">
+                                                            <p:panel styleClass="box-primary" widgetVar="panelFotoFrenteCNH">
+                                                        
+                                                                <br/>
+                                                                <p:fileUpload id="regUploadCNHFrente" style="width: 100%; padding-top: 20px;"
+                                                                              label ="Imagem CNH (Frente)" uploadLabel="Enviar arquivo" cancelLabel="Cancelar envio"
+                                                                              fileUploadListener="#{enviarFichaMB.uploadFotoCNHFrente}" fileLimit="1" fileLimitMessage="Permitido apenas um anexo."
+                                                                              value="#{enviarFichaMB.imgCnhFrenteFile}" sizeLimit="6299999" mode="advanced" invalidSizeMessage="Tamanho máximo aceito por arquivo 6MB (megaBytes)."
+                                                                              allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|GIF|JPE?G|PNG|PDF)$/" 
+                                                                              skinSimple="true" invalidFileMessage="Tipo de Arquivo não permitido"
+                                                                              messageTemplate="Não foi possível enviar para o servidor o arquivo {name}. O servidor aceita apenas imagens ou PDF."
+                                                                              update="regUploadMessageCNHFrente msgCNHFrente"  />
+                                                                <p:message id="regUploadMessageCNHFrente" for="regUploadCNHFrente" />
+                                                                <p:growl id="msgCNHFrente" showDetail="true" />
+                                                            </p:panel>
+                                                        </div>
+                                                        <div class="col-lg-6" style="padding-top:25px;">
+                                                            <p:panel styleClass="box-primary" widgetVar="panelFotoVersoCNH">
+
+                                                                <br/>
+                                                                <p:fileUpload id="regUploadCNHVerso" style="width: 100%; padding-top: 20px;"
+                                                                
+                                                                			  fileUploadListener="#{enviarFichaMB.uploadFotoCNHVerso}" fileLimit="1" fileLimitMessage="Permitido apenas um anexo."
+                                                                              label ="Imagem CNH (Verso)" uploadLabel="Enviar arquivo" cancelLabel="Cancelar envio" 
+                                                                              value="#{enviarFichaMB.imgCnhVersoFile}" sizeLimit="6299999" mode="advanced" invalidSizeMessage="Tamanho máximo aceito por arquivo 6MB (megaBytes)."
+                                                                              allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|GIF|JPE?G|PNG|PDF)$/" 
+                                                                              skinSimple="true" invalidFileMessage="Tipo de Arquivo não permitido"
+                                                                              messageTemplate="Não foi possível enviar para o servidor o arquivo {name}. O servidor aceita apenas imagens ou PDF."
+                                                                              update="regUploadMessageCNHVerso msgCNHVerso"  />
+                                                                <p:message id="regUploadMessageCNHVerso" for="regUploadCNHVerso" />
+                                                                 <p:growl id="msgCNHVerso" showDetail="true" />
+                                                            </p:panel>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ui:fragment>
+                                        <br/>
+
+                                        <div id="dRefPessoais" class="box box-solid box-default">
+                                            <div class="box-header with-border" style="padding-top: 1px">
+                                                <h4 style="padding-top: 5px;">Referências Pessoais</h4>
+                                            </div>
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <p:dataTable var="referencias"  id="PanRefPessoal"
+                                                                     value="#{enviarFichaMB.referenciasPessoais}">
+                                                            <p:column headerText="Ordem" width="15">
+                                                                <h:outputText value="#{referencias.id}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Contato" width="50">
+                                                                <h:outputText value="#{referencias.contato}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Parentesco" width="30">
+                                                                <h:outputText value="#{enviarFichaMB.buscaTipoContato(referencias.parentesco, 31)}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Telefone" width="25">
+                                                                <h:outputText
+                                                                        value="#{referencias.ddd} #{referencias.telefone}"
+                                                                        mask="(99) 9999-9999?9"/>
+                                                            </p:column>
+                                                            <p:column headerText="&#160;" width="5">
+                                                                <p:commandButton  value="Excluir" styleClass="btn-primary"
+                                                                                 process="@this"
+                                                                                 action="#{enviarFichaMB.delReferenciaPessoal(referencias.id)}"
+                                                                                 style="margin-right:10px;"
+                                                                                 partialSubmit="true">
+
+                                                                </p:commandButton>
+                                                            </p:column>
+
+                                                        </p:dataTable>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="pull-right" style="padding: 15px;">
+                                                        <p:commandButton id="btnReferencias" styleClass="btn-primary" disabled="#{!enviarFichaMB.showRefPessoal}"
+                                                                         action="#{enviarFichaMB.clearPessoal}"
+                                                                         oncomplete="onTop();"
+                                                                         process="@form"
+                                                                         partialSubmit="true"
+                                                                         value="Adicionar">
+                                                            <f:ajax execute="@form" render="@form"/>
+                                                        </p:commandButton>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <br/>
+
+                                        <div id="dRefComerciais" class="box box-solid box-default" >
+                                            <div class="box-header with-border" style="padding-top: 1px">
+                                                <h4 style="padding-top: 5px;">Referência Profissional</h4>
+                                            </div>
+                                            <div class="box-body">
+
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <p:dataTable var="refComerciais" id="PanRefComercial"
+                                                                     value="#{enviarFichaMB.referenciasComerciais}">
+                                                            <p:column headerText="Ordem" width="15">
+                                                                <h:outputText value="#{refComerciais.id}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Contato" width="50">
+                                                                <h:outputText value="#{refComerciais.contato}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Tipo Contato" width="30">
+                                                                <h:outputText value="#{enviarFichaMB.buscaTipoContato(refComerciais.tipoContato, 32)}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Telefone" width="25">
+                                                                <h:outputText
+                                                                        value="#{refComerciais.ddd} #{refComerciais.telefone}"
+                                                                        mask="(99) 9999-9999?9"/>
+                                                            </p:column>
+                                                            <p:column headerText="&#160;" width="5">
+                                                                <p:commandButton value="Excluir" styleClass="btn-primary"
+                                                                                 process="@this"
+                                                                                 action="#{enviarFichaMB.delReferenciaComercial(refComerciais.id)}"
+                                                                                 style="margin-right:10px;"
+                                                                                 partialSubmit="true">
+                                                                    <f:ajax execute="@form" render="@form"/>
+                                                                </p:commandButton>
+                                                            </p:column>
+                                                        </p:dataTable>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="pull-right" style="padding: 15px;">
+                                                        <p:commandButton id="btnRefRC" styleClass="btn-primary" disabled="#{!enviarFichaMB.showRefComercial}"
+                                                                         actionListener="#{enviarFichaMB.clearComercial}"
+                                                                         update="@form"
+                                                                         oncomplete="onTop();"
+                                                                         value="Adicionar" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <br/>
+                                    </ui:fragment>
+                                    
+                                    <ui:fragment rendered="#{enviarFichaMB.painelVeiculo}">
+                                        <div id="dVeiculos" class="box box-solid box-default">
+                                            <div class="box-header with-border" style="padding-top: 1px">
+                                                <h4>Informações dos Veículos ( e/ou Reboques)</h4>
+                                            </div>
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <p:dataTable var="refVeiculos" id="panelVeiculos" editable="false"
+                                                                     value="#{enviarFichaMB.referenciasVeiculos}">
+                                                            <p:column headerText="Ordem" width="3">
+                                                                <h:outputText value="#{refVeiculos.id}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Placa" width="10">
+                                                                <h:outputText value="#{refVeiculos.placaView}" />
+                                                            </p:column>
+
+                                                            <p:column headerText="Tipo" width="10">
+                                                                <h:outputText
+                                                                        value="#{enviarFichaMB.showTipo(refVeiculos.tipo)}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Marca" width="20">
+                                                                <h:outputText
+                                                                        value="#{enviarFichaMB.showMarca(refVeiculos.marca)}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Modelo" width="20">
+                                                                <h:outputText
+                                                                        value="#{enviarFichaMB.showModelo(refVeiculos.modelo)}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Renavam" width="10">
+                                                                <h:outputText value="#{refVeiculos.renavam}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Chassi" width="20">
+                                                                <h:outputText value="#{refVeiculos.chassi}"/>
+                                                            </p:column>
+
+
+                                                            <p:column headerText="&#160;" width="5">
+                                                                <p:commandButton value="Excluir" styleClass="btn-primary"
+                                                                                 process="@this"
+                                                                                 action="#{enviarFichaMB.delReferenciaVeiculos(refVeiculos.id)}"
+                                                                                 style="margin-right:10px;"
+                                                                                 partialSubmit="true">
+                                                                    <f:ajax execute="@form" render="@form"/>
+                                                                </p:commandButton>
+                                                            </p:column>
+                                                        </p:dataTable>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="pull-right" style="padding: 15px;">
+                                                        <p:commandButton id="btnRefVeiculo" styleClass="btn-primary" disabled="#{enviarFichaMB.limitadorVeiculo}"
+                                                                         action="#{enviarFichaMB.clearVeiculos}"
+                                                                         process="@form"
+                                                                         partialSubmit="true"
+                                                                         oncomplete="javascript: window.scrollTo(0,0);"
+                                                                         value="Adicionar">
+                                                            <f:ajax execute="@form" render="@form"/>
+                                                        </p:commandButton>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                    </ui:fragment>
+                                   
+                                    <br/>
+
+                                    <div class="box box-solid box-default">
+                                        <div class="box-header with-border" style="padding-top: 1px">
+                                            <h4>Observações</h4>
+                                        </div>
+                                        <div class="box-body">
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <p:inputTextarea id="observacoes" rows="5"
+                                                                     value="#{enviarFichaMB.fichaCliente.observacaoCliente}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    
+                                    
+                                    <ui:fragment id="fragMercadoria" rendered="#{enviarFichaMB.showMercadoria == true}">
+                                        <div class="box box-solid box-primary" id="panelMercadoria" >
+                                                <div class="box-header with-border" style="padding-top: 1px">
+                                                    <h4>Mercadorias</h4>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-3">
+                                                            <p:outputLabel for="tipoMercadoria" value="Mercadoria"/>
+                                                            <p:selectOneMenu id="tipoMercadoria"
+                                                                             value="#{enviarFichaMB.idMercadoria}" 
+                                                                             style="width: 100%;height:34px;" >
+                                                                <f:selectItem itemLabel="&#160;" itemValue=""/>
+                                                                <f:selectItems value="#{enviarFichaMB.lstMercadorias}"
+                                                                               var="listMercadorias" 
+                                                                               itemValue="#{listMercadorias.id}"
+                                                                               itemLabel="#{listMercadorias.descricao}"/>
+                                                            </p:selectOneMenu>
+                                                        </div>
+
+                                                        <div class="col-lg-3">
+                                                            <p:outputLabel for="paisOrigem" value="Pais Origem"/>
+                                                            <p:selectOneMenu id="paisOrigem"
+                                                                             value="#{enviarFichaMB.paisOrigem}"
+                                                                             style="width: 100%;height:34px;" >
+                                                                <f:selectItem itemLabel="&#160;" itemValue="0"/>
+                                                                <f:selectItems value="#{enviarFichaMB.lstPais}"
+                                                                               var="listPais"
+                                                                               itemValue="#{listPais.id}"
+                                                                               itemLabel="#{listPais.nome}"/>
+                                                                <p:ajax update="paisOrigem" partialSubmit="true"
+                                                                        listener="#{enviarFichaMB.escolherUFOrigem}" />
+                                                            </p:selectOneMenu>
+                                                        </div>
+
+
+                                                        <div class="col-lg-3">
+                                                            <p:outputLabel for="UFOrigem" value="UF Origem"/>
+                                                            <p:selectOneMenu id="UFOrigem"  disabled="#{!enviarFichaMB.habilitaUF}"
+                                                                             value="#{enviarFichaMB.ufOrigem}"
+                                                                             style="width: 100%;height:34px;" >
+                                                                <f:selectItem itemLabel="&#160;" itemValue="0"/>
+                                                                <f:selectItems value="#{enviarFichaMB.lstUFOrigem}"
+                                                                               var="listUF"
+                                                                               itemValue="#{listUF.id}"
+                                                                               itemLabel="#{listUF.nome}"/>
+                                                                <p:ajax update="UFOrigem" partialSubmit="true"
+                                                                        listener="#{enviarFichaMB.escolherCidadeOrigem}" />
+                                                            </p:selectOneMenu>
+                                                        </div>
+
+                                                        <div class="col-lg-3">
+                                                            <p:outputLabel for="cidOrigem" value="Cidade Origem"/>
+                                                            <p:selectOneMenu id="cidOrigem"  disabled="#{!enviarFichaMB.habilitaCidade}"
+                                                                             value="#{enviarFichaMB.cidOrigem}"
+                                                                             style="width: 100%;height:34px;" >
+                                                                <f:selectItem itemLabel="&#160;" itemValue="0"/>
+                                                                <f:selectItems value="#{enviarFichaMB.lstCidadeOrigem}"
+                                                                               var="listCidade"
+                                                                               itemValue="#{listCidade.id}"
+                                                                               itemLabel="#{listCidade.nome}"/>
+                                                            </p:selectOneMenu>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-3">
+                                                            <p:outputLabel for="paisDestino" value="Pais Destino"/>
+                                                            <p:selectOneMenu id="paisDestino"
+                                                                             value="#{enviarFichaMB.paisDestino}"
+                                                                             style="width: 100%;height:34px;" >
+                                                                <f:selectItem itemLabel="&#160;" itemValue="0"/>
+                                                                <f:selectItems value="#{enviarFichaMB.lstPais}"
+                                                                               var="listPais"
+                                                                               itemValue="#{listPais.id}"
+                                                                               itemLabel="#{listPais.nome}"/>
+                                                                <p:ajax update="paisDestino" partialSubmit="true"
+                                                                        listener="#{enviarFichaMB.escolherUFDestino}" />
+                                                            </p:selectOneMenu>
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <p:outputLabel for="UFDestino" value="UF Destino"/>
+                                                            <p:selectOneMenu id="UFDestino"
+                                                                             disabled="#{!enviarFichaMB.habilitaUFDestino}"
+                                                                             value="#{enviarFichaMB.ufDestino}"
+                                                                             style="width: 100%;height:34px;" >
+                                                                <f:selectItem itemLabel="&#160;" itemValue="0"/>
+                                                                <f:selectItems value="#{enviarFichaMB.lstUFDestino}"
+                                                                               var="listUF"
+                                                                               itemValue="#{listUF.id}"
+                                                                               itemLabel="#{listUF.nome}"/>
+                                                                <p:ajax update="UFDestino" partialSubmit="true"
+                                                                        listener="#{enviarFichaMB.escolherCidadeDestino}" />
+                                                            </p:selectOneMenu>
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <p:outputLabel for="cidDestino" value="Cidade Destino"/>
+                                                            <p:selectOneMenu id="cidDestino"
+                                                                             disabled="#{!enviarFichaMB.habilitaCidadeDestino}"
+                                                                             value="#{enviarFichaMB.cidDestino}"
+                                                                             style="width: 100%;height:34px;" >
+                                                                <f:selectItem itemLabel="&#160;" itemValue="0"/>
+                                                                <f:selectItems value="#{enviarFichaMB.lstCidadeDestino}"
+                                                                               var="listCidade"
+                                                                               itemValue="#{listCidade.id}"
+                                                                               itemLabel="#{listCidade.nome}"/>
+                                                            </p:selectOneMenu>
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <p:outputLabel for="vlrMercadoria" value="Valor"/>
+                                                            <p:inputText id="vlrMercadoria" onkeydown="mascara(this,moeda)"
+                                                                         value="#{enviarFichaMB.fichaCliente.mercValor}">
+                                                                <f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+
+                                                            </p:inputText>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </ui:fragment>
+
+                                    <br/>
+                                    <div class="row">
+                                        <div class="pull-right" style="padding: 15px;">
+                                            <p:commandButton id="btnEnviarFicha" styleClass="btn-primary"
+                                                             action="#{enviarFichaMB.salvarFichaVitimologiaNew}"
+                                                             oncomplete="javascript: window.scrollTo(0, 0);"
+                                                             update="@form"
+                                                             process="@form"
+                                                             value="Enviar Ficha"/>
+                                        </div>
+                                    </div>
+
+
+
+
+                            </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <p:dialog id="dlgFechado" widgetVar="dlgFechado" header="Esta ficha foi enviada com sucesso!" modal="true"
+                  resizable="false" closable="false"
+                  width="600" >
+            <p:panel>
+                <div class="row">
+                    <div class="col-lg-12" align="center">
+                        <img src="/manager/resources/images/network_upload_icon.png" style="width: 50%;"/>
+                        <h3>A Ficha já esta em nossa base! Para consultas utilize o número : ${enviarFichaMB.idCadastral} <br/></h3>
+                    </div>
+                </div>
+                <f:facet name="footer">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <span>&#160;</span>
+
+                        </div>
+                        <div class="col-lg-3" style="padding-left:40px;">
+                            <p:commandButton value="Fechar"
+                                             onclick="PF('dlgFechado').hide();"
+                                             action="#{enviarFichaMB.btnBack}"
+                                             styleClass="btn-primary" />
+                        </div>
+                    </div>
+                </f:facet>
+            </p:panel>
+        </p:dialog>
+        </h:form>
+
+        <p:dialog id="dialog" widgetVar="dialog" resizable="false"
+                  closable="false" modal="true" width="900" styleClass="disable-scroll">
+            <h:form id="formRefPessoal">
+                <div class="box box-solid box-primary">
+                    <div class="box-header with-border" style="padding-top: 1px">
+                        <h3>Referências Pessoais</h3>
+                     </div>
+                    <div class="box-body">
+                        <ui:include src="dlgReferenciaPessoal.xhtml"/>
+                    </div>
+
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="dialogRC" widgetVar="dialogRC" width="900"
+                  resizable="false" closable="false" modal="true"
+                  styleClass="disable-scroll" >
+            <h:form id="formRefComercial">
+                <div class="box box-solid box-primary">
+                    <div class="box-header with-border" style="padding-top: 1px">
+                        <h3>Referências Comerciais</h3>
+                    </div>
+                    <div class="box-body">
+                        <ui:include src="dlgReferenciaComercial.xhtml"/>
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="dlgVeiculo" widgetVar="dlgVeiculo"
+                  resizable="false" closable="false" modal="true"
+                  width="900" styleClass="disable-scroll">
+
+                <div class="box box-solid box-primary">
+                    <div class="box-header with-border" style="padding-top: 1px">
+                        <h3>Veículos e Reboques</h3>
+                    </div>
+                    <div class="box-body">
+                        <ui:include src="dlgFichaVeiculos.xhtml"/>
+                    </div>
+                </div>
+
+        </p:dialog>
+
+        <!--<p:dialog id="dlgImagens" widgetVar="dlgImagens" modal="true" header="Adicionar Imagens de Documentação" resizable="false"-->
+                  <!--closable="true" width="900" height="300" styleClass="box-primary ui-dialog ui-dialog-titlebar">-->
+            <!--<ui:include src="dlgFichaImagens.xhtml"/>-->
+        <!--</p:dialog>-->
+
+        <script type="text/javascript">
+            function handleResponse(xhr, status, args) {
+                if (args.validationFailed) {
+                    window.scrollTo(0, 0);
+                }
+            }
+
+            function Top() {
+                window.scrollTo(0, 0);
+            }
+
+            function onTop(args) {
+                window.scrollTo(0, 0);
+                window.location='#'+ args;
+            }
+
+            function focusField(id){
+                $(id).focus();
+            }
+
+
+        </script>
+
+        <adm:sidebar collapsed="true"/>
+
+
+    </ui:define>
+
+
+
+</ui:composition>

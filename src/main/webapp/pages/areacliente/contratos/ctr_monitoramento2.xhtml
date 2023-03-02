@@ -1,0 +1,396 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:adm="http://global5.com.br/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+			.ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
+				padding: 0.5em 0;
+				margin-left: 10px;
+				}
+
+			.ui-orderlist .ui-orderlist-list {
+				height: auto;
+			}
+	
+			.ui-orderlist .ui-grid-row .ui-grid-col-2, .ui-orderlist .ui-grid-row .ui-grid-col-10
+				{
+				padding: 0;
+			}
+	
+			.center {
+				margin-left: auto;
+				margin-right: auto;
+				display: block;
+			}
+		</style>
+	</ui:define>
+
+	<ui:define name="title">
+		Veículos Fixos
+	</ui:define>
+
+	<ui:define name="description">
+		- registro e manutenção
+	</ui:define>
+
+	<ui:define name="body">
+		
+		<adm:breadcrumb title="Veículos Fixos" />
+		
+		<ui:fragment rendered="#{!clienteVeiculoMB.abertoMonitoramento}">
+			<h:form>
+				<p:panel styleClass="box-danger">
+					<h4 style="color: #3193be"> Permissão de acesso apenas para clientes que têm contratos de monitoramento ativo !</h4>
+				</p:panel>
+			</h:form>
+		</ui:fragment>
+		
+		<ui:fragment rendered="#{clienteVeiculoMB.abertoMonitoramento}">
+		<h:form id="frmCadastroCnpj">
+			
+			<h:inputHidden value="#{clienteVeiculoMB.mostraEdicao}" id="testeId" />
+			
+			<p:panel styleClass="box-danger">
+			
+				<h5 style="font-weight: bold; color: gray">Matriz</h5>
+				
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-10 ui-lg-12">
+						
+						<div class="ui-g-12" >
+
+							<div class="ui-g-7">
+								<p:outputLabel value="Nome: "
+									style="color:black;font-weight:bold" />
+								<p:spacer />
+								<p:outputLabel id="outNome" value="#{clienteVeiculoMB.areaNome}" 
+									style="text-align: left; display:block; color:#008080 ; font-size: 20px " />
+							</div>
+
+							<div class="ui-g-2">
+								<p:outputLabel value="Nível" />
+								<p:spacer />
+								<p:outputLabel id="outNivel" value="#{clienteVeiculoMB.areaNivelNome}"
+									style="text-align: left; display:block; color:#008080 ; font-size: 20px " />
+							</div>
+
+							<div class="ui-g-3">
+
+								<p:outputLabel value="CNPJ" />
+								<p:spacer />
+								<p:outputLabel id="outCnpj"
+									value="#{clienteVeiculoMB.formataCnpj(clienteVeiculoMB.areaCnpj)}"
+									style="text-align: left; display:block; color:#008080 ; font-size: 20px " />
+
+							</div>
+
+						</div>
+												
+						<p:spacer width="2px" />
+						
+						<p:separator />
+						
+						<h:form id="frmCadastroArea" >
+							
+							<h6 style="font-weight: bold; color: gray">Inclusão e Manutenção de Placas </h6>
+							
+							<p:panelGrid style="width:100%;"
+									styleClass="ui-panelgrid-blank">
+								
+								<div class="ui-g ui-fluid">
+									<div class="col-lg-2">
+										<p:outputLabel value="Id Contrato: " />
+									</div>
+									<p:spacer height="5px" />
+
+									<div class="col-lg-2">
+										<p:outputLabel id="outIdCtrMonitora"
+											value="#{clienteVeiculoMB.ctr.id}" />
+									</div>
+
+								</div>
+								<BR/>
+								<div class="ui-g ui-fluid">
+									<div class="col-lg-10">
+										<p:outputLabel value="Cadastro de Veículos por Placas" />
+									</div>
+								</div>
+								<BR/>
+								<div class="ui-g ui-fluid">
+									<div class="col-lg-2">
+										<p:inputText id="inputPlacaOuIsca" size="85"											
+											value="#{clienteVeiculoMB.cliVei.placaVeiculo}" 
+											maxlength="8" onkeyup="this.value = this.value.toUpperCase();"
+											style="text-align:center"
+											placeholder=" Informe aqui a placa"  >
+										</p:inputText>
+									</div>
+								
+										<div class="col-lg-2">
+											<p:commandButton process="@this"  id="btnAdicionarPlacas"
+													value="Adicionar" icon="fa fa-plus" 
+													action="#{clienteVeiculoMB.adicionaPlacaOuIsca(1,clienteVeiculoMB.cliVei.placaVeiculo)}"
+													style="width: 150px; text-align: center;display: block;"
+													styleClass="btn btn-success">	
+																				
+											</p:commandButton>
+										</div>
+								
+									
+								</div>
+								<p:spacer width="2px" />
+								<p:separator />
+																				
+							</p:panelGrid>						
+						
+						</h:form>
+						
+					</div>									
+				</div>
+				
+				
+				<h:form id="formTable">
+			
+							<p:dataTable value="#{clienteVeiculoMB.lstClienteVeiculo}"
+								var="c" emptyMessage="Sem registro" widgetVar="dtPlacasRegistradas"
+								rowKey="#{c.id}" id="tablePesqCli" filteredValue="#{clienteVeiculoMB.lstClienteVeiculoSelect}"
+								scrollable="true" lazy="false"								
+								selectionMode="single"								
+								>
+								
+								<f:facet name="header">
+										<div class="products-table-header">
+                    						<span style="font-weight: bold">Pesquisa: </span>
+                    						
+				     						<span class="filter-container ui-input-icon-left">
+	                        					<i class="pi pi-search"></i>
+	                        					<p:inputText id="globalFilter" onkeyup="PF('dtPlacasRegistradas').filter()" 
+	                        						placeholder="Informe parte da Placa"/>
+	                    					</span>
+	                    					
+				     					</div>
+										
+										
+										<BR/>								
+			     							Placas Cadastradas,  qtde: #{clienteVeiculoMB.qtdPlacas}	
+			     						
+			     						<BR/>
+			     										     								     							
+			     				</f:facet>
+								
+									<p:ajax event="rowSelect" listener="#{clienteVeiculoMB.onRowSelect}" />
+			  						<p:ajax event="rowUnselect" listener="#{clienteVeiculoMB.onRowUnselect}" />								
+								
+								<p:column headerText="Id" style="width:20%;" filterBy="#{c.placaVeiculo}" filterPosition="top" visible="false">								
+									<h:outputText value="#{c.id}" style="text-align: center; display: block" />
+								</p:column>		
+								<p:column headerText="Placas" style="width:20%;" > 								
+									<h:outputText value="#{c.placaVeiculo}" style="text-align: center; display: block" />
+								</p:column>											
+								
+								<p:column headerText="Registro" style="width:15%;">
+									<h:outputText value="#{c.dtCriacao}" style="text-align: center; display: block" >
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								
+								<p:column headerText="Usuário" style="width:25%;">
+									<h:outputText value="#{c.usuCriacao.nome}"  >
+									</h:outputText>
+								</p:column>
+								
+								<p:column headerText="Mercosul" style="width:15%;">
+									<h:outputText value="#{c.dtAlteracaoPlacaMercosul}" style="text-align: center; display: block" >
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								
+								<p:column headerText="Usuário" style="width:25%;">
+									<h:outputText value="#{c.usuAlteraPlacaMercosul.nome}"  >
+									</h:outputText>
+								</p:column>
+								
+								<f:facet name="footer">
+									
+									<div class="align-right">
+										
+										<BR/>
+										
+										<p:commandButton value="Transformar  em  Mercosul"
+											process="@this" styleClass="btn-success" partialSubmit="true"
+											actionListener="#{clienteVeiculoMB.solicitarTransformacaoPlacaVeiculo(c.id)}"
+											update="@form" oncomplete="PF('dlgMercosul').show();onTop('dlgMercosul')">
+										</p:commandButton>																												
+										
+									
+									</div>
+
+									
+									<div class="align-right">
+										
+										<BR/>
+										
+											<p:commandButton value="Remover placa selecionada"
+												process="@this" styleClass="btn-danger" partialSubmit="true"
+												actionListener="#{clienteVeiculoMB.solicitarExclusaoPlacaVeiculo(c.id)}"
+												update="@form" oncomplete="PF('dlgCancel').show();onTop('dlgCancel')">
+											</p:commandButton>																										
+										
+									
+									</div>
+								
+								</f:facet>
+			
+			
+							</p:dataTable>
+					  
+				   			<p:dialog id="dlgCancel" widgetVar="dlgCancel"
+								header="Deseja excluir a placa selecionada ? " modal="true"
+								resizable="false" closable="false" width="600" position="center, center"
+								styleClass="box-primary">
+								<p:outputPanel id="fatDetalheCancel">
+				
+									<div class="ui-g ui-fluid" >
+										<div class="col-lg-4">
+											<p:outputLabel value="Placa: " />
+										</div>
+										<div class="col-lg-6" style="text-align:left;display:block">
+										<p:outputLabel value=" #{clienteVeiculoMB.cliVei.placaVeiculo} " style="color: #1266e5;" />
+										</div>
+									</div>
+														
+									<p:spacer width="2px" />
+									<p:separator style="border-color:red" />
+									<div class="align-center">
+				
+										<p:commandButton value="Voltar" onclick="PF('dlgCancel').hide()"
+											
+											styleClass="btn btn-primary">
+										</p:commandButton>
+				
+										<p:commandButton value="Confirmar" styleClass="btn btn-success"
+											actionListener="#{clienteVeiculoMB.deletarPlaca}"
+											onclick="PF('dlgCancel').hide()"
+											oncomplete="javascript: window.scrollTo(0, 0);"
+				                            update="@form" process="@this">
+										</p:commandButton>
+				
+									</div>
+				
+								</p:outputPanel>
+				
+							</p:dialog>
+							
+							<p:dialog id="dlgMercosul" widgetVar="dlgMercosul"
+								header="Deseja transformar a placa selecionada para o tipo Mercosul ? " modal="true"
+								resizable="false" closable="false" width="600" position="center, center"
+								styleClass="box-primary">
+								<p:outputPanel id="fatDetalhe">
+								
+								<ui:fragment rendered="#{!clienteVeiculoMB.abrirTransfPlacaMercosul}">
+									
+									<div class="ui-g ui-fluid" >
+										<div class="col-lg-12">
+											<p:outputLabel value="A placa já está no formato Mercosul!" style="color: #ff6633;"/>
+										</div>
+									</div>
+								
+								<p:spacer width="2px" />
+									<p:separator style="border-color:red" />
+									<div class="align-center">
+				
+										<p:commandButton value="Voltar" onclick="PF('dlgMercosul').hide()"
+											
+											styleClass="btn btn-primary">
+										</p:commandButton>
+									</div>
+									
+								</ui:fragment>
+									
+								<ui:fragment rendered="#{clienteVeiculoMB.abrirTransfPlacaMercosul}">
+								
+									<div class="ui-g ui-fluid" >
+										<div class="col-lg-4">
+											<p:outputLabel value="Placa Padrão: " />
+										</div>
+										<div class="col-lg-6" style="text-align:left;display:block">
+										<p:outputLabel value=" #{clienteVeiculoMB.cliVei.placaVeiculo} " style="color: #1266e5;" />
+										</div>
+									</div>
+
+									<div class="ui-g ui-fluid" >
+										<div class="col-lg-12">
+											<p:outputLabel value="Será convertida para a placa... " style="color: #00cc99;" />
+										</div>
+									</div>				
+
+									<div class="ui-g ui-fluid" >
+										<div class="col-lg-4">
+											<p:outputLabel value="Placa Mercosul: " />
+										</div>
+										<div class="col-lg-6" style="text-align:left;display:block">
+										<p:outputLabel value=" #{clienteVeiculoMB.placaPadraoAlteradaMercosul} " style="color: #1266e5;" />
+										</div>
+									</div>
+							
+														
+									<p:spacer width="2px" />
+									<p:separator style="border-color:red" />
+									<div class="align-center">
+				
+										<p:commandButton value="Voltar" onclick="PF('dlgMercosul').hide()"
+											
+											styleClass="btn btn-primary">
+										</p:commandButton>
+				
+										<p:commandButton value="Confirmar" styleClass="btn btn-success"
+											actionListener="#{clienteVeiculoMB.salvarPlacaMercosul()}"
+											onclick="PF('dlgCancel').hide()"
+											oncomplete="javascript: window.scrollTo(0, 0);"
+				                            update="@form" process="@this" partialSubmit="true">
+										</p:commandButton>
+				
+									</div>
+								</ui:fragment>
+								
+								</p:outputPanel>
+				
+							</p:dialog>		
+							
+					<BR/>
+									
+					
+									
+						
+									
+				</h:form>
+					
+					<h:commandLink title="Exportar Excel" >
+			        	<p:graphicImage value="/resources/images/xlsx-icon.png" style="width:3%; height:5%" />
+			        		<p:dataExporter type="xls" target="formTable:tablePesqCli"  
+			        			fileName="PlacaFixasExcel" pageOnly="true" 
+			        			postProcessor="#{clienteVeiculoMB.getCustomizacaoExcelVeiculoFixosBkp}"
+			        		 />			        		
+			    	</h:commandLink>
+					<h:commandLink title="Exportar CSV">
+			        	<p:graphicImage value="/resources/images/csv-icon.png" style="width:3%; height:5%" />
+			        		<p:dataExporter type="csv" target="formTable:tablePesqCli"  
+			        			fileName="PlacaFixasCsv" pageOnly="true" 
+			        			postProcessor="#{clienteVeiculoMB.getCustomizacaoExcelVeiculoFixosBkp}"
+			        		 />			        		
+			    	</h:commandLink>
+
+
+			</p:panel>						
+		</h:form>
+		</ui:fragment>
+		
+	</ui:define>
+
+</ui:composition>
+		

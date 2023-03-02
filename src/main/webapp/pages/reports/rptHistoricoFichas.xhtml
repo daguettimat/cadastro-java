@@ -33,7 +33,7 @@
             <div class="ui-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                        <p:panel header="Filtros de Pesquisa" styleClass="box-primary"
                                  widgetVar="panel" toggleable="true" >
                             <div class="row">
                                 <div class="col-md-2">
@@ -101,13 +101,13 @@
 
                                 <div class="col-lg-2" style="padding-right: 15px;">
                                     <p:commandButton value="Pesquisar" action="#{historicoFichasMB.btnPesquisarData}"
-                                                     icon="fa fa-search" update="@form" styleClass="btn-danger">
+                                                     icon="fa fa-search" update="@form" styleClass="btn-primary">
 
                                     </p:commandButton>
                                 </div>
                                 <div class="col-lg-2" style="padding-right: 15px;">
                                     <p:commandButton value="Voltar" action="#{historicoFichasMB.btnBack}"
-                                                     icon="fa fa-window-close" update="@form" styleClass="btn-danger"/>
+                                                     icon="fa fa-window-close" update="@form" styleClass="btn-primary"/>
                                 </div>
                             </div>
                         </p:panel>
@@ -126,7 +126,7 @@
                              var="c"
                              value="#{historicoFichasMB.listaHistorico}"
                              rows="20"
-                             styleClass="box-danger"
+                             styleClass="box-primary"
                              resizableColumns="true"
                              lazy="false" paginator="true"
                              paginatorPosition="bottom"
@@ -229,7 +229,7 @@
 
             <h:panelGroup layout="block">
                 <div class="align-right" style="padding: 5px;">
-                    <p:commandButton id="toggler" type="button" value="Configurações" styleClass="btn-danger"
+                    <p:commandButton id="toggler" type="button" value="Configurações" styleClass="btn-primary"
                                      style="float:left" icon="ui-icon-circle-arrow-s" />
                     <p:columnToggler datasource="historicoTable" trigger="toggler" />
                     <p:spacer height="5"/>
@@ -238,7 +238,7 @@
             </h:panelGroup>
 
             <br/>
-            <p:panel header="Exportar para Excel" styleClass="box-danger">
+            <p:panel header="Exportar para Excel" styleClass="box-primary">
                 <p:commandLink id="pdf" ajax="false">
                     <p:graphicImage value="/resources/images/pdf-icon.png"/>
                     <f:setPropertyActionListener value="false" target="#{exporterController.customExporter}" />

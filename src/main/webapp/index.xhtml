@@ -7,10 +7,7 @@
                 xmlns:c="http://java.sun.com/jstl/core"
                 template="WEB-INF/templates/template.xhtml">
 
-
-
     <ui:define name="head-end">
-
 
         <ui:param name="renderBreadCrumb" value="false"/>
         
@@ -108,8 +105,9 @@
         <h:form>
             <h:inputHidden id="msgUsuario" value="#{indexMB.msgUsuario}" />
             
-            <ui:fragment rendered= "#{logonMB.acessoSistemaCadastro}" >
             
+            <ui:fragment rendered= "#{logonMB.acessoSistemaCadastro}" >
+            <ui:fragment  rendered="#{logonMB.openCadastro}">
             <div class="row" data-step="1"
                  data-intro="Esse é o resumo informativo, aqui você verá o que aconteceu nas últimas 48 horas...">
                 <!-- Enviadas -->
@@ -175,13 +173,15 @@
                     </div>
                 </div>
             </div>
+            </ui:fragment>
 
             <div class="row">
 
                 <!-- Aguardando Cliente -->
-                <div class="col-lg-4 col-xs-6">
+                <ui:fragment  rendered="#{logonMB.openCadastro}">
+                <div class="#{logonMB.checarCtrClienteCad()}">
                     <!-- small box -->
-                    <div class="small-box bg-primary">
+                    <div class="small-box bg-primary">'
                         <div class="inner">
                             <h3>#{indexMB.aguardaCliente()}</h3>
                             <p>Aguardando Cliente</p>
@@ -194,8 +194,10 @@
                         </a>
                     </div>
                 </div>
+                </ui:fragment>
                 <!-- Re-Análise -->
-                <div class="col-lg-4 col-xs-6" style="#{indexMB.usuario.interno == true ? '' : 'display : none;'}">
+                <ui:fragment  rendered="#{logonMB.openCadastro}">
+                <div class="#{logonMB.checarCtrClienteCad()}" style="#{indexMB.usuario.interno == true ? '' : 'display : none;'}">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner" id="reanaliseBox">
@@ -209,8 +211,10 @@
                                        styleClass="small-box small-box-footer" value="Mais informações"/>
                     </div>
                 </div>
+                </ui:fragment>
                 <!-- Renovações -->
-                <div class="col-lg-4 col-xs-6" style="#{indexMB.usuario.interno != true ? '' : 'display : none;'}">
+                <ui:fragment  rendered="#{logonMB.openCadastro}">
+                <div class="#{logonMB.checarCtrClienteCad()}" style="#{indexMB.usuario.interno != true ? '' : 'display : none;'}">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner" id="renovacoesBox">
@@ -225,8 +229,25 @@
                         </a>
                     </div>
                 </div>
+                 </ui:fragment>
                 <!-- Enviar Ficha -->
-                <div class="col-lg-4 col-xs-6">
+                <ui:fragment  rendered="#{logonMB.openVitimologia}">
+                <div class="#{logonMB.checarCtrClienteVit()}">
+                    <!-- small box -->
+                    <div class="small-box bg-inverse text-white">
+                        <div class="inner" id="enviarFichaBox">
+                            <h3>Vitimologia</h3>
+                            <p>Enviar novas fichas para a Global 5</p>
+                        </div>
+                        <h:commandLink action="#{indexMB.enviarFichaVitimologia}"
+                                       styleClass="small-box small-box-footer" value="Acesso Rápido (Clique Aqui)"/>
+                    </div>
+                </div>                 
+                </ui:fragment>
+                
+                <!-- Enviar Ficha -->
+                <ui:fragment  rendered="#{logonMB.openCadastro}">
+                <div class="#{logonMB.checarCtrClienteCad()}">
                     <!-- small box -->
                     <div class="small-box bg-inverse text-white">
                         <div class="inner" id="enviarFichaBox">
@@ -240,15 +261,16 @@
                                        styleClass="small-box small-box-footer" value="Acesso Rápido (Clique Aqui)"/>
                     </div>
                 </div>
+                </ui:fragment>
             </div>
 		
 			
-
+			<ui:fragment  rendered="#{logonMB.openCadastro}">
             <ui:fragment  rendered="#{indexMB.usuario.interno == false and indexMB.total > 0}">
                 <div class="row">
                     <div class="col-lg-6">
 
-                        <div class="box box-danger">
+                        <div class="box box-primary">
                             <div class="box-header with-border">
                                 <h3 class="box-title">Fichas Recomendadas x Não Recomendadas</h3>
 
@@ -265,7 +287,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="box box-danger">
+                        <div class="box box-primary">
                             <div class="box-header with-border">
                                 <h3 class="box-title">Resumo do Últimos Lançamentos</h3>
                             </div>
@@ -330,16 +352,31 @@
                     </div>
                 </div>
             </ui:fragment>
-
+			</ui:fragment>
+            
+            <ui:fragment  rendered="#{logonMB.openCadastro}">
             <p:tabView dynamic="true">
-                <p:tab id="PC" title="Pendências Cadastrais" titleStyleClass="box-danger">
+            
+                <p:tab id="PC" title="Pendências Cadastrais" titleStyleClass="box-primary">
+            
                     <f:facet name="title">
-                        <h:outputText value="Pendências Cadastrais"/>
+                    	<c:if test="#{!pendenciasMB.usuario.interno}">
+                        	<h:outputText value="Pendências Cadastrais - CLIENTES"/>
+                    	</c:if>
+                    	
+                    	<c:if test="#{pendenciasMB.usuario.interno}">
+                    		<h:outputText value="Pendências Cadastrais - USUÁRIOS"/>
+                    	</c:if>
+                    	
                         <span class="badge">#{pendenciasMB.lstPrincipal.size()}</span>
                     </f:facet>
+            
                     <p:panel widgetVar="panel" toggleable="true">
+                    
                         <div class="row">
+                    
                             <div class="col-lg-12">
+                    
                                 <p:dataTable widgetVar="pendTable" var="c" value="#{pendenciasMB.lstPrincipal}"
                                              rows="15"
                                              rowKey="#{c.id}" lazy="true" paginator="true"
@@ -362,7 +399,7 @@
                                             <span style="padding-right:15px;#{c.pendenciasStatus.id == 209  ?  'font-weight: bold;' : 'color : #3f51b5!important;text-decoration: line-through;'}">#{c.cadastro.id}</span>
                                             <p:tooltip for="cmdAnalise" value="Análise Cadastral" />
                                             <p:commandButton id="cmdAnalise" action="#{cadastroMB.showAnaliseViaPendencias(c.cadastro.id)}"
-                                                             icon="fa fa-search" styleClass="btn btn-sm btn-danger" style="padding-right: 25px;"/>
+                                                             icon="fa fa-search" styleClass="btn btn-sm btn-primary" style="padding-right: 25px;"/>
                                             <p:tooltip for="imgFlag" value="#{c.pendenciasStatus.descricao}" />
                                             <p:graphicImage id="imgFlag" value="/resources/#{indexMB.flagPendencia(c.pendenciasStatus.id)}" styleClass="pull-right" style="width: 20%;" />
 
@@ -447,12 +484,16 @@
 
                             </div>
                         </div>
+                    
                     </p:panel>
+                
                 </p:tab>
+                
                 <br/>
+                
                 <f:event type="preRenderView" listener="#{renovacaoMB.updateUsuario(logonMB.usuarioLogado)}"/>
 
-                <p:tab id="CR" titleStyleClass="box-danger" rendered="#{indexMB.admin != true}">
+                <p:tab id="CR" titleStyleClass="box-primary" rendered="#{indexMB.admin != true}">
                     <f:facet name="title">
                         <h:outputText value="Controle de Renovações"/>
                         <span class="badge">#{indexMB.renovacoes()}</span>
@@ -511,7 +552,7 @@
                                             <p:commandButton id="cmdAutorizar" icon="fa fa-recycle"
                                                              action="#{renovacaoMB.dlg('dlgRenovar', rnv.id)}"
                                                              partialSubmit="true"
-                                                             update="@form" styleClass="btn-sm btn-danger"/>
+                                                             update="@form" styleClass="btn-sm btn-primary"/>
                                             <p:spacer height="5px;"/>
                                             <p:tooltip for="cmdCancelar" value="Cancelar a renovação da ficha"/>
                                             <p:commandButton id="cmdCancelar" icon="fa fa-ban"
@@ -528,7 +569,7 @@
                     </p:panel>
                 </p:tab>
                 <br/>
-                <p:tab id="LT" title="Linha do Tempo" titleStyleClass="box-danger" rendered="#{indexMB.admin != true}">
+                <p:tab id="LT" title="Linha do Tempo" titleStyleClass="box-primary" rendered="#{indexMB.admin != true}">
                     <div class="box" style="font-family: 'Helvetica Neue';font-size: 15px; padding-top:10px;">
                         <div class="box-body">
                             <div class="row">
@@ -540,7 +581,8 @@
                     </div>
                 </p:tab>
             </p:tabView>
-
+			</ui:fragment>
+            
             <p:dialog id="dlgRenovar" widgetVar="dlgRenovar" header="Confirmação Necessária..." modal="true"
                       resizable="false" closable="false"
                       width="600">
@@ -561,7 +603,7 @@
                                              onclick="PF('dlgRenovar').hide();"
                                              action="#{renovacaoMB.renew(215)}"
                                              update="@form"
-                                             styleClass="btn btn-danger"/>
+                                             styleClass="btn btn-primary"/>
                             <span style="padding-left: 10px; padding-right: 10px;">&#160;</span>
                             <p:commandButton value="Voltar"
                                              update="@form"
@@ -593,7 +635,7 @@
                             <p:commandButton value="Confirmar"
                                              onclick="PF('dlgRecusar').hide();"
                                              action="#{renovacaoMB.renew(216)}"
-                                             styleClass="btn btn-danger"/>
+                                             styleClass="btn btn-primary"/>
                             <span style="padding-left: 10px; padding-right: 10px;">&#160;</span>
 
                             <p:commandButton value="Cancelar"
@@ -647,7 +689,7 @@
                         message: '#{indexMB.msgUsuario}',
                         buttons: [{
                             label: 'Ok, estou ciente...',
-                            cssClass: 'btn-danger',
+                            cssClass: 'btn-primary',
                             action: function(dialogRef){
                                 dialogRef.close();
                                 encerrarAviso();

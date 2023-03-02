@@ -38,7 +38,7 @@
         <h:form>
 
             <h:panelGroup layout="block">
-                <p:panel header="Manutenção" styleClass="box-danger">
+                <p:panel header="Manutenção" styleClass="box-primary">
                 <div class="align-right">
                     <p:outputLabel value="Pesquisar por Id: "/>
                     <p:spacer height="5"/>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="ui-g ui-fluid" style="padding-top: 15px;">
                     <div class="col-lg-6">
-                        <p:panel header="Criação" styleClass="box-danger" toggleable="true" toggleSpeed="500" widgetVar="panelControle">
+                        <p:panel header="Criação" styleClass="box-primary" toggleable="true" toggleSpeed="500" widgetVar="panelControle">
                             <div class="ui-g ui-fluid">
                                 <div class="col-lg-3">
                                     <p:outputLabel value="Data" for="inptCriacao"/>
@@ -86,7 +86,7 @@
                         </p:panel>
                     </div>
                     <div class="col-lg-6">
-                        <p:panel header="Alteração" styleClass="box-danger" toggleable="true" toggleSpeed="500" widgetVar="panelAlteracao">
+                        <p:panel header="Alteração" styleClass="box-primary" toggleable="true" toggleSpeed="500" widgetVar="panelAlteracao">
                             <div class="ui-g ui-fluid">
                                 <div class="col-lg-3">
                                     <p:outputLabel value="Data" for="inptAlteracao"/>
@@ -106,14 +106,14 @@
                     <div class="align-right" style="padding: 5px;">
 
                         <p:commandButton value="Salvar" action="#{produtoMB.update}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
                         <p:spacer height="5"/>
                         <p:commandButton id="btRemove" value="Apagar" action="#{produtoMB.remove}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
 
                         <p:spacer height="5"/>
                         <p:commandButton value="Voltar" action="#{produtoMB.btnBack}"
-                                         styleClass="btn-danger"/>
+                                         styleClass="btn-primary"/>
                     </div>
                 </f:facet>
             </p:panel>

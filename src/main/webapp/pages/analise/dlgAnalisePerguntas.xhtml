@@ -40,7 +40,7 @@
             </div>
         </div>
         <p:tabView>
-            <p:tab title="Dados Básicos do Motorista" titleStyleClass="box-danger">
+            <p:tab title="Dados Básicos do Motorista" titleStyleClass="box-primary">
                 <p:panel style="padding-left: 20px;padding-right: 20px;">
                     <div class="ui-fluid">
                         <div class="row">
@@ -81,7 +81,7 @@
                     </div>
                 </p:panel>
             </p:tab>
-            <p:tab title="Informações do Endereço" titleStyleClass="box-danger">
+            <p:tab title="Informações do Endereço" titleStyleClass="box-primary">
                 <p:panel style="padding-left: 20px;padding-right: 20px;">
                     <div class="ui-fluid">
                         <div class="row">
@@ -126,7 +126,7 @@
             <div class="col-lg-12">
                 <p:growl autoUpdate="true" escape="false" sticky="true" id="msgs"/>
                 <p:dataTable widgetVar="marcaTable" var="c" value="#{motAnaliseMB.lstPerguntas}" rows="5"
-                             styleClass="box-danger"
+                             styleClass="box-primary"
                              rowKey="#{c.id}" lazy="true" paginator="true" editable="true"
                              paginatorPosition="bottom" selectionMode="single"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
@@ -168,7 +168,7 @@
             <p:commandButton value="Salvar" process="@this"
                              style="margin-right:10px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
                              action="#{motAnaliseMB.salvarDlgPerguntas}"
-                             styleClass="btn-danger">
+                             styleClass="btn-primary">
             </p:commandButton>
 
         </div>

@@ -23,7 +23,7 @@
         <h:form>
 
             <h:panelGroup layout="block">
-            <p:panel header="Manutenção" styleClass="box-danger">
+            <p:panel header="Manutenção" styleClass="box-primary">
                 <div class="align-right">
                     <p:outputLabel value="Pesquisar por Id: "/>
                     <p:spacer height="5"/>
@@ -73,13 +73,13 @@
                 <f:facet name="footer">
                     <div class="align-right" style="padding: 5px;">
                         <p:commandButton value="Salvar" action="#{avisosMB.update}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
                         <p:spacer height="5"/>
                         <p:commandButton id="btRemove" value="Apagar" action="#{avisosMB.remove}"
-                                         update="@form" styleClass="btn-danger"/>
+                                         update="@form" styleClass="btn-primary"/>
                         <p:spacer height="5"/>
                         <p:commandButton value="Voltar" action="#{avisosMB.btnBack}"
-                                         styleClass="btn-danger"/>
+                                         styleClass="btn-primary"/>
                     </div>
                 </f:facet>
             </p:panel>

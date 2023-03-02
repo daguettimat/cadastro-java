@@ -31,7 +31,7 @@
                     <div class="hidden-xs">
                         <pe:gravatar style="border-radius: 50%"
                                      value="#{logonMB.usuarioLogado.email}" />
-                        <p>
+                        <p style="color: white;"> 
                             #{logonMB.usuarioLogado.nome}<br/>
                             <small>#{logonMB.usuarioLogado.email}</small>
                         </p>
@@ -40,7 +40,7 @@
                 <li class="user-footer">
                     <h:form prependId="false">
                         <div class="pull-left">
-                            <p:commandLink  styleClass="btn btn-danger"
+                            <p:commandLink  styleClass="btn btn-primary"
                                             action="#{logonMB.trocarSenha}"
                                             value="Alterar Senha"/>
                         </div>

@@ -19,7 +19,7 @@
         <h:form>
             <p:growl autoUpdate="true" escape="false" sticky="true"/>
             <div class="ui-fluid">
-                <p:panel header="Filtros de Pesquisa" styleClass="box-danger"
+                <p:panel header="Filtros de Pesquisa" styleClass="box-primary"
                          widgetVar="panel" toggleable="true">
                     <div class="row">
                         <div class="col-lg-1">
@@ -74,13 +74,13 @@
                                              actionListener="#{pessoaMB.btnPesquisar}"
                                              update="@form"
                                              style="width: 100%;"
-                                             styleClass="btn btn-danger"
+                                             styleClass="btn btn-primary"
                                              partialSubmit="true"/>
 
                         </div>
                         <div class="col-lg-2" style="padding-right: 15px;">
                             <p:commandButton value="Voltar" action="#{pessoaMB.btnBack}"
-                                             icon="fa fa-window-close" styleClass="btn-danger"/>
+                                             icon="fa fa-window-close" styleClass="btn-primary"/>
                         </div>
                     </div>
                 </p:panel>
@@ -88,7 +88,7 @@
 
             <br/>
             <h:panelGroup layout="block">
-                <p:dataTable widgetVar="pesTable" var="c" value="#{pessoaMB.pesList}" rows="10" styleClass="box-danger"
+                <p:dataTable widgetVar="pesTable" var="c" value="#{pessoaMB.pesList}" rows="10" styleClass="box-primary"
                              filteredValue="#{pessoaMB.filteredValue}"
                              rowKey="#{c.id}" lazy="true" paginator="true"
                              paginatorPosition="bottom" selection="#{pessoaMB.pessoa}" selectionMode="single"
@@ -153,10 +153,10 @@
             <h:panelGroup layout="block">
                 <div class="align-right" style="padding: 5px;">
                     <p:commandButton id="btnInsert" value="Novo Registro" action="#{pessoaMB.insert}"
-                                     icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                                     icon="fa fa-pencil" update="@form" styleClass="btn-primary"/>
                     <p:spacer height="5"/>
                     <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print"
-                                   styleClass="btn-danger">
+                                   styleClass="btn-primary">
                         <p:menuitem value="PDF" url="#" icon="fa fa-file-pdf-o"/>
                         <p:menuitem value="XLS" url="#" icon="fa fa-file-excel-o"/>
                         <p:menuitem value="CSV" url="#" icon="fa fa-file-text"/>

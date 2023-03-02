@@ -44,7 +44,7 @@
         <adm:breadcrumb title="Edição de Motoristas"/>
         <h:form id="formVeiculo" enctype="multipart/form-data">
             <h:panelGroup layout="block">
-                <p:panel header="Dados Básicos do Veículo" styleClass="box-danger">
+                <p:panel header="Dados Básicos do Veículo" styleClass="box-primary">
                     <p:fragment autoUpdate="true" rendered="#{veiculoMB.edit}">
                         <div class="align-right">
                             <p:outputLabel value="Pesquisar por Id: "/>
@@ -107,7 +107,7 @@
 
                                 <div class="col-md-2" >
                                     <p:outputLabel for="nacional" value="Nacional"/>
-                                    <p:selectBooleanButton id="nacional" class="btn-danger" disabled="#{! veiculoMB.edit}"
+                                    <p:selectBooleanButton id="nacional" class="btn-primary" disabled="#{! veiculoMB.edit}"
                                                            value = "#{veiculoMB.veiculo.nacional}"
                                                            onLabel="Sim"
                                                            offLabel="Não"
@@ -155,7 +155,7 @@
 
                                 <div class="col-md-2" >
                                     <p:outputLabel for="leasing" value="Leasing"/>
-                                    <p:selectBooleanButton id="leasing" class="btn-danger" disabled="#{! veiculoMB.edit}"
+                                    <p:selectBooleanButton id="leasing" class="btn-primary" disabled="#{! veiculoMB.edit}"
                                                            value = "#{veiculoMB.veiculo.leasing}"
                                                            onLabel="Sim"
                                                            offLabel="Não"
@@ -239,14 +239,14 @@
                                
                                 	<div class="col-md-4">
                                 	<p:commandButton id="idConvertePlaca" value="Converter Mercosul" icon="fa fa-gears"
-                                                     styleClass="btn-danger"   oncomplete="PF('dlgConvertePlaca').show();onTop('dlgConvertePlaca')"
+                                                     styleClass="btn-primary"   oncomplete="PF('dlgConvertePlaca').show();onTop('dlgConvertePlaca')"
                                                      disabled="#{veiculoMB.placaAlteradaMercosul}" actionListener="#{veiculoMB.converterPlaca}" /> 
                                     	                 
                     				<p:tooltip id="toolTipConvertPlaca" for="idConvertePlaca" value="Converte a placa para o formato padrão Mercosul" position="top" />	
                                 	</div>
                                 	<div class="col-md-2"></div>
                                 	<div class="col-md-2">
-                                    <p:commandButton id="btnEnviarFicha" styleClass="btn-danger"
+                                    <p:commandButton id="btnEnviarFicha" styleClass="btn-primary"
                                                      action="#{veiculoMB.update}"
                                                      oncomplete="javascript: window.scrollTo(0, 0);"
                                                      value="Salvar"/>                                	
@@ -254,12 +254,12 @@
 
                                 	<div class="col-md-2">
                                     <p:commandButton id="btRemove" value="Apagar" 
-                                                     styleClass="btn-danger"/>                                	
+                                                     styleClass="btn-primary"/>                                	
                                 	</div>
 
                                 	<div class="col-md-2">
                                     <p:commandButton value="Voltar" action="#{veiculoMB.btnBack}"
-                                                     styleClass="btn-danger"/>
+                                                     styleClass="btn-primary"/>
                                 	
                                 	</div>
 
@@ -293,7 +293,7 @@
 
                                         <div class="col-md-1" >
                                             <p:outputLabel for="propNacional" value="Nacional"/>
-                                            <p:selectBooleanButton id="propNacional" class="btn-danger" disabled="true"
+                                            <p:selectBooleanButton id="propNacional" class="btn-primary" disabled="true"
                                                                    value = "#{veiculoMB.veiculo.proprietario.nacional}"
                                                                    onLabel="Sim"
                                                                    offLabel="Não"
@@ -356,87 +356,6 @@
                                 </div>
                             </div>
                             <br/>
-                            <p:fragment rendered="#{veiculoMB.veiculo.arrendatario.nome.length() > 0 }">
-                                <div id="dArrendatario" class="box box-solid box-default">
-                                <div class="box-header with-border" style="padding-top: 1px">
-                                    <h4 style="padding-top: 5px;">Dados do Arrendatário</h4>
-                                </div>
-                                <div class="box-body">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <p:outputLabel value="Proprietário" for="inptArre"/>
-                                            <p:inputText id="inptArre" value="#{veiculoMB.veiculo.arrendatario.nome}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <p:outputLabel value="Documento" for="inptDocArre"/>
-                                            <p:inputText id="inptDocArre" value="#{veiculoMB.veiculo.arrendatario.documento}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-                                        <div class="col-md-1" >
-                                            <p:outputLabel for="ArreNacional" value="Nacional"/>
-                                            <p:selectBooleanButton id="ArreNacional" class="btn-danger" disabled="#{! veiculoMB.edit}"
-                                                                   value = "#{veiculoMB.veiculo.arrendatario.nacional}"
-                                                                   onLabel="Sim"
-                                                                   offLabel="Não"
-                                                                   onIcon="ui-icon-check"
-                                                                   offIcon="ui-icon-close"/>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <p:outputLabel value="Data Cadastro" for="inptdtCadArre"/>
-                                            <p:inputText id="inptdtCadArre" value="#{veiculoMB.veiculo.arrendatario.dtCriacao}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-
-                                        <div class="col-md-2">
-                                            <p:outputLabel value="Telefone" for="inpTelArre"/>
-                                            <p:inputText id="inpTelArre" value="#{veiculoMB.veiculo.arrendatario.telefone.ddd} #{veiculoMB.veiculo.arrendatario.telefone.fone}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-1" style="min-width: 120px;">
-                                            <p:outputLabel value="CEP" for="inptCepArre"/>
-                                            <p:inputText id="inptCepArre" style="min-width: 100px;" value="#{veiculoMB.veiculo.arrendatario.endereco.cep}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-
-                                        <div class="col-md-5">
-                                            <p:outputLabel value="Logradouro" for="inptLogrArre"/>
-                                            <p:inputText id="inptLogrArre" value="#{veiculoMB.veiculo.arrendatario.endereco.logradouro}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-
-                                        <div class="col-md-1">
-                                            <p:outputLabel value="Número" for="inptNumArre"/>
-                                            <p:inputText id="inptNumArre" value="#{veiculoMB.veiculo.arrendatario.endereco.numero}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <p:outputLabel value="Complemento" for="inptCompArre"/>
-                                            <p:inputText id="inptCompArre" value="#{veiculoMB.veiculo.arrendatario.endereco.complemento}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <p:outputLabel value="Bairro" for="inptBaiArre"/>
-                                            <p:inputText id="inptBaiArre" value="#{veiculoMB.veiculo.arrendatario.endereco.bairro}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <p:outputLabel value="Cidade" for="inptCidArre"/>
-                                            <p:inputText id="inptCidArre" value="#{veiculoMB.veiculo.arrendatario.endereco.cidade}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-
-                                        <div class="col-md-1">
-                                            <p:outputLabel value="UF" for="inptUFArre"/>
-                                            <p:inputText id="inptUFArre" value="#{veiculoMB.veiculo.arrendatario.endereco.uf}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <p:outputLabel value="Pais" for="inptPaisArre"/>
-                                            <p:inputText id="inptPaisArre" value="#{veiculoMB.veiculo.arrendatario.endereco.pais}" disabled="#{! veiculoMB.edit}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            </p:fragment>
                         </div>
 
 
@@ -449,9 +368,9 @@
             </p:panel>
             </h:panelGroup>
             <br/>
-            <p:panel header="Histórico do Veículo" styleClass="box-danger" toggleable="true">
+            <p:panel header="Histórico do Veículo" styleClass="box-primary" toggleable="true">
                 <p:dataTable var="historico" value="#{veiculoMB.lstacVeiculos}" resizableColumns="true" sortBy="#{historico.acCadastro.dtCriacao}" sortOrder="DESCENDING"
-                             paginatorPosition="bottom" rows="10" styleClass="box-danger" lazy="true" paginator="true"
+                             paginatorPosition="bottom" rows="10" styleClass="box-primary" lazy="true" paginator="true"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
                              currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
                              rowsPerPageTemplate="5,10,15,25,50">
@@ -492,7 +411,7 @@
      	       <p:dialog id="dlgConvertePlaca" widgetVar="dlgConvertePlaca"
 				header="Deseja realizar a conversão da placa para o formato Mercosul?" modal="true"
 				resizable="false" closable="false" width="400" position="center, center"
-				styleClass="box-danger">
+				styleClass="box-primary">
 				<p:outputPanel id="fatDetalhe">
 					<div class="ui-g ui-fluid" id="l0">
 						<div class="col-lg-4">
@@ -518,7 +437,7 @@
 					<div class="align-center">
 
 						<p:commandButton value="Não" onclick="PF('dlgConvertePlaca').hide()"
-							styleClass="btn btn-danger">
+							styleClass="btn btn-primary">
 						</p:commandButton>
 
 						<p:commandButton value="Sim" styleClass="btn btn-success"

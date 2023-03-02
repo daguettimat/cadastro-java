@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<h:body styleClass="ui-widget">
+
+	<p:growl autoUpdate="true" showDetail="true" sticky="true"
+		severity="info,warn,error,fatal" />
+
+	<p:ajax event="load" update="formRelatorioFichaFinanceira" process="@all" />
+
+	<h:form id="formRelatorioFichaFinanceira" style=" height: 700px">
+
+		<p:scrollPanel style="width:100%;height:700px;">
+
+			<b:panel>
+
+				<div class="ui-fluid" style="padding-left: 5px;">
+
+
+					<div class="col-md-12">
+						<h:outputLabel
+							style="width:100%;font-weight:bold; padding: 5px; text-align: left; background-color:#3498DB;color:#FFF">
+							Resultado da pesquisa
+						</h:outputLabel>
+					</div>
+
+					<div class="col-md-12">
+						<p:scrollPanel
+							style="width:100%;height:1px;border-collapse: collapse; background-color: #F8F8F8">
+							<h:outputText id="outputY" escape="false"
+								value="#{motAnaliseMB.htmlRetornoFichaFinanceira()}" />
+						</p:scrollPanel>
+					</div>
+
+					<div class="col-md-12">
+						<p:dataTable widgetVar="c" var="v"
+							value="#{motAnaliseMB.listFFinancPorAnalise}" paginator="true"
+							emptyMessage="Nenhum registro encontrado!" 
+							 paginatorAlwaysVisible = "false"
+							>
+
+							<p:column headerText="Requisição">
+								<div align="center">
+									<p:outputLabel value="#{v.numRequisicao}" />
+								</div>
+							</p:column>
+
+							<p:column headerText="Status">
+								<div align="center">
+									<p:outputLabel value="#{v.stWsStatus}" />
+								</div>
+							</p:column>
+
+						</p:dataTable>
+
+					</div>
+
+
+					<p:spacer height="5px" />
+
+					<div class="col-md-12">
+						<p:dataTable widgetVar="t" var="c"
+							value="#{motAnaliseMB.listFFinancPorAnalise}" paginator="true"
+							emptyMessage="Nenhum registro encontrado!"
+							paginatorAlwaysVisible="false">
+
+							<p:column headerText="Informações sobre as Consultas">
+								<ui:fragment rendered="#{c.stWsStatus != 'SOLICITADA' }">
+									<div class="row">
+										<table
+											style="width: 100%; margin-bottom: 10px; border-collapse: collapse; background-color: #F8F8F8;">
+
+											<tr>
+												<td style="padding: 5px;"><p:scrollPanel mode="native"
+														style="width:100%;height:300px;border-collapse: collapse; background-color: #F8F8F8">
+
+
+														<h:outputText id="outputY" escape="false"
+															value="#{motAnaliseMB.testHtml(c.xmlRetorno)}" />
+													</p:scrollPanel></td>
+											</tr>
+										</table>
+									</div>
+								</ui:fragment>
+							</p:column>
+
+						</p:dataTable>
+					</div>
+
+					<f:facet name="footer" class="ui-fluid">
+
+						<div class="align-right" style="padding: 5px;">
+							<b:button value="Cancelar" look="danger"
+								onclick="PF('dlgFichaFinanceira').hide()" />
+						</div>
+					</f:facet>
+
+				</div>
+
+				<BR />
+				<p:spacer height="20px"></p:spacer>
+				<div class="ui-fluid" style="padding-left: 5px;">
+
+					<div class="col-md-12">
+						<h:outputLabel for="cpStatus" value="Status Apontamentos" />
+						<p:selectOneMenu  id="cpStatus"
+							value="#{motAnaliseMB.fichaFinanc.avaliacao.id}"
+							required="true">
+							<f:selectItem itemLabel="&#160;" itemValue="" />
+							<f:selectItems value="#{motAnaliseMB.lstReferenciasFichaFinac}"
+								var="cpStatus" itemValue="#{cpStatus.id}"
+								itemLabel="#{cpStatus.descricao}" />
+								<f:ajax event="valueChange" execute="@this" 
+									listener="#{motAnaliseMB.checarStatusFichaFinanceira}" />
+							
+						</p:selectOneMenu>
+					</div>
+
+					<br />
+
+					<div class="col-md-12">
+						<h:outputLabel for="pendencias" value="Pendências" />
+						<p:inputTextarea id="pendencias" rows="3"
+							value="#{motAnaliseMB.fichaFinanc.pendencia}" >
+							<f:ajax event="valueChange" execute="@this"
+							   listener="#{motAnaliseMB.checarPendencia}" />
+						</p:inputTextarea>
+					</div>
+
+					<br />
+					<div class="row">
+						<div class="col-md-5"></div>
+						<div class="col-md-2">
+							<p:commandButton value="Salvar" styleClass="btn-primary"
+								actionListener="#{motAnaliseMB.updateFichaFinanceiraPendencia()}"
+								process="@this"					
+								
+								style="margin-right:10px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
+								partialSubmit="true">
+								
+							</p:commandButton>
+						</div>
+						<div class="col-md-5">
+							<!--
+							onclick="PF('dlgFichaFinanceira').hide()"
+							<f:ajax execute="@form" render="@form" />
+							-->
+						</div>
+					</div>
+
+				</div>
+
+			</b:panel>
+		</p:scrollPanel>
+	</h:form>
+
+
+
+</h:body>
+
+</html>

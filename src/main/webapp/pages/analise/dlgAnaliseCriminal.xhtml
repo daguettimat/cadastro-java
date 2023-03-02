@@ -32,6 +32,7 @@
                 </div>
 
                 <br/>
+                
                 <div class="row">
                     <div class="col-md-11" >
                         <h:outputLabel for="pendencias" value="Pendências"/>
@@ -40,8 +41,9 @@
                     </div>
                 </div>
                 <br/>
+                
                 <f:facet name="footer" class="ui-fluid">
-                    <p:commandButton value="Salvar" styleClass="btn-danger"
+                    <p:commandButton value="Salvar" styleClass="btn-primary"
                                      actionListener="#{motAnaliseMB.updateCriminal}"
                                      onclick="PF('dlgCriminal').hide()"
                                      style="margin-right:10px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
@@ -52,7 +54,9 @@
                     <b:button value="Cancelar" look="danger"
                               onclick="PF('dlgCriminal').hide()"/>
                 </f:facet>
+            
             </div>
+            
         </b:panel>
     </h:form>
 </ui:composition>

@@ -102,6 +102,10 @@ public class Usuario implements BaseEntity {
     @Column(name = "usu_interno")
     private boolean interno;
 
+    @Column(name="usu_dt_ultimo_login")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dtUltimoLogin;
+    
     public Usuario() {
     }
 
@@ -249,4 +253,14 @@ public class Usuario implements BaseEntity {
     public void setInterno(boolean interno) {
         this.interno = interno;
     }
+
+	public Date getDtUltimoLogin() {
+		return dtUltimoLogin;
+	}
+
+	public void setDtUltimoLogin(Date dtUltimoLogin) {
+		this.dtUltimoLogin = dtUltimoLogin;
+	}
+    
+    
 }

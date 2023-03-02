@@ -1,6 +1,8 @@
 package br.com.global5.manager.model.analise;
 
 import br.com.global5.infra.model.BaseEntity;
+import br.com.global5.manager.model.geral.Mercadoria;
+import br.com.global5.manager.model.geral.Usuario;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -9,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "analise_cadastral_mercadoria")
+@Table(name = "java.analise_cadastral_mercadoria")
 @XmlRootElement
 @XmlAccessorType(value = XmlAccessType.FIELD)
 public class acMercadoria implements BaseEntity {
@@ -21,8 +23,21 @@ public class acMercadoria implements BaseEntity {
     @Column(name = "ameroid")
     private Integer id;
 
-    @Column(name = "amer_meroid")
-    private Integer mercadoria;
+    @ManyToOne(
+            fetch=FetchType.LAZY,
+            targetEntity=acCadastro.class,
+            cascade={CascadeType.DETACH, CascadeType.MERGE}
+    )
+    @JoinColumn(name="amer_anacoid")
+    private acCadastro acCadastro; 
+    
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            targetEntity = Mercadoria.class,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE}
+    )
+    @JoinColumn(name = "amer_meroid")
+    private Mercadoria mercadoria;
 
     @Column(name = "amer_dt_registro")
     private Timestamp mercDtRegistro;
@@ -70,15 +85,17 @@ public class acMercadoria implements BaseEntity {
         this.id = id;
     }
 
-    public Integer getMercadoria() {
-        return mercadoria;
-    }
+    public Mercadoria getMercadoria() {
+		return mercadoria;
+	}
 
-    public void setMercadoria(Integer mercadoria) {
-        this.mercadoria = mercadoria;
-    }
 
-    public Timestamp getMercDtRegistro() {
+	public void setMercadoria(Mercadoria mercadoria) {
+		this.mercadoria = mercadoria;
+	}
+
+
+	public Timestamp getMercDtRegistro() {
         return mercDtRegistro;
     }
 
@@ -157,4 +174,15 @@ public class acMercadoria implements BaseEntity {
     public void setMercCidDestino(String mercCidDestino) {
         this.mercCidDestino = mercCidDestino;
     }
+
+
+	public acCadastro getAcCadastro() {
+		return acCadastro;
+	}
+
+
+	public void setAcCadastro(acCadastro acCadastro) {
+		this.acCadastro = acCadastro;
+	}
+    
 }

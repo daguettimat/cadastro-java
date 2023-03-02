@@ -11,7 +11,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "mercadoria")
+@Table(name = "java.mercadoria")
 @XmlRootElement
 @XmlAccessorType(value = XmlAccessType.FIELD)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

@@ -136,7 +136,7 @@
 											<div class="row">
 												<div class="col-lg-1"></div>
 												<div class="col-lg-3">
-													<p:commandButton value="Registrar Atendimento" styleClass="btn-danger" 
+													<p:commandButton value="Registrar Atendimento" styleClass="btn-primary" 
 														disabled="#{chamadoBean.chamadoEncerrado}"
 														oncomplete="PF('dlgRegistraAtendimento').show();onTop('dlgRegistraAtendimento')"
 														update="dlgRegistraAtendimento">
@@ -152,7 +152,7 @@
 												</div>												
 
 												<div class="col-lg-3">
-													<p:commandButton value="Voltar a Lista de Chamados" styleClass="btn-danger" 
+													<p:commandButton value="Voltar a Lista de Chamados" styleClass="btn-primary" 
 													 action="#{chamadoBean.btnBackListChamados}" update="frmListaChamadoResposta">
 													</p:commandButton>
 												</div>												
@@ -167,7 +167,7 @@
      	    <p:dialog id="dlgRegistraAtendimento" widgetVar="dlgRegistraAtendimento"
 				header="Registro de Atendimento" modal="true"
 				resizable="false" closable="false" width="800" position="center, center"
-				styleClass="box-danger">
+				styleClass="box-primary">
 				<p:outputPanel id="fatDetalhe">
 					
 					<div class="ui-g ui-fluid" id="l0">
@@ -198,8 +198,9 @@
                             
 						</p:commandButton>
 
-						<p:commandButton value="Cancelar" onclick="PF('dlgRegistraAtendimento').hide()"
-							styleClass="btn btn-danger">
+						<p:commandButton value="Cancelar" 
+						onclick="PF('dlgRegistraAtendimento').hide()"
+							styleClass="btn btn-primary">
 						</p:commandButton>						
 
 					</div>
@@ -211,7 +212,7 @@
 			<p:dialog id="dlgFinalizaChamado" widgetVar="dlgFinalizaChamado"
 				header="Deseja encerrar o atendimento ao chamado?" modal="true"
 				resizable="false" closable="false" width="400" position="center, center"
-				styleClass="box-danger">
+				styleClass="box-primary">
 				<p:outputPanel id="chaDetalhe">
 					<div class="ui-g ui-fluid" id="l0">
 						<div class="col-lg-4">
@@ -232,7 +233,7 @@
 					<div class="align-center">
 
 						<p:commandButton value="Não" onclick="PF('dlgFinalizaChamado').hide()"
-							styleClass="btn btn-danger">
+							styleClass="btn btn-primary">
 						</p:commandButton>
 
 						<p:commandButton value="Sim" styleClass="btn btn-success"
@@ -269,7 +270,7 @@
 
 				<p:dataTable widgetVar="dtChamadoResp" var="r"
 					value="#{chamadoBean.listChamadoResp}" rows="15"
-					styleClass="box-danger" id="tbListResp" rowKey="#{r.id}"
+					styleClass="box-primary" id="tbListResp" rowKey="#{r.id}"
 					lazy="true" paginator="true"
 					emptyMessage="Nenhum Chamado ainda cadastrado!"
 					paginatorPosition="bottom" selectionMode="single"

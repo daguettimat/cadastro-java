@@ -6,12 +6,15 @@ import br.com.global5.manager.chamado.Chamado;
 import br.com.global5.manager.chamado.service.ChamadoService;
 import br.com.global5.manager.model.analise.acResumoFichas;
 import br.com.global5.manager.model.analise.acTimeLine;
+import br.com.global5.manager.model.contrato.produtos.AcAreaProduto;
 import br.com.global5.manager.model.geral.Avisos;
 import br.com.global5.manager.model.geral.AvisosLidos;
 import br.com.global5.manager.model.geral.Usuario;
 import br.com.global5.manager.service.analise.CadastroService;
 import br.com.global5.manager.service.analise.MotoristaService;
+import br.com.global5.manager.service.areas.AreaService;
 import br.com.global5.manager.service.cadastro.FichaRenovacaoService;
+import br.com.global5.manager.service.cadastro.PessoaService;
 import br.com.global5.manager.service.geral.AvisosLidosService;
 import br.com.global5.manager.service.geral.AvisosService;
 
@@ -49,8 +52,6 @@ import static java.lang.Math.abs;
 @SessionScoped
 public class IndexMB implements Serializable {
 
-
-
     @Inject
     private CadastroService cadService;
 
@@ -71,6 +72,12 @@ public class IndexMB implements Serializable {
     @Inject
     private ChamadoService chamadoService;
 
+    @Inject
+	private PessoaService pesService;
+    
+    @Inject
+    private AreaService areaService;
+    
     private  Date today;
     private  Date past;
     private  Usuario usuario;
@@ -103,12 +110,11 @@ public class IndexMB implements Serializable {
     private BigDecimal totalCRET;
     private BigDecimal abertosCRET;
     private BigDecimal bancosCRET;
-
     
     public IndexMB() {
 
         try {
-            usuario = checkUsuario.valid();
+            usuario = checkUsuario.valid();            
             Hibernate.initialize(usuario.getPessoa());
             Hibernate.initialize(usuario.getPessoa().getFuncao());
             Hibernate.initialize(usuario.getPessoa().getFuncao().getArea());
@@ -240,7 +246,21 @@ public class IndexMB implements Serializable {
         }
 
     }
+    
+    public void enviarFichaVitimologia() {
+        try {
+        	usuario = checkUsuario.valid();
+            FacesContext.getCurrentInstance().getExternalContext().redirect("pages/fichas_vitimologia/enviarFichaMenu.xhtml");
+//            FacesContext.getCurrentInstance().getExternalContext().redirect("pages/fichas_vitimologia/fichaUFVitimologia.xhtml");
+        } catch (IOException e) {
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Lista Cadastral não pode ser carregada. " +
+                            "Informe ao suporte técnico.", null));
+        }
 
+    }
+    
     public void listaAvisos(Usuario usuario) {
 
         usuario = checkUsuario.valid();
@@ -940,11 +960,5 @@ public class IndexMB implements Serializable {
 	public void setBancosCRET(BigDecimal bancosCRET) {
 		this.bancosCRET = bancosCRET;
 	}
-
-
-	
-	
-	
-    
     
 }

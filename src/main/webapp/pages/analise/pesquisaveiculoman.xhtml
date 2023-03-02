@@ -21,7 +21,7 @@
                 <f:event type="preRenderView" listener="#{pesquisaVeiculoMB.updateUsuario(logonMB.usuarioLogado)}"/>
             </f:metadata>
             <h:panelGroup layout="block">
-                <p:panel header="Dados básicos" styleClass="box-danger" toggleable="true">
+                <p:panel header="Dados básicos" styleClass="box-primary" toggleable="true">
                     <div class="align-right">
                         <p:outputLabel value="Pesquisar por Id: "/>
                         <p:spacer height="5"/>
@@ -85,7 +85,7 @@
                                     </div>
                                     <div class="col-lg-2">
                                         <p:outputLabel for="aprovado" value="Aprovado"/>
-                                        <p:selectBooleanButton id="aprovado" class="btn-danger"
+                                        <p:selectBooleanButton id="aprovado" class="btn-primary"
                                                                value = "#{pesquisaVeiculoMB.pesqVeiculo.aprovado}"
                                                                onLabel="Sim"
                                                                offLabel="Não"
@@ -121,17 +121,17 @@
                         <div class="align-right" style="padding: 5px;">
 
                             <p:commandButton value="Consultar" disabled="#{pesquisaVeiculoMB.pesqVeiculo.id != null}" action="#{pesquisaVeiculoMB.update()}"
-                                             update="@form" styleClass="btn-danger"/>
+                                             update="@form" styleClass="btn-primary"/>
                             <p:spacer height="5"/>
                             <p:commandButton value="Voltar" action="#{pesquisaVeiculoMB.btnBack}"
-                                             styleClass="btn-danger"/>
+                                             styleClass="btn-primary"/>
                         </div>
                     </f:facet>
                 </p:panel>
                 <br/>
 
                 <br/>
-                <p:panel header="Resultado Consulta" styleClass="box-danger" style="#{pesquisaVeiculoMB.pesqVeiculo.id != null ? '': 'display : none;'}">
+                <p:panel header="Resultado Consulta" styleClass="box-primary" style="#{pesquisaVeiculoMB.pesqVeiculo.id != null ? '': 'display : none;'}">
                     <ui:fragment rendered="#{pesquisaVeiculoMB.pesqVeiculo.dtResposta == null }">
                             <br/>
                             <h3 style="text-align: center">Ainda não temos resultado da consulta...</h3>

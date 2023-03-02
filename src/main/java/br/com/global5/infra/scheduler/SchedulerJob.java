@@ -143,7 +143,8 @@ public class SchedulerJob implements org.quartz.Job {
             for (acCadastro cadastro: lstFichas) {
                 line = 1;
 
-                int pendencias = pendenciasService.crud().eq("cadastro.id", cadastro.getId()).eq("pendenciasStatus.id", 205).list().size();
+                int pendencias = pendenciasService.crud()
+                		.eq("cadastro.id", cadastro.getId()).eq("pendenciasStatus.id", 205).list().size();
 
                 if( pendencias == 0) {
                     continue;
@@ -189,7 +190,8 @@ public class SchedulerJob implements org.quartz.Job {
 
                 new EnviaEmail().enviaEmail(bodyemail, tituloEmail, "cadastro@global5.com.br", destTo,
                         "mail.global5.com.br", "cadastro@global5.com.br",
-                        "cadastro@global5.com.br", "!@Cadastro@!");
+                        "cadastro@global5.com.br", "iKzC%M%IY0q1");
+                // Antiga senha: !@Cadastro@!
 
             }
 
@@ -277,8 +279,9 @@ public class SchedulerJob implements org.quartz.Job {
 
                 new EnviaEmail().enviaEmail(bodyemail, tituloEmail, "cadastro@global5.com.br", destTo,
                             "mail.global5.com.br", "cadastro@global5.com.br",
-                            "cadastro@global5.com.br", "!@Cadastro@!");
-
+                            "cadastro@global5.com.br", "iKzC%M%IY0q1");
+                
+                // Antiga senha: !@Cadastro@!  /// Ms-gaGov!202-
                 //
                 // Finaliza Ficha
                 //
@@ -362,8 +365,8 @@ public class SchedulerJob implements org.quartz.Job {
 
                 new EnviaEmail().enviaEmail(bodyemail, tituloEmail, "cadastro@global5.com.br", destTo,
                         "mail.global5.com.br", "cadastro@global5.com.br",
-                        "cadastro@global5.com.br", "!@Cadastro@!");
-
+                        "cadastro@global5.com.br", "iKzC%M%IY0q1");
+                // Antiga senha: !@Cadastro@!
                 //
                 // Finaliza Ficha
                 //

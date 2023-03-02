@@ -32,7 +32,7 @@ public class TelefoneTipo implements BaseEntity {
     private Timestamp exclusao;
 
     public TelefoneTipo() {
-    }
+}
 
     public TelefoneTipo(Integer id, String descricao, Timestamp exclusao) {
         this.id = id;

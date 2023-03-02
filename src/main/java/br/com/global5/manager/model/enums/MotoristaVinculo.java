@@ -31,6 +31,18 @@ public class MotoristaVinculo implements BaseEntity {
     @Column(name = "enum_dt_exclusao")
     private Timestamp exclusao;
 
+    @Column(name = "enumv_validade_cadastral")
+    private Integer validadeCadastral;
+    
+    @Column(name = "enumv_validade_embarque")
+    private Integer validadeEmbarque;
+    
+    @Column(name = "enumv_criminal_limpo")
+    private boolean criminalLimpo;
+    
+    @Column(name = "enumv_id_importacao")
+    private Integer idImportacao;
+    
     public MotoristaVinculo() {
     }
 
@@ -76,4 +88,37 @@ public class MotoristaVinculo implements BaseEntity {
     public void setExclusao(Timestamp exclusao) {
         this.exclusao = exclusao;
     }
+
+	public Integer getValidadeCadastral() {
+		return validadeCadastral;
+	}
+
+	public void setValidadeCadastral(Integer validadeCadastral) {
+		this.validadeCadastral = validadeCadastral;
+	}
+
+	public Integer getValidadeEmbarque() {
+		return validadeEmbarque;
+	}
+
+	public void setValidadeEmbarque(Integer validadeEmbarque) {
+		this.validadeEmbarque = validadeEmbarque;
+	}
+
+	public boolean isCriminalLimpo() {
+		return criminalLimpo;
+	}
+
+	public void setCriminalLimpo(boolean criminalLimpo) {
+		this.criminalLimpo = criminalLimpo;
+	}
+
+	public Integer getIdImportacao() {
+		return idImportacao;
+	}
+
+	public void setIdImportacao(Integer idImportacao) {
+		this.idImportacao = idImportacao;
+	}
+    
 }

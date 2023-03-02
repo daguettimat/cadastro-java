@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<!--xmlns:f="http://java.sun.com/jsf/core"-->
+<h:head >
+    <title style="font-size: 16pt;color: #1a2226; font-weight: bold;text-align: left">Relatório de Veiculos Fixos</title>
+    <style type="text/css">
+        .ui-widget {
+            font-size: 90%;
+        }
+
+    </style>
+
+</h:head>
+<h:body styleClass="ui-widget"	style="padding-left: 25px; padding-top: 10px">
+
+	<p:growl autoUpdate="true" showDetail="true" sticky="true" severity="info,warn,error,fatal" />
+	
+	<p:ajax event="load" update="formRelatorioViagem" process="@all" />
+	
+	<h:form id="formRelatorioViagem">
+	
+	 <p:focus/>
+	 
+		<p:spacer width="2px"/>
+		<p:separator/>
+		<p:spacer width="2px"/>		
+
+		<p:dataTable
+		 	value="#{areaClienteMB.lstDetalheFixos}" var="c"
+			emptyMessage="Nenhum registro foi encontrado." 
+			rows="1000" rowKey="#{c.id}" id="tbRelCad" 
+			lazy="true"  paginator="true" 
+            paginatorPosition="bottom" selectionMode="simple" 
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+            currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+            rowsPerPageTemplate="100,200,300,400,500,1000,2000,3000">
+
+			<f:facet name="header" >
+						<h4 style="padding_left: 250px">Referente Fatura Mês  : 
+							<p:outputLabel value="#{areaClienteMB.dtPesqMesAno}" style="font-size: 16px; " />
+							<p:separator/>
+						</h4>	
+						
+				<div class="ui-g ui-fluid" >
+					<div class="col-lg-4" style="text-align: center;display:block">
+						<p:outputLabel value="Qtd Incluídos = " />
+						<p:outputLabel value=" #{areaClienteMB.detFixos.inclusoes}" style="color:#4682B4" />
+					</div>
+					<div class="col-lg-4" style="text-align: center;display:block">
+						<p:outputLabel value="Qtd Excluídos = " />
+						<p:outputLabel value=" #{areaClienteMB.detFixos.exclusoes}" style="color:#4682B4" />
+					</div>
+					<div class="col-lg-4" style="text-align: center;display:block">
+						<p:outputLabel value="Qtd Faturados = " />
+						<p:outputLabel value=" #{areaClienteMB.detFixos.total}" style="color:#4682B4" />
+					</div>					
+				</div>									
+           </f:facet>
+			<div class="col-md-2">
+				<p:column headerText="Placas" style="color:red;">
+					<p:outputLabel value="#{c.placas}" style="color:black;text-align: center;display:block;width:87px" />
+				</p:column>		
+			</div>
+			<p/>
+
+
+		</p:dataTable>
+
+		<br/>
+		   
+		   <h3>Exportar para Excel </h3>
+ 
+		    <h:commandLink>
+        		<p:graphicImage value="/resources/images/xlsx-icon.png" style="width:5%; height:5%" />
+        		<p:dataExporter type="xls" target="tbRelCad" 
+        			fileName="lstRelVeiculoFixos" pageOnly="true"
+        			postProcessor="#{areaClienteMB.customizacaoExcelVeiculoFixosBkp}"
+        			 />
+    		</h:commandLink>
+ 		
+		
+	</h:form>
+
+	
+
+</h:body>
+
+</html>

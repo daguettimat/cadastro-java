@@ -1,0 +1,2685 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BoletimInformativoD" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4c343506-6f35-48bf-92c0-a2abefae8086">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Devel - Faturamento Base Local"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="373"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="622"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<style name="Table_TH" mode="Opaque" backcolor="#FCFCFC">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="rgba(191, 225, 255, 0.0)">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="DatasetBiRelato" uuid="22629993-1734-4030-ad8e-21391899ba74">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Devel - Faturamento Base Local"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+		<parameter name="Evento" class="java.lang.Integer">
+			<parameterDescription><![CDATA[N Evento]]></parameterDescription>
+		</parameter>
+		<parameter name="Boletim" class="java.lang.Integer">
+			<parameterDescription><![CDATA[Nº Boletim]]></parameterDescription>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT * FROM rastreamento.boletim_informativo_relato r where r.bir_eveoid = $P{Evento} and r.bir_bioid <=  $P{Boletim} order by  r.bir_bioid desc]]>
+		</queryString>
+		<field name="biroid" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="biroid"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo_relato"/>
+		</field>
+		<field name="bir_eveoid" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="bir_eveoid"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo_relato"/>
+		</field>
+		<field name="bir_bioid" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="bir_bioid"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo_relato"/>
+		</field>
+		<field name="bir_relato" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="bir_relato"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo_relato"/>
+		</field>
+		<field name="bir_dt_criacao" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="bir_dt_criacao"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo_relato"/>
+		</field>
+		<field name="bir_bi_tipo" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="bir_bi_tipo"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo_relato"/>
+		</field>
+	</subDataset>
+	<parameter name="Evento" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Numero do Evento]]></parameterDescription>
+	</parameter>
+	<parameter name="Boletim" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Numero do Boletim]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select * ,
+		(select 
+			case
+			when  r.bi_tipo = 'P' then 'Sinistro de Perda'
+			when  r.bi_tipo = 'S' then 'Suspeita de Roubo'
+			when  r.bi_tipo = 'D' then 'Sinistro de Dano'  end as descTipo from rastreamento.boletim_informativo r where r.bioid = $P{Boletim} ) as tipoBoletim,
+		(select
+			case 
+			when  r.bi_susp_tp_enumoid = 653 then 'Tentativa de Roubo '
+			when  r.bi_susp_tp_enumoid = 654 then 'Perseguição'
+			when  r.bi_susp_tp_enumoid = 655 then 'Perda de Sinal'  
+			when  r.bi_susp_tp_enumoid = 656 then 'Possibilidade de Jammer'
+			when  r.bi_susp_tp_enumoid = 657 then 'Botão de Pânico'
+			when  r.bi_susp_tp_enumoid = 658 then 'Violação de Painel'
+			when  r.bi_susp_tp_enumoid = 659 then 'Violação de Antena'
+			when  r.bi_susp_tp_enumoid = 660 then 'Violação de Bateria'
+			when  r.bi_susp_tp_enumoid = 661 then 'Violação de Desengate'
+			when  r.bi_susp_tp_enumoid = 662 then 'Violação de Baú'
+			when  r.bi_susp_tp_enumoid = 663 then 'Violação de Porta do Motorista'
+			when  r.bi_susp_tp_enumoid = 664 then 'Violação de Porta do Carona'
+			when  r.bi_susp_tp_enumoid = 665 then 'Desvio de Rota'
+			when  r.bi_susp_tp_enumoid = 666 then 'Paradas Proibidas'
+			when  r.bi_susp_tp_enumoid = 667 then 'Parada Excedida'
+			when  r.bi_susp_tp_enumoid = 668 then 'Transitando em Horário Não Permitido'
+			when  r.bi_susp_tp_enumoid = 669 then 'Outros'
+			end as descTipoSuspeita 	
+			from rastreamento.boletim_informativo r where r.bioid =  $P{Boletim}) as descTipoSuspeita,
+			(select case 
+				when r.bi_mot_obito = true then 'Em Óbito;' ELSE 
+				 '' end as tipoMotorista from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stmot_obito,			
+			(select case 
+				when r.bi_mot_localizado = true then 'Localizado;' ELSE 
+				 '' end as tipoMotorista from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stmot_localizado,
+			(select case 
+				when r.bi_mot_ferido_passa_bem = true then 'Passa Bem;' ELSE 
+				 '' end as tipoMotorista from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stmot_passa_bem,
+			(select case 
+				when r.bi_mot_hospitalizado = true then 'Hospitalizado;' ELSE 
+				 '' end as tipoMotorista from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stmot_hospitalizado,
+			(select case 
+				when r.bi_mot_ferido_levemente = true then 'Ferido Levemente;' ELSE 
+				 '' end as tipoMotorista from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stmot_ferido_leve,
+			(select case 
+				when r.bi_mot_ferido_gravemente = true then 'Ferido Gravemente;' ELSE 
+				 '' end as tipoMotorista from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stmot_ferido_grave,
+			(select case 
+				when r.bi_avaria_cavalo = true then 'Cavalo;' ELSE 
+				 '' end from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stava_cavalo,
+			(select case 
+				when r.bi_avaria_carreta = true then 'Carreta;' ELSE 
+				 '' end from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stava_careta,			 
+			(select case 
+				when r.bi_avaria_carga = true then 'Carga;' ELSE 
+				 '' end from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stava_carga,
+			(select case 
+				when r.bi_avaria_saque_mercadoria = true then 'Saque Mercadoria;' ELSE 
+				 '' end from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as stava_saque_mercadoria,	
+			(select case 
+				when r.bi_com_ini_dia_semana = 1  then 'Domingo'
+				when r.bi_com_ini_dia_semana = 2  then 'Segunda-Feira'  
+				when r.bi_com_ini_dia_semana = 3  then 'Terça-Feira'
+				when r.bi_com_ini_dia_semana = 4  then 'Quarta-Feira'
+				when r.bi_com_ini_dia_semana = 5  then 'Quinta-Feira'
+				when r.bi_com_ini_dia_semana = 6  then 'Sexta-Feira'
+				when r.bi_com_ini_dia_semana = 7  then 'Sabádo'
+				ELSE 
+				 '' end  from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as diaSemana,		
+			 (select case 
+				when r.bi_perda_abordagem_movimento = true  then 'Veículo em Movimento'
+				ELSE 
+				 'Veículo Parado' end  from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as abordagem,
+			(select case 
+				when r.bi_dano_tp_enumoid = 688  then 'Choque' 
+			    when r.bi_dano_tp_enumoid = 689  then 'Saída de Pista'
+			    when r.bi_dano_tp_enumoid = 690  then 'Adernamento'
+			    when r.bi_dano_tp_enumoid = 691  then 'Incêndio'  
+			    when r.bi_dano_tp_enumoid = 692  then 'Amassamento'  
+			    when r.bi_dano_tp_enumoid = 693  then 'Vazamento'  
+			    when r.bi_dano_tp_enumoid = 694  then 'Arranhadura'  
+			    when r.bi_dano_tp_enumoid = 695  then 'Quebra'  
+			    when r.bi_dano_tp_enumoid = 696  then 'Quebra de Mercadoria'  
+			    when r.bi_dano_tp_enumoid = 697  then 'Colisão'  
+			    when r.bi_dano_tp_enumoid = 698  then 'Abalroamento'  
+			    when r.bi_dano_tp_enumoid = 699  then 'Tombamento'  
+			    when r.bi_dano_tp_enumoid = 700  then 'Deslocamento de Carga'  
+			    when r.bi_dano_tp_enumoid = 701  then 'Contaminação'
+			    when r.bi_dano_tp_enumoid = 702  then 'Derrame'
+			    when r.bi_dano_tp_enumoid = 703  then 'Derrapagem'
+			    when r.bi_dano_tp_enumoid = 704  then 'Engavetamento'
+			    when r.bi_dano_tp_enumoid = 705  then 'Queda de Nivel ou de Veículo'
+			    when r.bi_dano_tp_enumoid = 706  then 'Molhadura'
+			    when r.bi_dano_tp_enumoid = 707  then 'Atolamento'
+			    when r.bi_dano_tp_enumoid = 708  then 'Atropelamento'
+			    when r.bi_dano_tp_enumoid = 709  then 'Desatreamento'
+			    when r.bi_dano_tp_enumoid = 710  then 'Má Estiva'
+			    when r.bi_dano_tp_enumoid = 711  then 'Amolgamento'
+			    when r.bi_dano_tp_enumoid = 712  then 'Capotamento'
+				ELSE 
+				 '' end  from rastreamento.boletim_informativo r where r.bioid = $P{Boletim}) as tipoAcidenteAvarias,
+				 				 				 			 			
+		(select usu_nome from java.usuario where usuoid = b.bi_usuoid_emissao ) as nomeUsuario		
+from rastreamento.evento e, 
+	 rastreamento.evento_info_viagem v,
+	 rastreamento.boletim_informativo b
+	where e.eveoid = $P{Evento} and
+		  v.evev_eveoid = $P{Evento} and
+		  b.bioid = $P{Boletim} and
+		  e.eveoid = v.evev_eveoid and
+		  b.bi_eveoid = v.evev_eveoid and
+		  e.eveoid = b.bi_eveoid]]>
+	</queryString>
+	<field name="eveoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eveoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_ano" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_ano"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_viagoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_viagoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_nr_evento" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_nr_evento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_emails" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="eve_emails"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_nr_boletim" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_nr_boletim"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_nr_boletim_suspeita" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_nr_boletim_suspeita"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_nr_boletim_perda" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_nr_boletim_perda"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_nr_boletim_dano" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_nr_boletim_dano"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_tipo_inicial" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="eve_tipo_inicial"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_tipo_final" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="eve_tipo_final"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_bioid_ultimo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_bioid_ultimo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_usuoid_criacao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_usuoid_criacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_usuoid_alteracao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_usuoid_alteracao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_usuoid_finalizacao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_usuoid_finalizacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_usuoid_cancelamento" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_usuoid_cancelamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_dt_criacao" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="eve_dt_criacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_dt_alteracao" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="eve_dt_alteracao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_dt_finalizacao" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="eve_dt_finalizacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_dt_cancelamento" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="eve_dt_cancelamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_areaoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="eve_areaoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_emails_cc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="eve_emails_cc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_placa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="eve_placa"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="eve_motorista" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="eve_motorista"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento"/>
+	</field>
+	<field name="evev_eveoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_eveoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_areaoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_areaoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_segoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_segoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_seguradora" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_seguradora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_corroid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_corroid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_corretora" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_corretora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_transportadora" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_transportadora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_veioid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_veioid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_veioid_placa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_veioid_placa"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_veioid_marca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_veioid_marca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_veioid_modelo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_veioid_modelo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_veioid_ano" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_veioid_ano"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_veioid_cor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_veioid_cor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_veioid_id_rastreador" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_veioid_id_rastreador"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_veioid_tecnologia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_veioid_tecnologia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid1" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid1"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid1_placa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid1_placa"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid1_marca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid1_marca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid1_ano" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid1_ano"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid1_cor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid1_cor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid1_tipo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid1_tipo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid2_placa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid2_placa"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid2_marca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid2_marca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid2_ano" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid2_ano"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid2_cor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid2_cor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid2_tipo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid2_tipo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid3" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid3"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid3_placa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid3_placa"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid3_marca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid3_marca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid3_ano" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid3_ano"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid3_cor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid3_cor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_caroid3_tipo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_caroid3_tipo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid1" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid1"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid1_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid1_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid1_cpf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid1_cpf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid1_fone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid1_fone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid1_vinculo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid1_vinculo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid2_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid2_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid2_cpf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid2_cpf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid2_fone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid2_fone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_motoid2_vinculo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_motoid2_vinculo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_viagoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_viagoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_origem_cidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_origem_cidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_origem_uf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_origem_uf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_destino_cidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_destino_cidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_destino_uf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_destino_uf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_emboid_origem" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_emboid_origem"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_emboid_destino" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_emboid_destino"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_mercadoria" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_mercadoria"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_valor" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="evev_valor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_tipo_operacao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="evev_tipo_operacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="evev_rastreador" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="evev_rastreador"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="evento_info_viagem"/>
+	</field>
+	<field name="bioid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bioid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_eveoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_eveoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_tipo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_tipo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_nr_global" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_nr_global"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_nr_sequencia" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_nr_sequencia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_rotulo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_rotulo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_tp_enumoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_tp_enumoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_detalhe_outros" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_detalhe_outros"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_datahora" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_datahora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_rodovia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_rodovia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_cidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_cidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_uf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_uf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_km" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_km"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_rua" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_rua"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_numero" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_numero"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_latitude" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_latitude"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_longitude" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_longitude"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_dt_comunicado" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_dt_comunicado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_fone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_fone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_dia_semana" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_dia_semana"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_ponto_referencia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_ponto_referencia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_datahora" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_datahora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_rodovia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_rodovia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_cidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_cidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_uf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_uf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_km" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_km"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_rua" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_rua"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_numero" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_numero"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_latitude" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_latitude"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_longitude" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_longitude"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_furto" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_furto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_furto_qualificado" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_furto_qualificado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_roubo" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_roubo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_extorsao" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_extorsao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_apropriacao_indebita" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_apropriacao_indebita"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_estelionato" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_estelionato"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_receptacao" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_receptacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_falsidade_ideologica" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_falsidade_ideologica"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_enumoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_enumoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_abordagem_movimento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_abordagem_movimento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_vei_carga" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_vei_carga"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_carga" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_carga"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_vei" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_vei"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_pertences" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_pertences"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_pneus" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_pneus"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_rastreador" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_rastreador"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_tacografo" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_tacografo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_perda_tp_combustivel" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_perda_tp_combustivel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_choque" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_choque"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_saida_pista" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_saida_pista"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_adernamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_adernamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_incendio" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_incendio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_amassamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_amassamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_vazamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_vazamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_arranhadura" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_arranhadura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_quebra" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_quebra"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_quebra_mercadoria" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_quebra_mercadoria"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_colisao" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_colisao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_abalroamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_abalroamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_tombamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_tombamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_deslocamento_carga" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_deslocamento_carga"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_contaminacao" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_contaminacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_derrame" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_derrame"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_derrapagem" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_derrapagem"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_engavetamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_engavetamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_queda_nivel" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_queda_nivel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_molhadura" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_molhadura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_atolamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_atolamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_atropelamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_atropelamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_desatreamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_desatreamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_ma_estiva" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_ma_estiva"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_amolgamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_amolgamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_capotamento" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_capotamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dano_tp_enumoid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dano_tp_enumoid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_mot_obito" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_mot_obito"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_mot_ferido_gravemente" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_mot_ferido_gravemente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_mot_ferido_levemente" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_mot_ferido_levemente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_mot_ferido_passa_bem" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_mot_ferido_passa_bem"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_mot_hospitalizado" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_mot_hospitalizado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_mot_localizado" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_mot_localizado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_avaria_cavalo" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_avaria_cavalo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_avaria_carreta" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_avaria_carreta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_avaria_carga" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_avaria_carga"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_avaria_saque_mercadoria" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="bi_avaria_saque_mercadoria"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_empresa_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_empresa_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_dthora" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_dthora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_atendente_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_atendente_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_atendente_fone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_atendente_fone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_agente_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_agente_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_agente_fone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_agente_fone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_previsao_chegada" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_previsao_chegada"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_nr_processo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_nr_processo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_seg_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_seg_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_seg_dthora" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bi_seg_dthora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_seg_nome_responsavel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_seg_nome_responsavel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_seg_fone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_seg_fone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_seg_nr_processo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_seg_nr_processo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_empresa_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_empresa_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_dthora" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_dthora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_atendente_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_atendente_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_atendente_fone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_atendente_fone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_perito_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_perito_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_perito_fone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_perito_fone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_previsao_chegada" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_previsao_chegada"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_nr_processo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_nr_processo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_relato" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_relato"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_fim_relato" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bi_fim_relato"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_fim_valor_prejuizo" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="bi_fim_valor_prejuizo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_fim_percentual_estimado" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_fim_percentual_estimado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_usuoid_emissao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_usuoid_emissao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dt_emissao" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dt_emissao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_dt_reenvio" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="bi_dt_reenvio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_emails_usuoid_alteracao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="bi_emails_usuoid_alteracao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_emails_dt_alteracao" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="bi_emails_dt_alteracao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_hora" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_hora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_com_ini_hora_comunicado" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.label" value="bi_com_ini_hora_comunicado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_hora" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_hora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_pronta_previsao_chegada_hora" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.label" value="bi_pronta_previsao_chegada_hora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_seg_hora" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.label" value="bi_seg_hora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_hora" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_hora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_reg_previsao_chegada_hora" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.label" value="bi_reg_previsao_chegada_hora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="bi_susp_fim_hora" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.label" value="bi_susp_fim_hora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="boletim_informativo"/>
+	</field>
+	<field name="tipoboletim" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tipoboletim"/>
+	</field>
+	<field name="desctiposuspeita" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="desctiposuspeita"/>
+	</field>
+	<field name="stmot_obito" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stmot_obito"/>
+	</field>
+	<field name="stmot_localizado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stmot_localizado"/>
+	</field>
+	<field name="stmot_passa_bem" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stmot_passa_bem"/>
+	</field>
+	<field name="stmot_hospitalizado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stmot_hospitalizado"/>
+	</field>
+	<field name="stmot_ferido_leve" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stmot_ferido_leve"/>
+	</field>
+	<field name="stmot_ferido_grave" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stmot_ferido_grave"/>
+	</field>
+	<field name="stava_cavalo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stava_cavalo"/>
+	</field>
+	<field name="stava_careta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stava_careta"/>
+	</field>
+	<field name="stava_carga" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stava_carga"/>
+	</field>
+	<field name="stava_saque_mercadoria" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="stava_saque_mercadoria"/>
+	</field>
+	<field name="diasemana" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="diasemana"/>
+	</field>
+	<field name="abordagem" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="abordagem"/>
+	</field>
+	<field name="tipoacidenteavarias" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tipoacidenteavarias"/>
+	</field>
+	<field name="nomeusuario" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nomeusuario"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="39" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout"/>
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="20" uuid="ae643531-83d0-4d48-b363-7fcbe61dfa9a"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[global 5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="74" y="-2" width="60" height="20" uuid="c77dc650-f92b-49d4-b0dc-f107aca1c3e2"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ENGENHARIA DE RISCOS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="70" y="-5" width="1" height="23" uuid="4b58b9e4-e7c2-415b-a0b2-00b214601247"/>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="100" y="0" width="350" height="20" uuid="b028a6fe-d3a9-4cf0-b947-0628145681eb"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Boletim Informativo]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="76" y="27" width="99" height="11" uuid="7d5701c0-c68e-4b1e-afbb-86e06bfd3474">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoboletim}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="27" width="76" height="11" uuid="76667327-0e1c-4363-bd3c-1dd04a23d1ae">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo do Boletim:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="27" width="35" height="11" uuid="a6401e0d-c9ce-471a-938b-9e74675a1269">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SM Nº:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="212" y="27" width="48" height="11" uuid="a9142aeb-df75-4921-aa10-3c23a5d914d3">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{eve_viagoid}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="270" y="27" width="20" height="11" uuid="9458ce28-f49c-4570-9a3e-4cbc1e771e81">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Nº:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="299" y="27" width="153" height="11" uuid="8580ff6c-97c8-4830-9618-381bcf8b0aa1">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_rotulo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-1" y="38" width="557" height="1" uuid="6921053d-63d3-4973-9e64-59123f739ba6">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="514" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}==1]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="4" width="40" height="11" uuid="91fc2f9c-c4fa-4daa-90a2-b3cd50b4acab">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="80" height="11" uuid="b3e61de5-d2e8-4f26-be15-c00ca542377b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Transportadora:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="29" width="120" height="11" uuid="1a9f1524-ec8e-40e0-ad6b-18d3f10017ff">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gerente Resp. pela Conta:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="40" y="4" width="499" height="11" uuid="44b36007-4dda-404d-847f-eaf3ba979e80">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_cliente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="80" y="16" width="459" height="11" uuid="e143ebcc-517f-4e53-b237-eb9212d833e8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_transportadora}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="120" y="29" width="419" height="11" uuid="ebf28801-cde9-457d-a115-b2034b128a9b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ Filipe Eduardo Dell´aira]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-1" y="41" width="557" height="1" uuid="a00b5247-1dd5-4957-809e-89c854be93d1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="96" width="30" height="11" uuid="72a26c42-08bd-4c63-bc87-a9d01e4360c9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Placa:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="108" width="70" height="11" uuid="7fc93844-a813-4790-b6ce-20222148cffd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID Rastreador:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="121" width="134" height="11" uuid="2c97cc80-e320-42dd-ad86-ae2bc532d2e5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tecnologia de Rastreamento:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="30" y="96" width="70" height="11" uuid="c45a05aa-862b-448f-896e-15348b85d501">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_veioid_placa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="71" y="108" width="99" height="11" uuid="783df8c2-3231-4503-98b3-a8f033e2e4e4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_veioid_id_rastreador}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="134" y="121" width="405" height="11" uuid="43024d60-8355-4229-99c9-c3b51ebf0e09">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_veioid_tecnologia}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-1" y="134" width="557" height="1" uuid="11c09b15-550c-4163-a0fa-0221eaf12d30">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="83" width="120" height="11" uuid="411cdd27-6f50-4428-a2c5-1d3d2c4f04a8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dados do Cavalo:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="140" y="96" width="240" height="11" uuid="d134dbc2-4581-49b0-832d-3cb7b7569c08">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_veioid_marca}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="110" y="96" width="30" height="11" uuid="05de59c0-1d04-4c4f-b400-665eef912ffc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Marca:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="416" y="96" width="70" height="11" uuid="fcfb54cb-7173-4423-950a-86f9957a915a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_veioid_ano}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="386" y="96" width="30" height="11" uuid="f32fd823-6ffc-4231-9265-73465db35365">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="108" width="25" height="11" uuid="90fdc323-2b9a-4b01-bf77-4d1efccf71b0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cor:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="108" width="99" height="11" uuid="335d3926-91b5-4d0b-bff1-1720f1d540e9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_veioid_cor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="343" y="108" width="196" height="11" uuid="18038946-900e-441e-9411-d15798a09163">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_veioid_modelo}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="299" y="108" width="44" height="11" uuid="60abf791-f8ee-40f7-8932-d74200d69411"/>
+				<staticText>
+					<reportElement x="0" y="-11" width="44" height="11" uuid="1a88f383-baec-42ae-a169-28bcdea3ac08">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Modelo:]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement x="0" y="150" width="40" height="11" uuid="405a8099-7e6b-4e6a-9650-65c7778c2eb7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Placa1:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="150" width="60" height="11" uuid="18092846-5549-4cf4-8d08-11ac9fcc44a9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid1_placa}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-1" y="188" width="557" height="1" uuid="a0ca0bd7-5781-4569-9d28-b813138b972e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="137" width="120" height="11" uuid="513871ca-364d-4e8b-8d0c-b07fa32a6a3a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dados da Carreta:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="140" y="150" width="90" height="11" uuid="9eaad273-27bc-440d-ab2c-82917d58c95e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid1_marca}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="150" width="40" height="11" uuid="85d188f2-5031-4b66-a075-251475f41e2e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Marca1:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="264" y="150" width="35" height="11" uuid="46b4e899-9932-492b-94a5-ab4711af3388">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid1_ano}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="234" y="150" width="30" height="11" uuid="d2f23715-648c-4f4c-a349-cd9b33d515e6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano1:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="151" width="25" height="11" uuid="bb64802e-4d40-414c-9d2a-d86b41fc399a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cor1:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="329" y="151" width="61" height="11" uuid="6d7959d5-a98a-4f8b-8c6f-4faceedce928">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid1_cor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="452" y="151" width="102" height="11" uuid="61f6d9c7-a3e2-4f55-8693-546386101588">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid1_tipo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="163" width="40" height="11" uuid="df320c7c-b4a9-4dba-87ef-698e57001342">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Placa2:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="163" width="60" height="11" uuid="46f0837f-710a-4687-b1cc-cbac0f6b8c84">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid2_placa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="140" y="163" width="90" height="11" uuid="c838f301-9fe8-4160-8c01-0c678f30bf62">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid2_marca}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="163" width="40" height="11" uuid="ebb33be4-6fe2-4781-8960-8e32e56fa2c0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Marca2:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="264" y="163" width="35" height="11" uuid="c3cf4f51-3bca-4716-b132-e514b08ac25c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid2_ano}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="234" y="163" width="30" height="11" uuid="410203dc-a7b7-4d32-b4f9-4d60794f3d1a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano2:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="164" width="25" height="11" uuid="6d2c64f9-138f-46bd-93d4-b3e4a775d1e3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cor2:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="329" y="164" width="61" height="11" uuid="2a7ab4fb-c234-49b4-a0d5-15dd600d0a87">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid2_cor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="452" y="164" width="102" height="11" uuid="8317a593-c16c-41e0-b338-9a08b58da582">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid2_tipo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="394" y="151" width="56" height="11" uuid="904aeb62-1727-4fa1-a612-2b76a141bb08">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Corroceria1:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="394" y="164" width="56" height="11" uuid="88f56e1a-1522-4cc0-90ac-12e0b05784a3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Corroceria2:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="176" width="40" height="11" uuid="175852c9-388a-45e9-8e31-2121c34e8a8f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Placa3:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="176" width="60" height="11" uuid="9fdbc334-22cd-4d41-be61-9d8afb0600b8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid3_placa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="140" y="176" width="90" height="11" uuid="80d34710-836d-4f6e-a283-fce3818a6751">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid3_marca}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="176" width="40" height="11" uuid="7a3bf9f7-f4a8-4635-849e-349af6241c5f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Marca3:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="264" y="176" width="35" height="11" uuid="478ffa1f-e0e7-4cab-b255-48e2c22e7dcd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid3_ano}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="234" y="176" width="30" height="11" uuid="33e47a55-8399-4166-894b-95ec75c9c9e3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano3:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="177" width="25" height="11" uuid="987a2b84-3aef-4da0-a80a-33ef7992be56">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cor3:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="329" y="177" width="61" height="11" uuid="044209e1-2082-4a22-ab88-e49d22b9c9e6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid3_cor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="452" y="177" width="102" height="11" uuid="a7ca34ee-45d4-4db7-b369-5770e4660c45">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_caroid3_tipo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="394" y="177" width="56" height="11" uuid="120b8e81-f230-4551-a392-6cd7b6c90290">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Corroceria3:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="203" width="40" height="11" uuid="9323217e-d862-4770-99ac-4e92d752ec99">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° SM:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="203" width="60" height="11" uuid="175a40fd-4bb1-4b32-bfcb-5d9c1291cffa">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_viagoid}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-1" y="229" width="557" height="1" uuid="a9f44b4f-3929-4679-bd3f-c26e3395ac32">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="190" width="120" height="11" uuid="fb29883e-e73c-4e07-9ff5-3e492979fd66">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dados da Viagem:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="140" y="203" width="159" height="11" uuid="72d5b12e-c8dc-4efd-925d-6ed13ac24429">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_origem_cidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="203" width="40" height="11" uuid="9024b369-e0dd-48d9-b20f-6daeb880ca67">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Origem:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="204" width="39" height="11" uuid="06d16600-cf5f-4402-9236-55e4a3c2146d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Destino:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="347" y="204" width="207" height="11" uuid="565ec960-1c42-4306-aaf2-1765972103e5">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_destino_cidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="216" width="40" height="11" uuid="c788b9d3-a762-4426-bd13-1a9082e9b942">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor:]]></text>
+			</staticText>
+			<textField pattern="¤#,##0.##;¤-##0.##" isBlankWhenNull="true">
+				<reportElement x="40" y="216" width="100" height="11" uuid="03a76887-baf6-446d-9926-71e83bda0e73">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_valor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="143" y="216" width="89" height="11" uuid="c2cb94f2-fd7b-465e-8cc7-e3c5a7219366">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Operação:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="232" y="216" width="322" height="11" uuid="b68419bd-fd4d-4d70-83d2-c88157179c76">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_tipo_operacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="266" width="27" height="11" uuid="e0ae24d1-555c-4d62-bb52-ae0cb25de604">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fone:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="27" y="266" width="93" height="11" uuid="5802db67-3e9c-452c-85d0-05c2e4e93ba7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_fone}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="357" width="557" height="1" uuid="3826fd24-933e-4535-afcd-9bd18d3e57e0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="231" width="160" height="11" uuid="6fead8c0-83b0-40ed-a39a-3c0cbabb502e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dados do Comunicado do Sinistro:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="330" y="266" width="219" height="11" uuid="b6b410de-de2a-4a47-8055-a3ea54f85462">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{diasemana}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="255" y="266" width="74" height="11" uuid="98299569-2886-4887-8032-551e390f42a6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dia da Semana:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="318" width="55" height="11" uuid="fe2d5cb9-1fb0-462b-acca-f41f25b42a11">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Referência:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="55" y="318" width="499" height="11" uuid="74d96c07-b022-4104-b3bf-372eb8b56138">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_ponto_referencia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="254" width="148" height="11" uuid="191a4084-d475-4700-a2dd-21c8139b096a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome do Comunicante/Empresa:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="148" y="254" width="401" height="11" uuid="24827bf2-4601-4bb3-97a1-35ed34738d78">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="305" width="50" height="11" uuid="dfed92e7-553a-4984-8fce-29ce048f6910">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="55" y="305" width="325" height="11" uuid="14342c95-8436-485a-8a99-f4314e6962e1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_rua}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="407" y="305" width="81" height="11" uuid="850f159b-217b-400c-b863-6d6caab205c7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="382" y="305" width="22" height="11" uuid="b3d43b0d-3fba-48f2-886a-e04126bb28d4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="331" width="40" height="11" uuid="7642070f-ba4d-4dc1-bd61-a12db64369af">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cidade:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="55" y="331" width="325" height="11" uuid="148361f8-2703-4c8a-887d-266af4c14ec5">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_cidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="382" y="331" width="18" height="11" uuid="ebd5fd7b-22fd-40b4-a6bc-bc44744c47e6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UF :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="407" y="331" width="80" height="11" uuid="7a5a461e-bbea-4bb9-b260-fba8674dab6a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_uf}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="344" width="110" height="11" uuid="90eb19cd-4240-44fd-9f22-c69ed43c8f17">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Coordenada (Latitude): ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="110" y="344" width="132" height="11" uuid="2cdd60ca-d63e-43e4-8c4d-579d83eefe06">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_latitude}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="247" y="344" width="114" height="11" uuid="222d0864-3e06-499e-a942-1f8262c20ebe">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Coordenada (Longitude):]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="363" y="344" width="129" height="11" uuid="76ebf776-5720-4309-a9a2-038b402a8e30">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_longitude}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="503" width="556" height="11" uuid="e596d1eb-089a-41c4-b2ff-498969f6126e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Histórico de Boletim]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-1" y="80" width="557" height="1" uuid="fa55bf6f-8a91-4c10-b9f1-80e4b7763a12">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="55" width="30" height="11" uuid="4776b8e8-b303-4783-ada4-d080561b1352">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CPF1:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="31" y="55" width="70" height="11" uuid="eab1925e-93d4-4f2c-b88f-c8ba54b48e76">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_motoid1_cpf}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="141" y="55" width="229" height="11" uuid="09f74dee-6ddb-4457-b613-659c7a2f60c6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_motoid1_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="101" y="55" width="36" height="11" uuid="9af6f265-6a16-4357-8d46-2c4166d5f25d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome1:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="424" y="55" width="125" height="11" uuid="111349a3-71c4-49a0-baa7-9ce03b5807e1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_motoid1_vinculo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="380" y="55" width="45" height="11" uuid="d19c97a8-a8eb-41ad-816d-6fdcebd58bf7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vínculo1:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="43" width="120" height="11" uuid="96ba81ea-0b2a-44ae-be64-7f7b46354a5a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dados do Motorista:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="68" width="30" height="11" uuid="7630c8fc-ffbb-4e41-bb0f-a00383b08d05">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CPF2:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="31" y="68" width="70" height="11" uuid="d4e34a6a-30d0-4d84-8430-7b6f884696ae">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_motoid2_cpf}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="141" y="68" width="229" height="11" uuid="7ba61e7a-d273-4ef6-b778-56dc468248da">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_motoid2_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="101" y="68" width="37" height="11" uuid="5949c8f5-8241-4b4c-8ba6-5423523b9d7a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome2:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="424" y="68" width="125" height="11" uuid="47de502f-7bc3-4859-977c-a0a42c09d763">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{evev_motoid2_vinculo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="380" y="68" width="45" height="11" uuid="f7ba1b7d-3954-44a6-99f5-d4df4389b6b9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vínculo2:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="242" width="122" height="11" uuid="5ea6de5e-7538-4e07-a06d-e8a6372eefdf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data/Hora do Comunicado:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyYY" isBlankWhenNull="true">
+				<reportElement x="124" y="242" width="60" height="11" uuid="94e436fa-ce89-4784-b2bb-b1f286b86312">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_datahora}]]></textFieldExpression>
+			</textField>
+			<textField pattern="hh:mm a" isBlankWhenNull="true">
+				<reportElement x="188" y="242" width="60" height="11" uuid="74528613-4324-44c1-9aee-2941ea184195">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement x="255" y="242" width="102" height="11" uuid="dd316296-a456-4105-95c0-2d68bdac30f4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data/Hora do Sinistro:]]></text>
+			</staticText>
+			<textField pattern="hh:mm a" isBlankWhenNull="true">
+				<reportElement x="422" y="242" width="60" height="11" uuid="955ef7d6-5a48-4044-8203-d5c46e8b71bf">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+			</textField>
+			<textField pattern="dd/MM/yyYY" isBlankWhenNull="true">
+				<reportElement x="358" y="242" width="60" height="11" uuid="f4d8eb0d-8520-4136-9925-7e021fc1c6a9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_dt_comunicado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="280" width="160" height="11" uuid="856e9532-4c7c-4d8c-8d06-e318ac435e3b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dados do Local do Sinistro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="292" width="40" height="11" uuid="59beff18-817b-414b-8bd3-37d2670227b7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rodovia:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="55" y="292" width="325" height="11" uuid="8b8317d6-4b43-4fdb-92a0-a8e4b0a575d3">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_rodovia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="382" y="292" width="22" height="11" uuid="b5f047f3-2c29-4ba4-a79f-a483232db909">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KM:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="407" y="292" width="81" height="11" uuid="db2fe89d-83af-4102-bca4-935bc2f46707">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_com_ini_km}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="359" width="138" height="11" uuid="67e45d4b-69ae-4f9f-904c-3dff9757d76b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Classificação do Sinistro:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="141" y="372" width="219" height="11" uuid="0e5d08b2-a9d2-4ad1-97e5-4225b9838ccc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoacidenteavarias}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="" x="0" y="372" width="138" height="11" uuid="b6c9be47-44ca-4414-9bf4-1bc07d991434">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Acidentes ou Avarias (Danos): ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="" x="0" y="385" width="104" height="11" uuid="f50a2deb-7010-4b1d-bb03-87be022fb160">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Situação do Motorista:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="105" y="385" width="444" height="11" isRemoveLineWhenBlank="true" uuid="23acd24e-16fe-4504-ba86-cadaa1e10845">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement markup="none">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stmot_obito}.concat($F{stmot_localizado}).concat($F{stmot_passa_bem}).concat($F{stmot_hospitalizado}).concat($F{stmot_ferido_leve}).concat($F{stmot_ferido_grave})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="" x="0" y="398" width="40" height="11" uuid="091a0a1f-ea06-4689-8988-88272d6048c1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Avarias:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="40" y="398" width="444" height="11" isRemoveLineWhenBlank="true" uuid="56240cc0-68dc-4d0f-9f90-247bd0c44d35">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement markup="none">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stava_cavalo}.concat($F{stava_careta}).concat($F{stava_carga}).concat($F{stava_saque_mercadoria})]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="409" width="554" height="93" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="60c00a37-09c4-420d-b8e5-23df99f0e843">
+					<printWhenExpression><![CDATA[!$F{bi_fim_relato}.equals(null)]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textField evaluationTime="Page">
+					<reportElement x="10" y="21" width="535" height="50" uuid="2710d25c-4476-4bef-abe2-c90fab9162be">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement markup="html">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bi_fim_relato}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="4" y="4" width="139" height="10" uuid="7d264bca-45d8-4d5c-bb41-969c8fbea283">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Descritivo do Registro Final:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="10" y="76" width="130" height="10" uuid="1b07d3cf-a23d-41e4-a565-f30bad020396">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor Estimado do Prejuízo:]]></text>
+				</staticText>
+				<textField pattern="¤#,##0.##;¤-#,##0.##">
+					<reportElement x="140" y="76" width="111" height="11" uuid="fc2b924b-da2b-4cd6-b3f5-fb1ab5c96d14">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bi_fim_valor_prejuizo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="355" y="77" width="111" height="11" uuid="8f2d745b-3383-4496-9c1f-df4fc9c43244">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bi_fim_percentual_estimado}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="255" y="77" width="102" height="10" uuid="da373b6b-285c-43a6-a968-f6713b1514c0">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Percentual Estimado:]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="144" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.spreadsheet.SpreadsheetLayout"/>
+			<frame>
+				<reportElement x="0" y="0" width="556" height="144" uuid="54a3485e-b08a-4c2d-a7fb-bbaf000f61ab"/>
+				<componentElement>
+					<reportElement mode="Opaque" x="0" y="0" width="556" height="144" uuid="71d18f85-318e-4935-b82b-d8398ab058a1">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.grid.JSSGridBagLayout"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+						<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+						<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+					</reportElement>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="DatasetBiRelato" uuid="68243e99-21c8-4f40-850c-af8c7c177c52">
+							<datasetParameter name="Evento">
+								<datasetParameterExpression><![CDATA[$P{Evento}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Boletim">
+								<datasetParameterExpression><![CDATA[$P{Boletim}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:column width="80" uuid="ebe5834d-ee04-466f-a022-f3997df0fdd4">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="80" height="20" uuid="a6228b8b-af48-44d1-87af-29e75b068a32"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[data criacao]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 1_TD" height="20">
+								<textField isStretchWithOverflow="true">
+									<reportElement x="0" y="0" width="80" height="20" uuid="bd3bf524-f078-4179-94c4-6c6303ae657f">
+										<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{bir_dt_criacao}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="476" uuid="b53375fd-3075-4815-9284-254bdffc3a1f">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="476" height="20" uuid="212ba322-c71b-4d20-80b6-84e167027673"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[relato]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table 1_TD" height="20">
+								<textField isStretchWithOverflow="true">
+									<reportElement x="0" y="0" width="476" height="20" uuid="684172c3-36a1-4560-a38f-51107c2dba45">
+										<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									</reportElement>
+									<textElement verticalAlignment="Middle" markup="html">
+										<font size="8"/>
+										<paragraph leftIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{bir_relato}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="10" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="47" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="3" width="395" height="11" uuid="889a16a4-c4d8-41e1-b3df-8b6223e73398">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Responsável pelo atendimento e registro das informações]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="15" width="35" height="11" uuid="a9e29e37-dfc9-4d6b-8918-29128d7dffe1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="36" y="15" width="150" height="11" uuid="ad7df983-d223-4984-b4f9-247b38f8efc5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomeusuario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="188" y="15" width="108" height="11" uuid="ade2fed7-771b-4bff-b770-8b9cf40a0157">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Data/Hora Preenchimento: ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h:mm:ss a" isBlankWhenNull="true">
+				<reportElement x="296" y="15" width="126" height="11" uuid="3c3e16f0-ec0a-4f74-ab4d-64ea1fc66fe7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bi_dt_emissao}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="557" height="1" uuid="6caccca9-ac23-4e19-a228-321d5926531e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<textField isBlankWhenNull="false">
+				<reportElement mode="Opaque" x="418" y="14" width="131" height="12" uuid="55e11b46-f2cf-4cf5-a2d8-86d49eb067db"/>
+				<textElement textAlignment="Right" markup="html">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página: " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="7" splitType="Stretch"/>
+	</summary>
+</jasperReport>

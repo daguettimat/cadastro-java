@@ -50,7 +50,8 @@
 
             .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error, div.ui-selectonemenu.ui-state-error, div.ui-fluid div.ui-selectonemenu.ui-state-error, div.ui-fluid div.ui-selectonemenu.ui-state-error.ui-state-focus, .form-control .ui-state-error {
 
-                color: #dd4b39 !important;
+/*                 color: #dd4b39 !important; */
+					color: #1762a8 !important;
             }
 
 
@@ -75,57 +76,55 @@
                         .hide();
                 }
 
-
                 $("#dMotorista").focusout(function () {
                     $("#dMotorista")
-                        .removeClass("box-danger")
+                        .removeClass("box-primary")
                         .addClass("box-default");
                 });
 
                 $("#dMotorista").focusin(function () {
                     $("#dMotorista")
-                        .addClass("box-danger")
+                        .addClass("box-primary")
                         .removeClass("box-default");
                 });
 
                 $("#dCNH").focusout(function () {
                     $("#dCNH")
-                        .removeClass("box-danger")
+                        .removeClass("box-primary")
                         .addClass("box-default");
                 });
 
                 $("#dCNH").focusin(function () {
                     $("#dCNH")
-                        .addClass("box-danger")
+                        .addClass("box-primary")
                         .removeClass("box-default");
                 });
 
 
                 $("#dRefPessoais").focusin(function () {
                     $("#dRefPessoais")
-                        .addClass("box-danger")
+                        .addClass("box-primary")
                         .removeClass("box-default");
                 });
 
 
                 $("#dRefPessoais").focusout(function () {
                     $("#dRefPessoais")
-                        .removeClass("box-danger")
+                        .removeClass("box-primary")
                         .addClass("box-default");
                 });
 
                 $("#dRefComerciais").focusin(function () {
                     $("#dRefComerciais")
-                        .addClass("box-danger")
+                        .addClass("box-primary")
                         .removeClass("box-default");
                 });
 
                 $("#dRefComerciais").focusout(function () {
                     $("#dRefComerciais")
-                        .removeClass("box-danger")
+                        .removeClass("box-primary")
                         .addClass("box-default");
-                });
-
+                });   
 
             });
 
@@ -154,12 +153,12 @@
                     <div class="row" style="padding-top:20px;">
                         <div class="col-lg-12">
                         
-                            <p:panel id="panelFicha" styleClass="box-danger" widgetVar="panel">
+                            <p:panel id="panelFicha" styleClass="box-primary" widgetVar="panel">
                             
                                     <f:event type="preRenderView" listener="#{enviarFichaMB.removeTerceiro}"/>
                                     
                                     <ui:fragment id="fragMotorista" rendered="#{enviarFichaMB.painelMotorista == true}">
-                                        <div id="dMotorista" class="box box-solid box-danger">
+                                        <div id="dMotorista" class="box box-solid box-primary">
                                             <div class="box-header with-border" style="padding-top: 1px">
                                                 <h4 style="padding-top: 5px;">Informações do Motorista</h4>
                                             </div>
@@ -184,7 +183,7 @@
                                                         <div class="row">
                                                             <div class="col-lg-2">
                                                                 <p:outputLabel for="nacional" value="Nacional"/>
-                                                                <p:selectBooleanButton id="nacional" class="btn-danger"
+                                                                <p:selectBooleanButton id="nacional" class="btn-primary"
                                                                                        value = "#{enviarFichaMB.fichaCliente.nacional}"
                                                                                        onLabel="Sim"
                                                                                        offLabel="Não"
@@ -405,7 +404,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-2" style="padding-top:25px;">
-                                                        <p:panel styleClass="box-danger" widgetVar="panelFoto" header="Foto Motorista" style="text-aling:center">
+                                                        <p:panel styleClass="box-primary" widgetVar="panelFoto" header="Foto Motorista" style="text-aling:center">
                                                       
                                                             <h:graphicImage value="/images/dynamic/?file=#{enviarFichaMB.foto(enviarFichaMB.fichaCliente.motorista.id)}" 
                                                             	style="width:100%;padding-bottom: 15px;border-color:black;border-style:double"/>
@@ -527,8 +526,8 @@
                                                     <div class="row" >
 
                                                         <div class="col-lg-6" style="padding-top:25px;">
-                                                            <p:panel styleClass="box-danger" widgetVar="panelFotoFrenteCNH">
-                                                               <!--  <h:graphicImage value="/images/dynamic/?file=#{enviarFichaMB.fotoCNH(enviarFichaMB.fichaCliente.motorista.id,true)}" style="width:100%;height: 30%"/> -->                                                        
+                                                            <p:panel styleClass="box-primary" widgetVar="panelFotoFrenteCNH">
+                                                        
                                                                 <br/>
                                                                 <p:fileUpload id="regUploadCNHFrente" style="width: 100%; padding-top: 20px;"
                                                                               label ="Imagem CNH (Frente)" uploadLabel="Enviar arquivo" cancelLabel="Cancelar envio"
@@ -543,8 +542,8 @@
                                                             </p:panel>
                                                         </div>
                                                         <div class="col-lg-6" style="padding-top:25px;">
-                                                            <p:panel styleClass="box-danger" widgetVar="panelFotoVersoCNH">
-                                                                <!-- <h:graphicImage value="/images/dynamic/?file=#{enviarFichaMB.fotoCNH(enviarFichaMB.fichaCliente.motorista.id,false)}" style="width:100%;height: 30%"/>  -->
+                                                            <p:panel styleClass="box-primary" widgetVar="panelFotoVersoCNH">
+
                                                                 <br/>
                                                                 <p:fileUpload id="regUploadCNHVerso" style="width: 100%; padding-top: 20px;"
                                                                 
@@ -592,7 +591,7 @@
                                                                         mask="(99) 9999-9999?9"/>
                                                             </p:column>
                                                             <p:column headerText="&#160;" width="5">
-                                                                <p:commandButton  value="Excluir" styleClass="btn-danger"
+                                                                <p:commandButton  value="Excluir" styleClass="btn-primary"
                                                                                  process="@this"
                                                                                  action="#{enviarFichaMB.delReferenciaPessoal(referencias.id)}"
                                                                                  style="margin-right:10px;"
@@ -606,7 +605,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="pull-right" style="padding: 15px;">
-                                                        <p:commandButton id="btnReferencias" styleClass="btn-danger" disabled="#{!enviarFichaMB.showRefPessoal}"
+                                                        <p:commandButton id="btnReferencias" styleClass="btn-primary" disabled="#{!enviarFichaMB.showRefPessoal}"
                                                                          action="#{enviarFichaMB.clearPessoal}"
                                                                          oncomplete="onTop();"
                                                                          process="@form"
@@ -651,7 +650,7 @@
                                                                         mask="(99) 9999-9999?9"/>
                                                             </p:column>
                                                             <p:column headerText="&#160;" width="5">
-                                                                <p:commandButton value="Excluir" styleClass="btn-danger"
+                                                                <p:commandButton value="Excluir" styleClass="btn-primary"
                                                                                  process="@this"
                                                                                  action="#{enviarFichaMB.delReferenciaComercial(refComerciais.id)}"
                                                                                  style="margin-right:10px;"
@@ -664,7 +663,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="pull-right" style="padding: 15px;">
-                                                        <p:commandButton id="btnRefRC" styleClass="btn-danger" disabled="#{!enviarFichaMB.showRefComercial}"
+                                                        <p:commandButton id="btnRefRC" styleClass="btn-primary" disabled="#{!enviarFichaMB.showRefComercial}"
                                                                          actionListener="#{enviarFichaMB.clearComercial}"
                                                                          update="@form"
                                                                          oncomplete="onTop();"
@@ -685,14 +684,14 @@
                                             <div class="box-body">
                                                 <div class="row">
                                                     <div class="col-lg-12">
-                                                        <p:dataTable var="refVeiculos" id="panelVeiculos"
+                                                        <p:dataTable var="refVeiculos" id="panelVeiculos" editable="false"
                                                                      value="#{enviarFichaMB.referenciasVeiculos}">
                                                             <p:column headerText="Ordem" width="3">
                                                                 <h:outputText value="#{refVeiculos.id}"/>
                                                             </p:column>
 
                                                             <p:column headerText="Placa" width="10">
-                                                                <h:outputText value="#{refVeiculos.placa}"/>
+                                                                <h:outputText value="#{refVeiculos.placaView}" />
                                                             </p:column>
 
                                                             <p:column headerText="Tipo" width="10">
@@ -717,8 +716,8 @@
 
 
                                                             <p:column headerText="&#160;" width="5">
-                                                                <p:commandButton value="Excluir" styleClass="btn-danger"
-                                                                                 process="@this"
+                                                                <p:commandButton value="Excluir" styleClass="btn-primary"
+                                                                                 process="@this" 
                                                                                  action="#{enviarFichaMB.delReferenciaVeiculos(refVeiculos.id)}"
                                                                                  style="margin-right:10px;"
                                                                                  partialSubmit="true">
@@ -730,9 +729,10 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="pull-right" style="padding: 15px;">
-                                                        <p:commandButton id="btnRefVeiculo" styleClass="btn-danger" disabled="#{enviarFichaMB.limitadorVeiculo}"
+                                                        <p:commandButton id="btnRefVeiculo" styleClass="btn-primary" 
+                                                        				 disabled="#{enviarFichaMB.limitadorVeiculo}"
                                                                          action="#{enviarFichaMB.clearVeiculos}"
-                                                                         process="@form"
+                                                                         process="@form"  update="@this"  
                                                                          partialSubmit="true"
                                                                          oncomplete="javascript: window.scrollTo(0,0);"
                                                                          value="Adicionar">
@@ -744,6 +744,66 @@
                                             </div>
                                         </div>
                                         <br/>
+                                      
+                                        <div  id="dPropVeicPF" class="box box-solid box-default">
+                                    		
+                                    		<div  class="box-header with-border" style="padding-top: 1px">
+                                                <h4>Informações do Proprietário do Veículo - Tipo Pessoa Física</h4>
+                                            </div>
+
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <p:dataTable var="refPropVeiculos" id="panelPropVeiculos" editable="false"
+                                                                     value="#{enviarFichaMB.referenciasPropVeiculos}">
+                                                             
+                                                            <p:column headerText="Ordem" width="5%">
+                                                                <h:outputText value="#{refPropVeiculos.id}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Placa" width="8%">
+                                                                <h:outputText value="#{refPropVeiculos.placaView}" />
+                                                            </p:column>
+
+                                                            <p:column headerText="Proprietário" width="20">
+                                                                <h:outputText
+                                                                        value="#{refPropVeiculos.proprietario.nome}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Documento" width="10%">
+                                                                <h:outputText
+                                                                        value="#{refPropVeiculos.proprietario.documento}"/>
+                                                            </p:column>                                                            
+                                                            <p:column headerText="RG" width="15%">
+                                                            	<p:row>
+                                                            		<h:outputText value="#{refPropVeiculos.proprietario.rgNumero} "/>
+                                                            		
+                                                            		<h:outputText value="#{refPropVeiculos.proprietario.rgEmissor} "/>
+                                                            		<h:outputText value="#{refPropVeiculos.proprietario.rgUF} "/> 
+                                                            	</p:row>
+                                                                
+                                                            </p:column>
+                                                            <p:column headerText="Nascido" width="8%">
+                                                                <h:outputText
+                                                                        value="#{refPropVeiculos.proprietario.dtNascimento}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Natural" width="20">
+                                                                <h:outputText
+                                                                        value="#{refPropVeiculos.proprietario.natural}"/>
+                                                            </p:column>
+                                                            
+                                                            <p:column headerText="Mãe" width="20" >
+                                                                <h:outputText value="#{refPropVeiculos.proprietario.nomeMae}" />
+                                                            </p:column>
+
+                                                        </p:dataTable>                                                    	
+													</div>
+												</div>
+											</div>	
+
+                                            
+                                    	</div>
+                                        
+                                        
                                     </ui:fragment>
                                    
                                     <br/>
@@ -766,7 +826,7 @@
                                     
                                     
                                     <ui:fragment id="fragMercadoria" rendered="#{enviarFichaMB.showMercadoria == true}">
-                                        <div class="box box-solid box-danger" id="panelMercadoria" >
+                                        <div class="box box-solid box-primary" id="panelMercadoria" >
                                                 <div class="box-header with-border" style="padding-top: 1px">
                                                     <h4>Mercadorias</h4>
                                                 </div>
@@ -774,12 +834,12 @@
                                                     <div class="row">
                                                         <div class="col-lg-3">
                                                             <p:outputLabel for="tipoMercadoria" value="Mercadoria"/>
-                                                            <p:selectOneMenu id="tipoMercadoria"
-                                                                             value="#{enviarFichaMB.idMercadoria}"
+                                                            <p:selectOneMenu id="tipoMercadoria" 
+                                                                             value="#{enviarFichaMB.idMercadoria}" 
                                                                              style="width: 100%;height:34px;" >
                                                                 <f:selectItem itemLabel="&#160;" itemValue=""/>
                                                                 <f:selectItems value="#{enviarFichaMB.lstMercadorias}"
-                                                                               var="listMercadorias"
+                                                                               var="listMercadorias" 
                                                                                itemValue="#{listMercadorias.id}"
                                                                                itemLabel="#{listMercadorias.descricao}"/>
                                                             </p:selectOneMenu>
@@ -890,7 +950,7 @@
                                     <br/>
                                     <div class="row">
                                         <div class="pull-right" style="padding: 15px;">
-                                            <p:commandButton id="btnEnviarFicha" styleClass="btn-danger"
+                                            <p:commandButton id="btnEnviarFicha" styleClass="btn-primary"
                                                              action="#{enviarFichaMB.salvarFichaNew}"
                                                              oncomplete="javascript: window.scrollTo(0, 0);"
                                                              update="@form"
@@ -926,7 +986,7 @@
                             <p:commandButton value="Fechar"
                                              onclick="PF('dlgFechado').hide();"
                                              action="#{enviarFichaMB.btnBack}"
-                                             styleClass="btn-danger" />
+                                             styleClass="btn-primary" />
                         </div>
                     </div>
                 </f:facet>
@@ -934,13 +994,10 @@
         </p:dialog>
         </h:form>
 
-
-
-
         <p:dialog id="dialog" widgetVar="dialog" resizable="false"
                   closable="false" modal="true" width="900" styleClass="disable-scroll">
             <h:form id="formRefPessoal">
-                <div class="box box-solid box-danger">
+                <div class="box box-solid box-primary">
                     <div class="box-header with-border" style="padding-top: 1px">
                         <h3>Referências Pessoais</h3>
                      </div>
@@ -956,7 +1013,7 @@
                   resizable="false" closable="false" modal="true"
                   styleClass="disable-scroll" >
             <h:form id="formRefComercial">
-                <div class="box box-solid box-danger">
+                <div class="box box-solid box-primary">
                     <div class="box-header with-border" style="padding-top: 1px">
                         <h3>Referências Comerciais</h3>
                     </div>
@@ -971,7 +1028,7 @@
                   resizable="false" closable="false" modal="true"
                   width="900" styleClass="disable-scroll">
 
-                <div class="box box-solid box-danger">
+                <div class="box box-solid box-primary">
                     <div class="box-header with-border" style="padding-top: 1px">
                         <h3>Veículos e Reboques</h3>
                     </div>
@@ -983,7 +1040,7 @@
         </p:dialog>
 
         <!--<p:dialog id="dlgImagens" widgetVar="dlgImagens" modal="true" header="Adicionar Imagens de Documentação" resizable="false"-->
-                  <!--closable="true" width="900" height="300" styleClass="box-danger ui-dialog ui-dialog-titlebar">-->
+                  <!--closable="true" width="900" height="300" styleClass="box-primary ui-dialog ui-dialog-titlebar">-->
             <!--<ui:include src="dlgFichaImagens.xhtml"/>-->
         <!--</p:dialog>-->
 
@@ -1014,7 +1071,5 @@
 
 
     </ui:define>
-
-
 
 </ui:composition>

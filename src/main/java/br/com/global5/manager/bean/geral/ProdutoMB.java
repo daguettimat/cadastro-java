@@ -26,9 +26,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Named
 @ViewAccessScoped
@@ -71,6 +75,7 @@ public class ProdutoMB implements Serializable {
 
 	public LazyDataModel<Produto> getProdList() {
 		if( prodList == null ) {
+			
 			prodList = new LazyDataModel<Produto>() {
 				/**
 				 *

@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 import br.com.global5.infra.model.BaseEntity;
+import br.com.global5.manager.model.areas.Area;
 import br.com.global5.manager.model.geral.Usuario;
 import br.com.global5.rastreamento.model.sinc.SincViagem;
 
@@ -15,7 +16,7 @@ import br.com.global5.rastreamento.model.sinc.SincViagem;
  */
 
 @Entity
-@Table(name="evento")
+@Table(name="rastreamento.evento")
 @NamedStoredProcedureQueries({
 	@NamedStoredProcedureQuery(
 			name = "evento_i",
@@ -41,10 +42,12 @@ public class Evento implements BaseEntity {
 	
 	@Column(name="eve_ano")
 	private Integer ano;
-			
-	@ManyToOne
-	@JoinColumn(name="eve_viagoid")
-	private SincViagem sincViagem;
+
+	@Column(name="eve_viagoid")
+	private Integer sincViagem;
+	//@ManyToOne
+	//@JoinColumn(name="eve_viagoid")
+	//private SincViagem sincViagem;
 
 	@Column(name="eve_nr_evento")
 	private Integer nrEvento;
@@ -75,6 +78,14 @@ public class Evento implements BaseEntity {
 	@JoinColumn(name="eve_bioid_ultimo")
 	private BoletimInformativo boletimInformativo;
 
+	@ManyToOne(	
+			fetch = FetchType.EAGER,
+			targetEntity = Area.class,
+			cascade = {CascadeType.DETACH, CascadeType.MERGE}			
+			)
+	@JoinColumn(name="eve_areaoid")
+	private Area area;
+	
 	@ManyToOne(	
 			fetch = FetchType.LAZY,
 			targetEntity = Usuario.class,
@@ -125,6 +136,16 @@ public class Evento implements BaseEntity {
 	@Column(name="eve_emails")
 	private String emails;
 
+	@Column(name="eve_emails_cc")
+	private String emailsCc;
+
+	@Column(name="eve_placa")
+	private String placa;
+
+	@Column(name="eve_motorista")
+	private String motorista;
+
+	
 	public Evento() {}
 	public Evento(Integer id) {this.id = id;}
 	public Integer getId() {
@@ -140,10 +161,20 @@ public class Evento implements BaseEntity {
 	public void setAno(Integer ano) {
 		this.ano = ano;
 	}
+	
+	/*
 	public SincViagem getSincViagem() {
 		return sincViagem;
 	}
 	public void setSincViagem(SincViagem sincViagem) {
+		this.sincViagem = sincViagem;
+	}
+	*/
+	
+	public Integer getSincViagem() {
+		return sincViagem;
+	}
+	public void setSincViagem(Integer sincViagem) {
 		this.sincViagem = sincViagem;
 	}
 	public Integer getNrEvento() {
@@ -176,6 +207,7 @@ public class Evento implements BaseEntity {
 	public void setNrBoletimDano(Integer nrBoletimDano) {
 		this.nrBoletimDano = nrBoletimDano;
 	}
+
 	public Character getTipoInicial() {
 		return tipoInicial;
 	}
@@ -248,6 +280,29 @@ public class Evento implements BaseEntity {
 	public void setEmails(String emails) {
 		this.emails = emails;
 	}
-	
+	public Area getArea() {
+		return area;
+	}
+	public void setArea(Area area) {
+		this.area = area;
+	}
+	public String getEmailsCc() {
+		return emailsCc;
+	}
+	public void setEmailsCc(String emailsCc) {
+		this.emailsCc = emailsCc;
+	}
+	public String getPlaca() {
+		return placa;
+	}
+	public String getMotorista() {
+		return motorista;
+	}
+	public void setPlaca(String placa) {
+		this.placa = placa;
+	}
+	public void setMotorista(String motorista) {
+		this.motorista = motorista;
+	}
 	
 }

@@ -60,6 +60,13 @@ import br.com.global5.infra.model.BaseEntity;
             }
     ),
     @NamedStoredProcedureQuery(
+            name = "usuario_detalhe_viagens_filipe",
+            procedureName = "usuario_detalhe_viagens_filipe",
+            parameters = {
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Date.class, name = "dt_mes")
+            }
+    ),
+    @NamedStoredProcedureQuery(
             name = "usuario_detalhe_checklists",
             procedureName = "usuario_detalhe_checklists",
             parameters = {
@@ -76,7 +83,24 @@ import br.com.global5.infra.model.BaseEntity;
                     @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "id_area")
 
             }
-    )     
+    )
+    ,
+    @NamedStoredProcedureQuery(
+            name = "usuario_detalhe_fixos",
+            procedureName = "usuario_detalhe_fixos",
+            parameters = {
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Date.class, name = "dt_mes"),
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "id_area")
+
+            }
+    ),
+    @NamedStoredProcedureQuery(
+            name = "pesquisa_viagens_monitoramento",
+            procedureName = "pesquisa_viagens_monitoramento",
+            parameters = {
+                    @StoredProcedureParameter(mode = ParameterMode.IN, type = Date.class, name = "dt_mes")
+            }
+    )
 }
 )
 public class Virtual implements BaseEntity {

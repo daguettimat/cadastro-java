@@ -47,7 +47,7 @@
         <h:form>
             <p:growl autoUpdate="true" escape="false" sticky="true"/>
             <h:panelGroup layout="block">
-                <p:dataTable widgetVar="propTable" var="c" value="#{proprietarioMB.proprietarioList}" rows="15" styleClass="box-danger"
+                <p:dataTable widgetVar="propTable" var="c" value="#{proprietarioMB.proprietarioList}" rows="15" styleClass="box-primary"
                              filteredValue="#{proprietarioMB.filteredValue}"
                              rowKey="#{c.id}" lazy="true" paginator="true"
                              paginatorPosition="bottom" selection="#{proprietarioMB.proprietario}" selectionMode="single"
@@ -111,9 +111,9 @@
             <h:panelGroup layout="block">
                 <div class="align-right" style="padding: 5px;">
                     <p:commandButton id="btnInsert" value="Novo Registro" action="#{proprietarioMB.insert}"
-                                     icon="fa fa-pencil" update="@form" styleClass="btn-danger"/>
+                                     icon="fa fa-pencil" update="@form" styleClass="btn-primary"/>
                     <p:spacer height="5"/>
-                    <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print" styleClass="btn-danger">
+                    <p:splitButton id="btnReports" value="Relatórios" type="button" icon="fa fa-print" styleClass="btn-primary">
                         <p:menuitem value="PDF" url="#" icon="fa fa-file-pdf-o"/>
                         <p:menuitem value="XLS" url="#" icon="fa fa-file-excel-o"/>
                         <p:menuitem value="CSV" url="#" icon="fa fa-file-text"/>

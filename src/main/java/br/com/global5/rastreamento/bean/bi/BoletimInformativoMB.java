@@ -3,11 +3,19 @@ package br.com.global5.rastreamento.bean.bi;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
@@ -19,10 +27,19 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 
 import br.com.global5.infra.Crud;
+import br.com.global5.infra.util.AppUtils;
+import br.com.global5.infra.util.RelatorioUtil;
+import br.com.global5.infra.util.UtilException;
 import br.com.global5.infra.util.checkUsuario;
+import br.com.global5.manager.model.areas.Area;
 import br.com.global5.manager.model.geral.Usuario;
+import br.com.global5.rastreamento.infra.ViagemClient;
 import br.com.global5.rastreamento.model.bi.BoletimInformativo;
 import br.com.global5.rastreamento.model.bi.BoletimInformativoNumeracao;
 import br.com.global5.rastreamento.model.bi.BoletimInformativoRelato;
@@ -32,8 +49,11 @@ import br.com.global5.rastreamento.model.bi.EventoInfoViagem;
 import br.com.global5.rastreamento.model.enums.TipoDano;
 import br.com.global5.rastreamento.model.enums.TipoPerda;
 import br.com.global5.rastreamento.model.enums.TipoSuspeita;
+import br.com.global5.rastreamento.model.trafegus.EventoInfoRastreador;
+import br.com.global5.rastreamento.model.trafegus.VersaoTecnologia;
 import br.com.global5.rastreamento.service.bi.BoletimInformativoRelatoService;
 import br.com.global5.rastreamento.service.bi.BoletimInformativoService;
+import br.com.global5.rastreamento.service.bi.EventoInfoRastreadorService;
 import br.com.global5.rastreamento.service.bi.EventoInfoViagemService;
 import br.com.global5.rastreamento.service.bi.EventoService;
 import br.com.global5.rastreamento.service.bi.TipoSuspeitaService;
@@ -67,8 +87,18 @@ public class BoletimInformativoMB implements Serializable {
 	private String    eventoInicial = "";
 	private Integer   numeroSM		= null;
 	private Integer   numIdEvento= null;
-	private Integer	  numIdTpSuspeita = null; 
+	private Integer	  numIdTpSuspeita = 653; // tentativa de roubo 
 	private Integer   codTipoSuspeitaClone = null;
+	
+	// Emails Global5
+	private List<String>lstEmailGlobal5;
+	private String addEmailGlobal5 = "";
+	private JSONArray arrayJsonGlobal5;
+	private Integer nivel2 = null;
+	//private String contaEmailMultiploNfse = "";
+	private String contaEmailMultiploGlobal5 = "";
+	String emailListGlobal5 = "";
+	String emailCcParaBoletim = "";
 	
 	private boolean painelDadosSinistro 		 = false;
 	private boolean painelDadosSuspeita 		 = false;
@@ -78,12 +108,13 @@ public class BoletimInformativoMB implements Serializable {
 	private boolean painelClassSinistroPerda 	 = false;
 	private boolean painelClassSinistroPerdaDano = false;
 	
+	private boolean painelRelatoPrimProcedimento = true;
 	private boolean painelBoletimFinal			 = false;
 	private boolean painelBoletimFinalSuspeita 	 = false;
 	private boolean painelTipoSuspeitaOutros	 = false;
 	
 	// Variaveis Dados SM (para visualização)
-	private boolean subPnDadosCarreta = true;
+	private boolean subPnDadosCarreta = false;
 	private boolean subPnDadosCarreta1 = false;
 	private boolean subPnDadosCarreta2 = false;
 	private boolean subPnDadosCarreta3 = false;
@@ -104,6 +135,9 @@ public class BoletimInformativoMB implements Serializable {
 	
 	@Inject
 	EventoInfoViagemService evInfoViagService;
+	
+	@Inject
+	private EventoInfoRastreadorService evInfoRastreadorService;
 	
 	@Inject
 	TipoSuspeitaService tipoSuspService;
@@ -139,8 +173,23 @@ public class BoletimInformativoMB implements Serializable {
 				bi =  new BoletimInformativo();
 				
 				try {
-					
 					bi = (BoletimInformativo) bi2.clone();
+
+					//Francis 27/10/2020
+					if(tipoSelecaoBi.equals('S')){
+						bi.setTipoSuspeita(new TipoSuspeita());
+					}
+					/*
+					if(bi.getTipoSuspeita() == null){
+						bi.setTipoSuspeita(new TipoSuspeita());	
+					} 
+					*/
+					
+					
+					/*if(bi.getTipoSuspeita().getId() == null){
+						bi.setTipoSuspeita(new TipoSuspeita());	
+					} */
+					
 					bi.setId(null);
 					bi.setRelato("");
 					
@@ -158,8 +207,6 @@ public class BoletimInformativoMB implements Serializable {
 							
 					}
 					
-			
-					//bi.setTipoSuspeita(new TipoSuspeita());
 					
 					lstTipoSuspeita = tipoSuspService.crud().isNull("exclusao").listAll();
 										
@@ -187,7 +234,7 @@ public class BoletimInformativoMB implements Serializable {
 			} else {
 				
 				bi =  new BoletimInformativo();
-				//bi.setTipoSuspeita(new TipoSuspeita(null));
+
 				id = null;
 				
 				if (tipoSelecaoBi == bi.EVENTO_TIPO_SUSPEITA){
@@ -199,8 +246,17 @@ public class BoletimInformativoMB implements Serializable {
 				checarEventoDadosCarreta();
 				checarEventoDadosMotorista();
 				
+//				try {
+//					buscarViagemBI(ev.getSincViagem());
+//				} catch (ParseException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				
 			}
 						
+			lstEmailGlobal5 = new ArrayList<String>();
+			arrayJsonGlobal5 = new JSONArray();
 	}
 
 	public void findByIdEvento(Integer idEvento){
@@ -212,10 +268,24 @@ public class BoletimInformativoMB implements Serializable {
 		eiv = new EventoInfoViagem();
 
 		ev = evService.crud().get(idEvento);
-		eiv = evInfoViagService.crud().get(idEvento);
+		Hibernate.initialize(ev);
 		
-			Hibernate.initialize(ev);
-			Hibernate.initialize(eiv);
+		//Adicionado novo recurso para busca
+		Criteria cri = evInfoViagService.crud().getSession().createCriteria(EventoInfoViagem.class);
+		cri.add(Restrictions.eq("id", idEvento ));
+		
+		int result = cri.list().size();
+		
+		if(result == 1){
+			
+			EventoInfoViagem eivG = (EventoInfoViagem) cri.list().get(0);
+			
+			//eiv = evInfoViagService.crud().get(idEvento);
+			eiv = evInfoViagService.crud().get(eivG.getId());
+		}
+		
+		// Registro anterior
+		Hibernate.initialize(eiv);
 			
 	}
 	
@@ -264,14 +334,17 @@ public class BoletimInformativoMB implements Serializable {
 		
 		if( checkBi.tipoBoletimFinalRetorno() == true && tipoSelecaoBi == bi.EVENTO_TIPO_DANO ){
 			painelBoletimFinal = true;
+			painelRelatoPrimProcedimento = false;
 		}
 		
 		if( checkBi.tipoBoletimFinalRetorno() == true && tipoSelecaoBi == bi.EVENTO_TIPO_PERDA ){
 			painelBoletimFinal = true;
+			painelRelatoPrimProcedimento = false;
 		}
 	
 		if( checkBi.tipoBoletimFinalRetorno() == true && tipoSelecaoBi == bi.EVENTO_TIPO_SUSPEITA ){
 			painelBoletimFinalSuspeita = true;
+			painelRelatoPrimProcedimento = false;
 		}
 		
 	}
@@ -291,6 +364,7 @@ public class BoletimInformativoMB implements Serializable {
 	
 	
 	public void checarEventoDadosMotorista(){
+		/* Bloqueio em 08/10/2020
 		if(ev.getSincViagem().getMotorista1() != null){
 			subPnDadosMotorista1 = true;
 		}
@@ -298,13 +372,23 @@ public class BoletimInformativoMB implements Serializable {
 		if(ev.getSincViagem().getMotorista2() != null){
 			subPnDadosMotorista2 = true;
 		}
+		*/
+		
+		if(eiv.getMotoristaCpf1() != null){
+			subPnDadosMotorista1 = true;
+		}
+	
+		if(eiv.getMotoristaCpf2() != null){
+			subPnDadosMotorista2 = true;
+		}
+		
 	}
-	
-	
+			
 	public void checarEventoDadosCarreta(){
 		String b = "a";
 		String a = b;
 		
+		/* Bloqueio em 08/10/2020
 		if( ev.getSincViagem().getVeiculo() != null ){
 			// verifica se existe carretas ligada ao veiculo
 			if (ev.getSincViagem().getCarreta1() != null){
@@ -330,10 +414,36 @@ public class BoletimInformativoMB implements Serializable {
 				ev.getSincViagem().getCarreta3() == null ){
 			subPnDadosCarreta = false;
 		}
+		*/
+
+
+			// verifica se existe carretas ligada ao veiculo
+			if (eiv.getCarretaPlaca1() != null){
+				// mostra dados carreta 1
+				// subPnDadosCarreta = true;
+				//this.subPnDadosCarreta1 = true;
+				this.setSubPnDadosCarreta(true);
+				this.setSubPnDadosCarreta1(true);
+			}
+			if (eiv.getCarretaPlaca2() != null){
+				// mostra dados carreta 2
+				this.setSubPnDadosCarreta(true);
+				this.setSubPnDadosCarreta2(true);
+			}
+			if (eiv.getCarretaPlaca3() != null){
+				// mostra dados carreta 3
+				this.setSubPnDadosCarreta(true);				
+				this.setSubPnDadosCarreta3(true);
+			}
+
+		if (eiv.getCarretaPlaca1() == null &&
+				eiv.getCarretaPlaca2() == null &&
+				eiv.getCarretaPlaca3() == null ){
+			subPnDadosCarreta = false;
+		}
 		
 	}
-	
-	
+		
 	public void cargaTipoPerdaBiAnterior(){
 		//if (checkBi.tipoEventoBiRetorno() == 'P') {
 		// Carga de dados com base no tipo do ultimo boletim informativo ligado ao evento
@@ -363,9 +473,11 @@ public class BoletimInformativoMB implements Serializable {
 			if (bi.getPerdaTpFalsidadeIdeologica() == true) {
 				tipoPerdaSel = "falsidadeIdeologica";
 			}
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Sua chamada deste evento não trouxe nada para carregar!"));
+			return;
 		}
 	}
-	
 	
 	public void tipoPerdaSelecionada(){
 				
@@ -418,7 +530,6 @@ public class BoletimInformativoMB implements Serializable {
 			bi.setPerdaTpFalsidadeIdeologica(false);
 		}
 	}
-
 	
     public void cargaTipoDanoBiAnterior(){
 		
@@ -504,7 +615,6 @@ public class BoletimInformativoMB implements Serializable {
     	}
 	}
 	
-    
 	public void tipoDanoSelecionada(){
 		
 		clearTipoDano();
@@ -611,7 +721,6 @@ public class BoletimInformativoMB implements Serializable {
 		}				
 		
 	}
-
 	
 	public void clearTipoDano(){
 		if(!tipoDanoSel.equals("")) {
@@ -644,7 +753,7 @@ public class BoletimInformativoMB implements Serializable {
 	}
 
 	
-	public void salvarBoletim(){
+	public void salvarBoletim() throws IOException{
 		
 		Integer numGlobalPorTipo = null;
 		
@@ -681,13 +790,7 @@ public class BoletimInformativoMB implements Serializable {
 				numGlobalPorTipo = (Integer) qryBINum.getOutputParameterValue("bin");
 				
 			}
-			
-			//StoredProcedureQuery qryBINum = boletimNumeracaoCrud.getEntityManager().createNamedStoredProcedureQuery("boletim_informativo_global");
-			//qryBINum.setParameter("tipo", tipoSelecaoBi);
-			//qryBINum.execute();
-						
-			//numGlobalPorTipo = (Integer) qryBINum.getOutputParameterValue("bin");
-			
+				
 			Long result = numGlobalPorTipo.longValue();
 			
 			if ( result > 0 ){
@@ -708,7 +811,8 @@ public class BoletimInformativoMB implements Serializable {
 				}
 				
 				// Persiste Boletim
-				String codRotulo = "BI-" + tipoSelecaoBi + " " + ev.getSincViagem().getId() +
+				//String codRotulo = "BI-" + tipoSelecaoBi + " " + ev.getSincViagem().getId() +
+				String codRotulo = "BI-" + tipoSelecaoBi + " " + ev.getSincViagem() +
 									"-" + ev.getNrEvento() + "." + countNrBoletim + "/" + numGlobalPorTipo +
 									"-" + ev.getAno();
 				
@@ -719,7 +823,7 @@ public class BoletimInformativoMB implements Serializable {
 				bi.setNrSequencia(ev.getNrEvento());
 				bi.setTipo(tipoSelecaoBi);
 				bi.setRotulo(codRotulo);
-				
+				bi.setComIniDataHora(new Date());
 				
 				if ( ev.getBoletimInformativo() != null){
 					if(ev.getBoletimInformativo().getTipo() == bi.EVENTO_TIPO_SUSPEITA){
@@ -733,24 +837,69 @@ public class BoletimInformativoMB implements Serializable {
 				}
 				
 				bi.setEvento(new Evento(ev.getId()));
-				
-//				if(this.getNumIdTpSuspeita() != null){
-//					bi.setTipoSuspeita(new TipoSuspeita(this.getNumIdTpSuspeita()));
-//				} 
-								
+											
 				biService.crud().save(bi);
 				
 				boletimSalvo = true;
 				
 				// Salvar relato do boletim
-				BoletimInformativoRelato biRel = new BoletimInformativoRelato();
-				biRel.setEvento(bi.getEvento());
-				biRel.setBoletimInformativo(bi);
-				biRel.setRelato(bi.getRelato());
-				biRel.setDtCriacao(new Date());
-				biRel.setTipo("N");
+				if(bi.getRelato().length() > 0){
+					BoletimInformativoRelato biRel = new BoletimInformativoRelato();
 				
-				biRelService.crud().save(biRel);
+					biRel.setEvento(bi.getEvento());
+					biRel.setBoletimInformativo(bi);
+					biRel.setRelato(bi.getRelato());
+					//	biRel.setRelato("fsadfsadfasd");
+					biRel.setDtCriacao(new Date());
+					biRel.setTipo("N");
+				
+					biRelService.crud().save(biRel);
+				}
+				
+				// Gravar Boletim em PDF na pasta /var/www/anexos_bi/envio/
+				String nomeRelatorioJasper ="";
+				// Escolhe qual é o tipo do arquivo  ( antigo modelo de teste "BoletimInformativo" )
+				if(tipoSelecaoBi.equals('P')){
+					nomeRelatorioJasper = "BoletimInformativoP";
+				}
+				
+				if(tipoSelecaoBi.equals('D')){
+					nomeRelatorioJasper = "BoletimInformativoD";
+				}
+
+				if(tipoSelecaoBi.equals('S')){
+					nomeRelatorioJasper = "BoletimInformativoS";
+				}
+				
+ 				RelatorioUtil relatorioUtil = new RelatorioUtil();
+				
+				String  nomeRelatorioSaida = "BI-"+ bi.getTipo() + " " + ev.getSincViagem() +"-ev-"+ev.getId()+"-bi-"+bi.getId();  
+				
+				String  nomeRelatorioSaidaPdf = nomeRelatorioSaida + ".pdf" ;
+				
+				Integer numEvento = ev.getId();
+				Integer numBoletim = bi.getId();
+				
+				HashMap parametrosRelatorio = new HashMap<>();
+				parametrosRelatorio.put("Evento", ev.getId());
+				parametrosRelatorio.put("Boletim", bi.getId());
+				
+				try {
+					relatorioUtil.geraRelatorio(parametrosRelatorio, nomeRelatorioJasper, nomeRelatorioSaida, 1);
+				} catch (UtilException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				String toEmail = ev.getEmails().replace(";", ",");
+				String ccEmail = emailCcParaBoletim;
+				
+				// Enviar email
+				String localArq = "/var/www/anexos_bi/envio/" ; //"/var/www/boletos/1/envio/"
+				String nomeArq = nomeRelatorioSaidaPdf;
+				
+				AppUtils.enviarEmail(localArq, nomeArq, toEmail, ccEmail);
+				//AppUtils.preparaEmail(localArq);			
 				
 				//Atualização na Tabela Evento
 				
@@ -787,6 +936,23 @@ public class BoletimInformativoMB implements Serializable {
 					ev.setUsuFinalizacao(checkUsuario.valid());
 				}
 				
+				int qtdEmail = lstEmailGlobal5.size();
+				String emailsAnterior = ev.getEmailsCc();
+				
+				if(qtdEmail > 0){
+					for(int i = 0 ; i < qtdEmail ; i++){
+						emailListGlobal5 +=  lstEmailGlobal5.get(i) + ";";
+					}
+				}
+				
+				if (emailsAnterior == null) {
+					ev.setEmailsCc(emailListGlobal5);
+				} else {
+					ev.setEmailsCc(emailsAnterior + emailListGlobal5);	
+				}
+				
+				
+				
 				evService.update(ev);
 					
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Boletim gravado com sucessso!") );
@@ -820,21 +986,665 @@ public class BoletimInformativoMB implements Serializable {
 		
 	}
 	
-	
+	/**
+	 * @author Francis Bueno
+	 * @param event
+	 * 
+	 * Suspeita de Roubo, quando o tipo do evento de suspeita de roubo
+	 * 
+	 */
 	public void onTipoEventoSuspeitaRoubo(AjaxBehaviorEvent event){
-		
-		this.setNumIdTpSuspeita(this.bi.getTipoSuspeita().getId());
-		
-		if (this.bi.getTipoSuspeita().getId() ==  669 ){
-			this.setPainelTipoSuspeitaOutros(true);
-			
+		//AjaxBehaviorEvent event 
+		//SelectEvent event
+		String a = "b";
+		String b = a;
+		if( ((UIOutput)event.getSource()).getValue() == null){
+			this.setNumIdTpSuspeita(653); // Tentativa de Roubo 
 		} else {
-			this.setPainelTipoSuspeitaOutros(false);
+			//Integer idEve = (Integer) event.getSource();
+			Integer idEvent = (Integer) ((UIOutput)event.getSource()).getValue();
 			
+			//Integer ii = idEve;
+			this.setNumIdTpSuspeita(idEvent);
+			//this.setNumIdTpSuspeita(this.bi.getTipoSuspeita().getId());
+			
+			if (this.bi.getTipoSuspeita().getId() ==  669 ){
+				this.setPainelTipoSuspeitaOutros(true);
+				
+			} else {
+				this.setPainelTipoSuspeitaOutros(false);
+				
+			}
 		}
 				
 	}
 	
+	// Novo Método busca ws chp
+	private List<VersaoTecnologia> lstVersaoTecnologia;
+	
+	@Inject
+	private Crud<Area> areaCrud;
+	
+	public void buscarViagemBI(Integer idViagem) throws ParseException {
+		//Hibernate.initialize(EventoInfoViagem.class);
+		Criteria criEvViagem = evInfoViagService.crud().getSession().createCriteria(EventoInfoViagem.class);
+		criEvViagem.add(Restrictions.eq("viagem", idViagem));
+		
+		int result = criEvViagem.list().size();
+		
+		// Não atualiza o result após a inclusão (persistencia)
+		
+		if( result == 0){
+			ViagemClient wsV = new ViagemClient();
+
+			getWsDataViagemBI(wsV, idViagem);
+			
+			
+		}
+		
+		
+
+	}
+	
+	
+	private void getWsDataViagemBI(ViagemClient wsV, Integer idViagem)
+			throws ParseException {
+		
+		if( idViagem != null){
+		// Busca existencia de Viagem na tabela de eventos
+		Criteria smEvento = evService.crud().getSession().createCriteria(Evento.class);
+		smEvento.add(Restrictions.eq("sincViagem", idViagem));
+		
+		int result = smEvento.list().size();
+		
+		if( result > 0){
+			
+			// Não busca pois o ID já está no evento
+			//FacesContext.getCurrentInstance().addMessage(null, 
+			//		new FacesMessage(FacesMessage.SEVERITY_INFO , "Aviso", "A sm já está cadadastrada no evento!"));
+			//} else {
+
+			EventoInfoViagem eiv = new EventoInfoViagem();
+			ArrayList<EventoInfoRastreador> listArray = new ArrayList<>();
+			// Buscar Dados no WS CHP
+			JSONArray objJsonArray = wsV.getViagemBI(idViagem);
+			
+			
+			if( objJsonArray != null){
+
+				// tamanho do JsonArray retornado do Ws
+				int viagensCount = objJsonArray.length();
+				
+				for (int i = 0; i < viagensCount; i++) {
+				
+					String numSm = objJsonArray.getJSONObject(i).opt("codigoSM").toString();
+					String docTransportador = objJsonArray.getJSONObject(i).opt("documento_transportador").toString();
+					
+					// Se docTransportador for diferente de null
+					if (!docTransportador.equals("null")) {
+						
+						// Dados para Gravação do Evento
+						String nomeCliente = objJsonArray.getJSONObject(i).opt("pess_nome_transportador").toString();						
+						String docSeguradora = objJsonArray.getJSONObject(i).opt("documento_seguradora").toString();
+
+						// Persistencia - Cliente
+						eiv.setViagem(idViagem);
+						eiv.setNomeCliente(nomeCliente);
+						eiv.setNomeSeguradora("");
+						eiv.setNomeCorretora("");
+						eiv.setNomeTransportadora(nomeCliente);
+						
+						
+						String statusViagemJson = objJsonArray.getJSONObject(i).optString("status_viagem").toString();						
+						
+						// Motoristas
+						JSONArray jsonArrayMotoristas = objJsonArray.getJSONObject(i).getJSONArray("motoristas");
+						
+						// Var Motoristas
+						int arrayMotoristasCount = 0;
+						int motoristaCount = 0;
+						String jsonMotoristas = "";
+						
+						if (jsonArrayMotoristas != null) {
+							
+							arrayMotoristasCount = jsonArrayMotoristas.length();
+							
+							for (int im = 0; im < arrayMotoristasCount; im++) {
+
+								motoristaCount++;
+
+								jsonMotoristas += jsonArrayMotoristas.getJSONObject(im).toString() + ",";
+								
+								if(im == 0){
+									// Persistencia - Motorista 1
+									eiv.setMotoristaNome1(jsonArrayMotoristas.getJSONObject(im).opt("nome_moto").toString());
+									eiv.setMotoristaCpf1(jsonArrayMotoristas.getJSONObject(im).opt("cpf_moto").toString());
+									eiv.setMotoristaVinculo1(jsonArrayMotoristas.getJSONObject(im).opt("vinculo_contratual").toString());
+								}
+								if( im == 1){
+									// Persistencia - Motorista 2
+									eiv.setMotoristaNome2(jsonArrayMotoristas.getJSONObject(im).opt("nome_moto").toString());
+									eiv.setMotoristaCpf2(jsonArrayMotoristas.getJSONObject(im).opt("cpf_moto").toString());
+									eiv.setMotoristaVinculo2(jsonArrayMotoristas.getJSONObject(im).opt("vinculo_contratual").toString());									
+								}
+
+							} // final for arrayMotoristaCount
+							
+							// Motorista Preparação de dados para Persistencia
+							if (motoristaCount > 0) {
+								
+								int countChar = jsonMotoristas.length();
+								String jsonClear = jsonMotoristas.substring(0, (countChar - 1)); 
+								
+								String jsonMotoristaMontado = "[" + jsonClear + "]";
+								jsonMotoristas = jsonMotoristaMontado;
+								
+							}
+							
+						} // final if jsonArrayMotoristas --> Motoristas
+						
+						
+						// Veiculos (Trativa para Cavalo, Reboque e Escolta)
+						JSONArray jsonArrayVeiculos = objJsonArray.getJSONObject(i).getJSONArray("veiculos");
+						
+						// Var Veiculos
+						int arrayVeiculosCount = 0;
+						int cavaloCount = 0;
+						String placaCavalo = "";
+						int reboqueCount = 0;
+						String placaReboque1 = "";
+						String placaReboque2 = "";
+						String placaReboque3 = "";
+						int escoltaCount = 0;
+						String jsonVeiculosEscolta = "";
+						String codAutotracMct = "";
+						
+						if (jsonArrayVeiculos != null) {
+							
+							arrayVeiculosCount = jsonArrayVeiculos.length();
+							
+							// Escolta
+							escoltaCount = 0;
+							
+							for (int iv = 0; iv < arrayVeiculosCount; iv++){
+								
+								int tipoVeiculo = jsonArrayVeiculos.getJSONObject(iv).getInt("tipo_veiculo");
+								
+								// Valor Escolta para uso em criterio de regra -->
+								// valor do elemento escolta para condição if
+								String veiculoEscolta = jsonArrayVeiculos.getJSONObject(iv).opt("escolta").toString();
+								
+								// Cavalo: coleta placa onde (tipo_veiculo != 1 e
+								// escolta = null)
+								if (tipoVeiculo != 1 && veiculoEscolta.equals("null")) {
+
+									cavaloCount++;
+									placaCavalo += jsonArrayVeiculos.getJSONObject(iv).opt("placa").toString() + "|";
+
+									//Persistencia - Cavalo / Veiculo
+									eiv.setVeiculoPlaca(jsonArrayVeiculos.getJSONObject(iv).opt("placa").toString());
+									eiv.setVeiculoMarca(jsonArrayVeiculos.getJSONObject(iv).opt("marca").toString());
+									eiv.setVeiculoModelo(jsonArrayVeiculos.getJSONObject(iv).opt("modelo").toString());
+									eiv.setVeiculoAno(jsonArrayVeiculos.getJSONObject(iv).opt("ano_modelo").toString());
+									eiv.setVeiculoCor(jsonArrayVeiculos.getJSONObject(iv).opt("cor").toString());
+																		
+								} // final if tipo_veiculo != 1 && escolta = null
+								
+								// Reboque: coleta placa onde (tipo_veiculo = 1 e
+								// escolta = null )
+								if (tipoVeiculo == 1 && veiculoEscolta.equals("null")) {
+									
+									reboqueCount++;
+
+									if (reboqueCount == 1) {
+										placaReboque1 = jsonArrayVeiculos.getJSONObject(iv).opt("placa").toString().trim();
+									
+										//Persistencia - Carreta1
+										eiv.setCarretaPlaca1(jsonArrayVeiculos.getJSONObject(iv).opt("placa").toString().trim());
+										eiv.setCarretaMarca1(jsonArrayVeiculos.getJSONObject(iv).opt("marca").toString().trim());
+										eiv.setCarretaAno1(Integer.parseInt(jsonArrayVeiculos.getJSONObject(iv).opt("ano_modelo").toString()));
+										eiv.setCarretaCor1(jsonArrayVeiculos.getJSONObject(iv).opt("cor").toString().trim());
+										eiv.setCarretaTipo1(jsonArrayVeiculos.getJSONObject(iv).opt("modelo").toString().trim());
+										
+									}
+									if (reboqueCount == 2) {
+										placaReboque2 = jsonArrayVeiculos.getJSONObject(iv).opt("placa").toString().trim();
+										
+										//Persistencia - Carreta2
+										eiv.setCarretaPlaca2(jsonArrayVeiculos.getJSONObject(iv).opt("placa").toString().trim());
+										eiv.setCarretaMarca2(jsonArrayVeiculos.getJSONObject(iv).opt("marca").toString().trim());
+										eiv.setCarretaAno2(Integer.parseInt(jsonArrayVeiculos.getJSONObject(iv).opt("ano_modelo").toString()));
+										eiv.setCarretaCor2(jsonArrayVeiculos.getJSONObject(iv).opt("cor").toString().trim());
+										eiv.setCarretaTipo2(jsonArrayVeiculos.getJSONObject(iv).opt("modelo").toString().trim());
+										
+									}
+									if (reboqueCount == 3) {
+										placaReboque3 = jsonArrayVeiculos.getJSONObject(iv).opt("placa").toString().trim();
+										
+										//Persistencia - Carreta3
+										eiv.setCarretaPlaca3(jsonArrayVeiculos.getJSONObject(iv).opt("placa").toString().trim());
+										eiv.setCarretaMarca3(jsonArrayVeiculos.getJSONObject(iv).opt("marca").toString().trim());
+										eiv.setCarretaAno3(Integer.parseInt(jsonArrayVeiculos.getJSONObject(iv).opt("ano_modelo").toString()));
+										eiv.setCarretaCor3(jsonArrayVeiculos.getJSONObject(iv).opt("cor").toString().trim());
+										eiv.setCarretaTipo3(jsonArrayVeiculos.getJSONObject(iv).opt("modelo").toString().trim());
+										
+									}
+																	
+								} // final if tipo_veiculo = 1 e escolta = null
+								
+								// Escolta: (Se existir e se diferente de null )
+								// (AJUSTE... deixar condição <> de null | ! )
+								if (!veiculoEscolta.equals("null")) {
+
+									escoltaCount++;
+									jsonVeiculosEscolta += jsonArrayVeiculos.getJSONObject(iv).toString() + ",";
+
+								}
+															
+							} // final for arrayVeiculosCount --> Verifica Veiculo
+							
+							// Cavalo Preparação de dados para Persistencia
+							if (cavaloCount > 0) {
+
+								int countChar = placaCavalo.length();
+								String strClear = placaCavalo.substring(0, (countChar - 1));
+								placaCavalo = strClear;
+
+							} // final if cavaloCount
+							
+							// Escolta Preparação de dados para Persistencia
+							if (escoltaCount > 0) {
+
+								int countChar = jsonVeiculosEscolta.length();
+								// tira a virgula no final do arquivo
+								String jsonClear = jsonVeiculosEscolta.substring(0, (countChar - 1)); 
+								String jsonEscoltaMontado = "[" + jsonClear + "]";
+								jsonVeiculosEscolta = jsonEscoltaMontado;
+
+							} // final if escoltaCount						
+							
+							
+						} // final jsonArrayVeiculos -> Veiculos 
+						
+						// Tecnologia (Terminais) (Trativa para tecnologia e iscas )
+						JSONArray jsonArrayTecnologia = objJsonArray.getJSONObject(i).getJSONArray("terminais");
+						
+						// Var Tecnologias
+						int arrayTecnologiaCount = 0;
+						int tecnologiaCount = 0;
+						int iscaSimCount = 0;
+						int iscaNaoCount = 0;
+						String jsonTerminalComIsca = "";
+						String numeroTerminal = ""; // para Isca = N ,
+													// term_numero_terminal (mct)
+						int terminalCodigo = 0; 	// para Isca = N , term_vtec_codigo
+						int idTecnologia = 0;
+						
+						ArrayList<String> listArrayA = new ArrayList<>();
+						
+						
+						
+						if (jsonArrayTecnologia != null) {
+							
+							arrayTecnologiaCount = jsonArrayTecnologia.length();
+							
+							int contador = 1;
+							String termCodigo ="";
+							String termDescricao ="";
+							String termTelemonitorado = "";
+							String termNumTerminal = "";
+							String termVtecCodigo = "";
+							String termIsca = "";
+							
+							String terminalComIsca = "";
+							
+							for (int it = 0; it < arrayTecnologiaCount; it++) {
+								
+								// Adiciona rastreador...
+								termCodigo = jsonArrayTecnologia.getJSONObject(it).opt("term_codigo").toString();
+								termDescricao = jsonArrayTecnologia.getJSONObject(it).opt("vtec_descricao").toString();
+								termTelemonitorado = jsonArrayTecnologia.getJSONObject(it).opt("telemonitorado").toString();
+								termNumTerminal = jsonArrayTecnologia.getJSONObject(it).opt("term_numero_terminal").toString();
+								termVtecCodigo = jsonArrayTecnologia.getJSONObject(it).opt("term_vtec_codigo").toString();
+								termIsca = jsonArrayTecnologia.getJSONObject(it).opt("isca").toString();
+								
+								listArray.add(new EventoInfoRastreador( contador++ , termCodigo, termDescricao, termTelemonitorado, termNumTerminal, termVtecCodigo, termIsca ) );		
+								
+							} // final for arrayTecnologiaCount
+							
+							// Terminal com Isca,
+							if (iscaSimCount > 0) {
+
+								int countChar = jsonTerminalComIsca.length();
+								// tira virgula final da linha
+								String jsonClear = jsonTerminalComIsca.substring(0, (countChar - 1)); 
+								String jsonTerminalComIscaMontado = "[" + jsonClear + "]";
+								jsonTerminalComIsca = jsonTerminalComIscaMontado;
+
+							} // final if iscaSimCount
+							
+							
+							// Terminal sem Isca (Veiculo Motor)
+							if (iscaNaoCount > 0) {
+
+								int countChar = numeroTerminal.length();
+								// tira virgula final da linha
+								String strClear = numeroTerminal.substring(0, (countChar - 1));
+								numeroTerminal = strClear;
+
+							} // final if iscaNaoCount
+							
+						} // final jsonArrayTecnologia
+						
+						
+						// Origem
+						JSONObject jbOrigem =  objJsonArray.getJSONObject(i).getJSONObject("origem");
+						
+							if(jbOrigem != null){
+								jbOrigem.opt("vloc_descricao").toString();
+								jbOrigem.opt("cida_descricao_ibge").toString();
+								jbOrigem.opt("sigla_estado").toString();
+								jbOrigem.opt("pais").toString();
+								jbOrigem.opt("refe_latitude").toString();
+								jbOrigem.opt("refe_longitude").toString();
+								jbOrigem.opt("previsao_chegada").toString();	
+								
+								// Persistencia Origem...
+							
+								eiv.setOrigemCidade(jbOrigem.opt("cida_descricao_ibge").toString());
+								eiv.setOrigemUf(jbOrigem.opt("sigla_estado").toString());
+							}
+							
+							
+						// Destino
+						JSONObject jbDestino =  objJsonArray.getJSONObject(i).getJSONObject("destino");
+							
+							if(jbDestino != null){
+								jbDestino.opt("vloc_descricao").toString();
+								jbDestino.opt("cidade").toString();
+								jbDestino.opt("sigla_estado").toString();
+								jbDestino.opt("pais").toString();
+								jbDestino.opt("refe_latitude").toString();
+								jbDestino.opt("refe_longitude").toString();
+								
+								//jsonArrayDestino.getJSONObject(d).opt("cidade").toString();
+								jbDestino.opt("previsao_chegada").toString();	
+																
+								// Persistencia Destino...
+								eiv.setDestinoCidade(jbDestino.opt("cidade").toString());
+								eiv.setDestinoUf(jbDestino.opt("sigla_estado").toString());
+								
+								
+							}						
+									
+						
+						// locais
+						JSONArray jsonArrayLocais = objJsonArray.getJSONObject(i).getJSONArray("locais");
+						
+						int arrayLocaisCount = 0;
+						
+						if(jsonArrayLocais != null){
+							
+							arrayLocaisCount = jsonArrayLocais.length();
+							
+							Integer seqParada = null;
+							String tipoParada = "";
+							String locDescricao = "";
+							String cidadeLocal = "";
+							String ufLocal = "";
+							String paisLocal = "";
+							String latitudeLocal = "";
+							String longitudeLocal = "";
+							String refe_Km_Local = "";
+							String previsao_checada_local = "";
+							
+							
+							for (int l=0; l < arrayLocaisCount ; l++){
+								jsonArrayLocais.getJSONObject(l).opt("sequencia_parada").toString();
+								jsonArrayLocais.getJSONObject(l).opt("tipo_parada").toString();
+								jsonArrayLocais.getJSONObject(l).opt("vloc_descricao").toString();
+								jsonArrayLocais.getJSONObject(l).opt("cida_descricao_ibge").toString();
+								jsonArrayLocais.getJSONObject(l).opt("sigla_estado").toString();
+								jsonArrayLocais.getJSONObject(l).opt("pais").toString();
+								jsonArrayLocais.getJSONObject(l).opt("refe_latitude").toString();
+								jsonArrayLocais.getJSONObject(l).opt("refe_longitude").toString();
+								jsonArrayLocais.getJSONObject(l).opt("refe_km").toString();
+								jsonArrayLocais.getJSONObject(l).opt("previsao_chegada").toString();
+								
+								// persistir 
+								
+							}
+							
+						}
+						
+						// Valor Frete					
+						JSONArray jsonArrayFrete = objJsonArray.getJSONObject(i).getJSONArray("valor_frete");
+						
+						int arrayFreteCount = 0;
+						
+						if(jsonArrayFrete != null){
+							
+							arrayFreteCount = jsonArrayFrete.length();
+							
+							for (int f=0; f < arrayFreteCount ; f++){
+								// jsonArrayTecnologia.getJSONObject(it).opt("term_numero_terminal").toString().trim();
+								
+								//String docTransportador = objJsonArray.getJSONObject(i).opt("documento_transportador").toString();
+								
+								// Se docTransportador for diferente de null
+								//if (!docTransportador.equals("null")) {
+								
+								
+								//String embarcador = jsonArrayLocais.getJSONObject(f).opt("embarcador").toString();
+								
+								//eiv.setEmbarcadorOrigem(embarcador);
+								if(jsonArrayLocais.getJSONObject(f).opt("valor_frete") != null){
+									BigDecimal vlrFrete = new BigDecimal(jsonArrayLocais.getJSONObject(f).optDouble("valor_frete"));
+									eiv.setValor(vlrFrete);
+								}
+								
+								
+								
+								
+								String t1= "a";
+								String b = t1;
+								// persistir 
+								
+							}
+							
+						}
+
+						// Persiste Boletim_Informativo
+						
+						
+						// Persiste Tabela evento_rastreador
+
+						
+					}
+					
+					eiv.setId(ev.getId());
+					eiv.setArea(ev.getArea());
+					evInfoViagService.crud().save(eiv);
+					
+					EventoInfoRastreador eir = new EventoInfoRastreador();
+					
+					if(listArray.size() >= 0){
+						
+						for(int ei=0; ei < listArray.size();ei++){
+							
+							//eir.setId(eiv.getId());
+							eir.setEvInfoViagem(eiv);
+							eir.setCodigo(listArray.get(ei).getCodigo());
+							eir.setDescricao(listArray.get(ei).getDescricao());
+							eir.setTelemonitorado(listArray.get(ei).getTelemonitorado());
+							eir.setNumeroTerminal(listArray.get(ei).getNumeroTerminal());
+							eir.setVtecCodigo(listArray.get(ei).getVtecCodigo());
+							eir.setIsca(listArray.get(ei).getIsca());
+							
+							evInfoRastreadorService.crud().save(eir);
+							
+						}
+						
+					}
+					
+				}
+				
+			}			
+		}
+			
+		}
+		
+		
+		
+	}
+
+	
+	private String interpretarMCT(String codMctViagem) {
+
+		char[] codM = codMctViagem.toCharArray();
+
+		int sizeString = codMctViagem.length();
+		int countAntesPipe = 0;
+		int countPosPipe = 0;
+
+		String codMct = "";
+
+		for (int i = 0; i < sizeString; ++i) {
+
+			if (!String.valueOf(codM[i]).equals("|")) {
+				++countAntesPipe;
+			}
+		}
+
+		codMct = codMctViagem.substring(0, 7);
+		return codMct;
+
+	}
+	
+	public void backListEvento(){
+		try {
+			
+			FacesContext.getCurrentInstance().getExternalContext().redirect("../bi/bilst.xhtml");			
+			
+		} catch (IOException e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,"Lista de Eventos" + getId()
+							+ " não pode ser carregada. Informe ao suporte técnico.",null));
+		}
+	}
+
+
+	
+	public void meuEmailGlobal5(String emailGlobal5){
+		
+		if(!emailGlobal5.equals("")){
+			this.setAddEmailGlobal5(emailGlobal5);
+		}
+		
+	}
+	
+	public void addEmailGlobal5NaLista(Integer nivel){
+		
+		Integer idNivel = nivel;
+		
+		JSONObject obj = new JSONObject();
+		
+	    String EMAIL_REGEX = "^[_a-z0-9-\\+]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9]+)*(\\.[a-z]{2,})$";
+	    
+	    Pattern pattern;
+
+		Matcher matcher = null;
+
+		pattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
+		
+		if ( idNivel == 2 ) {
+			matcher = pattern.matcher(addEmailGlobal5.trim());
+			this.setNivel2(2);
+		}
+		
+		boolean resultEmail = matcher.matches();
+		
+		if (resultEmail == true){
+			
+			if ( idNivel == 2) {
+				
+				lstEmailGlobal5.add(addEmailGlobal5.toLowerCase());
+				emailCcParaBoletim = emailCcParaBoletim + addEmailGlobal5.toLowerCase() + ',';
+				/*
+				lstEmailNfse.add(emailNfse.toLowerCase());
+				
+				AreaEmailNfseJson emailNfseJ = new AreaEmailNfseJson();							
+				
+				emailNfseJ.setEmail(emailNfse.toLowerCase());
+				obj.put("email", emailNfseJ.getEmail());
+			   */
+				obj.put("email", addEmailGlobal5.toLowerCase());
+				
+				arrayJsonGlobal5.put(obj);
+				
+				this.setAddEmailGlobal5("");
+				
+			}
+		
+			// Teste para coletar emails para ser atualizada na tabela de eventos
+			/*
+			int qtdEmail = lstEmailGlobal5.size();
+			
+			if(qtdEmail > 0){
+				for(int i = 0 ; i < qtdEmail ; i++){
+					emailListGlobal5 +=  lstEmailGlobal5.get(i) + ";";
+				}
+			}
+			*/
+			// Atualizar página	
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update("frmRegistro:frmBoletim:frmDadosBoletim:frmDadosEmailEnvio:inputEmailNfse");
+			//context.update("frmRegistro:frmBoletim:frmDadosBoletim:frmDadosEmailEnvio:listEmailNfs");
+			//context.update("frmCadastroCnpj:frmCadastroArea:inputEmailNfse");				
+			
+			
+		}
+	}
+	
+	public void coletarEmailGlobal5(SelectEvent event){
+		
+		if ( nivel2 == 2 ) {
+			
+			this.setContaEmailMultiploGlobal5((String) event.getObject());
+			
+			//int zer = lstEmailNfse.indexOf(contaEmailMultiploNfse);
+			int zer = lstEmailGlobal5.indexOf(contaEmailMultiploGlobal5);
+			
+			//lstEmailNfse.remove(contaEmailMultiploNfse);
+			lstEmailGlobal5.remove(contaEmailMultiploGlobal5);
+			
+			int qtdEmail = lstEmailGlobal5.size();
+			emailCcParaBoletim = "";
+			if(qtdEmail >= 0){
+				for(int i = 0 ; i < qtdEmail ; i++){
+					//emailListGlobal5 = emailListGlobal5 + lstEmailGlobal5.get(i) + ";";
+					emailListGlobal5 =  lstEmailGlobal5.get(i) + ";";
+					emailCcParaBoletim = emailCcParaBoletim + lstEmailGlobal5.get(i) + ',';
+				}
+			}
+			
+			//arrayJsonNfse.remove(zer);
+			arrayJsonGlobal5.remove(zer);
+			
+			this.setContaEmailMultiploGlobal5("");
+		}
+		
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("frmRegistro:frmBoletim:frmDadosBoletim:frmDadosEmailEnvio:listEmailG5");
+		
+	}
+	
+	// Final teste novo método ws chp
+	
+	public void convertHtmlToPdf(){
+		//Jtidy tidy = new Tidy();
+	}
 	
 	public BoletimInformativo getBi() {
 		return bi;
@@ -980,6 +1790,15 @@ public class BoletimInformativoMB implements Serializable {
 		this.painelClassSinistroPerdaDano = painelClassSinistroPerdaDano;
 	}
 	
+	
+	public boolean isPainelRelatoPrimProcedimento() {
+		return painelRelatoPrimProcedimento;
+	}
+
+	public void setPainelRelatoPrimProcedimento(boolean painelRelatoPrimProcedimento) {
+		this.painelRelatoPrimProcedimento = painelRelatoPrimProcedimento;
+	}
+
 	public boolean isPainelBoletimFinal() {
 		return painelBoletimFinal;
 	}
@@ -1147,6 +1966,70 @@ public class BoletimInformativoMB implements Serializable {
 
 	public void setSubPnDadosMotorista2(boolean subPnDadosMotorista2) {
 		this.subPnDadosMotorista2 = subPnDadosMotorista2;
+	}
+
+	public List<VersaoTecnologia> getLstVersaoTecnologia() {
+		return lstVersaoTecnologia;
+	}
+
+	public void setLstVersaoTecnologia(List<VersaoTecnologia> lstVersaoTecnologia) {
+		this.lstVersaoTecnologia = lstVersaoTecnologia;
+	}
+
+	public List<String> getLstEmailGlobal5() {
+		return lstEmailGlobal5;
+	}
+
+	public String getAddEmailGlobal5() {
+		return addEmailGlobal5;
+	}
+
+	public JSONArray getArrayJsonGlobal5() {
+		return arrayJsonGlobal5;
+	}
+
+	public Integer getNivel2() {
+		return nivel2;
+	}
+
+	public String getContaEmailMultiploGlobal5() {
+		return contaEmailMultiploGlobal5;
+	}
+
+	public String getEmailListGlobal5() {
+		return emailListGlobal5;
+	}
+
+	public void setLstEmailGlobal5(List<String> lstEmailGlobal5) {
+		this.lstEmailGlobal5 = lstEmailGlobal5;
+	}
+
+	public void setAddEmailGlobal5(String addEmailGlobal5) {
+		this.addEmailGlobal5 = addEmailGlobal5;
+	}
+
+	public void setArrayJsonGlobal5(JSONArray arrayJsonGlobal5) {
+		this.arrayJsonGlobal5 = arrayJsonGlobal5;
+	}
+
+	public void setNivel2(Integer nivel2) {
+		this.nivel2 = nivel2;
+	}
+
+	public void setContaEmailMultiploGlobal5(String contaEmailMultiploGlobal5) {
+		this.contaEmailMultiploGlobal5 = contaEmailMultiploGlobal5;
+	}
+
+	public void setEmailListGlobal5(String emailListGlobal5) {
+		this.emailListGlobal5 = emailListGlobal5;
+	}
+
+	public String getEmailCcParaBoletim() {
+		return emailCcParaBoletim;
+	}
+
+	public void setEmailCcParaBoletim(String emailCcParaBoletim) {
+		this.emailCcParaBoletim = emailCcParaBoletim;
 	}
 	
 			

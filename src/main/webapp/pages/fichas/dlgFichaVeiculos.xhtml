@@ -25,7 +25,7 @@
         
     <h:form id="formVeiculo" onkeypress="if (event.keyCode == 13) { return false; }">
     	<p:growl id="growlMsg" showDetail="true" autoUpdate="true" />
-<!--         <p:messages showDetail="true" autoUpdate="true" closable="true" /> -->
+<!--        <p:messages showDetail="true" autoUpdate="true" closable="true" /> -->
 <!-- 		rendered="#{enviarFichaMB.atualizaPlaca}" -->		
     
     	<ui:fragment id="fragAtualizaPlaca" rendered="#{ enviarFichaMB.atualizaPlaca}"		>
@@ -35,7 +35,7 @@
 			<div class="row" style="padding-right: 15px;">
 			
 				<div style="text-align:right">
-						<p:commandButton  styleClass="btn-danger" icon="fa fa-close"
+						<p:commandButton  styleClass="btn-primary" icon="fa fa-close"
 								actionListener="#{enviarFichaMB.naoAplicaPadraoMercosul}"  partialSubmit="true"
 								onclick="PF('dlgVeiculo').hide();onTop('dVeiculos');">
 						</p:commandButton>						
@@ -68,7 +68,9 @@
 				</div>
 				
 				<div class="col-lg-4" style="text-align:center">
-					<p:inputText style="width: 100%;" placeholder="informe aqui o renavam" value="#{enviarFichaMB.numRenavamInformaCliente}">					
+					<p:inputText style="width: 100%;" placeholder="informe aqui o renavam" 
+						maxlength="11" size="11"
+						value="#{enviarFichaMB.numRenavamInformaCliente}">					
 					</p:inputText>
 				</div>
 
@@ -101,7 +103,7 @@
 				</div>
 				<div class="col-lg-6">
 					 <div style="text-align:left">
-						<p:commandButton  value="Chamado" styleClass="btn-danger" disabled="#{!enviarFichaMB.abrirChamadoPlaca}" 
+						<p:commandButton  value="Chamado" styleClass="btn-primary" disabled="#{!enviarFichaMB.abrirChamadoPlaca}" 
 							actionListener="#{enviarFichaMB.habilitarSuporte}" partialSubmit="true">
 						</p:commandButton>
 					</div>										
@@ -142,7 +144,7 @@
                     	<div class="row" id="aplicarArquivo">
 										<div class="align-center" style="padding: 5px;">
 						 		
-						 		<p:commandButton value="Requisitar Atendimento" ajax="true" styleClass="btn-danger" id="btnRequisitarAtendimento" 
+						 		<p:commandButton value="Requisitar Atendimento" ajax="true" styleClass="btn-primary" id="btnRequisitarAtendimento" 
 						 				update="@form" action="#{enviarFichaMB.RequisitarAtendimento}"						 		/>
 						    
 								<p:spacer height="5" />
@@ -255,6 +257,7 @@
                         <p:inputMask id="dataDocumento" required="true" requiredMessage="A Data do Documento do veículo é obrigatório"
                                      value="#{enviarFichaMB.refVeiculo.dataDocumento}"
                                      mask="99/99/9999">
+                            <p:ajax event="blur" listener="#{enviarFichaMB.dataDocumentoTest}" />
                             <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                         </p:inputMask>
                     </div>
@@ -277,15 +280,18 @@
                     </div>
                     <div class="col-md-6">
                         <label>Categoria</label>
-                        <b:selectOneMenu id="veiCategoria" required="true"
+                        <p:selectOneMenu id="veiCategoria" required="true"
                                          requiredMessage="A Categoria deve ser uma que está na lista de opções"
                                          value="#{enviarFichaMB.refVeiculo.idCategoria}">
+                           
                             <f:selectItem itemLabel="&#160;" itemValue=""/>
                             <f:selectItems value="#{enviarFichaMB.lstVeiculoCategoria}"
                                            var="listVeiCategoria"
                                            itemValue="#{listVeiCategoria.id}"
                                            itemLabel="#{listVeiCategoria.descricao}"/>
-                        </b:selectOneMenu>
+                        <f:ajax event="valueChange"  listener="#{enviarFichaMB.textoCategoria}" execute="@this" />
+                        </p:selectOneMenu>
+                        
                     </div>
              	    
              	    <div class="col-md-3">
@@ -378,9 +384,10 @@
 
                         <div class="col-md-3" id="propNacional">
                             <label>CPF/CNPJ</label>
-                            <p:inputText id="veiPropDoc" style="width: 100%;" required="true" requiredMessage="Documento Proprietário Obrigatório"
+                            <p:inputText id="veiPropDoc" style="width: 100%;" 
+                            			 required="true" requiredMessage="Documento Proprietário Obrigatório"
                                          value="#{enviarFichaMB.docProprietario}" maxlength="15">
-                                <p:ajax event="blur" listener="#{enviarFichaMB.verificaDoc}" partialSubmit="true" process="@this"/>
+                                         <f:ajax event="blur" execute="veiPropDoc" listener="#{enviarFichaMB.verificaDoc}" render="@form" />                                		 
                             </p:inputText>
 
                         </div>
@@ -403,7 +410,95 @@
                                          requiredMessage="O Telefone é um campo obrigatório"
                                          value="#{enviarFichaMB.refVeiculo.telefone}"/>
                         </div>
-                    </ui:fragment>
+                                              
+                        <h:form id="formPropVei" > 
+
+						<ui:fragment rendered="#{enviarFichaMB.propPfVeiculoNacional}" id="dPropVeicPF">
+	                                                                                           
+	                 	<p:outputLabel 
+	                 		style="margin-left:15px;margin-top:20px"
+	                 		value="Informações complementares - proprietário do veículo" id="pega"></p:outputLabel>
+	                 			                 	                 
+	                 		<div class="row" style="margin:5px">
+	                    	
+	                    		<div class="col-md-6">
+	                            	<label>Natural de...</label>
+	                            	<p:inputText style="width: 100%;" required="true" maxlength="60"  
+	                            		requiredMessage="Local de nascimento"
+	                            		value="#{enviarFichaMB.veiPfNatural}"
+	                            		onchange="this.value = this.value.toUpperCase();"
+	                                 />
+	                        	</div>
+	                        
+	                            <div class="col-md-3">
+	                            	<label>Data de Nascimento</label>
+				                     <p:inputMask id="dataDocumentoPropPf"  
+				                     				requiredMessage="A Data de nascimento é obrigatório"
+				                                     value="#{enviarFichaMB.veiPfDtNascimento}"
+				                                     mask="99/99/9999" >
+				                     </p:inputMask>		                                 
+	                        	</div>
+                         
+	                    	</div>
+	
+	                 		<div class="row" style="margin:5px">
+	                    	
+	                    		<div class="col-md-6">
+	                            	<label>RG Nº</label>
+	                            	<p:inputText style="width: 100%;" required="true" maxlength="15"  
+	                            		requiredMessage="Número do RG"
+	                            		value="#{enviarFichaMB.veiPfRgNumero}"
+	                                 />
+	                        	</div>
+	
+	                            <div class="col-md-2">
+	                            	<label>Orgão</label>
+	                            	<p:inputText style="width: 100%;" required="true" maxlength="6"  
+	                            		requiredMessage="Orgão Emissão do Documento"
+	                            		value="#{enviarFichaMB.veiPfRgEmissor}"
+	                            		onchange="this.value = this.value.toUpperCase();"
+	                                 />
+	                        	</div>
+	
+	                        
+	                            <div class="col-md-2">
+	                            	<label>Estado</label>
+	                            	<p:inputText style="width: 100%;" required="true" maxlength="2"  
+	                            		requiredMessage="Estado a qual foi emitido"
+	                            		value="#{enviarFichaMB.veiPfRgUf}"  
+	                            		onchange="this.value = this.value.toUpperCase();"                          		
+	                                 />
+	                        	</div>
+	                        
+	                    	</div>
+	
+	                 		<div class="row" style="margin:5px">
+	                    	
+	                    		<div class="col-md-6">
+	                            	<label>Pai</label>
+	                            	<p:inputText style="width: 100%;" maxlength="70" 
+	                            		value="#{enviarFichaMB.veiPfNomePai}"
+	                            		onchange="this.value = this.value.toUpperCase();"
+	                                 />
+	                        	</div>
+	                        
+	                            <div class="col-md-6">
+	                            	<label>Mãe</label>
+	                            	<p:inputText style="width: 100%;" maxlength="70"   
+	     								value="#{enviarFichaMB.veiPfNomeMae}"   
+	     								onchange="this.value = this.value.toUpperCase();"                    		
+	                                 />
+	                        	</div>
+	                        
+	                    	</div>
+	                    	                    	
+	                		
+	                		
+	                	</ui:fragment>
+	                	
+	                	</h:form>
+	                	
+	                </ui:fragment>
 
                     <ui:fragment id="fragPropEstrangeiro" rendered="#{! enviarFichaMB.veiculoNacional}">
                         <div class="col-md-3" id="propEstrangeiro">
@@ -496,14 +591,15 @@
             <f:facet name="footer">
                 <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
                     <div align="right">
-                        <p:commandButton value="Salvar" styleClass="btn-danger" update="@form" process="@form"
+                        <p:commandButton value="Salvar" styleClass="btn-primary" update="@form" process="@form"
                                          actionListener="#{enviarFichaMB.addReferenciaVeiculos}" id="btnSalvar"
-                                         onclick="onTop('dVeiculos');" disabled="#{! enviarFichaMB.btnSalvarVeiculo}"
+                                         onclick="onTop('dVeiculos');" 
+                                         disabled="#{! enviarFichaMB.btnSalvarVeiculo}"
                                          style="margin-right:10px;" partialSubmit="true" >
                             <f:ajax execute="@form" render="@form" />
                         </p:commandButton>
 
-                        <p:button value="Cancelar"  styleClass="btn-danger"                         			
+                        <p:button value="Cancelar"  styleClass="btn-primary"                         			
                                     onclick="PF('dlgVeiculo').hide();onTop('dVeiculos');"/>
                     </div>
                 </div>

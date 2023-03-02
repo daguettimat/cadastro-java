@@ -3,9 +3,13 @@ package br.com.global5.manager.bean.areas;
 import br.com.global5.infra.Crud;
 import br.com.global5.infra.CrudService;
 import br.com.global5.infra.model.Filter;
+import br.com.global5.infra.util.checkUsuario;
 import br.com.global5.manager.model.areas.Area;
 import br.com.global5.manager.model.areas.AreaQry;
+import br.com.global5.manager.model.contrato.Contrato;
+import br.com.global5.manager.model.contrato.acContrato;
 import br.com.global5.manager.service.areas.AreaService;
+import br.com.global5.manager.service.cadastro.ContratoService;
 import br.com.global5.manager.service.geral.UsuarioService;
 import br.com.global5.template.exception.BusinessException;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
@@ -26,6 +30,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Named
 @ViewAccessScoped
@@ -43,9 +48,12 @@ public class AreaMB implements Serializable {
 	private Filter<Area> filter = new Filter<Area>(new Area());
 	private Integer areaID;
 	
+	// Pesquisa
 	private String nomePesq = "";
+	
 	private List<AreaQry> lstAreaQry;
 
+	private List<acContrato> listaContratos;
 	@Inject
 	AreaService areaService;
 
@@ -57,12 +65,15 @@ public class AreaMB implements Serializable {
 	
 	@Inject
 	UsuarioService usuService;
-
+	
+	@Inject
+	ContratoService contratoService;
+	 
     @PostConstruct
     public void init() {
-
+    	
         lstAreas = areaService.listAll();
-
+   
     }
 
 	public LazyDataModel<Area> getAreaList() {
@@ -148,6 +159,8 @@ public class AreaMB implements Serializable {
 		area = new Area();
 		filter = new Filter<Area>(new Area());
 		id = null;
+		
+		
 	}
 
 	public void findAreaById(Integer id) {
@@ -200,6 +213,7 @@ public class AreaMB implements Serializable {
 							+ " não pode ser carregada. Informe ao suporte técnico.",null));
 		}
 	}
+	
 
 	public void btnPespCliente(){
 		
@@ -264,6 +278,103 @@ public class AreaMB implements Serializable {
 		}
 		
 	}
+
+	/**
+	 * @author Francis Bueno
+	 * @param nome
+	 * Método utilizado pela tela areaman.xhtml pela dialog dlgPesquisa
+	 * Recebe o nome que sera pesquisado
+	 */
+	public void checarNomePesquisa(String nome){
+		this.setNomePesq(nome);
+	}
+	
+	
+
+	public List<acContrato> buscarListaContratos(Integer nivel){
+		
+		List<acContrato> ListRecebidaB = null;
+		
+		if(nivel != null) {
+			
+			Integer idNivelRecebido = nivel;
+									
+			String nomePesquisa = "";
+			
+			if( !nomePesq.equals("")){
+				nomePesquisa = nomePesq.toString();
+			}
+			
+			if (nivel == 9) {
+				
+				pesquisarContratos();
+				
+				ListRecebidaB = getListaContratos();
+				
+			} 
+			
+			return ListRecebidaB;
+			
+		} else {
+			
+		  return ListRecebidaB=null;
+		  
+		}
+		
+	}
+
+
+
+	public void pesquisarContratos(){
+
+		boolean haveParameters = false;
+		
+		try{
+
+			EntityManager em = areaService.crud().getEntityManager();
+			
+			String from = " ";
+			String parameters = " ";
+			
+			if (nomePesq.isEmpty() != true) {
+				parameters += " a.area_nome ILIKE '%" + nomePesq + "%' AND ";
+				haveParameters = true;
+			}
+
+			
+			try{
+				
+				String query = "select a.areaoid as id, a.areaoid as area, p.pes_documento1 as cnpj, a.area_nome as nome , "
+						+ " 	(select  '(' || telddd || ')' || ' ' || telfone as telefone from java.telefone where teloid = p.pes_teloid) as telefone, "
+						+ "  	coalesce((select enum_nome || ' - empresa: ' || con_empoid "
+						+ "			from administrativo.enum_contrato_status, java.contrato "
+						+ "				where con_enumoid_status = enumoid and con_areaoid = areaoid and con_enumoid_produto_tipo = 15 order by conoid desc limit 1),'Inexistente') as statusCadastro,"
+						+ "  	coalesce((select enum_nome || ' - empresa: ' || con_empoid "
+						+ "			from administrativo.enum_contrato_status, java.contrato "
+						+ "				where con_enumoid_status = enumoid and con_areaoid = areaoid and con_enumoid_produto_tipo = 16 order by conoid desc limit 1),'Inexistente') as statusMonitoramento "
+						+ " from java.area a, java.pessoa p " + from
+						+ "		where " + parameters  
+						+ "			  a.area_dt_exclusao is null and"
+						+ "           a.area_pesoid_responsavel = p.pesoid and a.area_anvloid = 2";
+				
+				listaContratos = em.createNativeQuery(query, "ListaContratosMapping").getResultList();							
+								
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			haveParameters = false;
+		}
+		
+	}
+
+
+
+	
 	
     public List<Area> getLstAreas() {
         return lstAreas;
@@ -349,6 +460,22 @@ public class AreaMB implements Serializable {
         this.areaID = areaID;
     }
 
+	public List<AreaQry> getLstAreaQry() {
+		return lstAreaQry;
+	}
+
+	public void setLstAreaQry(List<AreaQry> lstAreaQry) {
+		this.lstAreaQry = lstAreaQry;
+	}
+
+	public ContratoService getContratoService() {
+		return contratoService;
+	}
+
+	public void setContratoService(ContratoService contratoService) {
+		this.contratoService = contratoService;
+	}
+
 	public String getNomePesq() {
 		return nomePesq;
 	}
@@ -357,12 +484,13 @@ public class AreaMB implements Serializable {
 		this.nomePesq = nomePesq;
 	}
 
-	public List<AreaQry> getLstAreaQry() {
-		return lstAreaQry;
+	public List<acContrato> getListaContratos() {
+		return listaContratos;
 	}
 
-	public void setLstAreaQry(List<AreaQry> lstAreaQry) {
-		this.lstAreaQry = lstAreaQry;
+	public void setListaContratos(List<acContrato> listaContratos) {
+		this.listaContratos = listaContratos;
 	}
-    
+
+	
 }

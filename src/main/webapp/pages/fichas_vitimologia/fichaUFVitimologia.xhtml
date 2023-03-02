@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://global5.com.br/adminfaces"
+                xmlns:b="http://bootsfaces.net/ui"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+
+            .ui-datatable-empty-message {
+                display: none;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Fichas Seleção Vitimologia
+    </ui:define>
+
+    <ui:define name="description">
+        Envio de fichas para a Global<sup>5</sup>
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Fichas Seleção"/>
+
+        <div class="ui-fluid">
+            <div class="row">
+                <div class="col-lg-12 col-md-4 col-sm-12">
+                    <p:growl id="msgs" showDetail="true"/>
+                    <div class="row" style="padding-top:20px;">
+                        <div class="col-lg-12">
+                            <p:panel styleClass="box-primary"
+                                     widgetVar="panel">
+                                <h:form id="form0" onkeypress="if (event.keyCode == 13) { return false; }">
+                                    
+                                    <p:panel header="Origem da Ficha - Escolha o estado contratado" >
+                                        <div class="row" style="padding-top: 15px;" data-step="1" data-intro="Esse é o quadro de pesquisa, aqui você informa ao sistema qual é a transportadora responsável pela ficha">
+                                            <div class="col-lg-2">
+                                                <span>&#160;</span>
+                                            </div>
+                                            <p:fragment autoUpdate="true" rendered="#{enviarFichaMB.habilitaArea == true}">
+                                                <div class="col-lg-4" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
+                                                    <p:outputLabel for="transportadora" value="Transportadora"/>
+                                                    <p:autoComplete id="transportadora" completeMethod="#{areaMB.listArea}"
+                                                                    value="#{enviarFichaMB.area}"  maxResults="15"
+                                                                    var="area" itemLabel="#{area.nome}" itemValue="#{area}"
+                                                                    forceSelection="true" minQueryLength="3" queryDelay="700"
+                                                                    converter="simpleEntityConverter">
+
+                                                        <p:ajax event="itemSelect" listener="#{enviarFichaMB.selectTransp}" update="transportadora"/>
+                                                    </p:autoComplete>
+                                                </div>
+                                            </p:fragment>
+                                            <p:fragment autoUpdate="true" rendered="#{enviarFichaMB.habilitaArea == false}">
+                                                <div class="col-lg-4" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
+                                                    <p:outputLabel for="inptArea" value="Transportadora"/>
+                                                    <p:inputText id="inptArea" disabled="true" value = "#{enviarFichaMB.area.nome}"/>
+                                                </div>
+                                            </p:fragment>
+                                            <p:fragment autoUpdate="true" rendered="#{enviarFichaMB.habilitaFilial == true}">
+                                                <div class="col-lg-4" data-step="3" data-intro="Aqui você escolhe qual é a Filial responsável pela ficha que será enviada.">
+                                                    <p:outputLabel for="filial" value="Filial"/>
+                                                    <p:autoComplete id="filial" completeMethod="#{enviarFichaMB.listFilial}"
+                                                                    value="#{enviarFichaMB.areaFilial}"  maxResults="15"
+                                                                    var="areaFilial" itemLabel="#{areaFilial.nome}"
+                                                                    itemValue="#{areaFilial}" forceSelection="true"
+                                                                    minQueryLength="3" queryDelay="700"
+                                                                    converter="simpleEntityConverter">
+                                                        <p:ajax event="itemSelect" listener="#{enviarFichaMB.selectFilial}" update="filial"/>
+                                                    </p:autoComplete>
+                                                </div>
+                                            </p:fragment>
+                                            <p:fragment autoUpdate="true" rendered="#{enviarFichaMB.habilitaFilial == false}">
+                                                <div class="col-lg-4" data-step="2" data-intro="O campo filial transportadora indica quem é a responsável (filial)">
+                                                    <p:outputLabel for="inptAreaFilial" value="Filial"/>
+                                                    <p:inputText id="inptAreaFilial" disabled="true" value = "#{enviarFichaMB.areaFilial.nome}"/>
+                                                </div>
+                                            </p:fragment>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <p:outputLabel  value="&#160;"/>
+                                            </div>
+                                            <div class="col-lg-4" data-step="2" data-intro="O campo transportadora indica quem é a responsável (matriz)">
+                                                <p:outputLabel for="inptCC" value="Centro de Custo"/>
+                                                <p:inputText id="inptCC"  value = "#{enviarFichaMB.centroCusto}"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <BR/>
+                                        
+                                        <!-- Teste de  SelectCheckboxMenu -->
+                                        <h:panelGrid columns="2" cellpadding="5">
+                                        	<h:outputLabel for="multiple" value="Estados e Regiões:" style="margin:20px	"/>
+                                        	<p:selectCheckboxMenu 
+                                        		id="multiple" 
+                                        		value="#{enviarFichaMB.selectedCities2}"
+                                        		label="Cities" multiple="true" filter="true" 
+                                        		filterMatchMode="startsWith" panelStyle="width:300px">
+                                        	
+                                        		<f:selectItems value="#{enviarFichaMB.lstVitUfTrue}" 
+                                        					var="lstVit"
+                                                            itemValue="#{lstVit.id}"
+                                                            itemLabel="#{lstVit.ufVitimologia.regiao}"/>
+                                        			
+                                        		<p:ajax  listener="#{enviarFichaMB.testVitUfApos}"  />
+                                        		
+                                        	</p:selectCheckboxMenu>
+                                        </h:panelGrid>
+                                        
+                                    </p:panel>
+                                    <br/>
+
+                                </h:form>
+                            </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+
+</ui:composition>

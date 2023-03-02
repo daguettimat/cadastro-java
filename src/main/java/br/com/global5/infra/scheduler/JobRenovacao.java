@@ -16,6 +16,8 @@ import br.com.global5.manager.service.cadastro.FichaRenovacaoService;
 import br.com.global5.manager.service.cadastro.VeiculoService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.apache.commons.logging.Log;
 import org.apache.deltaspike.scheduler.api.Scheduled;
 import org.hibernate.Hibernate;
 import org.hibernate.search.util.impl.HibernateSearchResourceLoader;
@@ -29,8 +31,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Scheduled(cronExpression = "0 0 0/12 * * ?")
+// seconds minutes hours day-of-month month day-of-week year
+
+//@Scheduled(cronExpression = "0 0/5 0 * * ?")
 //@Scheduled(cronExpression = "5 * * * * ?")
+@Scheduled(cronExpression = "0 0 1-3 * * ?")
 public class JobRenovacao implements org.quartz.Job {
 
     @Inject
@@ -72,7 +77,10 @@ public class JobRenovacao implements org.quartz.Job {
         try {
 
             lstFichas = renovacaoService.crud().eq("status.id", 213).list();
-
+            
+			System.out.println("EMAILRENOVACAO inicio de busca no banco");
+            System.out.println("EMAILRENOVACAO " + lstFichas.size() + " a notificar");
+            
             System.out.println("**********************************************************");
             System.out.println(" ");
             System.out.println(" JOB RENOVACAO CADASTRAL / " + new Date() ) ;
@@ -82,7 +90,10 @@ public class JobRenovacao implements org.quartz.Job {
 
             String bodyemail = "";
             String tituloEmail = "";
+            
 
+            String listaEmail = "";
+            
             for (FichaRenovacao renovacao: lstFichas) {
 
                 tituloEmail = "Renovação " + renovacao.getId() + ", precisa de sua atenção";
@@ -120,15 +131,31 @@ public class JobRenovacao implements org.quartz.Job {
                 for( InternetAddress em : emails ) {
                     destTo[counter++] =  em;
                 }
-
+                
+                listaEmail = listaEmail + emails.toString();
+                
+                new EnviaEmail().enviaEmail(bodyemail, tituloEmail, "cadastro@global5.com.br", destTo,
+                        "mail.global5.com.br", "cadastro@global5.com.br",
+                        "cadastro@global5.com.br", "iKzC%M%IY0q1");
+             
+                // Antiga senha: !@Cadastro@!
+                /*
                 new EnviaEmail().enviaEmail(bodyemail, tituloEmail, "cadastro@global5.com.br", destTo,
                         "mail.global5.com.br", "cadastro@global5.com.br",
                         "cadastro@global5.com.br", "!@Cadastro@!");
-
+				*/
                 renovacao.setStatus(new RenovacaoStatus(214));
                 renovacaoService.crud().update(renovacao);
 
+                System.out.println("EMAILRENOVACAO notificando ficha " + renovacao.getId() + " , email: " + emails.toString());
+                
             }
+            
+            System.out.println("EMAILRENOVACAO Fim notificação emails");
+            System.out.println("EMAILRENOVACAO Fim processo");
+            
+            String teste = listaEmail;
+            String a = teste;
 
         } catch (Exception e) {
             e.printStackTrace();

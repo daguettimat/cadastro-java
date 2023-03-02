@@ -311,8 +311,8 @@ public class EventoMB2 implements Serializable {
 				
 				//EntityManager eBI = biService.crud().getEntityManager();
 				
-				// Persiste Boletim
-				String codRotulo = "BI-" + tipoSelecaoBi + " " + ev.getSincViagem().getId() +
+				// Persiste Boletim .getId()
+				String codRotulo = "BI-" + tipoSelecaoBi + " " + ev.getSincViagem() +
 									"-" + ev.getNrEvento() + "." + ev.getNrEvento() + "/" + numGlobalPorTipo +
 									"-" + ev.getAno();
 				

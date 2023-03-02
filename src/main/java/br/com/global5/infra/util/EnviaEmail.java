@@ -35,7 +35,9 @@ public class EnviaEmail implements Serializable {
 	  
 	  */	
 	
-	public void enviaEmail(String bodyEmail, String assunto ,String remetente, Address destTo[], String host, String mail, String user, String passwd, String ... optional) throws Exception {
+	public void enviaEmail(String bodyEmail, String assunto ,
+			String remetente, Address destTo[], String host, String mail, String user, 
+			String passwd, String ... optional) throws Exception {
 
 		Properties mailServerProperties;
 		Session getMailSession;
@@ -56,7 +58,6 @@ public class EnviaEmail implements Serializable {
 			getMailSession = Session.getDefaultInstance(mailServerProperties, null);
 			generateMailMessage = new MimeMessage(getMailSession);
 
-
 //			// Step2
 
 //			List<InternetAddress> emails = new ArrayList<InternetAddress>();
@@ -73,11 +74,17 @@ public class EnviaEmail implements Serializable {
 //			}
 //			generateMailMessage.addRecipients(Message.RecipientType.TO, dest);
 
+			generateMailMessage.setRecipients(Message.RecipientType.TO,destTo);		
+			generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("liberacao@global5.com.br"));
+			/* Retirei aqui 23/06/2020
 			generateMailMessage.setRecipients(Message.RecipientType.TO,destTo);
 			generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("liberacao@global5.com.br"));
-
-
+			*/
+			/* Retirei aqui 23/06/2020	
 			generateMailMessage.setFrom(new InternetAddress(remetente));
+			generateMailMessage.setFrom(new InternetAddress("francis.bueno@global5.com.br"));
+			*/
+			generateMailMessage.setFrom(new InternetAddress(remetente));			
 			generateMailMessage.setSubject(assunto);
 			generateMailMessage.setContent(bodyEmail, "text/html; charset=utf-8");
 

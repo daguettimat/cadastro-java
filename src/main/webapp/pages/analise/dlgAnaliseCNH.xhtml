@@ -182,7 +182,7 @@
 
 				<br/>
                 <f:facet name="footer" class="ui-fluid ">
-                    <p:commandButton value="Salvar" styleClass="btn-danger"
+                    <p:commandButton value="Salvar" styleClass="btn-primary"
                                      actionListener="#{motAnaliseMB.updateCNH}"
                                      onclick="PF('dlgCNH').hide()"
                                      style="width:100px; margin-right:10px;#{(cadastroMB.cadastro.status.id == 8 or cadastroMB.cadastro.status.id == 9) ? 'display:none' : '' }"
@@ -190,7 +190,7 @@
                         <f:ajax execute="@form" render="@form" />
                     </p:commandButton>
 
-                    <p:button value="Cancelar" styleClass="btn-danger" style="width:100px;"
+                    <p:button value="Cancelar" styleClass="btn-primary" style="width:100px;"
                               onclick="PF('dlgCNH').hide()"/>
                 </f:facet>
             </div>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<!--xmlns:f="http://java.sun.com/jsf/core"-->
+<h:head >
+    <title style="font-size: 16pt;color: #1a2226; font-weight: bold;text-align: left">Relatório de Dados para DashBoard Base1</title>
+    <style type="text/css">
+        .ui-widget {
+            font-size: 90%;
+        }
+
+    </style>
+
+</h:head>
+<h:body styleClass="ui-widget"	style="padding-left: 25px; padding-top: 10px">
+
+	<p:growl autoUpdate="true" showDetail="true" sticky="true" severity="info,warn,error,fatal" />
+	
+	<p:ajax event="load" update="formRelatorioCadastro" process="@all" />
+	
+	<h:form id="formRelatorioCadastro">
+	
+	 <p:focus/>
+	 
+		<p:spacer width="2px"/>
+		<div align="right">
+		 <h4>Exportar para Excel </h4>
+ 
+		    <h:commandLink>
+        		<p:graphicImage value="/resources/images/xlsx-icon.png" style="width:2%; height:2%" />
+        		<p:dataExporter type="xls" target="tbRelCad" 
+        		fileName="lstRelCadastro" pageOnly="true" 
+        		postProcessor="#{dashMB.customizacaoExcelCadastro}"/>
+    		</h:commandLink>
+		
+		</div>
+		
+		<p:separator/>
+		<p:spacer width="2px"/>		
+
+		<p:dataTable  
+			id="tbRelCad"
+			widgetVar="tbRelCad"
+		 	value="#{dashMB.lstRelDashBase1}" var="c"
+			emptyMessage="Nenhum registro foi encontrado." 
+			rows="100000" rowKey="#{c.num_ficha}"  
+			lazy="true"  paginator="true" 
+            paginatorPosition="bottom" selectionMode="simple" 
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+            currentPageReportTemplate="[ Mostrando de {startRecord} até {endRecord} de {totalRecords} registro(s)- Página: {currentPage}/{totalPages} ]"
+            rowsPerPageTemplate="5,400,1200,3200,5200,10000,100000">
+
+			<f:facet name="header" >
+		 					<p:outputLabel  style="font-size: 16px; " value="Período escolhido: " />
+						 	<p:spacer width="50px" />
+							<p:outputLabel  style="font-size: 16px; " value="#{dashMB.pDtInicialR}" />
+							<p:spacer width="50px" />
+							<p:outputLabel  style="font-size: 16px; " value="#{dashMB.pDtFinaR }" />
+										
+           </f:facet>
+
+			<p:column headerText="Num Ficha" style="color:red;width:10%" >
+				<h:outputText value="#{c.num_ficha}" style="color:black;text-align:center;display:block"/>
+			</p:column>
+
+			<p:column headerText="Cnpj" style="color:red;width:10%" >
+				<h:outputText value="#{c.cnpj}" style="color:black;text-align:center;display:block"/>
+			</p:column>
+
+			<p:column headerText="Cliente" style="color:red;width:20%;" >
+				<h:outputText value="#{c.nome_cliente}" style="color:black;text-align:left;display:block"  />
+			</p:column>
+
+			<p:column headerText="Finalizado" style="color:red;width:10%;">
+				<h:outputText value="#{c.finalizado}" 
+					style="color:black;text-align: center;display:block">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText >
+			</p:column>
+
+			<p:column headerText="Status" style="color:red;width:17%;" >
+				<h:outputText value="#{c.status}" style="color:black;text-align:center;display:block" />
+			</p:column>			
+
+			<p/>
+
+
+					<p:columnGroup type="footer" >
+						<p:row>							
+							
+							<p:column colspan="5" style="background:gray;color:white;text-align:right">
+								<f:facet name="footer" >
+								   <h:outputText value="#{dashMB.qtdRegistrosDash}" style="text-align:center;display:block">
+                    				<f:convertNumber maxFractionDigits="0" minFractionDigits="0"
+										locale="pt_BR" currencySymbol="Qtde de Registros "  type="currency"/>
+                				</h:outputText>
+                				</f:facet>
+							
+							</p:column>
+															
+						</p:row>
+
+					</p:columnGroup>
+
+
+		</p:dataTable>
+
+		<br/>
+		   <h3>Exportar para Excel </h3>
+ 			
+		    <h:commandLink style="margin-left:60px">
+        		<p:graphicImage value="/resources/images/xlsx-icon.png" style="width:2%; height:2%" />
+        		<p:dataExporter type="xls" target="tbRelCad" 
+        		fileName="lstRelCadastro" pageOnly="true" 
+        		postProcessor="#{dashMB.customizacaoExcelCadastro}"/>
+    		</h:commandLink>
+			
+			<BR/>
+		
+			<div class="row">
+				<div align="center" style="padding-top:20px">
+					<p:commandButton	action="#{dashMB.sairTelaDash(dlg_dash_data_cadastro)}" 
+								styleClass="btn-danger" value="Fechar"  icon="fa fa-window-close-o" ajax="false">
+					</p:commandButton>			
+				</div>
+			</div>
+			
+	</h:form>
+
+	
+
+</h:body>
+
+</html>

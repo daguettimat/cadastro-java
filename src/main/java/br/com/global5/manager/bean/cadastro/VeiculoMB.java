@@ -2,6 +2,10 @@ package br.com.global5.manager.bean.cadastro;
 
 import br.com.global5.infra.Crud;
 import br.com.global5.infra.CrudService;
+import br.com.global5.infra.atualiza_motvei_chp.MotoristaClient;
+import br.com.global5.infra.atualiza_motvei_chp.VeiculoClient;
+import br.com.global5.infra.atualiza_motvei_chp.acVeiculoCad;
+import br.com.global5.infra.atualiza_motvei_chp.acVeiculoCadT;
 import br.com.global5.infra.model.Filter;
 import br.com.global5.infra.util.ValidaBrasil;
 import br.com.global5.infra.util.checkUsuario;
@@ -10,9 +14,11 @@ import br.com.global5.manager.model.analise.acVeiculos;
 import br.com.global5.manager.model.auxiliar.Cor;
 import br.com.global5.manager.model.cadastro.Marca;
 import br.com.global5.manager.model.cadastro.Modelo;
+import br.com.global5.manager.model.cadastro.Proprietario;
 import br.com.global5.manager.model.cadastro.Veiculo;
 import br.com.global5.manager.model.enums.VeiculoCategoria;
 import br.com.global5.manager.model.enums.VeiculoTipo;
+import br.com.global5.manager.model.geral.Motorista;
 import br.com.global5.manager.model.geral.Usuario;
 import br.com.global5.manager.service.analise.VeiculosService;
 import br.com.global5.manager.service.auxiliar.CorService;
@@ -21,11 +27,13 @@ import br.com.global5.manager.service.cadastro.ModeloService;
 import br.com.global5.manager.service.cadastro.VeiculoService;
 import br.com.global5.manager.service.enums.VeiculoCategoriaService;
 import br.com.global5.manager.service.enums.VeiculoTipoService;
+import br.com.global5.manager.service.geral.UsuarioService;
 import br.com.global5.template.exception.BusinessException;
 import jdk.nashorn.internal.runtime.ECMAErrors;
 import org.apache.deltaspike.core.api.resourceloader.InjectableResource;
 import org.apache.deltaspike.core.api.scope.ViewAccessScoped;
 import org.hibernate.Hibernate;
+import org.json.JSONObject;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -39,11 +47,16 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
 
 @Named
 @ViewAccessScoped
@@ -88,6 +101,9 @@ public class VeiculoMB implements Serializable {
 	private String placaPadraoMercosul = "";
 	private String placaAnterior = "";
 	
+	// Variaveis - Lista para ws consulta na CHP/Trafegus
+    private List<acVeiculoCad> listaAcVeiculoCad;
+    private List<acVeiculoCadT> listaAcVeiculoParaTrafegus;
 	
 	@Inject
 	VeiculoService veiculoService;
@@ -110,6 +126,9 @@ public class VeiculoMB implements Serializable {
 	@Inject
     VeiculosService veiculosService;
 
+	@Inject 
+	private UsuarioService usuService;
+	
 	@Inject
 	Crud<Veiculo> veiculoCrud;
 
@@ -129,7 +148,8 @@ public class VeiculoMB implements Serializable {
 	}
 
 	public LazyDataModel<Veiculo> getVeiculoList() {
-		if( veiculoList == null ) {
+		if( veiculoList == null ) {	
+			
 			veiculoList = new LazyDataModel<Veiculo>() {
 				/**
 				 *
@@ -254,6 +274,7 @@ public class VeiculoMB implements Serializable {
 		veiculo.setModelo(new Modelo());
 		veiculo.setCor(new Cor());
 		veiculo.setTipo(new VeiculoTipo());
+		
 
 		usuario = checkUsuario.valid();
 		
@@ -284,9 +305,11 @@ public class VeiculoMB implements Serializable {
         Hibernate.initialize(veiculo.getProprietario().getTelefone());
 
         try {
+        	/*
             Hibernate.initialize(veiculo.getArrendatario());
             Hibernate.initialize(veiculo.getArrendatario().getEndereco());
             Hibernate.initialize(veiculo.getArrendatario().getTelefone());
+            */
         } catch (Exception e) {}
 
         Hibernate.initialize(veiculo.getMarca());
@@ -462,7 +485,366 @@ public class VeiculoMB implements Serializable {
     	
 		
 	}
+	
+	// Projeto atualizar dados CHP/Trafegus
+	/**
+	 * @author Francis Bueno
+	 * @return
+	 * Método de chamada do front, carrega todos os motorista na tabela listaAcMotoristaCad e só para que após possa ser atualizado
+	 * Utilizado pela tela /webapp/pages/ws/trafegus/chamada_ws_chp.xhtml -- Atualiza Motorista, Atualiza Veiculo (esse será outra chamada)
+	 */
+    public String buscaVeiculoPorPlaca(){
+    	
+    	EntityManager em = usuService.crud().getEntityManager();
+    	
+    	String query = " select v.veioid as id, v.vei_placa as placa, v.vei_uf as uf, v.vei_municipio as municipio, v.vei_pais as pais, "
+    		       	 + " v.vei_renavam as renavam, v.vei_chassi as chassi, v.vei_anofabricacao as anoFabricacao, v.vei_anomodelo as anoModelo, "
+    		       	 + " c.cor_nome as cor "
+    		       	 + " from veiculo  v, cor c " 
+    		         + " where v.vei_coroid = c.coroid and v.vei_dt_criacao > '2017/12/01' ";
+    	
+    	listaAcVeiculoCad = em.createNativeQuery(query, "ListaVeiculoCadMapping").getResultList();
+    	
+    	if ( listaAcVeiculoCad.size() > 0){
+    		
+    		int result = listaAcVeiculoCad.size();
+    		
+    		for(int i=0; i < result;i++){
+    			    			
+    			buscarVeiculoPorPlaca(listaAcVeiculoCad.get(i).getPlaca().toString());    				
+    			
+    		}
+    		
+    	}    	
+    	
+    	return null;
+    }
+    
+    
+    private void buscarVeiculoPorPlaca(String placa){
+    	
+    	VeiculoClient wsV = new VeiculoClient();
 
+    	// Busca dados do veiculo para checar se o veiculo existe na chp/Trafegus
+    	JSONObject objJsonMot = wsV.getVeiculo(placa);
+
+    	if( objJsonMot != null){
+    		
+    		String idVeiculoChp = "";
+    		
+    		idVeiculoChp = objJsonMot.get("codigo").toString();
+    		
+    		// Dados coletado do ws  192.168.64.101/ws_rest/public/api/veiculo/{ placa}
+    		objJsonMot.get("codigo").toString();	// id do veiculo na chp
+    		objJsonMot.get("placa").toString();		// placa do veiculo na chp
+    		    		
+    		// Atualiza dados do veiculo no sistema CHP/Trafegus
+    		
+    		//atualizarMotoristaCHP(cpf, idMotoristaChp);
+    		
+    				
+    	}
+    	
+    }
+    /**
+     * teste atualiza veiculos 23-04-2021
+     */
+    public void buscarVeiculosPorPlacasCHP(){
+    	
+    	EntityManager em = usuService.crud().getEntityManager();
+    	
+    	String query  = " select veioid as id, vei_placa as placa , vei_renavam as renavam , vei_chassi as chassi , "
+    				  + "vei_municipio as municipio, vei_uf as uf, vei_pais as pais, vei_anofabricacao as anoFabricacao, "
+    				  + " vei_anomodelo as anoModelo, vei_nacional as nacional,"
+    				  + " (case  when vei_tipo = 59 then '1' else '2' end) as tipo, "
+    				  + " (select mar_nome  from marca where maroid = vei_maroid ) as marca,"
+    				  + " (select mod_nome from modelo where modoid = vei_modoid ) as modelo,"
+    				  + " (select cor_nome from cor where coroid = vei_coroid) as cor"
+    				  + " from veiculo "
+    				  + " where "
+    				  + " vei_dt_verificacao_ws is null and "
+    				  + " vei_dt_atualiza_ws is null and "
+    				  + " vei_dt_criacao > '2021-06-01'";
+    	
+    	//21/04/2020
+    	
+    	listaAcVeiculoCad = em.createNativeQuery(query, "ListaVeiculoCadMapping").getResultList();
+    	
+    	if ( listaAcVeiculoCad.size() > 0) {
+    		
+    		int result = listaAcVeiculoCad.size();
+    		
+    		for ( int i = 0 ; i < result ; i++ ){
+    			
+    			int tamanhoPlaca = listaAcVeiculoCad.get(i).getPlaca().length();
+    				
+    				boolean t = listaAcVeiculoCad.get(i).getPlaca().contains("-");
+    				//boolean c = listaAcVeiculoCad.get(i).getPlaca().matches("-");    				
+    				//boolean d = t;
+    				
+    				String novaPlaca = "";
+    				Integer idPlaca = null;
+    				if ( t == true ){
+    					novaPlaca = listaAcVeiculoCad.get(i).getPlaca().replace("-", "").toString().trim();
+    					idPlaca = listaAcVeiculoCad.get(i).getId();
+    					String te = novaPlaca;
+    					
+    				} else {
+    					novaPlaca = listaAcVeiculoCad.get(i).getPlaca().toString().trim();
+    					idPlaca = listaAcVeiculoCad.get(i).getId();			
+    				}
+    					buscarVeiculoPorPlaca(idPlaca, novaPlaca);
+    			
+    		}
+    		
+    	}
+    	
+    }
+    
+    private void buscarVeiculoPorPlaca(Integer idPlaca, String placa){
+    	
+    	VeiculoClient wsV = new VeiculoClient();
+    	
+    	 JSONObject objJsonVei = wsV.getVeiculo(placa);
+    	 
+    	 if ( objJsonVei != null ) {
+    		 
+    		 String idVeiculoChp = "";
+    		 
+    		 idVeiculoChp = objJsonVei.get("codigo").toString();
+    		 
+    		 objJsonVei.get("codigo").toString();
+    		 objJsonVei.get("placa").toString();
+    		 objJsonVei.get("tipo_veiculo").toString();
+    		 objJsonVei.get("cor").toString();
+    		 objJsonVei.get("marca").toString();
+    		 objJsonVei.get("modelo").toString();
+    		 objJsonVei.get("ano_modelo").toString();
+    		 objJsonVei.get("ano_fabricacao").toString();
+    		 objJsonVei.get("renavam").toString();
+    		 objJsonVei.get("chassi").toString();
+    		 objJsonVei.get("sigla_estado").toString();
+    		 objJsonVei.get("cidade_emplacamento").toString();
+    		 objJsonVei.get("pais").toString();    		 
+    		 
+    		 atualizarVeiculoNaChp(idPlaca, placa, idVeiculoChp);
+    		 
+    	 } else {
+    		 
+    		 // Checar oque fará o sistema quando passar por aqui... 
+    		 
+    		 // Atualiza o registro no cadastro, informando que consultou ws mas não teve
+    		 // nada para ser atualizado campo dtAtualizaWs = null e dtVerificaoWs com Date
+    		 Veiculo vei = veiculoService.findById(idPlaca);
+    		 
+    		 //vei.setDtAtualizacaoWs(null);
+    		 vei.setDtVerificacaoWs(new Date());
+    		 veiculoService.crud().update(vei);
+    		 veiculoService.commit();
+    		 
+    	 }
+    	
+    }
+    
+    private void atualizarVeiculoNaChp(Integer idPlaca, String placa, String idVeiculoChp ){
+    	
+    	EntityManager em = usuService.crud().getEntityManager();
+    	
+    	String query  = " select veioid as id, vei_placa as placa , vei_renavam as renavam , vei_chassi as chassi , "
+    				  + "vei_municipio as municipio, vei_uf as uf, vei_pais as pais, vei_anofabricacao as anoFabricacao, "
+    				  + " vei_anomodelo as anoModelo, vei_nacional as nacional,"
+    				  + " (case  when vei_tipo = 59 then '1' else '2' end) as tipo, "
+    				  + " (select mar_nome  from marca where maroid = vei_maroid ) as marca,"
+    				  + " (select mod_nome from modelo where modoid = vei_modoid ) as modelo,"
+    				  + " (select cor_nome from cor where coroid = vei_coroid) as cor"
+    				  + " from veiculo "
+    				  + " where "
+    				  + " vei_dt_verificacao_ws is null and vei_dt_atualiza_ws is null and "
+    				  + " veioid = " + idPlaca + " and" 
+    				  + " vei_dt_criacao > '2021-06-01'";
+    	    	
+    	listaAcVeiculoParaTrafegus = em.createNativeQuery(query, "ListaVeiculoCadTMapping").getResultList();
+    	
+    	VeiculoClient wsV = new VeiculoClient();
+    	
+    	// Variaveis do métod
+    	
+    	Integer idVeiculoCad = null;
+    	String 	placaVei = null, tipoVei = null, corVei = null, marcaVei = null , modeloVei = null,
+    			anoModeloVei = null, anoFabricacaoVei = null, renavanVei = null, chassiVei = null,
+    			siglaEstadoVei = null, cidadeEmplacamentoVei = null, paisVeiculo = null ;
+    	
+    	if ( listaAcVeiculoParaTrafegus.size() == 1) {
+    		
+    		idVeiculoCad = listaAcVeiculoParaTrafegus.get(0).getId();
+    		
+    		if( listaAcVeiculoParaTrafegus.get(0).getPlaca() != null){
+    			
+    			if(listaAcVeiculoParaTrafegus.get(0).getPlaca().toString().contains("-")){
+        			placaVei  = listaAcVeiculoParaTrafegus.get(0).getPlaca().toString().replace("-", "");	
+        		} else {
+        			placaVei  = listaAcVeiculoParaTrafegus.get(0).getPlaca().toString();
+        		}        		
+    			
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getTipo() != null){
+    			tipoVei = listaAcVeiculoParaTrafegus.get(0).getTipo().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getCor() != null){
+    			corVei = listaAcVeiculoParaTrafegus.get(0).getCor().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getMarca() != null){
+    			marcaVei = listaAcVeiculoParaTrafegus.get(0).getMarca().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getModelo() != null){
+    			modeloVei = listaAcVeiculoParaTrafegus.get(0).getModelo().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getAnoModelo() != null){
+    			anoModeloVei = listaAcVeiculoParaTrafegus.get(0).getAnoModelo().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getAnoFabricacao() != null){
+    			anoFabricacaoVei = listaAcVeiculoParaTrafegus.get(0).getAnoFabricacao().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getRenavam() != null){
+    			renavanVei = listaAcVeiculoParaTrafegus.get(0).getRenavam().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getChassi() != null){
+    			chassiVei = listaAcVeiculoParaTrafegus.get(0).getChassi().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getUf() != null){
+    			siglaEstadoVei = listaAcVeiculoParaTrafegus.get(0).getUf().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getMunicipio() != null){
+    			cidadeEmplacamentoVei = listaAcVeiculoParaTrafegus.get(0).getMunicipio().toString();
+    		}
+    		if( listaAcVeiculoParaTrafegus.get(0).getPais() != null){
+    			paisVeiculo = listaAcVeiculoParaTrafegus.get(0).getPais().toString();
+    		}
+    		
+    		boolean result = wsV.putVeiculo(idVeiculoChp, placaVei, tipoVei, corVei, marcaVei, modeloVei, anoModeloVei, 
+    					   					anoFabricacaoVei, renavanVei, chassiVei, siglaEstadoVei, (cidadeEmplacamentoVei+" - "+siglaEstadoVei), paisVeiculo);
+    		
+    		if ( result == true ){
+    			// Atualiza o banco de dado tabela veiculo 
+    			Integer v = idVeiculoCad;
+    			Integer b = v;
+    			Veiculo vei = veiculoService.findById(idVeiculoCad);
+    			vei.setDtVerificacaoWs(new Date());
+    			vei.setDtAtualizacaoWs(new Date());
+    			veiculoService.crud().update(vei);
+    			veiculoService.commit();
+    		} else {
+    			Veiculo vei = veiculoService.findById(idVeiculoCad);
+    			vei.setDtVerificacaoWs(new Date());
+    			//vei.setDtAtualizacaoWs(null);
+    			veiculoService.crud().update(vei);
+    			veiculoService.commit();    			
+    		}
+    		
+    	}
+    	
+    }
+    
+    
+    private void atualizarMotoristaCHP(String cpf, String idMotoristaChp){
+    	
+       	EntityManager em = usuService.crud().getEntityManager();
+        	
+        	String query =  " select v.veioid as id, v.vei_placa as placa, v.vei_uf as uf, v.vei_municipio as municipio,"
+        		 + " v.vei_pais as pais, "
+   		       	 + " v.vei_renavam as renavam, v.vei_chassi as chassi, v.vei_anofabricacao as anoFabricacao, v.vei_anomodelo as anoModelo, "
+   		       	 + " c.cor_nome as cor "
+   		       	 + " from veiculo  v, cor c " 
+   		         + " where v.vei_coroid = c.coroid and v.vei_dt_criacao > '2017/12/01' ";
+        			       	
+        
+        	listaAcVeiculoParaTrafegus = em.createNativeQuery(query, "ListaVeiculoCadMapping").getResultList();
+        	
+        	VeiculoClient wsV = new VeiculoClient();        	
+        	
+        	Integer idVeiCad = null;
+        	String placaVei = "" , ufVei = "", municipioVei = "", paisVei = "", renavamVei = "", chassiVei ;
+        	String anoFabricacaoVei = null, anoModeloVei = null;
+        	String corVei = "";      	
+        	
+        	if( listaAcVeiculoParaTrafegus.size() == 1 ){
+        		
+        		// Carga de Variaveis para serem atualizadas no sistema Trafegus
+        		idVeiCad= listaAcVeiculoParaTrafegus.get(0).getId();    		
+        		
+        		if(listaAcVeiculoParaTrafegus.get(0).getPlaca() != null){
+            		if(listaAcVeiculoParaTrafegus.get(0).getPlaca().toString().contains("-")){
+            			placaVei  = listaAcVeiculoParaTrafegus.get(0).getPlaca().toString().replace("-", "");	
+            		} else {
+            			placaVei  = listaAcVeiculoParaTrafegus.get(0).getPlaca().toString();
+            		}        			
+        		}
+        		
+        		if( listaAcVeiculoParaTrafegus.get(0).getUf() != null){
+        			ufVei = listaAcVeiculoParaTrafegus.get(0).getUf().toString(); 
+        		}    			
+        		
+        		if (listaAcVeiculoParaTrafegus.get(0).getMunicipio() != null ){
+        			municipioVei   = listaAcVeiculoParaTrafegus.get(0).getMunicipio().toString();
+        		}    		
+        		
+        		if ( listaAcVeiculoParaTrafegus.get(0).getPais() != null){
+        			paisVei	= listaAcVeiculoParaTrafegus.get(0).getPais().toString();
+        		}    		
+        		
+        		if( listaAcVeiculoParaTrafegus.get(0).getRenavam() != null){
+        			renavamVei  = listaAcVeiculoParaTrafegus.get(0).getRenavam().toString();    		
+        		}
+        		
+        		if( listaAcVeiculoParaTrafegus.get(0).getChassi() != null){
+        			chassiVei  = listaAcVeiculoParaTrafegus.get(0).getChassi().toString();    		
+        		}
+
+        		if( listaAcVeiculoParaTrafegus.get(0).getAnoFabricacao() != null){
+        			anoFabricacaoVei  = listaAcVeiculoParaTrafegus.get(0).getAnoFabricacao().toString();    		
+        		}        		
+
+        		if( listaAcVeiculoParaTrafegus.get(0).getAnoModelo() != null){
+        			anoModeloVei  = listaAcVeiculoParaTrafegus.get(0).getAnoModelo().toString();    		
+        		}       
+        		
+        		if( listaAcVeiculoParaTrafegus.get(0).getCor() != null){
+        			corVei  = listaAcVeiculoParaTrafegus.get(0).getCor().toString();    		
+        		}       
+        		
+        		// Envia dados para atualizar sistema Trafegus via ws | put
+        		//boolean result = wsV.putVeiculo(placaVei, ufVei, municipioVei, paisVei, renavamVei, chassiVei, anoFabricacaoVei, 
+        		//								anoModeloVei, corVei);
+        		boolean result = true;
+        		
+        		 if (result == true){    			 
+        			 // Atualiza o banco de dados veiculo
+        			 Veiculo vei = veiculoService.findById(idVeiCad);
+        			 /*
+        			 mot.setDtAtualizaWs(new Date());
+        			 mot.setDtVerificacaoWs(new Date());
+        			 //mot.setExisteRegistroWs(true);
+        			 motService.crud().update(mot);
+        			 //motService.commit();
+        			  
+        			  * */
+        			 
+
+        		 } else {
+        			 /*
+        			 Motorista mot = motService.findById(idMotCad);
+        			 mot.setDtAtualizaWs(null);
+        			 mot.setDtVerificacaoWs(new Date());
+        			 motService.crud().update(mot);
+        			 //motService.commit();
+        			  * 
+        			  */
+        		 }
+        		 
+        	}
+        	
+        }    
+    
 	public void onRowUnselect(UnselectEvent event) {
 		veiculo = new Veiculo();
 	}
@@ -715,6 +1097,22 @@ public class VeiculoMB implements Serializable {
 	public void setAplicadoProcAltPlaca(Boolean aplicadoProcAltPlaca) {
 		this.aplicadoProcAltPlaca = aplicadoProcAltPlaca;
 	}
-	
+
+	public List<acVeiculoCad> getListaAcVeiculoCad() {
+		return listaAcVeiculoCad;
+	}
+
+	public void setListaAcVeiculoCad(List<acVeiculoCad> listaAcVeiculoCad) {
+		this.listaAcVeiculoCad = listaAcVeiculoCad;
+	}
+
+	public List<acVeiculoCadT> getListaAcVeiculoParaTrafegus() {
+		return listaAcVeiculoParaTrafegus;
+	}
+
+	public void setListaAcVeiculoParaTrafegus(List<acVeiculoCadT> listaAcVeiculoParaTrafegus) {
+		this.listaAcVeiculoParaTrafegus = listaAcVeiculoParaTrafegus;
+	}
+
     
 }

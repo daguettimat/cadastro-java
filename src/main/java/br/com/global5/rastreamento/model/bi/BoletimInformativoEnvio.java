@@ -8,7 +8,7 @@ import javax.persistence.*;
 import br.com.global5.infra.model.BaseEntity;
 
 @Entity
-@Table(name="boletim_informativo_envio")
+@Table(name="rastreamento.boletim_informativo_envio")
 public class BoletimInformativoEnvio implements BaseEntity{
 	
 	private static final long serialVersionUID = 1L;

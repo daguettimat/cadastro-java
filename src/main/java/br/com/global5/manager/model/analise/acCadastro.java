@@ -9,10 +9,15 @@ import br.com.global5.manager.model.enums.FichaTipo;
 import br.com.global5.manager.model.geral.Usuario;
 import br.com.global5.manager.model.areas.Area;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.json.JSONObject;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,7 +27,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "analise_cadastral")
+@Table(name = "java.analise_cadastral")
 @XmlRootElement
 @XmlAccessorType(value = XmlAccessType.FIELD)
 @TypeDefs({
@@ -190,7 +195,7 @@ public class acCadastro implements BaseEntity {
     private Integer analiseEspecialStatus;
 
 
-    @Column(name = "anac_analise_especial_detalhe", updatable=false)
+    @Column(name = "anac_analise_especial_detalhe" , updatable=false)
     private String analiseEspecialDetalhe;
 
 
@@ -427,7 +432,7 @@ public class acCadastro implements BaseEntity {
     public void setAnaliseEspecialStatus(Integer analiseEspecialStatus) {
         this.analiseEspecialStatus = analiseEspecialStatus;
     }
-
+    
     public String getAnaliseEspecialDetalhe() {
         return analiseEspecialDetalhe;
     }
@@ -435,4 +440,6 @@ public class acCadastro implements BaseEntity {
     public void setAnaliseEspecialDetalhe(String analiseEspecialDetalhe) {
         this.analiseEspecialDetalhe = analiseEspecialDetalhe;
     }
+
+    
 }

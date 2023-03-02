@@ -248,6 +248,7 @@ public class BoletimInformativoViewMB implements Serializable {
 	
 	
 	public void checarEventoDadosMotorista(){
+		/*
 		if(biV.getEvento().getSincViagem().getMotorista1() != null){
 			subPnDadosMotorista1 = true;
 		}
@@ -255,10 +256,18 @@ public class BoletimInformativoViewMB implements Serializable {
 		if(biV.getEvento().getSincViagem().getMotorista2() != null){
 			subPnDadosMotorista2 = true;
 		}
+		*/
+		if(eiv.getMotoristaCpf1() != null){
+			subPnDadosMotorista1 = true;
+		}
+	
+		if(eiv.getMotoristaCpf2() != null){
+			subPnDadosMotorista2 = true;
+		}
 	}
 	
 	public void checarEventoDadosCarreta(){
-		
+		/*
 		if( biV.getEvento().getSincViagem().getVeiculo() != null ){
 			// verifica se existe carretas ligada ao veiculo
 			if (biV.getEvento().getSincViagem().getCarreta1() != null){
@@ -284,11 +293,38 @@ public class BoletimInformativoViewMB implements Serializable {
 				biV.getEvento().getSincViagem().getCarreta3() == null ){
 			subPnDadosCarreta = false;
 		}
+		*/
+		
+		if (eiv.getCarretaPlaca1() != null){
+			// mostra dados carreta 1
+			// subPnDadosCarreta = true;
+			//this.subPnDadosCarreta1 = true;
+			this.setSubPnDadosCarreta(true);
+			this.setSubPnDadosCarreta1(true);
+		}
+		if (eiv.getCarretaPlaca2() != null){
+			// mostra dados carreta 2
+			this.setSubPnDadosCarreta(true);
+			this.setSubPnDadosCarreta2(true);
+		}
+		if (eiv.getCarretaPlaca3() != null){
+			// mostra dados carreta 3
+			this.setSubPnDadosCarreta(true);				
+			this.setSubPnDadosCarreta3(true);
+		}
+
+	if (eiv.getCarretaPlaca1() == null &&
+			eiv.getCarretaPlaca2() == null &&
+			eiv.getCarretaPlaca3() == null ){
+		subPnDadosCarreta = false;
+	}
 		
 	}
 	
 	public void checarClassificacaoBI() {
-
+		String a = "b";
+		String b = a;
+		
 		if (biV.getTipo() == biV.EVENTO_TIPO_DANO) {
 
 			Criteria criteriaD = tipoDanoService.crud().getSession().createCriteria(TipoDano.class);
@@ -390,9 +426,10 @@ public class BoletimInformativoViewMB implements Serializable {
 
 			if (biV.getMotLocalizado() == true) {
 				situacaoMotorista = "Localizado; ";
-			} else {
-				situacaoMotorista = "Não Localizado; ";
-			}
+			} 
+//			else {
+//				situacaoMotorista = "Não Localizado; ";
+//			}
 			if (biV.getMotFeridoPassaBem() == true) {
 				situacaoMotorista = situacaoMotorista + "Passa Bem; ";
 			} 
@@ -400,7 +437,7 @@ public class BoletimInformativoViewMB implements Serializable {
 				situacaoMotorista = situacaoMotorista + "Hospitalizado; ";
 			} 
 			if (biV.getMotFeridoLevemente() == true) {
-				situacaoMotorista = situacaoMotorista + "Ferido Levemento; ";
+				situacaoMotorista = situacaoMotorista + "Ferido Levemente; ";
 			} 
 			if (biV.getMotObito() == true) {
 				situacaoMotorista = situacaoMotorista + "Em Óbito; ";

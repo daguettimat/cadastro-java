@@ -8,7 +8,7 @@
 
 	<ui:define name="head-end">
 
-		<style type="text/css">
+<style type="text/css">
 .ui-grid-row .ui-grid-col-2, .ui-grid-row .ui-grid-col-10 {
 	padding: 0.5em 0;
 	margin-left: 10px;
@@ -55,13 +55,20 @@ input[disabled] {
 
 
 		<h:form id="frmRegistro">
-		
-			
 
 			<h:panelGroup layout="block">
 
-				<p:panel styleClass="box-danger" >
+				<p:panel styleClass="box-primary" >
+				
 
+							<div class="align-right" style="padding: 5px;">
+								<p:commandButton value="Voltar"										
+									action="#{boletimInformativoMB.backListEvento}" update="@form"
+									styleClass="btn-primary" />
+								<p:spacer height="5" />
+								</div>
+
+		
 					<!-- Tipo Boletim -->
 					<div class="row" style="padding-top: 10px" >
 
@@ -72,7 +79,7 @@ input[disabled] {
 
 						<div class="col-lg-8">
 							<p:selectOneRadio id="radioTipoBoletim"
-								value="#{boletimInformativoMB.tipoSelecaoBi}" disabled="true">
+								value="#{boletimInformativoMB.tipoSelecaoBi}" disabled="true" >
 								<f:selectItem itemLabel="Sinistro de Perdas" itemValue="P"  />
 								<f:selectItem itemLabel="Sinistro de Danos" itemValue="D" />
 								<f:selectItem itemLabel="Suspeita de Roubo" itemValue="S" />								 
@@ -89,7 +96,7 @@ input[disabled] {
 						</div>
 
 						<div class="col-lg-1">
-							<h:outputText value="#{boletimInformativoMB.eiv.viagem.id}"
+							<h:outputText value="#{boletimInformativoMB.eiv.viagem}"
 								style="color:red;font-style:italic" />
 						</div>
 
@@ -116,7 +123,7 @@ input[disabled] {
 
 
 					</div>
-
+					
 					<p:separator />
 
 					<h:form id="frmBoletim">
@@ -135,7 +142,7 @@ input[disabled] {
 
 										<div class="row">
 
-											<div class="col-lg-2">
+											<div class="col-lg-1">
 												<h:outputText value="Cliente: " for="idCliente"
 													style="color:black;font-weight:bold" />
 											</div>
@@ -146,10 +153,10 @@ input[disabled] {
 											</div>
 
 										</div>
-
+<!-- 
 										<div class="row">
 
-											<div class="col-lg-2">
+											<div class="col-lg-1">
 												<h:outputText value="Seguradora: " for="idSeguradora"
 													style="color:black;font-weight:bold" />
 											</div>
@@ -162,7 +169,7 @@ input[disabled] {
 
 										<div class="row">
 
-											<div class="col-lg-2">
+											<div class="col-lg-1">
 												<h:outputText value="Corretora: " for="idCorretora"
 													style="color:black;font-weight:bold" />
 											</div>
@@ -172,9 +179,10 @@ input[disabled] {
 											</div>
 										</div>
 
+ -->
 										<div class="row">
 
-											<div class="col-lg-2">
+											<div class="col-lg-1">
 												<h:outputText value="Transportadora: "
 													for="idTransportadora" style="color:black;font-weight:bold" />
 											</div>
@@ -232,7 +240,7 @@ input[disabled] {
 													style="color:red;font-style:italic" />
 											</div>
 
-											<div class="col-lg-2">
+											<div class="col-lg-1">
 												<h:outputText value="ID Rastreador: " for="idIdRastreador"
 													style="color:black;font-weight:bold" />
 											</div>
@@ -263,13 +271,13 @@ input[disabled] {
 													style="color:red;font-style:italic" />
 											</div>
 
-											<div class="col-lg-3">
+											<div class="col-lg-2">
 												<h:outputText value="Tecnologia de Rastreamento: "
 													for="idTecnologia" style="color:black;font-weight:bold" />
 											</div>
-											<div class="col-lg-1">
+											<div class="col-lg-4" style="text-align:left;display:block;">
 												<h:outputText value="#{boletimInformativoMB.eiv.veiculoIdTecnologia}"
-													style="color:red;font-style:italic" />
+													style="color:red;font-style:italic;" />
 											</div>
 
 										</div>
@@ -283,8 +291,7 @@ input[disabled] {
 
 						</p:tab>
 						
-						<ui:fragment id="subPnCarreta"	rendered="#{boletimInformativoMB.subPnDadosCarreta}">
-						<p:tab title="Dados da Carreta">
+						<p:tab title="Dados da Carreta" rendered="#{boletimInformativoMB.subPnDadosCarreta}">
 
 							<h:form id="frmDadosCarreta">
 
@@ -457,7 +464,6 @@ input[disabled] {
 							</h:form>
 
 						</p:tab>
-						</ui:fragment>
 						
 						<p:tab title="Dados do Motorista">
 
@@ -585,7 +591,7 @@ input[disabled] {
 													style="color:black;font-weight:bold" />
 											</div>
 											<div class="col-lg-1">
-												<h:outputText value="#{boletimInformativoMB.eiv.viagem.id}"
+												<h:outputText value="#{boletimInformativoMB.eiv.viagem}"
 													style="color:red;font-style:italic" />
 											</div>
 
@@ -702,7 +708,7 @@ input[disabled] {
 
 						<ui:fragment id="fragSinistro"	rendered="#{boletimInformativoMB.painelDadosSinistro}">
 
-							<div id="pnComSinistro" class="box box-solid box-danger">
+							<div id="pnComSinistro" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Dados do Comunicado do Sinistro</h4>
 								</div>
@@ -711,51 +717,67 @@ input[disabled] {
 									<!-- Data/Hora Sinistro -->
 									<div class="row  ui-fluid">
 
-										<div class="col-lg-3">
+										<div class="col-lg-2">
 											<p:outputLabel value="Data/Hora do Comunicado: "
 												style="color:black;font-weight:bold" />
 										</div>
 
-										<div class="col-lg-3">
-											<p:calendar id="dtComunicado" showOn="button"
-												value="#{boletimInformativoMB.bi.comIniDataHora}"
-												pattern="dd/MM/yyyy HH:mm" showButtonPanel="true"></p:calendar>
+										<div class="col-lg-2">
+											<p:calendar id="dtComunicado"  placeholder="Data"
+												value="#{boletimInformativoMB.bi.comDtComunicado}"
+												inputStyle="text-align:center; display:block"
+												pattern="dd/MM/yyyy"></p:calendar>
 										</div>
-
-										<div class="col-lg-3">
+										
+										<div class="col-lg-1">
+											<p:calendar value="#{boletimInformativoMB.bi.comIniHoraComunicado}"
+												pattern="HH:mm" timeOnly="true"   placeholder="Hora"
+												inputStyle="text-align:center; display:block"
+												></p:calendar>
+										</div>
+										<div class="col-lg-1"></div>
+										<div class="col-lg-2">
 											<p:outputLabel value="Data/Hora do Sinistro: "
 												style="color:black;font-weight:bold" />
 										</div>
 
-										<div class="col-lg-3">
+										<div class="col-lg-2">
 											<p:calendar value="#{boletimInformativoMB.bi.comIniDataHora}"
-												showOn="button" pattern="dd/MM/yyyy HH:mm"
-												showButtonPanel="true"></p:calendar>
+												inputStyle="text-align:center; display:block"
+												pattern="dd/MM/yyyy" placeholder="Data"></p:calendar>
 										</div>
 
-									</div>
-									<p />
+										<div class="col-lg-1" >
+											<p:calendar value="#{boletimInformativoMB.bi.comIniHora}"
+												pattern="HH:mm" timeOnly="true"  placeholder="Hora"
+												inputStyle="text-align:center; display:block"
+												></p:calendar>
+										</div>										
 
+									</div>
+									
+									<p />
+									
 									<div class="row ui-fluid">
 
-										<div class="col-md-3">
-											<p:outputLabel value="Nome do Comunicante/Empresa: "
+										<div class="col-md-2">
+											<p:outputLabel value="Nome Comunicante/Empresa: "
 												style="color:black;font-weight:bold" />
 										</div>
 
-										<div class="col-md-5">
+										<div class="col-md-4">
 											<p:inputText value="#{boletimInformativoMB.bi.comIniNome}" maxlength="60"
 												style="color:red;font-style:italic">
 
 											</p:inputText>
 										</div>
 
-										<div class="col-md-1">
+										<div class="col-md-2">
 											<p:outputLabel value="Fone: "
 												style="color:black;font-weight:bold" />
 										</div>
 
-										<div class="col-md-3">
+										<div class="col-md-2">
 											<p:inputText value="#{boletimInformativoMB.bi.comIniFone}" maxlength="15"
 												style="color:red;font-style:italic"></p:inputText>
 										</div>
@@ -764,7 +786,7 @@ input[disabled] {
 
 									<div class="row ui-fluid">
 
-										<div class="col-md-3">
+										<div class="col-md-2">
 											<p:outputLabel value="Dia da Semana: "
 												style="color:black;font-weight:bold;padding-top:10px" />
 										</div>
@@ -792,7 +814,7 @@ input[disabled] {
 
 							</div>
 
-							<div id="pnLocalSinistro" class="box box-solid box-danger">
+							<div id="pnLocalSinistro" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Dados do Local do Sinistro</h4>
 								</div>
@@ -863,8 +885,8 @@ input[disabled] {
 									<p />
 									<div class="row ui-fluid">
 
-										<div class="col-md-3">
-											<p:outputLabel value="Ponto Referência(Posto,etc): "
+										<div class="col-md-1">
+											<p:outputLabel value="Proximidades: "
 												style="color:black;font-weight:bold" />
 										</div>
 										<div class="col-md-9">
@@ -905,7 +927,7 @@ input[disabled] {
 
 							</div>
 
-							<div id="pnClassificacao" class="box box-solid box-danger">
+							<div id="pnClassificacao" class="box box-solid box-primary">
 
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Classificação do Sinistro</h4>
@@ -1803,7 +1825,7 @@ input[disabled] {
 	
 	
 						<ui:fragment id="fragSuspeitaRoubo" rendered= "#{boletimInformativoMB.painelDadosSuspeita}">
-							<div id="pnSuspeitaRoubo" class="box box-solid box-danger">
+							<div id="pnSuspeitaRoubo" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Dados da Suspeita de Roubo</h4>
 								</div>
@@ -1821,14 +1843,14 @@ input[disabled] {
 
 											<p:selectOneMenu
 												value="#{boletimInformativoMB.bi.tipoSuspeita.id}" >
-												<f:selectItem itemLabel="&#160;" itemValue="" />
-												<f:selectItems
+												
+												<f:selectItems 
 													value="#{boletimInformativoMB.lstTipoSuspeita}"
 													var="listTpSusp" itemValue="#{listTpSusp.id}"
 													itemLabel="#{listTpSusp.descricao}"></f:selectItems>
 													
-													 <p:ajax event="valueChange" listener="#{boletimInformativoMB.onTipoEventoSuspeitaRoubo}" 
-													 process="@this"/>
+													 <p:ajax event="change" listener="#{boletimInformativoMB.onTipoEventoSuspeitaRoubo}" 
+													 process="@this" />
 											</p:selectOneMenu>
 
 										</div>
@@ -1853,11 +1875,19 @@ input[disabled] {
 												style="color:black;font-weight:bold" />
 										</div>
 
-										<div class="col-lg-3">
-											<p:calendar showOn="button"
-												value="#{boletimInformativoMB.bi.comIniDataHora}"
-												pattern="dd/MM/yyyy HH:mm" showButtonPanel="true"></p:calendar>
+										<div class="col-lg-2">
+											<p:calendar 
+												value="#{boletimInformativoMB.bi.comIniDataHora}" 
+												inputStyle="text-align:center; display:block" placeholder="Data"
+												pattern="dd/MM/yyyy"></p:calendar>
 										</div>
+										
+										<div class="col-lg-1" >
+											<p:calendar value="#{boletimInformativoMB.bi.comIniHora}"
+												pattern="HH:mm" placeholder="Hora" timeOnly="true" 
+												inputStyle="text-align:center; display:block"
+												></p:calendar>
+										</div>	
 
 									</div>
 
@@ -1917,13 +1947,13 @@ input[disabled] {
 									<div class="row ui-fluid">
 
 										<div class="col-md-2">
-											<h:outputText value="Local - Município: "
+											<h:outputText value="Município: "
 												style="color:black;font-weight:bold" />
 										</div>
 
 										<div class="col-md-7">
 											<p:inputText value="#{boletimInformativoMB.bi.comIniCidade}" maxlength="80"
-												style="font-style:italic" placeholder="Município/UF"></p:inputText>
+												style="font-style:italic" ></p:inputText>
 										</div>
 
 										<div class="col-md-1">
@@ -1937,6 +1967,22 @@ input[disabled] {
 										</div>
 
 									</div>
+									
+									<p />
+									<div class="row ui-fluid">
+
+										<div class="col-md-2">
+											<p:outputLabel value="Proximidades: "
+												style="color:black;font-weight:bold" />
+										</div>
+										<div class="col-md-9">
+											<p:inputText
+												value="#{boletimInformativoMB.bi.comIniPontoReferencia}" maxlength="80"
+												style="color:red;font-style:italic"></p:inputText>
+										</div>
+
+									</div>									
+									
 									<p />
 
 									<div class="row ui-fluid">
@@ -1988,11 +2034,20 @@ input[disabled] {
 												style="color:black;font-weight:bold" />
 										</div>
 
-										<div class="col-lg-3">
-											<p:calendar showOn="button"
+										<div class="col-lg-2">
+											<p:calendar 
 												value="#{boletimInformativoMB.bi.suspFimDataHora}"
-												pattern="dd/MM/yyyy HH:mm" showButtonPanel="true"></p:calendar>
+												inputStyle="text-align:center; display:block" placeholder="Data"
+												pattern="dd/MM/yyyy"></p:calendar>
 										</div>
+										
+										
+										<div class="col-lg-1" >
+										 	<p:calendar value="#{boletimInformativoMB.bi.suspFimHora}"
+												pattern="HH:mm" placeholder="Hora" timeOnly="true" 
+												inputStyle="text-align:center; display:block"
+												></p:calendar>
+										</div>	
 
 									</div>
 
@@ -2054,13 +2109,13 @@ input[disabled] {
 									<div class="row ui-fluid">
 
 										<div class="col-md-2">
-											<h:outputText value="Local - Município: "
+											<h:outputText value="Município: "
 												style="color:black;font-weight:bold" />
 										</div>
 
 										<div class="col-md-7">
 											<p:inputText value="#{boletimInformativoMB.bi.suspFimCidade}" maxlength="80"
-												style="font-style:italic" placeholder="Município/UF"></p:inputText>
+												style="font-style:italic" ></p:inputText>
 										</div>
 
 										<div class="col-md-1">
@@ -2112,7 +2167,7 @@ input[disabled] {
 						
 						</ui:fragment>
 						
-							<div id="pnAcionamento" class="box box-solid box-danger">
+							<div id="pnAcionamento" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Dados do Acionamento</h4>
 								</div>
@@ -2125,7 +2180,7 @@ input[disabled] {
 											styleClass="ui-panelgrid-blank">
 
 											<p:row>
-												<p:column rowspan="4" colspan="4"
+												<p:column rowspan="5" colspan="5"
 													style="width:250px;font-weight:bold;text-align:center;border-radius:10px;">PRONTA RESPOSTA</p:column>
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Nome Empresa/Região:</p:column>
@@ -2138,12 +2193,20 @@ input[disabled] {
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Data/Hora:</p:column>
 												<p:column rowspan="1" style="width:180px;">
-													<p:calendar value="#{boletimInformativoMB.bi.prontaDthora}"
-														showOn="button" pattern="dd/MM/yyyy HH:mm"
-														showButtonPanel="true"></p:calendar>
+													<p:calendar value="#{boletimInformativoMB.bi.prontaDthora}" placeholder="Data"
+														inputStyle="text-align:center; display:block"
+														 pattern="dd/MM/yyyy">
+													</p:calendar>
 												</p:column>
+												<p:column rowspan="1" style="width:180px;">
+													<p:calendar value="#{boletimInformativoMB.bi.prontaHora}" placeholder="Hora"
+														inputStyle="text-align:center; display:block"
+														 pattern="HH:mm" timeOnly="true">
+													</p:calendar>
+												</p:column>												
 											</p:row>
-
+											
+<!-- 											
 											<p:row>
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Nome da Atendente Empresa de P.R.:</p:column>
@@ -2160,6 +2223,8 @@ input[disabled] {
 														mask="(99) 9999-9999" style="font-style:italic"></p:inputMask>
 												</p:column>
 											</p:row>
+											
+											
 
 											<p:row>
 												<p:column rowspan="1"
@@ -2177,28 +2242,44 @@ input[disabled] {
 														mask="(99) 99999-9999" style="font-style:italic"></p:inputMask>
 												</p:column>
 											</p:row>
-
-											<p:row>
-												<p:column rowspan="1"
-													style="font-weight:bold;text-align:center">Previsão Chegada:</p:column>
-												<p:column rowspan="1">
-													<p:calendar value="#{boletimInformativoMB.bi.prontaPrevisaoChegada}"
-														showOn="button" pattern="dd/MM/yyyy HH:mm"
-														showButtonPanel="true"></p:calendar>
-												</p:column>
+ -->
+ 
+ 											<p:row>
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Nº do Processo:</p:column>
 												<p:column rowspan="1">
 													<p:inputText
 														value="#{boletimInformativoMB.bi.prontaNrProcesso}" maxlength="20"
 														style="font-style:italic"></p:inputText>
+												</p:column> 											
+ 											</p:row>
+ 
+											
+											
+											<p:row>												
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Previsão Chegada:</p:column>													
+												<p:column rowspan="1" >
+													<p:calendar value="#{boletimInformativoMB.bi.prontaPrevisaoChegada}" placeholder="Data"
+														inputStyle="text-align:center; display:block" style="width:100px;"
+														
+														pattern="dd/MM/yyyy" ></p:calendar>
 												</p:column>
+												
+												<p:column rowspan="1">
+													<p:calendar value="#{boletimInformativoMB.bi.prontaPrevisaoChegadaHora}" placeholder="Hora"
+														pattern="HH:mm" timeOnly="true"   style="width:180px;"
+														inputStyle="text-align:center; display:block"></p:calendar>
+												</p:column>
+												
 											</p:row>
 
 										</p:panelGrid>
-
+										
 
 									</div>
+
+									<ui:fragment rendered="#{boletimInformativoMB.painelClassSinistroPerdaDano}">
 
 									<div class="box ui-fluid" id="idSeguradora">
 
@@ -2206,11 +2287,10 @@ input[disabled] {
 											styleClass="ui-panelgrid-blank">
 
 											<p:row>
-												<p:column rowspan="4" colspan="3"
-													style="width:250px;font-weight:bold;text-align:center;border-radius:10px;">SEGURADORA</p:column>
+												<p:column rowspan="5" colspan="5"
+													style="width:250px;font-weight:bold;text-align:center;">SEGURADORA</p:column>
 												<p:column rowspan="1"
-													style="font-weight:bold;text-align:center">Nome Empresa Seguradora / Região:</p:column>
-
+													style="font-weight:bold;text-align:center">Nome Empresa/Região:</p:column>
 												<p:column rowspan="1" style="width:350px;">
 													<p:inputText value="#{boletimInformativoMB.bi.segNome}" maxlength="40"
 														style="font-style:italic"></p:inputText>
@@ -2218,11 +2298,19 @@ input[disabled] {
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Data/Hora:</p:column>
 												<p:column rowspan="1" style="width:180px;">
-													<p:calendar value="#{boletimInformativoMB.bi.segDthora}"
-														showOn="button" pattern="dd/MM/yyyy HH:mm"
-														showButtonPanel="true"></p:calendar>
+													<p:calendar value="#{boletimInformativoMB.bi.segDthora}" placeholder="Data"
+														inputStyle="text-align:center; display:block"
+														pattern="dd/MM/yyyy"></p:calendar>
+												</p:column>												
+												<p:column rowspan="1" style="width:180px;">
+													<p:calendar value="#{boletimInformativoMB.bi.segHora}" placeholder="Hora"
+											            pattern="HH:mm" timeOnly="true"  
+											            inputStyle="text-align:center; display:block"></p:calendar>
 												</p:column>
+																								
 											</p:row>
+
+<!-- 
 
 											<p:row>
 												<p:column rowspan="1"
@@ -2240,10 +2328,12 @@ input[disabled] {
 												</p:column>
 											</p:row>
 
+
+ -->
 											<p:row>
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Nº do Processo:</p:column>
-												<p:column rowspan="1" colspan="3">
+												<p:column rowspan="1">
 													<p:inputText
 														value="#{boletimInformativoMB.bi.segNrProcesso}" maxlength="40"
 														style="font-style:italic"></p:inputText>
@@ -2259,10 +2349,10 @@ input[disabled] {
 										<p:panelGrid style="margin-top: 15px"
 											styleClass="ui-panelgrid-blank">
 											<p:row>
-												<p:column rowspan="4" colspan="4"
+												<p:column rowspan="5" colspan="5"
 													style="width:250px;font-weight:bold;text-align:center">REGULADORA</p:column>
 												<p:column rowspan="1"
-													style="font-weight:bold;text-align:center">Nome Empresa Reguladora / Região:</p:column>
+													style="font-weight:bold;text-align:center">Nome Empresa/Região:</p:column>
 
 												<p:column rowspan="1" style="width:350px;">
 													<p:inputText
@@ -2272,12 +2362,19 @@ input[disabled] {
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Data/Hora:</p:column>
 												<p:column rowspan="1" style="width:180px;">
-													<p:calendar value="#{boletimInformativoMB.bi.regDthora}"
-														showOn="button" pattern="dd/MM/yyyy HH:mm"
-														showButtonPanel="true"></p:calendar>
+													<p:calendar value="#{boletimInformativoMB.bi.regDthora}" placeholder="Data"
+														 inputStyle="text-align:center; display:block"
+														 pattern="dd/MM/yyyy"></p:calendar>
 												</p:column>
+												<p:column rowspan="1" style="width:180px;">
+													<p:calendar value="#{boletimInformativoMB.bi.regHora}" placeholder="Hora"
+														 pattern="HH:mm" timeOnly="true"
+														 inputStyle="text-align:center; display:block"></p:calendar>
+												</p:column>												
+												
 											</p:row>
 
+<!-- 
 											<p:row>
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Nome atendente Empresa Reguladora:</p:column>
@@ -2295,6 +2392,8 @@ input[disabled] {
 												</p:column>
 											</p:row>
 
+ -->
+<!-- 
 											<p:row>
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Nome do Perito:</p:column>
@@ -2312,39 +2411,59 @@ input[disabled] {
 												</p:column>
 											</p:row>
 
-											<p:row>
-												<p:column rowspan="1"
-													style="font-weight:bold;text-align:center">Previsão Chegada do Períto:</p:column>
-												<p:column rowspan="1">
-													<p:calendar value="#{boletimInformativoMB.bi.regPrevisaoChegada}"
-														showOn="button" pattern="dd/MM/yyyy HH:mm"
-														showButtonPanel="true"></p:calendar>
-												</p:column>
+ -->										
+ 
+ 											<p:row>
 												<p:column rowspan="1"
 													style="font-weight:bold;text-align:center">Nº do Processo:</p:column>
 												<p:column rowspan="1">
 													<p:inputText
 														value="#{boletimInformativoMB.bi.regNrProcesso}" maxlength="20"
 														style="font-style:italic"></p:inputText>
+												</p:column> 											 											
+ 											</p:row>
+ 
+ 
+ 											<p:row>
+											
+												<p:column rowspan="1"
+													style="font-weight:bold;text-align:center">Previsão Chegada:</p:column>
+												<p:column rowspan="1">
+													<p:calendar value="#{boletimInformativoMB.bi.regPrevisaoChegada}" placeholder="Data"
+														 inputStyle="text-align:center; display:block"
+														 pattern="dd/MM/yyyy">
+													</p:calendar>
 												</p:column>
+
+												<p:column rowspan="1">
+													<p:calendar value="#{boletimInformativoMB.bi.regPrevisaoChegadaHora}" placeholder="Hora"
+														 pattern="HH:mm" timeOnly="true"  
+														 inputStyle="text-align:center; display:block">
+													</p:calendar>
+												</p:column>
+
+
 											</p:row>
 
 										</p:panelGrid>
 
 									</div>
 
+									</ui:fragment>
+
 								</div>
 
 							</div>
 
-							<div id="pnRelatoOcorrencia" class="box box-solid box-danger">
+							<div id="pnRelatoOcorrencia" class="box box-solid box-primary">
 							<div class="box-header with-board" style="padding-top: 1px">
 								<h4>Relatos da Ocorrência</h4>
 							</div>
 							
 							<div class="box-body">
+
 								
-								<div id="pnPrimProcedimento" class="box box-solid box-danger" >
+								<div id="pnPrimProcedimento" class="box box-solid box-primary" >
 									<div class="box-header with-board" style="padding-top: 1px">
 										<h4 style="cor:whithe">1º Procedimento - Informe de Sinistro</h4>
 									</div>
@@ -2352,13 +2471,13 @@ input[disabled] {
 								<div class="box-body" style="padding-left: 25px">
 									
 									<div class="row">
-										<p:outputLabel style="padding-left: 25px;color:brown" value="Relato do Boletim Informativo"></p:outputLabel>
+										<p:outputLabel style="padding-left: 25px;color:brown" value="Relato do Boletim Informativo" ></p:outputLabel>
 									</div>
 									
 									<div class="ui-g-12">
 									
 										<p:textEditor widgetVar="editor1" value="#{boletimInformativoMB.bi.relato}" 
-											height="300" style="margin-bottom:10px">
+											height="300" style="margin-bottom:10px" >
 											  <f:facet name="toolbar">
              									<span class="ql-formats">
                 									<button class="ql-bold"></button>
@@ -2379,6 +2498,7 @@ input[disabled] {
 					
 								</div>
 								
+								
 								<p:spacer/>
 								
 								<div id="pnSegProcedimento" class="box box-solid box-warning" >
@@ -2392,7 +2512,7 @@ input[disabled] {
 									<div class="col-lg-12">
 									
 																		
-									<p:dataTable widgetVar="dtBi" var="b" value="#{boletimInformativoMB.listBiRelato}" rows="10" styleClass="box-danger"
+									<p:dataTable widgetVar="dtBi" var="b" value="#{boletimInformativoMB.listBiRelato}" rows="10" styleClass="box-primary"
                              			id="tbListBiRelato"	style="background:#eeeeec"
                              			rowKey="#{b.id}" lazy=""  paginator="true" emptyMessage="Nenhum histórico anterior de boletim para este evento!"
                              			paginatorPosition="bottom"  
@@ -2454,7 +2574,7 @@ input[disabled] {
 
 						<ui:fragment id="fragBoletimFinal"	rendered="#{boletimInformativoMB.painelBoletimFinal}">
 												
-							<div id="pnFinalizacao" class="box box-solid box-danger">
+							<div id="pnFinalizacao" class="box box-solid box-primary">
 								<div class="box-header with-board" style="padding-top: 1px">
 									<h4>Registro de Finalização do Boletim</h4>
 								</div>
@@ -2520,18 +2640,100 @@ input[disabled] {
 
 								<div class="box-body" style="background: #eeeeec">
 									
-									<div class="box box-solid box-danger" >
+									<div class="box box-solid box-primary" >
 									
                        					<p:textEditor value="#{boletimInformativoMB.ev.emails}" height="100" style="margin-bottom:10px" readonly="true" >
                        						 <f:facet name="toolbar">
 									             <span class="ql-formats">
-									             	<p:outputLabel value="Email será enviado para:"
+									             	<p:outputLabel value="Email será enviado para (lista de email - Trafegus):"
 									             		style="font-size:15px;color:#008b8b;text-shadow:1px 1px 1px #000000;padding-top:5px">
 									             	</p:outputLabel>
 									            </span>
 									            <span class="ql-formats">
 									            </span>
 									         </f:facet>
+                       					</p:textEditor>
+                       					
+                       					<p:textEditor value="#{boletimInformativoMB.ev.emailsCc}" height="100" style="margin-bottom:10px" readonly="true">
+                       						 <f:facet name="toolbar">
+    											<div class="ui-g ui-fluid">
+	    									        <span class="ql-formats">
+										             	<p:outputLabel value="Email será enviado para Global 5 (Cc):"
+										             		style="font-size:15px;color:#008b8b;text-shadow:1px 1px 1px #000000;padding-top:5px">
+										             	</p:outputLabel>
+										            </span>
+    											</div>
+												
+									            <span class="ql-formats">
+									            </span>
+    											<div class="ui-g ui-fluid">
+    												<div class="col-lg-1"></div>    												
+    												<div class="col-lg-10">
+		                       						 	<span class="ql-formats">
+		
+											         	<h:outputText value="Adicionar novo email para a Global5: " 
+											         			style="font-size:15px;color:#9AD1B6;text-shadow:1px 1px 1px #000000;
+											         			padding-top:5px;text-align:left; display:block;"/>
+														
+														</span>
+													</div>
+                       						 	</div>
+
+    											<div class="ui-g ui-fluid">
+    												<div class="col-lg-1"></div>    												
+    												<div class="col-lg-4">
+		                       						 	<span class="ql-formats">
+											         		<p:inputText id="inputEmailNfse"
+											         			value="#{boletimInformativoMB.addEmailGlobal5}" 
+																size="85" placeholder="Adicione e-mail para transmitir o boletim">
+																	<p:ajax event="blur" 
+																		process="@this"
+																		listener="#{boletimInformativoMB.meuEmailGlobal5(boletimInformativoMB.addEmailGlobal5)}"
+																		/>	
+															</p:inputText>															
+														</span>
+													</div>
+													<div class="col-lg-1">
+														<p:commandButton 
+							 									 process="@this" update="@none"
+																 style="margin-right:20px;" icon="fa fa-plus" title="Adicionar" >
+																 <p:ajax listener="#{boletimInformativoMB.addEmailGlobal5NaLista(2)}" process="@this"/>
+																 <p:ajax update="listEmailG5  " /> 
+														</p:commandButton>																		
+													</div>
+                       						 	</div>
+                       						 	
+												<div class="ui-g ui-fluid">
+													<div class="col-lg-1"></div>
+										        	<div class="col-lg-11">
+								        				
+								        			<h:outputText value="novos emails que serão adicionados:" 
+								        				style="font-size:15px;color:#9AD1B6;text-shadow:1px 1px 1px #000000;padding-top:5px;text-align:left; display:block;"/>
+													<h:outputText value="para excluir marque o email " 								   		
+																style="color:red;text-size:10px" />
+								        				
+								        				<div class="col-lg-11">
+															<p:orderList id="listEmailG5" value="#{boletimInformativoMB.lstEmailGlobal5}" 
+																var="emailsG5" controlsLocation="none" itemLabel="#{emailsG5}" 
+																itemValue="#{emailsG5}">						   										 
+																<p:ajax event="select" listener="#{boletimInformativoMB.coletarEmailGlobal5}" />
+															</p:orderList>			     													        			
+															
+								        				</div>
+								        				        				
+								        			</div>
+								        			 
+												</div>
+												
+												<div  class="ui-g ui-fluid">
+														<div class="col-lg-1"></div>
+								        				<div class="col-lg-5">
+														</div>        		
+												
+												</div>
+                       						 										            
+									        </f:facet>
+									        									         
                        					</p:textEditor>
 									
 								  </div>
@@ -2549,14 +2751,36 @@ input[disabled] {
 
 
 					<f:facet name="footer">
-						<div class="align-right" style="padding: 5px;">
+						<div class="ui-g ui-fluid">
+							<div class="col-lg-2">
+								<div class="align-left" style="padding: 5px;">
 
-							<p:commandButton value="Salvar Boletim" disabled="#{boletimInformativoMB.boletimSalvo}"
-								action="#{boletimInformativoMB.salvarBoletim}" update="@form"
-								styleClass="btn-danger" />
-							<p:spacer height="5" />
+									<p:commandButton value="Voltar"										
+										action="#{boletimInformativoMB.backListEvento}" update="@form"
+										styleClass="btn-primary" />
+									<p:spacer height="5" />
+
+									</div>
+							</div>
+								<div class="col-lg-4">
+
+								</div>
+								<div class="col-lg-3"></div>
+								<div class="col-lg-3">
+									<div class="align-right" style="padding: 5px;">
+
+										<p:commandButton value="Salvar Boletim"
+											disabled="#{boletimInformativoMB.boletimSalvo}"
+											action="#{boletimInformativoMB.salvarBoletim}" update="@form"
+											styleClass="btn-primary" />
+										<p:spacer height="5" />
+
+									</div>
+								</div>
 
 						</div>
+						 <p:messages id="messages" showDetail="true" closable="true">      
+    					</p:messages>
 					</f:facet>
 
 				</p:panel>

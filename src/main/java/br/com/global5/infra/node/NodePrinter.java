@@ -58,7 +58,7 @@ public class NodePrinter {
             Class.forName("org.postgresql.driver");
             conexao = DriverManager.getConnection("jdbc:postgresql://" + endereco
                     + ":" + porta + "/" + banco + "?user=" + usuario
-                    + "&password=" + senha);
+					+ "&password=" + senha);
         } catch (ClassNotFoundException ex) {
             throw ex;
         } catch (SQLException ex) {

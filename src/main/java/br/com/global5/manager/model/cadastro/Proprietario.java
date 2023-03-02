@@ -3,6 +3,7 @@ package br.com.global5.manager.model.cadastro;
 import br.com.global5.infra.model.BaseEntity;
 import br.com.global5.manager.model.cadastro.Localizador;
 import br.com.global5.manager.model.cadastro.Telefone;
+import br.com.global5.manager.model.enums.DocumentoTipo;
 import br.com.global5.manager.model.geral.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -86,6 +87,47 @@ public class Proprietario implements BaseEntity {
     )
     @JoinColumn(name = "prop_teloid")
     private Telefone telefone;
+    
+    @Column(name = "prop_documento1_emissao")
+    private Date doc1Emissão;
+    
+    @Column(name = "prop_documento1_emissor")
+    private String doc1Emissor;
+    
+    @Column(name = "prop_documento1_uf")
+    private String doc1Uf;
+        
+    @Column(name = "prop_documento2")
+    private String documento2;
+    
+    @ManyToOne(
+            fetch=FetchType.EAGER,
+            targetEntity=DocumentoTipo.class,
+            cascade={CascadeType.DETACH, CascadeType.MERGE}
+    )
+    @JoinColumn(name = "prop_documento2_tipo")    
+    private DocumentoTipo documento2_tipo;
+    
+    @Column(name = "prop_documento2_emissao")
+    private Date doc2Emissão;
+    
+    @Column(name = "prop_documento2_emissor")
+    private String doc2Emissor;
+    
+    @Column(name = "prop_documento2_uf")
+    private String doc2Uf;
+    
+    @Column(name = "prop_dt_nascimento")
+    private Date dtNascimento;
+    
+    @Column(name = "prop_naturalidade")
+    private String Naturalidade;
+    
+    @Column(name = "prop_nomemae")
+    private String nomeMae;
+    
+    @Column(name = "prop_nomepai")
+    private String nomePai;
 
     public Proprietario() {
     }
@@ -195,4 +237,126 @@ public class Proprietario implements BaseEntity {
     public void setTelefone(Telefone telefone) {
         this.telefone = telefone;
     }
+
+
+	public Date getDoc1Emissão() {
+		return doc1Emissão;
+	}
+
+
+	public void setDoc1Emissão(Date doc1Emissão) {
+		this.doc1Emissão = doc1Emissão;
+	}
+
+
+	public String getDoc1Emissor() {
+		return doc1Emissor;
+	}
+
+
+	public void setDoc1Emissor(String doc1Emissor) {
+		this.doc1Emissor = doc1Emissor;
+	}
+
+
+	public String getDoc1Uf() {
+		return doc1Uf;
+	}
+
+
+	public void setDoc1Uf(String doc1Uf) {
+		this.doc1Uf = doc1Uf;
+	}
+
+
+	public String getDocumento2() {
+		return documento2;
+	}
+
+
+	public void setDocumento2(String documento2) {
+		this.documento2 = documento2;
+	}
+
+
+	public DocumentoTipo getDocumento2_tipo() {
+		return documento2_tipo;
+	}
+
+
+	public void setDocumento2_tipo(DocumentoTipo documento2_tipo) {
+		this.documento2_tipo = documento2_tipo;
+	}
+
+
+	public Date getDoc2Emissão() {
+		return doc2Emissão;
+	}
+
+
+	public void setDoc2Emissão(Date doc2Emissão) {
+		this.doc2Emissão = doc2Emissão;
+	}
+
+
+	public String getDoc2Emissor() {
+		return doc2Emissor;
+	}
+
+
+	public void setDoc2Emissor(String doc2Emissor) {
+		this.doc2Emissor = doc2Emissor;
+	}
+
+
+	public String getDoc2Uf() {
+		return doc2Uf;
+	}
+
+
+	public void setDoc2Uf(String doc2Uf) {
+		this.doc2Uf = doc2Uf;
+	}
+
+
+	public Date getDtNascimento() {
+		return dtNascimento;
+	}
+
+
+	public void setDtNascimento(Date dtNascimento) {
+		this.dtNascimento = dtNascimento;
+	}
+
+
+	public String getNaturalidade() {
+		return Naturalidade;
+	}
+
+
+	public void setNaturalidade(String naturalidade) {
+		Naturalidade = naturalidade;
+	}
+
+
+	public String getNomeMae() {
+		return nomeMae;
+	}
+
+
+	public void setNomeMae(String nomeMae) {
+		this.nomeMae = nomeMae;
+	}
+
+
+	public String getNomePai() {
+		return nomePai;
+	}
+
+
+	public void setNomePai(String nomePai) {
+		this.nomePai = nomePai;
+	}
+    
+    
 }
